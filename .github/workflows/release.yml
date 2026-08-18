@@ -47,6 +47,14 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Read release publication gate
+        id: release_gate
+        shell: pwsh
+        run: |
+          $gate = Get-Content release-gate.json -Raw | ConvertFrom-Json
+          $rendersVerified = [bool]$gate.rendersVerified
+          "renders_verified=$($rendersVerified.ToString().ToLowerInvariant())" >> $env:GITHUB_OUTPUT
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -161,6 +169,7 @@ jobs:
           "notes_path=$notesPath" >> $env:GITHUB_OUTPUT
 
       - name: Publish GitHub Release
+        if: steps.release_gate.outputs.renders_verified == 'true'
         shell: pwsh
         run: |
           gh release create "${{ steps.tag.outputs.tag }}" `
