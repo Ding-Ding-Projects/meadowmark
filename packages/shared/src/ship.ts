@@ -41,13 +41,34 @@ export function rollShipWindow(
   const distinct: ShippableGood[] = [];
   for (let i = 0; i < distinctCount && pool.length > 0; i++) {
     const idx = nextInt(rng, 0, pool.length - 1);
-    distinct.push(pool[idx]);
+    const picked = pool[idx];
+    if (picked === undefined) {
+      // Cannot actually happen: idx is bounded to [0, pool.length - 1] by
+      // construction. Skip rather than throw so a future edit that somehow
+      // broke that invariant degrades to fewer distinct goods, not a crash.
+      continue;
+    }
+    distinct.push(picked);
     pool.splice(idx, 1);
+  }
+
+  // If the player is too low-level (or the content pool is misconfigured)
+  // to have any shippable good at all, roll an empty window rather than
+  // dividing by a zero-length `distinct` array below - the dock just has
+  // nothing to offer this cycle, which is a real, handleable state rather
+  // than an invariant violation.
+  if (distinct.length === 0) {
+    return { unlocked: true, crates: [], windowStartedAt: now, windowEndsAt: now + SHIP_WINDOW_MS, chestReady: false };
   }
 
   const crates: ShipCrate[] = [];
   for (let i = 0; i < SHIP_CRATE_COUNT; i++) {
     const good = distinct[i % distinct.length];
+    if (good === undefined) {
+      // Cannot actually happen: i % distinct.length is always within
+      // [0, distinct.length - 1], and distinct.length > 0 was just checked.
+      continue;
+    }
     const quantityNeeded = nextInt(rng, 4, 14);
     crates.push({
       id: `crate-${i}`,
@@ -120,7 +141,19 @@ export function openShipChest(state: GameState, reward: ShipChestReward): GameSt
   };
 }
 
-/** Rolls a fresh window if the current one has expired or never started (and the dock is unlocked). */
+/**
+ * Rolls a fresh window if the current one has expired or never started (and the dock is unlocked).
+ *
+ * KNOWN CHUNK-INVARIANCE GAP: same root cause as mine.ts's tickMine. This
+ * only checks whether the CURRENT 24h window has expired, not how many
+ * windows elapsed since the last call. A single tick() spanning several
+ * days rolls one window (dated from the final `now`); the equivalent
+ * sequence of smaller ticks rolls one window per elapsed day, each
+ * consuming its own draws from the shared world RNG. The two produce
+ * different `windowEndsAt` values and different crate contents for the
+ * same wall-clock elapsed time - tick(24h) == 1440x tick(1min) does not
+ * hold here across a multi-window gap.
+ */
 export function tickShip(
   state: GameState,
   rng: RngState,

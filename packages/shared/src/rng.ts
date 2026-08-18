@@ -44,10 +44,24 @@ export function chance(state: RngState, p: number): boolean {
   return nextFloat(state) < p;
 }
 
-/** Picks a uniformly random element from a non-empty array. */
+/**
+ * Picks a uniformly random element from a non-empty array. Throws if the
+ * array is empty - there is no sensible value to return, and the caller
+ * needs to know its content pool is empty rather than silently getting
+ * back `undefined` dressed up as a `T`.
+ */
 export function pick<T>(state: RngState, items: readonly T[]): T {
   if (items.length === 0) throw new Error("pick: empty array");
-  return items[nextInt(state, 0, items.length - 1)];
+  const index = nextInt(state, 0, items.length - 1);
+  const item = items[index];
+  if (item === undefined) {
+    // Cannot actually happen: index is constructed above to be within
+    // [0, items.length - 1], so this lookup can never miss. The check
+    // exists only so the compiler (and any future refactor that breaks
+    // that invariant) can see it rather than us asserting it away.
+    throw new Error(`pick: internal error - index ${index} out of bounds for array of length ${items.length}`);
+  }
+  return item;
 }
 
 /**
@@ -65,10 +79,23 @@ export function pickWeighted<T>(
   if (total <= 0) throw new Error("pickWeighted: total weight must be > 0");
   let roll = nextFloat(state) * total;
   for (let i = 0; i < items.length; i++) {
-    roll -= weights[i];
-    if (roll <= 0) return items[i];
+    const item = items[i];
+    const weight = weights[i];
+    if (item === undefined || weight === undefined) {
+      // Cannot actually happen: i stays within [0, items.length - 1] and
+      // items/weights were checked to be the same length above.
+      throw new Error(`pickWeighted: internal error - missing entry at index ${i}`);
+    }
+    roll -= weight;
+    if (roll <= 0) return item;
   }
-  return items[items.length - 1];
+  const last = items[items.length - 1];
+  if (last === undefined) {
+    // Cannot actually happen: the length check above guarantees at least
+    // one element, so this fallback always has something to return.
+    throw new Error("pickWeighted: internal error - no element found for fallback return");
+  }
+  return last;
 }
 
 /**

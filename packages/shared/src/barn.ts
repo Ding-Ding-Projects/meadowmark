@@ -37,7 +37,11 @@ export function canUpgradeBarn(state: Pick<GameState, "barn" | "economy" | "inve
   if (!next) return false;
   if (state.economy.coins < next.costCoins) return false;
   for (const goodId in next.costMaterials) {
-    if ((state.inventory[goodId] ?? 0) < next.costMaterials[goodId]) return false;
+    // costMaterials[goodId] always exists here since goodId came from its
+    // own keys; the ?? 0 satisfies noUncheckedIndexedAccess's static
+    // widening rather than covering a real missing-entry case.
+    const required = next.costMaterials[goodId] ?? 0;
+    if ((state.inventory[goodId] ?? 0) < required) return false;
   }
   return true;
 }
@@ -49,7 +53,8 @@ export function upgradeBarn(state: GameState): GameState {
 
   const inventory = { ...state.inventory };
   for (const goodId in next.costMaterials) {
-    inventory[goodId] = (inventory[goodId] ?? 0) - next.costMaterials[goodId];
+    const cost = next.costMaterials[goodId] ?? 0;
+    inventory[goodId] = (inventory[goodId] ?? 0) - cost;
   }
 
   return {

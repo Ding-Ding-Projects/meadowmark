@@ -83,7 +83,32 @@ export function rollVillagerRequest(
   };
 }
 
-/** Removes expired requests and rolls a fresh one if fewer than 3 are currently open. */
+/**
+ * Removes expired requests and rolls a fresh one if fewer than 3 are currently open.
+ *
+ * KNOWN CHUNK-INVARIANCE GAP (the worst instance of this pattern in the
+ * package): unlike mine.ts/ship.ts, this top-up loop isn't even gated by a
+ * calendar boundary - it maintains "3 open requests" on every call where a
+ * slot is empty. Each newly-rolled request gets its own 6h expiry from
+ * `now`, so across a long elapsed span, fine-grained ticking cascades:
+ * roll -> expire -> roll -> expire, once per ~6h actually elapsed, while a
+ * single coarse tick() covering the same span only ever tops up once (to
+ * exactly 3), using far fewer draws from the shared world RNG. This means
+ * tick(24h) once and 1440x tick(1min) end this call with a different
+ * number of RNG draws consumed - not just different village requests, but
+ * a different RNG stream position for every subsequent roll in the game,
+ * in that tick and every one after it. This is the clearest violation of
+ * the "tick(24h) == 1440x tick(1min)" invariant in this package and needs
+ * a real fix (loop "once per 6h boundary actually crossed", the same
+ * treatment mine.ts/ship.ts need), not a quick patch here.
+ *
+ * Related, smaller effect: dailies.ts's streak counter can diverge too -
+ * if the chest was claimed right before an offline span crossing more
+ * than one calendar day, chunked ticking correctly increments the streak
+ * once and then resets it to 0 on the next (unclaimed) day, while a
+ * single coarse jump increments it once and never resets it. See
+ * dailies.ts's tickDailies for the exact mechanism.
+ */
 export function tickVillage(
   state: GameState,
   rng: RngState,

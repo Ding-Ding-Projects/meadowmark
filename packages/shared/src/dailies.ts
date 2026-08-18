@@ -32,9 +32,23 @@ export function generateDailyTasks(dateKey: string, templates: DailyTaskTemplate
   for (let i = 0; i < DAILY_TASK_COUNT && pool.length > 0; i++) {
     const idx = nextInt(rng, 0, pool.length - 1);
     const template = pool[idx];
+    if (template === undefined) {
+      // Cannot actually happen: idx is constructed above to be within
+      // [0, pool.length - 1], so this lookup can never miss. Skip rather
+      // than throw so one impossible-in-practice miss degrades to fewer
+      // daily tasks instead of crashing the whole tick.
+      continue;
+    }
     pool.splice(idx, 1);
 
-    const targetId = template.targetIdPool ? template.targetIdPool[nextInt(rng, 0, template.targetIdPool.length - 1)] : null;
+    let targetId: string | null = null;
+    if (template.targetIdPool && template.targetIdPool.length > 0) {
+      const pickIndex = nextInt(rng, 0, template.targetIdPool.length - 1);
+      // Same reasoning as above: pickIndex is bounded to the pool's own
+      // length, so this can't miss either - `?? null` is just the honest
+      // fallback if that invariant is ever violated by a future edit.
+      targetId = template.targetIdPool[pickIndex] ?? null;
+    }
     const targetQuantity = nextInt(rng, template.minQuantity, template.maxQuantity);
 
     tasks.push({
@@ -62,7 +76,30 @@ export function createInitialDailies(now: number, templates: DailyTaskTemplate[]
   };
 }
 
-/** Rolls over to a fresh set of tasks when the local date has changed, tracking whether yesterday's streak survives (all 5 tasks must have been completed and claimed) or resets. */
+/**
+ * Rolls over to a fresh set of tasks when the local date has changed, tracking whether yesterday's streak survives (all 5 tasks must have been completed and claimed) or resets.
+ *
+ * Task CONTENT is safe from chunk-size effects: generateDailyTasks() seeds
+ * its own local RNG from the date string alone, so "today"'s tasks are the
+ * same regardless of how many tick() calls it took to get there, and it
+ * never touches the shared world RNG.
+ *
+ * KNOWN CHUNK-INVARIANCE GAP in the STREAK, though: this only compares
+ * `state.dailies.dateKey` (the last day we actually rolled over) against
+ * `today`, i.e. one boundary check per call, not once per day actually
+ * elapsed. Concretely: if the chest was claimed right before an offline
+ * span that crosses more than one calendar day, N * tick(1 day) rolls
+ * over once per day - day0->day1 sees chestClaimed=true and increments
+ * the streak, then day1->day2 (chestClaimed now false, offline) resets it
+ * straight back to 0 - ending at streak=0. A single tick() covering the
+ * same span jumps day0 straight to the final day, sees chestClaimed=true
+ * from day0, and increments once with no intervening reset - ending at
+ * streak=oldStreak+1. Same wall-clock elapsed time, different streak.
+ * This is a real player-visible bug, not just an RNG-stream curiosity;
+ * fixing it means looping "once per calendar day actually crossed" here
+ * too. See village.ts's tickVillage for the RNG-stream-divergence variant
+ * of the same root cause.
+ */
 export function tickDailies(
   state: GameState,
   templates: DailyTaskTemplate[],
