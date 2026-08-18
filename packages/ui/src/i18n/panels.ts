@@ -71,6 +71,12 @@ registerCopy({
   "panel.zoo.title": { en: { 1: "Zoo", 3: "Zoo" }, yue: { 1: "動物園", 3: "動物園" } },
   "panel.zoo.gridLabel": { en: { 1: "Enclosures" }, yue: { 1: "圍欄" } },
   "panel.zoo.emptyEnclosure": { en: { 1: "Empty enclosure — assign an animal", 3: "Empty pen, needs a resident" }, yue: { 1: "空圍欄－揀隻動物", 3: "空晒，揀隻嚟住先" } },
+  "panel.zoo.noHatchedSpecies": { en: { 1: "Hatch a species below before assigning it here.", 3: "Nothing to put in yet — hatch someone first." }, yue: { 1: "要先喺下面孵化先可以擺入嚟。", 3: "仲未孵到，去下面撈隻先。" } },
+  "panel.zoo.collectionTitle": { en: { 1: "Species collection", 3: "Card collection" }, yue: { 1: "動物收藏", 3: "咭仔收藏" } },
+  "panel.zoo.cardsProgress": { en: { 1: "{held} / {needed} cards" }, yue: { 1: "{held} / {needed} 張咭" } },
+  "panel.zoo.hatch": { en: { 1: "Hatch", 3: "Hatch it!" }, yue: { 1: "孵化", 3: "孚返隻出嚟！" } },
+  "panel.zoo.hatched": { en: { 1: "Hatched", 3: "Already hatched" }, yue: { 1: "已孵化", 3: "已經孵咗" } },
+  "panel.zoo.needMoreCards": { en: { 1: "Collect more cards to hatch this species." }, yue: { 1: "要儲多啲咭先可以孵化。" } },
 
   // Mine
   "panel.mine.title": { en: { 1: "Mine", 3: "Mine" }, yue: { 1: "礦場", 3: "礦場" } },
@@ -84,6 +90,8 @@ registerCopy({
   "panel.museum.completed": { en: { 1: "Complete", 3: "Done and dusted" }, yue: { 1: "已完成", 3: "搞掂晒" } },
   "panel.museum.emptySlot": { en: { 1: "Missing" }, yue: { 1: "欠奉" } },
   "panel.museum.reward": { en: { 1: "Completion reward: {coins} coins" }, yue: { 1: "完成獎勵：{coins} 金幣" } },
+  "panel.museum.donateReady": { en: { 1: "Ready to donate — click to place it", 3: "Got one! Click to hand it over" }, yue: { 1: "已齊備，撳下捐俾佢", 3: "有咗喇，快啲捐咗佢" } },
+  "panel.museum.notReady": { en: { 1: "Not assembled yet", 3: "Still digging for it" }, yue: { 1: "仲未砌齊", 3: "仲喺礦洞度搵緊" } },
 
   // Achievements
   "panel.achievements.title": { en: { 1: "Achievements", 3: "Achievements" }, yue: { 1: "成就", 3: "成就" } },

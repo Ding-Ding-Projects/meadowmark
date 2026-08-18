@@ -246,9 +246,25 @@ export interface EnclosureInstance {
   readyAt: Timestamp | null;
 }
 
+export type ZooHabitatId = "grass" | "water" | "rock" | "arctic";
+
+/** One species in the zoo's catalog, with the player's card-collection progress toward hatching it. */
+export interface ZooSpeciesCard {
+  speciesId: AnimalId;
+  nameKey: string;
+  iconId: string;
+  habitat: ZooHabitatId;
+  cardsHeld: number;
+  cardsNeeded: number;
+  hatched: boolean;
+}
+
 export interface ZooView {
   enclosures: EnclosureInstance[];
+  /** Only species the player has already hatched - the only ones assignable to an enclosure. */
   availableAnimals: AnimalDef[];
+  /** The full species catalog with card-collection progress, driving the hatchery/collection view. */
+  speciesCards: ZooSpeciesCard[];
 }
 
 export type MineTileState = "hidden" | "revealed" | "obstacle" | "find";
@@ -276,7 +292,13 @@ export interface ArtifactDef {
 export interface MuseumExhibitSlot {
   setId: string;
   setNameKey: string;
-  slots: { artifactId: ArtifactId | null; def: ArtifactDef | null }[];
+  /**
+   * `available` is true when the required artifact for this exact slot has
+   * already been fully assembled (state.mine.completedArtifacts) but not
+   * yet donated anywhere - i.e. the slot is empty and ready to fill. It is
+   * always false once `artifactId` is set (the slot is already filled).
+   */
+  slots: { artifactId: ArtifactId | null; def: ArtifactDef | null; available: boolean }[];
   rewardCoins: number;
   completed: boolean;
 }
@@ -422,6 +444,7 @@ export type GameAction =
   | { type: "town/demolish"; instanceId: EntityId }
   | { type: "zoo/assign"; enclosureId: EntityId; animalId: AnimalId }
   | { type: "zoo/collect"; enclosureId: EntityId }
+  | { type: "zoo/hatch"; speciesId: AnimalId }
   | { type: "mine/dig"; tileIndex: number }
   | { type: "museum/donate"; setId: string; slotIndex: number; artifactId: ArtifactId }
   | { type: "achievement/claim"; achievementId: AchievementId; tier: number }

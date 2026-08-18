@@ -14,6 +14,7 @@ import { createInitialTown } from "./town.js";
 import { createInitialExpansions } from "./expansions.js";
 import { createInitialZoo } from "./zoo.js";
 import { createInitialMine } from "./mine.js";
+import { createInitialMuseum } from "./museum.js";
 import { createInitialBoosters } from "./boosters.js";
 import { createInitialAchievements } from "./achievements.js";
 import { createInitialDailies, type DailyTaskTemplate } from "./dailies.js";
@@ -23,7 +24,7 @@ import { createEmptyTrain } from "./train.js";
 import { createEmptyHelicopter } from "./helicopter.js";
 import { createEmptyShip } from "./ship.js";
 
-export const CURRENT_SCHEMA_VERSION = 1;
+export const CURRENT_SCHEMA_VERSION = 2;
 
 export interface NewGameOptions {
   playerName: string;
@@ -71,6 +72,7 @@ export function newGame(options: NewGameOptions): GameState {
     expansions: createInitialExpansions(),
     zoo: createInitialZoo(),
     mine: createInitialMine(),
+    museum: createInitialMuseum(),
     boosters: createInitialBoosters(),
     achievements: createInitialAchievements(),
     dailies: createInitialDailies(now, options.dailyTaskTemplates),
@@ -87,8 +89,11 @@ export function newGame(options: NewGameOptions): GameState {
 type MigrationStep = (raw: any) => any;
 
 const MIGRATIONS: Record<number, MigrationStep> = {
-  // Example shape for the future: `1: (raw) => ({ ...raw, someNewField: default }),`
-  // No migrations exist yet since schema v1 is the first version.
+  // v1 -> v2: added the museum system. A v1 save has no `museum` key at
+  // all, so it starts every existing player at "not yet unlocked, nothing
+  // donated" - the same state a save reaching level MUSEUM_UNLOCK_LEVEL
+  // for the first time under v2 would start from.
+  1: (raw) => ({ ...raw, museum: createInitialMuseum() }),
 };
 
 /**

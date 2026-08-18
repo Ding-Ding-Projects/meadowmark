@@ -1,0 +1,38 @@
+{
+  "artifacts": [
+    { "id": "sundial", "displayName": "Ancient Sundial", "iconId": "artifact_sundial", "setId": "ancient_treasures" },
+    { "id": "totem", "displayName": "Carved Totem", "iconId": "artifact_totem", "setId": "ancient_treasures" },
+    { "id": "urn", "displayName": "Painted Urn", "iconId": "artifact_urn", "setId": "royal_relics" },
+    { "id": "tablet", "displayName": "Stone Tablet", "iconId": "artifact_tablet", "setId": "royal_relics" },
+    { "id": "crown", "displayName": "Jeweled Crown", "iconId": "artifact_crown", "setId": "crown_jewels" }
+  ],
+  "exhibits": [
+    {
+      "exhibitId": "ancient_treasures",
+      "displayName": "Ancient Treasures",
+      "artifactIds": ["sundial", "totem"],
+      "rewardCoins": 3000,
+      "rewardCash": 3,
+      "bonusKind": "cropYieldBonus",
+      "bonusValue": 0.02
+    },
+    {
+      "exhibitId": "royal_relics",
+      "displayName": "Royal Relics",
+      "artifactIds": ["urn", "tablet"],
+      "rewardCoins": 4000,
+      "rewardCash": 4,
+      "bonusKind": "factorySpeedBonus",
+      "bonusValue": 0.02
+    },
+    {
+      "exhibitId": "crown_jewels",
+      "displayName": "Crown Jewels",
+      "artifactIds": ["crown"],
+      "rewardCoins": 6000,
+      "rewardCash": 8,
+      "bonusKind": "orderRewardBonus",
+      "bonusValue": 0.03
+    }
+  ]
+}

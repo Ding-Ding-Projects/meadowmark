@@ -109,6 +109,21 @@
   justify-content: center;
 }
 
+/* An empty exhibit/collection slot whose required item is already in hand
+   and ready to be placed with one click - visually distinct from a plain
+   read-only status slot. */
+button.mm-cargo-slot--actionable {
+  background: var(--mm-color-secondary-container);
+  border-color: var(--mm-color-secondary);
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+button.mm-cargo-slot--actionable:hover,
+button.mm-cargo-slot--actionable:focus-visible {
+  filter: brightness(1.08);
+}
+
 .mm-village-notice {
   display: flex;
   gap: var(--mm-space-2);

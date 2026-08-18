@@ -1,0 +1,16 @@
+{
+  "helicopter": {
+    "cash": 15,
+    "boosterKinds": ["energyRefill"],
+    "animalCards": { "otter": 2, "flamingo": 1 }
+  },
+  "ship": {
+    "cash": 20,
+    "expansionPermits": 1,
+    "animalCards": { "seal": 2, "penguin": 1 }
+  },
+  "daily": {
+    "rewardCoins": 300,
+    "rewardCash": 2
+  }
+}

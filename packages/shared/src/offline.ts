@@ -28,6 +28,7 @@ import { type ShippableGood, tickShip } from "./ship.js";
 import { type BuildingCatalogEntry, tickTown } from "./town.js";
 import { maybeUnlockZoo } from "./zoo.js";
 import { maybeUnlockMine, tickMine } from "./mine.js";
+import { maybeUnlockMuseum } from "./museum.js";
 import { type DailyTaskTemplate, tickDailies } from "./dailies.js";
 import { type RegattaTaskTemplate, tickVillage } from "./village.js";
 import { MAX_OFFLINE_MS } from "./time.js";
@@ -114,6 +115,7 @@ export function tick(state: GameState, elapsedMs: number, now: number, config: T
 
   next = maybeUnlockZoo(next);
   next = maybeUnlockMine(next, now);
+  next = maybeUnlockMuseum(next);
   {
     const r = tickMine(next, now);
     next = r.state;

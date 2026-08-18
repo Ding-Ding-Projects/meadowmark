@@ -362,6 +362,25 @@ export interface MineState {
 }
 
 // ---------------------------------------------------------------------------
+// Museum
+// ---------------------------------------------------------------------------
+
+export interface MuseumExhibitProgress {
+  exhibitId: string;
+  /** Which of this exhibit's required artifact ids have been donated so far. Only present in state.museum.exhibits once at least one donation has happened - see museum.ts's donateArtifact(). */
+  donatedArtifactIds: string[];
+  completed: boolean;
+}
+
+export interface MuseumState {
+  unlocked: boolean;
+  /** One entry per exhibit that has received at least one donation; an exhibit with zero donations simply has no entry here. */
+  exhibits: MuseumExhibitProgress[];
+  /** Every artifact id ever donated to ANY exhibit, world-wide - once donated it can never be donated again (to this exhibit or any other), even if a fresh copy is somehow completed later. */
+  donatedArtifactIds: string[];
+}
+
+// ---------------------------------------------------------------------------
 // Boosters
 // ---------------------------------------------------------------------------
 
@@ -523,6 +542,7 @@ export interface GameState {
   expansions: ExpansionsState;
   zoo: ZooState;
   mine: MineState;
+  museum: MuseumState;
   boosters: BoosterState;
   achievements: AchievementsState;
   dailies: DailiesState;

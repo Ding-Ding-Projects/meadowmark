@@ -132,7 +132,7 @@ export function mountUi(root: HTMLElement, opts: MountUiOptions): MountedUi {
         currentDisposer = renderMinePanel(panelHost, state.mine, opts.host);
         break;
       case "museum":
-        currentDisposer = renderMuseumPanel(panelHost, state.museum);
+        currentDisposer = renderMuseumPanel(panelHost, state.museum, opts.host);
         break;
       case "achievements":
         currentDisposer = renderAchievementsPanel(panelHost, state.achievements, opts.host);
