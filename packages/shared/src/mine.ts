@@ -7,10 +7,10 @@
  * regenerates once per local calendar day.
  */
 
-import type { GameEvent, GameState, MineState, MineTile, MineTileContent } from "./types";
-import type { RngState } from "./rng";
-import { nextFloat, pick, scopedRng } from "./rng";
-import { DAY_MS, HOUR_MS, MAX_OFFLINE_MS, isReady, nextLocalDayBoundary } from "./time";
+import type { GameEvent, GameState, MineState, MineTile, MineTileContent } from "./types.js";
+import type { RngState } from "./rng.js";
+import { nextFloat, pick, scopedRng } from "./rng.js";
+import { DAY_MS, HOUR_MS, MAX_OFFLINE_MS, isReady, nextLocalDayBoundary } from "./time.js";
 
 export const MINE_UNLOCK_LEVEL = 22;
 export const MINE_GRID_WIDTH = 8;

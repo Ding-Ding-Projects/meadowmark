@@ -4,9 +4,9 @@
  * for more slots.
  */
 
-import type { AnimalsState, AnimalTypeId, AnimalUnit, GameEvent, GameState, ResourceBag } from "./types";
-import { addGood, addXp, barnFreeSpace, removeGood } from "./economy";
-import { isReady } from "./time";
+import type { AnimalsState, AnimalTypeId, AnimalUnit, GameEvent, GameState, ResourceBag } from "./types.js";
+import { addGood, addXp, barnFreeSpace, removeGood } from "./economy.js";
+import { isReady } from "./time.js";
 
 export interface AnimalCatalogEntry {
   animalTypeId: AnimalTypeId;

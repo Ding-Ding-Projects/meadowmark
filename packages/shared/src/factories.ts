@@ -14,9 +14,9 @@ import type {
   GameEvent,
   GameState,
   ResourceBag,
-} from "./types";
-import { addGood, addXp, barnFreeSpace, hasAll, removeAll } from "./economy";
-import { isReady } from "./time";
+} from "./types.js";
+import { addGood, addXp, barnFreeSpace, hasAll, removeAll } from "./economy.js";
+import { isReady } from "./time.js";
 
 export const FACTORY_BASE_QUEUE_SLOTS = 2;
 export const FACTORY_MAX_QUEUE_SLOTS = 6;

@@ -5,9 +5,9 @@
  * five opens a chest; a streak counter tracks consecutive completed days.
  */
 
-import type { DailiesState, DailyTask, GameEvent, GameState } from "./types";
-import { createRng, nextInt, seedFromString } from "./rng";
-import { DAY_MS, MAX_OFFLINE_MS, localDateKey, nextLocalDayBoundary } from "./time";
+import type { DailiesState, DailyTask, GameEvent, GameState } from "./types.js";
+import { createRng, nextInt, seedFromString } from "./rng.js";
+import { DAY_MS, MAX_OFFLINE_MS, localDateKey, nextLocalDayBoundary } from "./time.js";
 
 export const DAILY_TASK_COUNT = 5;
 

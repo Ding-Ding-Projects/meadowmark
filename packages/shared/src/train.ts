@@ -5,11 +5,11 @@
  * seeded RNG at departure time so they are fully deterministic on replay.
  */
 
-import type { GameEvent, GameState, GoodId, ResourceBag, TrainState, TrainWagon } from "./types";
-import type { RngState } from "./rng";
-import { nextInt, pickWeighted } from "./rng";
-import { hasAll, removeAll } from "./economy";
-import { MINUTE_MS, isReady } from "./time";
+import type { GameEvent, GameState, GoodId, ResourceBag, TrainState, TrainWagon } from "./types.js";
+import type { RngState } from "./rng.js";
+import { nextInt, pickWeighted } from "./rng.js";
+import { hasAll, removeAll } from "./economy.js";
+import { MINUTE_MS, isReady } from "./time.js";
 
 export const TRAIN_WAGON_COUNT = 3;
 export const TRAIN_MIN_ROUND_TRIP_MS = 20 * MINUTE_MS;

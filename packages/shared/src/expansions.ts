@@ -4,7 +4,7 @@
  * chests, never purchased.
  */
 
-import type { ExpansionsState, GameState, ParcelState } from "./types";
+import type { ExpansionsState, GameState, ParcelState } from "./types.js";
 
 export const EXPANSION_PARCEL_COUNT = 40;
 

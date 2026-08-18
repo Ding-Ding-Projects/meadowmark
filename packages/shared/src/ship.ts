@@ -4,11 +4,11 @@
  * chest with cash, animal cards, and expansion permits.
  */
 
-import type { GameEvent, GameState, GoodId, ShipCrate, ShipState } from "./types";
-import type { RngState } from "./rng";
-import { nextInt, scopedRng } from "./rng";
-import { addXp, removeGood } from "./economy";
-import { DAY_MS, MAX_OFFLINE_MS } from "./time";
+import type { GameEvent, GameState, GoodId, ShipCrate, ShipState } from "./types.js";
+import type { RngState } from "./rng.js";
+import { nextInt, scopedRng } from "./rng.js";
+import { addXp, removeGood } from "./economy.js";
+import { DAY_MS, MAX_OFFLINE_MS } from "./time.js";
 
 export const SHIP_UNLOCK_LEVEL = 18;
 export const SHIP_CRATE_COUNT = 6;

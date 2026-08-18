@@ -4,11 +4,11 @@
  * boosters, and animal cards.
  */
 
-import type { GameEvent, GameState, GoodId, HelicopterOrder, HelicopterState, OrderRequirement } from "./types";
-import type { RngState } from "./rng";
-import { nextInt } from "./rng";
-import { hasAll, removeAll } from "./economy";
-import { MINUTE_MS, isReady } from "./time";
+import type { GameEvent, GameState, GoodId, HelicopterOrder, HelicopterState, OrderRequirement } from "./types.js";
+import type { RngState } from "./rng.js";
+import { nextInt } from "./rng.js";
+import { hasAll, removeAll } from "./economy.js";
+import { MINUTE_MS, isReady } from "./time.js";
 
 export const HELICOPTER_ORDER_COUNT = 2;
 export const HELICOPTER_REFILL_DELAY_MS = 30 * MINUTE_MS;

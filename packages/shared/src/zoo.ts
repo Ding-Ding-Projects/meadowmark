@@ -7,8 +7,8 @@
  * decision rather than a formality.
  */
 
-import type { GameState, GridPosition, ZooEnclosure, ZooHabitat, ZooState } from "./types";
-import { MINUTE_MS } from "./time";
+import type { GameState, GridPosition, ZooEnclosure, ZooHabitat, ZooState } from "./types.js";
+import { MINUTE_MS } from "./time.js";
 
 export const ZOO_UNLOCK_POPULATION = 400;
 export const ZOO_INCOME_INTERVAL_MS = 10 * MINUTE_MS;

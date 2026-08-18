@@ -4,8 +4,8 @@
  * pure: it takes a GameState and returns a new one, never mutates in place.
  */
 
-import type { EconomyState, GameEvent, GameState } from "./types";
-import { MINUTE_MS } from "./time";
+import type { EconomyState, GameEvent, GameState } from "./types.js";
+import { MINUTE_MS } from "./time.js";
 
 /** XP required to go from level L to L+1. */
 export function xpToNext(level: number): number {

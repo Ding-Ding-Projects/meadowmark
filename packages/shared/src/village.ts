@@ -7,10 +7,10 @@
  * the village screen is shown, so nobody mistakes it for a live service.
  */
 
-import type { GameEvent, GameState, RegattaState, RegattaTask, Villager, VillageState, VillagerRequest } from "./types";
-import type { RngState } from "./rng";
-import { createRng, nextInt, pick, scopedRng, seedFromString } from "./rng";
-import { HOUR_MS, MAX_OFFLINE_MS, boundariesElapsed, localWeekKey, isReady } from "./time";
+import type { GameEvent, GameState, RegattaState, RegattaTask, Villager, VillageState, VillagerRequest } from "./types.js";
+import type { RngState } from "./rng.js";
+import { createRng, nextInt, pick, scopedRng, seedFromString } from "./rng.js";
+import { HOUR_MS, MAX_OFFLINE_MS, boundariesElapsed, localWeekKey, isReady } from "./time.js";
 
 export const LOCAL_ONLY_NOTICE =
   "This village is entirely local. The villagers here are offline characters built into the game, not other players - " +

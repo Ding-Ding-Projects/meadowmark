@@ -6,11 +6,11 @@
  * costs 1 cash.
  */
 
-import type { GameEvent, GameState, GoodId, OrderRequirement, OrderSlot, OrdersState } from "./types";
-import type { RngState } from "./rng";
-import { nextInt, pickWeighted } from "./rng";
-import { addXp, hasAll, removeAll } from "./economy";
-import { MINUTE_MS, isReady } from "./time";
+import type { GameEvent, GameState, GoodId, OrderRequirement, OrderSlot, OrdersState } from "./types.js";
+import type { RngState } from "./rng.js";
+import { nextInt, pickWeighted } from "./rng.js";
+import { addXp, hasAll, removeAll } from "./economy.js";
+import { MINUTE_MS, isReady } from "./time.js";
 
 export const ORDER_BOARD_SIZE = 6;
 export const ORDER_REFILL_DELAY_MS = 3 * MINUTE_MS;

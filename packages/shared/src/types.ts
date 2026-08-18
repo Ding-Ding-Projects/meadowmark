@@ -9,7 +9,7 @@
  * The engine renders state; it never owns state.
  */
 
-import type { RngState } from "./rng";
+import type { RngState } from "./rng.js";
 
 // ---------------------------------------------------------------------------
 // Primitive ids

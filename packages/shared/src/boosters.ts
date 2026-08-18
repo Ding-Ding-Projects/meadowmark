@@ -6,8 +6,8 @@
  * module or any other.
  */
 
-import type { ActiveBooster, BoosterKind, BoosterState, GameEvent, GameState } from "./types";
-import { isReady } from "./time";
+import type { ActiveBooster, BoosterKind, BoosterState, GameEvent, GameState } from "./types.js";
+import { isReady } from "./time.js";
 
 export const BOOSTER_DEFAULT_DURATIONS_MS: Record<BoosterKind, number> = {
   growSpeed2x: 30 * 60 * 1000,

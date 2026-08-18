@@ -8,9 +8,9 @@
  * grid cells with no footprint restrictions beyond collision.
  */
 
-import type { BuildingTypeId, GameEvent, GameState, GridPosition, PlacedBuilding, ResourceBag, TownState } from "./types";
-import { hasAll, removeAll } from "./economy";
-import { isReady } from "./time";
+import type { BuildingTypeId, GameEvent, GameState, GridPosition, PlacedBuilding, ResourceBag, TownState } from "./types.js";
+import { hasAll, removeAll } from "./economy.js";
+import { isReady } from "./time.js";
 
 export const TOWN_GRID_WIDTH = 40;
 export const TOWN_GRID_HEIGHT = 40;

@@ -7,7 +7,7 @@
  * through.
  */
 
-import type { AchievementId, AchievementsState, GameEvent, GameState } from "./types";
+import type { AchievementId, AchievementsState, GameEvent, GameState } from "./types.js";
 
 export interface AchievementTier {
   threshold: number;

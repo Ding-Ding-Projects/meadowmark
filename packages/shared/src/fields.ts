@@ -13,9 +13,9 @@ import type {
   PlantAllResult,
   Plot,
   ResourceBag,
-} from "./types";
-import { addGood, addXp, barnFreeSpace } from "./economy";
-import { isReady } from "./time";
+} from "./types.js";
+import { addGood, addXp, barnFreeSpace } from "./economy.js";
+import { isReady } from "./time.js";
 
 export const STARTING_PLOT_COUNT = 6;
 export const MAX_PLOT_COUNT = 60;

@@ -7,21 +7,21 @@
  * independently reviewable transform from version N to N+1.
  */
 
-import type { GameState } from "./types";
-import { createRng, seedFromString } from "./rng";
-import { createInitialFields } from "./fields";
-import { createInitialTown } from "./town";
-import { createInitialExpansions } from "./expansions";
-import { createInitialZoo } from "./zoo";
-import { createInitialMine } from "./mine";
-import { createInitialBoosters } from "./boosters";
-import { createInitialAchievements } from "./achievements";
-import { createInitialDailies, type DailyTaskTemplate } from "./dailies";
-import { createInitialVillage, type RegattaTaskTemplate } from "./village";
-import { createEmptyOrderBoard } from "./orders";
-import { createEmptyTrain } from "./train";
-import { createEmptyHelicopter } from "./helicopter";
-import { createEmptyShip } from "./ship";
+import type { GameState } from "./types.js";
+import { createRng, seedFromString } from "./rng.js";
+import { createInitialFields } from "./fields.js";
+import { createInitialTown } from "./town.js";
+import { createInitialExpansions } from "./expansions.js";
+import { createInitialZoo } from "./zoo.js";
+import { createInitialMine } from "./mine.js";
+import { createInitialBoosters } from "./boosters.js";
+import { createInitialAchievements } from "./achievements.js";
+import { createInitialDailies, type DailyTaskTemplate } from "./dailies.js";
+import { createInitialVillage, type RegattaTaskTemplate } from "./village.js";
+import { createEmptyOrderBoard } from "./orders.js";
+import { createEmptyTrain } from "./train.js";
+import { createEmptyHelicopter } from "./helicopter.js";
+import { createEmptyShip } from "./ship.js";
 
 export const CURRENT_SCHEMA_VERSION = 1;
 

@@ -28,18 +28,18 @@
  * go completely untested.
  */
 
-import { newGame, type NewGameOptions } from "./save";
-import { tick, type TickConfig } from "./offline";
-import { DAY_MS, MINUTE_MS } from "./time";
-import { scopedRng } from "./rng";
-import type { GameState } from "./types";
-import type { DailyTaskTemplate } from "./dailies";
-import type { RegattaTaskTemplate } from "./village";
-import type { OrderableGood } from "./orders";
-import type { HeliOrderableGood } from "./helicopter";
-import type { ShippableGood } from "./ship";
-import { generateMineGrid } from "./mine";
-import { rollShipWindow } from "./ship";
+import { newGame, type NewGameOptions } from "./save.js";
+import { tick, type TickConfig } from "./offline.js";
+import { DAY_MS, MINUTE_MS } from "./time.js";
+import { scopedRng } from "./rng.js";
+import type { GameState } from "./types.js";
+import type { DailyTaskTemplate } from "./dailies.js";
+import type { RegattaTaskTemplate } from "./village.js";
+import type { OrderableGood } from "./orders.js";
+import type { HeliOrderableGood } from "./helicopter.js";
+import type { ShippableGood } from "./ship.js";
+import { generateMineGrid } from "./mine.js";
+import { rollShipWindow } from "./ship.js";
 
 const FIXED_SEED = 1234567890;
 // A deliberately non-midnight, non-round instant, so day/window/interval

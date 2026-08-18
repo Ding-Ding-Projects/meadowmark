@@ -14,23 +14,23 @@
  * called, only to what `now` ended up being.
  */
 
-import type { BuildingTypeId, GameEvent, GameState, TickResult } from "./types";
-import type { RngState } from "./rng";
-import { reconcileEnergy } from "./economy";
-import { tickAnimals } from "./animals";
-import { tickFactories } from "./factories";
-import { tickFields } from "./fields";
-import { tickBoosters } from "./boosters";
-import { type OrderableGood, tickOrders } from "./orders";
-import { tickTrain } from "./train";
-import { type HeliOrderableGood, tickHelicopter } from "./helicopter";
-import { type ShippableGood, tickShip } from "./ship";
-import { type BuildingCatalogEntry, tickTown } from "./town";
-import { maybeUnlockZoo } from "./zoo";
-import { maybeUnlockMine, tickMine } from "./mine";
-import { type DailyTaskTemplate, tickDailies } from "./dailies";
-import { type RegattaTaskTemplate, tickVillage } from "./village";
-import { MAX_OFFLINE_MS } from "./time";
+import type { BuildingTypeId, GameEvent, GameState, TickResult } from "./types.js";
+import type { RngState } from "./rng.js";
+import { reconcileEnergy } from "./economy.js";
+import { tickAnimals } from "./animals.js";
+import { tickFactories } from "./factories.js";
+import { tickFields } from "./fields.js";
+import { tickBoosters } from "./boosters.js";
+import { type OrderableGood, tickOrders } from "./orders.js";
+import { tickTrain } from "./train.js";
+import { type HeliOrderableGood, tickHelicopter } from "./helicopter.js";
+import { type ShippableGood, tickShip } from "./ship.js";
+import { type BuildingCatalogEntry, tickTown } from "./town.js";
+import { maybeUnlockZoo } from "./zoo.js";
+import { maybeUnlockMine, tickMine } from "./mine.js";
+import { type DailyTaskTemplate, tickDailies } from "./dailies.js";
+import { type RegattaTaskTemplate, tickVillage } from "./village.js";
+import { MAX_OFFLINE_MS } from "./time.js";
 
 /**
  * Content catalogs needed by the subsystems whose refills/rolls depend on
