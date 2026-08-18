@@ -1,0 +1,22 @@
+{
+  "name": "@meadowmark/engine",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Meadowmark's real-time 3D renderer: a fully generative low-poly diorama built on three.js, with zero external art assets.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -b",
+    "gen-meshes": "tsx ../../tools/gen-meshes/generate.ts"
+  },
+  "dependencies": {
+    "three": "^0.180.0"
+  },
+  "devDependencies": {
+    "@types/three": "^0.180.0",
+    "typescript": "^5.9.2",
+    "tsx": "^4.19.0"
+  }
+}
