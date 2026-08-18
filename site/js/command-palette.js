@@ -31,7 +31,19 @@
       { id: "set-accent", title: "Settings — Accent colour", titleYue: "設定 — 主色", anchor: "appearance" },
       { id: "set-font", title: "Settings — Font", titleYue: "設定 — 字體", anchor: "appearance" },
       { id: "set-reset", title: "Settings — Reset everything", titleYue: "設定 — 全部重設", anchor: "appearance" },
-    ].forEach((s) => index.push({ kind: "setting", title: s.title, titleYue: s.titleYue, path: "Settings", href: rootPrefix + "settings.html#" + s.anchor }));
+      { id: "cap-status", title: "Local tools — Release and browser status", titleYue: "本機工具 — 版本同瀏覽器狀態", href: "capabilities.html#cap-status" },
+      { id: "cap-vocabulary", title: "Local tools — Personal vocabulary JSON", titleYue: "本機工具 — 個人詞彙 JSON", href: "capabilities.html#cap-identity" },
+      { id: "cap-schedule", title: "Local tools — Scheduled appearance", titleYue: "本機工具 — 排程外觀", href: "capabilities.html#cap-identity" },
+      { id: "cap-logo", title: "Local tools — Logo customization", titleYue: "本機工具 — 標誌自訂", href: "capabilities.html#cap-identity" },
+      { id: "cap-converter", title: "Local tools — File converter", titleYue: "本機工具 — 檔案轉換器", href: "capabilities.html#cap-tools" },
+      { id: "cap-ollama", title: "Local tools — Ollama browser boundary", titleYue: "本機工具 — Ollama 瀏覽器限制", href: "capabilities.html#cap-tools" },
+      { id: "cap-locks", title: "Local tools — Toy locks and Support Tickets", titleYue: "本機工具 — 玩具鎖同本機支援票", href: "capabilities.html#cap-safety" },
+      { id: "cap-auth", title: "Local tools — TOTP authenticator", titleYue: "本機工具 — TOTP 驗證器", href: "capabilities.html#cap-safety" },
+      { id: "cap-history", title: "Local tools — History, exports, and notifications", titleYue: "本機工具 — 歷史、匯出同通知", href: "capabilities.html#cap-workspace" },
+    ].forEach((s) => index.push({ kind: "setting", title: s.title, titleYue: s.titleYue, path: s.href ? "Local tools" : "Settings", href: rootPrefix + (s.href || ("settings.html#" + s.anchor)) }));
+    document.querySelectorAll("[data-command-label]").forEach((node, position) => {
+      index.push({ kind: "element", title: node.dataset.commandLabel, titleYue: "", path: document.title, href: location.pathname + location.hash, target: node, position });
+    });
   }
 
   function score(item, q) {
@@ -75,6 +87,7 @@
       input.placeholder = window.MMStrings ? MMStrings.get("palette.placeholder", MMI18n.get().lang, MMI18n.get().funnyEn) : "Search…";
       inputWrap.appendChild(input);
       el.appendChild(inputWrap);
+      const paletteMatcher = window.MMRegexBuilder ? MMRegexBuilder.attach(input, {}) : null;
 
       const results = document.createElement("div");
       results.className = "mm-palette-results";
@@ -98,7 +111,7 @@
 
       function draw() {
         const q = input.value.trim().toLowerCase();
-        const matches = q ? index.filter((i) => score(i, q)) : index;
+        const matches = paletteMatcher ? index.filter((i) => paletteMatcher.matches(i.title + " " + (i.titleYue || "") + " " + i.path)) : (q ? index.filter((i) => score(i, q)) : index);
         results.innerHTML = "";
         selectedIdx = Math.min(selectedIdx, Math.max(0, matches.length - 1));
         if (!matches.length) {
@@ -127,6 +140,14 @@
 
       function select(m) {
         close();
+        if (m.target && document.contains(m.target)) {
+          m.target.scrollIntoView({ behavior: "smooth", block: "center" });
+          m.target.classList.add("mm-highlight-flash");
+          if (!m.target.matches('a,button,input,select,textarea,[tabindex]')) m.target.tabIndex = -1;
+          m.target.focus();
+          setTimeout(() => m.target.classList.remove("mm-highlight-flash"), 1500);
+          return;
+        }
         const [path, anchor] = m.href.split("#");
         const targetIsHere = window.location.pathname.endsWith(path.replace(/^\.*\//, "/"));
         if (anchor && targetIsHere) {
@@ -149,7 +170,7 @@
         else if (e.key === "ArrowUp") { e.preventDefault(); selectedIdx = Math.max(0, selectedIdx - 1); draw(); }
         else if (e.key === "Enter") {
           const q = input.value.trim().toLowerCase();
-          const matches = q ? index.filter((i) => score(i, q)) : index;
+          const matches = paletteMatcher ? index.filter((i) => paletteMatcher.matches(i.title + " " + (i.titleYue || "") + " " + i.path)) : (q ? index.filter((i) => score(i, q)) : index);
           if (matches[selectedIdx]) select(matches[selectedIdx]);
         }
       });

@@ -1,6 +1,28 @@
 {
-  "published": false,
-  "tag": null,
-  "assetUrl": null,
-  "note": "Flip published to true and fill tag/assetUrl once a real GitHub Release with a verified installer asset exists. Never guess assetUrl — copy it from the published release's own asset list."
+  "schemaVersion": 2,
+  "currentBaseline": {
+    "published": true,
+    "tag": "v0.1.0-21",
+    "targetCommit": "6e7760b993ad07356efe4b641220578b267fe807",
+    "publishedAt": "2026-08-18T04:49:34Z",
+    "releaseUrl": "https://github.com/Ding-Ding-Projects/meadowmark/releases/tag/v0.1.0-21",
+    "installer": {
+      "name": "Meadowmark-Setup-0.1.0.exe",
+      "assetUrl": "https://github.com/Ding-Ding-Projects/meadowmark/releases/download/v0.1.0-21/Meadowmark-Setup-0.1.0.exe",
+      "size": 135971840,
+      "sha256": "bc63fff4f39b0d9b530ac76302540911f4a02ff31f4d6083ee2f49382816a245",
+      "unsigned": true
+    },
+    "updateAssets": [
+      { "name": "RELEASES", "size": 81, "sha256": "098546c094fae35cdc51946663652795070412afad3de63882789842e8a3d208" },
+      { "name": "meadowmark-0.1.0-full.nupkg", "size": 135257445, "sha256": "c705151e586eb9e371520ac33a86cd0a4a281004a89da5df68097c2a89292e14" }
+    ]
+  },
+  "pendingRelease": {
+    "label": "Next release pending",
+    "published": false,
+    "tag": null,
+    "assetUrl": null,
+    "note": "Site parity work is in progress. No new tag, installer, or release has been verified for this pass yet; v0.1.0-21 remains the latest downloadable historical baseline."
+  }
 }
