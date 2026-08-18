@@ -25,6 +25,7 @@ and run it. Windows will warn that the publisher is unknown — click
 ## Contents
 
 - [Building from source](#building-from-source)
+- [Runtime evidence](#runtime-evidence)
 - [Project layout](#project-layout)
 - [Line count](#line-count)
 - [Contributing](#contributing)
@@ -80,6 +81,15 @@ is permanently disabled for this project — see `electron-builder.yml`.
 - Node.js 20+ (the one-click scripts install this for you)
 
 </details>
+
+## Runtime evidence
+
+The packaged Squirrel.Windows build was installed and launched on the hidden
+desktop from commit `c328d7d`. This capture is the real app surface: terrain
+tiles, field beds, the readable Wheat selector, and the corrected navigation
+rail are visible in the built artifact.
+
+![Packaged Meadowmark showing terrain tiles and field beds](docs/assets/captures/meadowmark-packaged-terrain-fields.png)
 
 ## Project layout
 
