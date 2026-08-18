@@ -639,7 +639,7 @@ export function stateToEngineView(state: GameState, now: number): GameStateView 
     tiles: state.terrain
       ? state.terrain.tiles.map((t, i) => ({
           position: { x: i % state.terrain.gridWidth, y: Math.floor(i / state.terrain.gridWidth) },
-          terrain: t,
+          terrain: t.kind,
         }))
       : buildTiles(state.town.gridWidth, state.town.gridHeight, soilTiles, waterTiles),
     buildings: [...buildings, ...zooBuildings, ...factoryBuildings, barnBuilding],
