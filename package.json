@@ -4,6 +4,7 @@
   "private": true,
   "description": "Meadowmark - a 3D town-and-farm building game for Windows. Grow, produce, deliver, and build a town. Electron + TypeScript + three.js, fully offline, and nothing in it is ever for sale.",
   "license": "MIT",
+  "author": "Ding-Ding Projects",
   "workspaces": [
     "packages/shared",
     "packages/engine",

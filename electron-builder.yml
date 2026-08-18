@@ -1,0 +1,53 @@
+# electron-builder configuration for Meadowmark.
+#
+# Windows only, Squirrel.Windows only. Meadowmark is free with no
+# purchases of any kind, so there is nothing to gate behind a signed
+# release channel -- but more importantly: CODE SIGNING IS PERMANENTLY
+# PROHIBITED FOR THIS PROJECT. Never request, generate, store, or invoke a
+# code-signing certificate or signer here. The three signing-related
+# fields below are set to `false` explicitly, on purpose, forever -- do
+# not "fix" this by re-enabling them, and do not silently discover a
+# certificate and wire it in. An unsigned Setup.exe will trigger Windows'
+# unknown-publisher / SmartScreen warning; that is expected and the
+# README says so.
+
+appId: com.dingdingprojects.meadowmark
+productName: Meadowmark
+copyright: Copyright (c) Ding-Ding Projects
+
+directories:
+  output: release
+  buildResources: build-resources
+
+files:
+  - packages/app/dist/**/*
+  - packages/ui/dist/**/*
+  - package.json
+  - "!**/*.ts"
+  - "!**/*.map"
+
+extraMetadata:
+  main: packages/app/dist/main.cjs
+
+# Permanent no-signing policy. See the module comment above.
+forceCodeSigning: false
+signExecutable: false
+signAndEditExecutable: false
+
+win:
+  target:
+    - target: squirrel
+  # No icon is committed yet; the app-logo-customization feature (see
+  # docs/inventory/inventory.json) owns generating a real one. Leaving
+  # this unset rather than pointing at a placeholder avoids shipping a
+  # framework-default icon that later silently becomes "the" icon.
+  artifactName: "${productName}-Setup-${version}.${ext}"
+
+squirrelWindows:
+  # electron-builder-squirrel-windows 26.x rejects the legacy `setupExe` /
+  # `noMsi` keys with a schema-validation error; `artifactName` is the
+  # supported way to control the generated setup executable's name.
+  artifactName: "${productName}-Setup-${version}.${ext}"
+  # No remote update feed is published yet; packages/app/src/identity.ts
+  # carries a placeholder UPDATE_FEED_URL_PLACEHOLDER for when one is
+  # wired up. Leaving `remoteReleases` unset here until then.
