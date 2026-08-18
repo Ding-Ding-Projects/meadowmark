@@ -1,0 +1,291 @@
+{
+  "$schema": "./inventory.schema.json",
+  "notes": [
+    "This is a HAND-WRITTEN completeness inventory, not a generated one. It lists every canonical surface-contract feature the project must eventually carry, one row per feature.",
+    "Almost every row below starts as \"missing\" at this point in the project. That is correct and honest, not a failure: this file is written before most of the app exists, so the inventory can track completion from day one instead of being reverse-engineered later.",
+    "A row's status may only be \"done\" once its implementation, article, tests, and capture fields all point at real, existing paths. tools/inventory/check.mjs enforces this for the implementation field; see that script for what it actually checks.",
+    "Do not delete a row because the feature is hard, out of scope for now, or not yet started. Update its status, and its implementation/article/tests/capture fields, as work lands."
+  ],
+  "features": [
+    {
+      "id": "language-modes",
+      "title": "Language modes (English / Cantonese / Bilingual)",
+      "surface": "every user-facing app and page",
+      "status": "missing",
+      "implementation": null,
+      "article": null,
+      "tests": null,
+      "capture": null
+    },
+    {
+      "id": "funny-level-sliders",
+      "title": "Per-language funny-level sliders (1-5, English and Cantonese independently)",
+      "surface": "settings",
+      "status": "missing",
+      "implementation": null,
+      "article": null,
+      "tests": null,
+      "capture": null
+    },
+    {
+      "id": "emoji-toggle",
+      "title": "Show emojis in dialogs and message boxes toggle",
+      "surface": "settings",
+      "status": "missing",
+      "implementation": null,
+      "article": null,
+      "tests": null,
+      "capture": null
+    },
+    {
+      "id": "school-mode",
+      "title": "School mode (universal, shared credential, forces English)",
+      "surface": "every user-facing app and page",
+      "status": "missing",
+      "implementation": null,
+      "article": null,
+      "tests": null,
+      "capture": null
+    },
+    {
+      "id": "narrator",
+      "title": "Spoken narrator with per-language voice pickers",
+      "surface": "every user-facing app",
+      "status": "missing",
+      "implementation": null,
+      "article": null,
+      "tests": null,
+      "capture": null
+    },
+    {
+      "id": "scheduled-settings",
+      "title": "Scheduled language/appearance/external settings sources",
+      "surface": "settings",
+      "status": "missing",
+      "implementation": null,
+      "article": null,
+      "tests": null,
+      "capture": null
+    },
+    {
+      "id": "regex-builders",
+      "title": "Anchored full regex builder on every search field, dropdown, and context menu",
+      "surface": "every search field",
+      "status": "missing",
+      "implementation": null,
+      "article": null,
+      "tests": null,
+      "capture": null
+    },
+    {
+      "id": "notification-centre",
+      "title": "Non-blocking notifications with a reviewable history/centre",
+      "surface": "every user-facing app",
+      "status": "missing",
+      "implementation": null,
+      "article": null,
+      "tests": null,
+      "capture": null
+    },
+    {
+      "id": "material3-appearance-editors",
+      "title": "Material Design 3 appearance system with per-element Edit appearance editors",
+      "surface": "every rendered element",
+      "status": "missing",
+      "implementation": null,
+      "article": null,
+      "tests": null,
+      "capture": null
+    },
+    {
+      "id": "tabs-groups-searches",
+      "title": "Browser-style tabbed navigation, tab groups, and the four tab-discovery searches",
+      "surface": "every user-facing app and page",
+      "status": "missing",
+      "implementation": null,
+      "article": null,
+      "tests": null,
+      "capture": null
+    },
+    {
+      "id": "landing-page-offline-docs",
+      "title": "Material Design 3 landing page and bundled offline documentation browser",
+      "surface": "GitHub Pages site + in-app docs",
+      "status": "missing",
+      "implementation": null,
+      "article": null,
+      "tests": null,
+      "capture": null
+    },
+    {
+      "id": "command-palette",
+      "title": "Command palette (Ctrl+Shift+F) with teleport-to-element results",
+      "surface": "every user-facing app and page",
+      "status": "missing",
+      "implementation": null,
+      "article": null,
+      "tests": null,
+      "capture": null
+    },
+    {
+      "id": "destructive-action-confirmation",
+      "title": "Two-key destructive-action super-confirmation gate",
+      "surface": "every destructive action",
+      "status": "missing",
+      "implementation": null,
+      "article": null,
+      "tests": null,
+      "capture": null
+    },
+    {
+      "id": "local-history",
+      "title": "Local Git-backed version history for saves, settings, and other user records",
+      "surface": "app",
+      "status": "missing",
+      "implementation": null,
+      "article": null,
+      "tests": null,
+      "capture": null
+    },
+    {
+      "id": "changelog-viewer",
+      "title": "In-app changelog viewer with date filter, search, and per-entry commit links",
+      "surface": "app",
+      "status": "missing",
+      "implementation": null,
+      "article": null,
+      "tests": null,
+      "capture": null
+    },
+    {
+      "id": "external-editor-handoff",
+      "title": "Open in external editor (VS Code) handoff for exports",
+      "surface": "app",
+      "status": "missing",
+      "implementation": null,
+      "article": null,
+      "tests": null,
+      "capture": null
+    },
+    {
+      "id": "exports",
+      "title": "Export every record/view/list/log/document in every applicable format",
+      "surface": "every list and record",
+      "status": "missing",
+      "implementation": null,
+      "article": null,
+      "tests": null,
+      "capture": null
+    },
+    {
+      "id": "bulk-actions",
+      "title": "Bulk actions on every list, table, grid, and collection",
+      "surface": "every list and collection",
+      "status": "missing",
+      "implementation": null,
+      "article": null,
+      "tests": null,
+      "capture": null
+    },
+    {
+      "id": "accessibility",
+      "title": "Keyboard reachability, focus, roles/names/states, contrast, reduced-motion",
+      "surface": "every user-facing surface",
+      "status": "missing",
+      "implementation": null,
+      "article": null,
+      "tests": null,
+      "capture": null
+    },
+    {
+      "id": "responsive-sizing",
+      "title": "No clipping/truncation at supported window sizes, scales, densities, languages",
+      "surface": "every user-facing surface",
+      "status": "missing",
+      "implementation": null,
+      "article": null,
+      "tests": null,
+      "capture": null
+    },
+    {
+      "id": "personal-vocabulary-upload",
+      "title": "Local personal-vocabulary JSON upload control",
+      "surface": "settings",
+      "status": "missing",
+      "implementation": null,
+      "article": null,
+      "tests": null,
+      "capture": null
+    },
+    {
+      "id": "toy-locks-support-tickets",
+      "title": "Per-element toy locks (password/TOTP) and the Support Tickets recovery route",
+      "surface": "every rendered element",
+      "status": "missing",
+      "implementation": null,
+      "article": null,
+      "tests": null,
+      "capture": null
+    },
+    {
+      "id": "unlock-ladder",
+      "title": "The unlock ladder (dim sum -> sums -> whack-a-mole -> clock)",
+      "surface": "every surface that can lock a user out",
+      "status": "missing",
+      "implementation": null,
+      "article": null,
+      "tests": null,
+      "capture": null
+    },
+    {
+      "id": "shared-link-embed-graphic",
+      "title": "Product-specific Open Graph / shared-link embed graphic",
+      "surface": "repository + every page",
+      "status": "missing",
+      "implementation": null,
+      "article": null,
+      "tests": null,
+      "capture": null
+    },
+    {
+      "id": "app-logo-customization",
+      "title": "App-logo customization (presets + local custom upload + safe conversion)",
+      "surface": "settings",
+      "status": "missing",
+      "implementation": null,
+      "article": null,
+      "tests": null,
+      "capture": null
+    },
+    {
+      "id": "file-conversion",
+      "title": "Universal local file converter",
+      "surface": "app",
+      "status": "missing",
+      "implementation": null,
+      "article": null,
+      "tests": null,
+      "capture": null
+    },
+    {
+      "id": "ollama-suite-manager",
+      "title": "Universal local Ollama suite manager",
+      "surface": "app",
+      "status": "missing",
+      "implementation": null,
+      "article": null,
+      "tests": null,
+      "capture": null
+    },
+    {
+      "id": "status-reporting",
+      "title": "Live status reporting surface",
+      "surface": "app + project",
+      "status": "missing",
+      "implementation": null,
+      "article": null,
+      "tests": null,
+      "capture": null
+    }
+  ]
+}
