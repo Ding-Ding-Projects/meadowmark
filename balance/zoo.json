@@ -119,6 +119,186 @@
       "cardsNeeded": 9,
       "baseIncomeCoins": 33,
       "baseIncomeZooBucks": 2
+    },
+    {
+      "speciesId": "giraffe",
+      "displayName": "Giraffe",
+      "iconId": "animal_giraffe",
+      "habitat": "grass",
+      "family": "herbivore",
+      "cardsNeeded": 12,
+      "baseIncomeCoins": 46,
+      "baseIncomeZooBucks": 2
+    },
+    {
+      "speciesId": "rhino",
+      "displayName": "Rhino",
+      "iconId": "animal_rhino",
+      "habitat": "grass",
+      "family": "herbivore",
+      "cardsNeeded": 16,
+      "baseIncomeCoins": 62,
+      "baseIncomeZooBucks": 3
+    },
+    {
+      "speciesId": "cheetah",
+      "displayName": "Cheetah",
+      "iconId": "animal_cheetah",
+      "habitat": "grass",
+      "family": "big-cat",
+      "cardsNeeded": 15,
+      "baseIncomeCoins": 58,
+      "baseIncomeZooBucks": 3
+    },
+    {
+      "speciesId": "hyena",
+      "displayName": "Hyena",
+      "iconId": "animal_hyena",
+      "habitat": "grass",
+      "family": "predator",
+      "cardsNeeded": 13,
+      "baseIncomeCoins": 50,
+      "baseIncomeZooBucks": 2
+    },
+    {
+      "speciesId": "ostrich",
+      "displayName": "Ostrich",
+      "iconId": "animal_ostrich",
+      "habitat": "grass",
+      "family": "bird",
+      "cardsNeeded": 11,
+      "baseIncomeCoins": 42,
+      "baseIncomeZooBucks": 2
+    },
+    {
+      "speciesId": "hippo",
+      "displayName": "Hippo",
+      "iconId": "animal_hippo",
+      "habitat": "water",
+      "family": "aquatic",
+      "cardsNeeded": 14,
+      "baseIncomeCoins": 54,
+      "baseIncomeZooBucks": 3
+    },
+    {
+      "speciesId": "crocodile",
+      "displayName": "Crocodile",
+      "iconId": "animal_crocodile",
+      "habitat": "water",
+      "family": "predator",
+      "cardsNeeded": 15,
+      "baseIncomeCoins": 58,
+      "baseIncomeZooBucks": 3
+    },
+    {
+      "speciesId": "dolphin",
+      "displayName": "Dolphin",
+      "iconId": "animal_dolphin",
+      "habitat": "water",
+      "family": "aquatic",
+      "cardsNeeded": 13,
+      "baseIncomeCoins": 50,
+      "baseIncomeZooBucks": 2
+    },
+    {
+      "speciesId": "swan",
+      "displayName": "Swan",
+      "iconId": "animal_swan",
+      "habitat": "water",
+      "family": "bird",
+      "cardsNeeded": 10,
+      "baseIncomeCoins": 38,
+      "baseIncomeZooBucks": 2
+    },
+    {
+      "speciesId": "beaver",
+      "displayName": "Beaver",
+      "iconId": "animal_beaver",
+      "habitat": "water",
+      "family": "aquatic",
+      "cardsNeeded": 11,
+      "baseIncomeCoins": 40,
+      "baseIncomeZooBucks": 2
+    },
+    {
+      "speciesId": "mountain_lion",
+      "displayName": "Mountain Lion",
+      "iconId": "animal_mountain_lion",
+      "habitat": "rock",
+      "family": "big-cat",
+      "cardsNeeded": 16,
+      "baseIncomeCoins": 60,
+      "baseIncomeZooBucks": 3
+    },
+    {
+      "speciesId": "bighorn_sheep",
+      "displayName": "Bighorn Sheep",
+      "iconId": "animal_bighorn_sheep",
+      "habitat": "rock",
+      "family": "herbivore",
+      "cardsNeeded": 10,
+      "baseIncomeCoins": 38,
+      "baseIncomeZooBucks": 2
+    },
+    {
+      "speciesId": "condor",
+      "displayName": "Condor",
+      "iconId": "animal_condor",
+      "habitat": "rock",
+      "family": "bird",
+      "cardsNeeded": 12,
+      "baseIncomeCoins": 46,
+      "baseIncomeZooBucks": 2
+    },
+    {
+      "speciesId": "lynx",
+      "displayName": "Lynx",
+      "iconId": "animal_lynx",
+      "habitat": "rock",
+      "family": "predator",
+      "cardsNeeded": 13,
+      "baseIncomeCoins": 50,
+      "baseIncomeZooBucks": 2
+    },
+    {
+      "speciesId": "walrus",
+      "displayName": "Walrus",
+      "iconId": "animal_walrus",
+      "habitat": "arctic",
+      "family": "aquatic",
+      "cardsNeeded": 15,
+      "baseIncomeCoins": 58,
+      "baseIncomeZooBucks": 3
+    },
+    {
+      "speciesId": "snowy_owl",
+      "displayName": "Snowy Owl",
+      "iconId": "animal_snowy_owl",
+      "habitat": "arctic",
+      "family": "bird",
+      "cardsNeeded": 11,
+      "baseIncomeCoins": 42,
+      "baseIncomeZooBucks": 2
+    },
+    {
+      "speciesId": "reindeer",
+      "displayName": "Reindeer",
+      "iconId": "animal_reindeer",
+      "habitat": "arctic",
+      "family": "herbivore",
+      "cardsNeeded": 12,
+      "baseIncomeCoins": 46,
+      "baseIncomeZooBucks": 2
+    },
+    {
+      "speciesId": "snow_leopard",
+      "displayName": "Snow Leopard",
+      "iconId": "animal_snow_leopard",
+      "habitat": "arctic",
+      "family": "big-cat",
+      "cardsNeeded": 17,
+      "baseIncomeCoins": 64,
+      "baseIncomeZooBucks": 3
     }
   ]
 }

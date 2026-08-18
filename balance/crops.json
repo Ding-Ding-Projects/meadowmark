@@ -12,6 +12,16 @@
       "sortIndex": 0
     },
     {
+      "id": "barley",
+      "displayName": "Barley",
+      "unlockLevel": 2,
+      "growTimeMs": 180000,
+      "seedCostCoins": 9,
+      "xpReward": 2,
+      "coinReward": 19,
+      "sortIndex": 1
+    },
+    {
       "id": "corn",
       "displayName": "Corn",
       "unlockLevel": 3,
@@ -19,7 +29,27 @@
       "seedCostCoins": 16,
       "xpReward": 2,
       "coinReward": 33,
-      "sortIndex": 1
+      "sortIndex": 2
+    },
+    {
+      "id": "oats",
+      "displayName": "Oats",
+      "unlockLevel": 4,
+      "growTimeMs": 360000,
+      "seedCostCoins": 21,
+      "xpReward": 3,
+      "coinReward": 43,
+      "sortIndex": 3
+    },
+    {
+      "id": "peanut",
+      "displayName": "Peanut",
+      "unlockLevel": 5,
+      "growTimeMs": 480000,
+      "seedCostCoins": 27,
+      "xpReward": 3,
+      "coinReward": 56,
+      "sortIndex": 4
     },
     {
       "id": "carrot",
@@ -29,7 +59,27 @@
       "seedCostCoins": 35,
       "xpReward": 4,
       "coinReward": 73,
-      "sortIndex": 2
+      "sortIndex": 5
+    },
+    {
+      "id": "cucumber",
+      "displayName": "Cucumber",
+      "unlockLevel": 7,
+      "growTimeMs": 780000,
+      "seedCostCoins": 41,
+      "xpReward": 5,
+      "coinReward": 87,
+      "sortIndex": 6
+    },
+    {
+      "id": "lettuce",
+      "displayName": "Lettuce",
+      "unlockLevel": 8,
+      "growTimeMs": 960000,
+      "seedCostCoins": 49,
+      "xpReward": 5,
+      "coinReward": 103,
+      "sortIndex": 7
     },
     {
       "id": "sugarcane",
@@ -39,7 +89,27 @@
       "seedCostCoins": 58,
       "xpReward": 6,
       "coinReward": 122,
-      "sortIndex": 3
+      "sortIndex": 8
+    },
+    {
+      "id": "cabbage",
+      "displayName": "Cabbage",
+      "unlockLevel": 10,
+      "growTimeMs": 1500000,
+      "seedCostCoins": 66,
+      "xpReward": 7,
+      "coinReward": 141,
+      "sortIndex": 9
+    },
+    {
+      "id": "onion",
+      "displayName": "Onion",
+      "unlockLevel": 11,
+      "growTimeMs": 1920000,
+      "seedCostCoins": 75,
+      "xpReward": 8,
+      "coinReward": 162,
+      "sortIndex": 10
     },
     {
       "id": "cotton",
@@ -49,7 +119,17 @@
       "seedCostCoins": 86,
       "xpReward": 9,
       "coinReward": 187,
-      "sortIndex": 4
+      "sortIndex": 11
+    },
+    {
+      "id": "pepper",
+      "displayName": "Pepper",
+      "unlockLevel": 14,
+      "growTimeMs": 2940000,
+      "seedCostCoins": 102,
+      "xpReward": 11,
+      "coinReward": 223,
+      "sortIndex": 12
     },
     {
       "id": "strawberry",
@@ -59,7 +139,17 @@
       "seedCostCoins": 121,
       "xpReward": 13,
       "coinReward": 266,
-      "sortIndex": 5
+      "sortIndex": 13
+    },
+    {
+      "id": "spinach",
+      "displayName": "Spinach",
+      "unlockLevel": 18,
+      "growTimeMs": 4380000,
+      "seedCostCoins": 140,
+      "xpReward": 16,
+      "coinReward": 309,
+      "sortIndex": 14
     },
     {
       "id": "tomato",
@@ -69,7 +159,17 @@
       "seedCostCoins": 161,
       "xpReward": 19,
       "coinReward": 360,
-      "sortIndex": 6
+      "sortIndex": 15
+    },
+    {
+      "id": "apple",
+      "displayName": "Apple",
+      "unlockLevel": 22,
+      "growTimeMs": 6240000,
+      "seedCostCoins": 181,
+      "xpReward": 21,
+      "coinReward": 406,
+      "sortIndex": 16
     },
     {
       "id": "potato",
@@ -79,7 +179,17 @@
       "seedCostCoins": 203,
       "xpReward": 24,
       "coinReward": 458,
-      "sortIndex": 7
+      "sortIndex": 17
+    },
+    {
+      "id": "broccoli",
+      "displayName": "Broccoli",
+      "unlockLevel": 26,
+      "growTimeMs": 8820000,
+      "seedCostCoins": 228,
+      "xpReward": 29,
+      "coinReward": 522,
+      "sortIndex": 18
     },
     {
       "id": "soybean",
@@ -89,7 +199,27 @@
       "seedCostCoins": 257,
       "xpReward": 34,
       "coinReward": 596,
-      "sortIndex": 8
+      "sortIndex": 19
+    },
+    {
+      "id": "sunflower",
+      "displayName": "Sunflower",
+      "unlockLevel": 30,
+      "growTimeMs": 12120000,
+      "seedCostCoins": 280,
+      "xpReward": 38,
+      "coinReward": 653,
+      "sortIndex": 20
+    },
+    {
+      "id": "melon",
+      "displayName": "Melon",
+      "unlockLevel": 32,
+      "growTimeMs": 13620000,
+      "seedCostCoins": 306,
+      "xpReward": 42,
+      "coinReward": 716,
+      "sortIndex": 21
     },
     {
       "id": "rice",
@@ -99,7 +229,17 @@
       "seedCostCoins": 319,
       "xpReward": 44,
       "coinReward": 750,
-      "sortIndex": 9
+      "sortIndex": 22
+    },
+    {
+      "id": "watermelon",
+      "displayName": "Watermelon",
+      "unlockLevel": 36,
+      "growTimeMs": 18360000,
+      "seedCostCoins": 369,
+      "xpReward": 55,
+      "coinReward": 884,
+      "sortIndex": 23
     },
     {
       "id": "pumpkin",
@@ -109,7 +249,27 @@
       "seedCostCoins": 406,
       "xpReward": 63,
       "coinReward": 987,
-      "sortIndex": 10
+      "sortIndex": 24
+    },
+    {
+      "id": "pineapple",
+      "displayName": "Pineapple",
+      "unlockLevel": 40,
+      "growTimeMs": 23760000,
+      "seedCostCoins": 436,
+      "xpReward": 69,
+      "coinReward": 1066,
+      "sortIndex": 25
+    },
+    {
+      "id": "banana",
+      "displayName": "Banana",
+      "unlockLevel": 42,
+      "growTimeMs": 26160000,
+      "seedCostCoins": 468,
+      "xpReward": 75,
+      "coinReward": 1150,
+      "sortIndex": 26
     },
     {
       "id": "chilli",
@@ -119,7 +279,17 @@
       "seedCostCoins": 502,
       "xpReward": 82,
       "coinReward": 1242,
-      "sortIndex": 11
+      "sortIndex": 27
+    },
+    {
+      "id": "mango",
+      "displayName": "Mango",
+      "unlockLevel": 47,
+      "growTimeMs": 32220000,
+      "seedCostCoins": 549,
+      "xpReward": 91,
+      "coinReward": 1365,
+      "sortIndex": 28
     },
     {
       "id": "coffee_bean",
@@ -129,7 +299,17 @@
       "seedCostCoins": 600,
       "xpReward": 101,
       "coinReward": 1500,
-      "sortIndex": 12
+      "sortIndex": 29
+    },
+    {
+      "id": "orange",
+      "displayName": "Orange",
+      "unlockLevel": 53,
+      "growTimeMs": 39420000,
+      "seedCostCoins": 647,
+      "xpReward": 110,
+      "coinReward": 1624,
+      "sortIndex": 30
     },
     {
       "id": "lavender",
@@ -139,7 +319,17 @@
       "seedCostCoins": 698,
       "xpReward": 120,
       "coinReward": 1758,
-      "sortIndex": 13
+      "sortIndex": 31
+    },
+    {
+      "id": "tea_leaf",
+      "displayName": "Tea Leaf",
+      "unlockLevel": 58,
+      "growTimeMs": 45480000,
+      "seedCostCoins": 730,
+      "xpReward": 126,
+      "coinReward": 1841,
+      "sortIndex": 32
     },
     {
       "id": "grape",
@@ -149,7 +339,17 @@
       "seedCostCoins": 797,
       "xpReward": 139,
       "coinReward": 2018,
-      "sortIndex": 14
+      "sortIndex": 33
+    },
+    {
+      "id": "ginger",
+      "displayName": "Ginger",
+      "unlockLevel": 66,
+      "growTimeMs": 53880000,
+      "seedCostCoins": 853,
+      "xpReward": 149,
+      "coinReward": 2160,
+      "sortIndex": 34
     },
     {
       "id": "blueberry",
@@ -159,7 +359,17 @@
       "seedCostCoins": 914,
       "xpReward": 159,
       "coinReward": 2313,
-      "sortIndex": 15
+      "sortIndex": 35
+    },
+    {
+      "id": "cacao_pod",
+      "displayName": "Cacao Pod",
+      "unlockLevel": 72,
+      "growTimeMs": 60240000,
+      "seedCostCoins": 948,
+      "xpReward": 166,
+      "coinReward": 2404,
+      "sortIndex": 36
     },
     {
       "id": "vanilla",
@@ -169,7 +379,27 @@
       "seedCostCoins": 1097,
       "xpReward": 197,
       "coinReward": 2804,
-      "sortIndex": 16
+      "sortIndex": 37
+    },
+    {
+      "id": "olive",
+      "displayName": "Olive",
+      "unlockLevel": 85,
+      "growTimeMs": 80520000,
+      "seedCostCoins": 1202,
+      "xpReward": 219,
+      "coinReward": 3087,
+      "sortIndex": 38
+    },
+    {
+      "id": "saffron",
+      "displayName": "Saffron",
+      "unlockLevel": 95,
+      "growTimeMs": 100620000,
+      "seedCostCoins": 1442,
+      "xpReward": 272,
+      "coinReward": 3743,
+      "sortIndex": 39
     }
   ]
 }

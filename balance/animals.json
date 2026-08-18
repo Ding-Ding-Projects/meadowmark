@@ -60,6 +60,66 @@
       "displayName": "Bee",
       "coinReward": 276,
       "xpReward": 22
+    },
+    {
+      "id": "duck",
+      "level": 34,
+      "productGoodId": "duck_egg",
+      "productionTimeMs": 27300000,
+      "feedCost": 6,
+      "displayName": "Duck",
+      "coinReward": 388,
+      "xpReward": 32
+    },
+    {
+      "id": "turkey",
+      "level": 41,
+      "productGoodId": "turkey_meat",
+      "productionTimeMs": 41400000,
+      "feedCost": 8,
+      "displayName": "Turkey",
+      "coinReward": 546,
+      "xpReward": 46
+    },
+    {
+      "id": "rabbit",
+      "level": 48,
+      "productGoodId": "angora_wool",
+      "productionTimeMs": 62700000,
+      "feedCost": 11,
+      "displayName": "Rabbit",
+      "coinReward": 768,
+      "xpReward": 67
+    },
+    {
+      "id": "alpaca",
+      "level": 55,
+      "productGoodId": "alpaca_fleece",
+      "productionTimeMs": 95100000,
+      "feedCost": 15,
+      "displayName": "Alpaca",
+      "coinReward": 1081,
+      "xpReward": 97
+    },
+    {
+      "id": "horse",
+      "level": 63,
+      "productGoodId": "horse_milk",
+      "productionTimeMs": 153000000,
+      "feedCost": 22,
+      "displayName": "Horse",
+      "coinReward": 1596,
+      "xpReward": 149
+    },
+    {
+      "id": "quail",
+      "level": 71,
+      "productGoodId": "quail_egg",
+      "productionTimeMs": 246180000,
+      "feedCost": 33,
+      "displayName": "Quail",
+      "coinReward": 2358,
+      "xpReward": 227
     }
   ]
 }

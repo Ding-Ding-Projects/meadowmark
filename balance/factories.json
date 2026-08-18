@@ -110,6 +110,86 @@
       "id": "toy_factory",
       "displayName": "Toy Factory",
       "unlockLevel": 32
+    },
+    {
+      "id": "paper_mill",
+      "displayName": "Paper Mill",
+      "unlockLevel": 13
+    },
+    {
+      "id": "pottery",
+      "displayName": "Pottery",
+      "unlockLevel": 19
+    },
+    {
+      "id": "creamery",
+      "displayName": "Creamery",
+      "unlockLevel": 23
+    },
+    {
+      "id": "smokehouse",
+      "displayName": "Smokehouse",
+      "unlockLevel": 25
+    },
+    {
+      "id": "pasta_kitchen",
+      "displayName": "Pasta Kitchen",
+      "unlockLevel": 29
+    },
+    {
+      "id": "glassworks",
+      "displayName": "Glassworks",
+      "unlockLevel": 31
+    },
+    {
+      "id": "juice_bar",
+      "displayName": "Juice Bar",
+      "unlockLevel": 34
+    },
+    {
+      "id": "leatherworks",
+      "displayName": "Leatherworks",
+      "unlockLevel": 37
+    },
+    {
+      "id": "candle_maker",
+      "displayName": "Candle Maker",
+      "unlockLevel": 43
+    },
+    {
+      "id": "cheese_cave",
+      "displayName": "Cheese Cave",
+      "unlockLevel": 46
+    },
+    {
+      "id": "coffee_roastery",
+      "displayName": "Coffee Roastery",
+      "unlockLevel": 51
+    },
+    {
+      "id": "tea_house",
+      "displayName": "Tea House",
+      "unlockLevel": 59
+    },
+    {
+      "id": "brewery",
+      "displayName": "Brewery",
+      "unlockLevel": 61
+    },
+    {
+      "id": "chocolatier",
+      "displayName": "Chocolatier",
+      "unlockLevel": 69
+    },
+    {
+      "id": "distillery",
+      "displayName": "Distillery",
+      "unlockLevel": 78
+    },
+    {
+      "id": "soap_works",
+      "displayName": "Soap Works",
+      "unlockLevel": 85
     }
   ],
   "recipes": [
@@ -723,6 +803,1091 @@
       "unlockLevel": 35,
       "xpReward": 73,
       "coinReward": 435
+    },
+    {
+      "id": "recipe_feed_mill_barley_feed",
+      "factoryTypeId": "feed_mill",
+      "inputs": {
+        "barley": 2
+      },
+      "outputGoodId": "animal_feed",
+      "outputQuantity": 3,
+      "productionTimeMs": 660000,
+      "unlockLevel": 2,
+      "xpReward": 2,
+      "coinReward": 9
+    },
+    {
+      "id": "recipe_mill_oat_flour",
+      "factoryTypeId": "mill",
+      "inputs": {
+        "oats": 2
+      },
+      "outputGoodId": "oat_flour",
+      "outputQuantity": 1,
+      "productionTimeMs": 660000,
+      "unlockLevel": 4,
+      "xpReward": 2,
+      "coinReward": 13
+    },
+    {
+      "id": "recipe_mill_peanut_butter",
+      "factoryTypeId": "mill",
+      "inputs": {
+        "peanut": 3
+      },
+      "outputGoodId": "peanut_butter",
+      "outputQuantity": 1,
+      "productionTimeMs": 660000,
+      "unlockLevel": 5,
+      "xpReward": 4,
+      "coinReward": 23
+    },
+    {
+      "id": "recipe_mill_sunflower_oil",
+      "factoryTypeId": "mill",
+      "inputs": {
+        "sunflower": 3
+      },
+      "outputGoodId": "sunflower_oil",
+      "outputQuantity": 1,
+      "productionTimeMs": 1080000,
+      "unlockLevel": 30,
+      "xpReward": 27,
+      "coinReward": 159
+    },
+    {
+      "id": "recipe_dairy_goat_cheese",
+      "factoryTypeId": "dairy",
+      "inputs": {
+        "goat_milk": 2
+      },
+      "outputGoodId": "goat_cheese",
+      "outputQuantity": 1,
+      "productionTimeMs": 2280000,
+      "unlockLevel": 21,
+      "xpReward": 13,
+      "coinReward": 75
+    },
+    {
+      "id": "recipe_dairy_mare_cheese",
+      "factoryTypeId": "dairy",
+      "inputs": {
+        "horse_milk": 2
+      },
+      "outputGoodId": "mare_cheese",
+      "outputQuantity": 1,
+      "productionTimeMs": 3840000,
+      "unlockLevel": 63,
+      "xpReward": 139,
+      "coinReward": 836
+    },
+    {
+      "id": "recipe_dairy_quail_custard",
+      "factoryTypeId": "dairy",
+      "inputs": {
+        "quail_egg": 2,
+        "milk": 1
+      },
+      "outputGoodId": "quail_custard",
+      "outputQuantity": 1,
+      "productionTimeMs": 4140000,
+      "unlockLevel": 71,
+      "xpReward": 223,
+      "coinReward": 1340
+    },
+    {
+      "id": "recipe_textile_angora_yarn",
+      "factoryTypeId": "textile",
+      "inputs": {
+        "angora_wool": 2
+      },
+      "outputGoodId": "angora_yarn",
+      "outputQuantity": 1,
+      "productionTimeMs": 1320000,
+      "unlockLevel": 48,
+      "xpReward": 58,
+      "coinReward": 346
+    },
+    {
+      "id": "recipe_textile_alpaca_yarn",
+      "factoryTypeId": "textile",
+      "inputs": {
+        "alpaca_fleece": 2
+      },
+      "outputGoodId": "alpaca_yarn",
+      "outputQuantity": 1,
+      "productionTimeMs": 1440000,
+      "unlockLevel": 55,
+      "xpReward": 86,
+      "coinReward": 518
+    },
+    {
+      "id": "recipe_preserves_applesauce",
+      "factoryTypeId": "preserves",
+      "inputs": {
+        "apple": 2,
+        "sugar": 1
+      },
+      "outputGoodId": "applesauce",
+      "outputQuantity": 1,
+      "productionTimeMs": 960000,
+      "unlockLevel": 22,
+      "xpReward": 18,
+      "coinReward": 106
+    },
+    {
+      "id": "recipe_preserves_mango_jam",
+      "factoryTypeId": "preserves",
+      "inputs": {
+        "mango": 2,
+        "sugar": 1
+      },
+      "outputGoodId": "mango_jam",
+      "outputQuantity": 1,
+      "productionTimeMs": 1320000,
+      "unlockLevel": 47,
+      "xpReward": 38,
+      "coinReward": 227
+    },
+    {
+      "id": "recipe_preserves_marmalade",
+      "factoryTypeId": "preserves",
+      "inputs": {
+        "orange": 2,
+        "sugar": 1
+      },
+      "outputGoodId": "marmalade",
+      "outputQuantity": 1,
+      "productionTimeMs": 1380000,
+      "unlockLevel": 53,
+      "xpReward": 45,
+      "coinReward": 268
+    },
+    {
+      "id": "recipe_snack_pickles",
+      "factoryTypeId": "snack",
+      "inputs": {
+        "cucumber": 3
+      },
+      "outputGoodId": "pickles",
+      "outputQuantity": 1,
+      "productionTimeMs": 900000,
+      "unlockLevel": 18,
+      "xpReward": 5,
+      "coinReward": 29
+    },
+    {
+      "id": "recipe_snack_broccoli_bites",
+      "factoryTypeId": "snack",
+      "inputs": {
+        "broccoli": 2
+      },
+      "outputGoodId": "broccoli_bites",
+      "outputQuantity": 1,
+      "productionTimeMs": 1020000,
+      "unlockLevel": 26,
+      "xpReward": 15,
+      "coinReward": 91
+    },
+    {
+      "id": "recipe_sauce_pepper_sauce",
+      "factoryTypeId": "sauce",
+      "inputs": {
+        "pepper": 2
+      },
+      "outputGoodId": "pepper_sauce",
+      "outputQuantity": 1,
+      "productionTimeMs": 900000,
+      "unlockLevel": 20,
+      "xpReward": 8,
+      "coinReward": 48
+    },
+    {
+      "id": "recipe_sauce_onion_relish",
+      "factoryTypeId": "sauce",
+      "inputs": {
+        "onion": 2
+      },
+      "outputGoodId": "onion_relish",
+      "outputQuantity": 1,
+      "productionTimeMs": 900000,
+      "unlockLevel": 20,
+      "xpReward": 6,
+      "coinReward": 35
+    },
+    {
+      "id": "recipe_ice_cream_banana_split",
+      "factoryTypeId": "ice_cream",
+      "inputs": {
+        "banana": 2,
+        "cream": 1
+      },
+      "outputGoodId": "banana_split",
+      "outputQuantity": 1,
+      "productionTimeMs": 3060000,
+      "unlockLevel": 42,
+      "xpReward": 34,
+      "coinReward": 204
+    },
+    {
+      "id": "recipe_ice_cream_mango_sorbet",
+      "factoryTypeId": "ice_cream",
+      "inputs": {
+        "mango": 2,
+        "cream": 1
+      },
+      "outputGoodId": "mango_sorbet",
+      "outputQuantity": 1,
+      "productionTimeMs": 3240000,
+      "unlockLevel": 47,
+      "xpReward": 39,
+      "coinReward": 234
+    },
+    {
+      "id": "recipe_candy_peanut_brittle",
+      "factoryTypeId": "candy",
+      "inputs": {
+        "peanut": 2,
+        "sugar": 1
+      },
+      "outputGoodId": "peanut_brittle",
+      "outputQuantity": 1,
+      "productionTimeMs": 960000,
+      "unlockLevel": 25,
+      "xpReward": 8,
+      "coinReward": 45
+    },
+    {
+      "id": "recipe_candy_ginger_candy",
+      "factoryTypeId": "candy",
+      "inputs": {
+        "ginger": 2,
+        "sugar": 1
+      },
+      "outputGoodId": "ginger_candy",
+      "outputQuantity": 1,
+      "productionTimeMs": 1620000,
+      "unlockLevel": 66,
+      "xpReward": 60,
+      "coinReward": 359
+    },
+    {
+      "id": "recipe_tailor_alpaca_sweater",
+      "factoryTypeId": "tailor",
+      "inputs": {
+        "alpaca_yarn": 2
+      },
+      "outputGoodId": "alpaca_sweater",
+      "outputQuantity": 1,
+      "productionTimeMs": 3540000,
+      "unlockLevel": 55,
+      "xpReward": 190,
+      "coinReward": 1140
+    },
+    {
+      "id": "recipe_tailor_angora_scarf",
+      "factoryTypeId": "tailor",
+      "inputs": {
+        "angora_yarn": 2
+      },
+      "outputGoodId": "angora_scarf",
+      "outputQuantity": 1,
+      "productionTimeMs": 3300000,
+      "unlockLevel": 48,
+      "xpReward": 127,
+      "coinReward": 761
+    },
+    {
+      "id": "recipe_cosmetics_ginger_oil",
+      "factoryTypeId": "cosmetics",
+      "inputs": {
+        "ginger": 2
+      },
+      "outputGoodId": "ginger_oil",
+      "outputQuantity": 1,
+      "productionTimeMs": 1620000,
+      "unlockLevel": 66,
+      "xpReward": 55,
+      "coinReward": 328
+    },
+    {
+      "id": "recipe_furniture_cabinet",
+      "factoryTypeId": "furniture",
+      "inputs": {
+        "planks": 3,
+        "glass": 2
+      },
+      "outputGoodId": "cabinet",
+      "outputQuantity": 1,
+      "productionTimeMs": 1080000,
+      "unlockLevel": 31,
+      "xpReward": 9,
+      "coinReward": 52
+    },
+    {
+      "id": "recipe_coffee_house_cappuccino",
+      "factoryTypeId": "coffee_house",
+      "inputs": {
+        "ground_coffee": 1,
+        "cream": 1
+      },
+      "outputGoodId": "cappuccino",
+      "outputQuantity": 1,
+      "productionTimeMs": 3420000,
+      "unlockLevel": 51,
+      "xpReward": 44,
+      "coinReward": 263
+    },
+    {
+      "id": "recipe_jewellery_tiara",
+      "factoryTypeId": "jewellery",
+      "inputs": {
+        "platinum_bar": 1,
+        "ruby": 1
+      },
+      "outputGoodId": "tiara",
+      "outputQuantity": 1,
+      "productionTimeMs": 3000000,
+      "unlockLevel": 40,
+      "xpReward": 42,
+      "coinReward": 253
+    },
+    {
+      "id": "recipe_winery_cider",
+      "factoryTypeId": "winery",
+      "inputs": {
+        "apple": 3
+      },
+      "outputGoodId": "cider",
+      "outputQuantity": 1,
+      "productionTimeMs": 1680000,
+      "unlockLevel": 72,
+      "xpReward": 19,
+      "coinReward": 113
+    },
+    {
+      "id": "recipe_toy_factory_plush_toy",
+      "factoryTypeId": "toy_factory",
+      "inputs": {
+        "fabric": 2,
+        "thread": 1
+      },
+      "outputGoodId": "plush_toy",
+      "outputQuantity": 1,
+      "productionTimeMs": 2760000,
+      "unlockLevel": 33,
+      "xpReward": 57,
+      "coinReward": 344
+    },
+    {
+      "id": "recipe_paper_mill_paper",
+      "factoryTypeId": "paper_mill",
+      "inputs": {
+        "wood": 3
+      },
+      "outputGoodId": "paper",
+      "outputQuantity": 2,
+      "productionTimeMs": 780000,
+      "unlockLevel": 13,
+      "xpReward": 2,
+      "coinReward": 13
+    },
+    {
+      "id": "recipe_paper_mill_book",
+      "factoryTypeId": "paper_mill",
+      "inputs": {
+        "paper": 3
+      },
+      "outputGoodId": "book",
+      "outputQuantity": 1,
+      "productionTimeMs": 2160000,
+      "unlockLevel": 18,
+      "xpReward": 4,
+      "coinReward": 23
+    },
+    {
+      "id": "recipe_pottery_pottery_bowl",
+      "factoryTypeId": "pottery",
+      "inputs": {
+        "clay": 3
+      },
+      "outputGoodId": "pottery_bowl",
+      "outputQuantity": 1,
+      "productionTimeMs": 900000,
+      "unlockLevel": 19,
+      "xpReward": 3,
+      "coinReward": 19
+    },
+    {
+      "id": "recipe_pottery_painted_pottery",
+      "factoryTypeId": "pottery",
+      "inputs": {
+        "pottery_bowl": 1,
+        "paint": 1
+      },
+      "outputGoodId": "painted_pottery",
+      "outputQuantity": 1,
+      "productionTimeMs": 2400000,
+      "unlockLevel": 24,
+      "xpReward": 7,
+      "coinReward": 44
+    },
+    {
+      "id": "recipe_creamery_whipped_cream",
+      "factoryTypeId": "creamery",
+      "inputs": {
+        "cream": 3
+      },
+      "outputGoodId": "whipped_cream",
+      "outputQuantity": 1,
+      "productionTimeMs": 960000,
+      "unlockLevel": 23,
+      "xpReward": 17,
+      "coinReward": 100
+    },
+    {
+      "id": "recipe_creamery_aged_cheddar",
+      "factoryTypeId": "creamery",
+      "inputs": {
+        "cheese": 2
+      },
+      "outputGoodId": "aged_cheddar",
+      "outputQuantity": 1,
+      "productionTimeMs": 2580000,
+      "unlockLevel": 29,
+      "xpReward": 25,
+      "coinReward": 152
+    },
+    {
+      "id": "recipe_creamery_cream_tart",
+      "factoryTypeId": "creamery",
+      "inputs": {
+        "whipped_cream": 1,
+        "jam": 1
+      },
+      "outputGoodId": "cream_tart",
+      "outputQuantity": 1,
+      "productionTimeMs": 2580000,
+      "unlockLevel": 29,
+      "xpReward": 34,
+      "coinReward": 205
+    },
+    {
+      "id": "recipe_smokehouse_smoked_ham",
+      "factoryTypeId": "smokehouse",
+      "inputs": {
+        "bacon": 2
+      },
+      "outputGoodId": "smoked_ham",
+      "outputQuantity": 1,
+      "productionTimeMs": 960000,
+      "unlockLevel": 25,
+      "xpReward": 11,
+      "coinReward": 65
+    },
+    {
+      "id": "recipe_smokehouse_smoked_turkey",
+      "factoryTypeId": "smokehouse",
+      "inputs": {
+        "turkey_meat": 2
+      },
+      "outputGoodId": "smoked_turkey",
+      "outputQuantity": 1,
+      "productionTimeMs": 1200000,
+      "unlockLevel": 41,
+      "xpReward": 39,
+      "coinReward": 231
+    },
+    {
+      "id": "recipe_smokehouse_deli_platter",
+      "factoryTypeId": "smokehouse",
+      "inputs": {
+        "smoked_ham": 1,
+        "smoked_turkey": 1
+      },
+      "outputGoodId": "deli_platter",
+      "outputQuantity": 1,
+      "productionTimeMs": 3060000,
+      "unlockLevel": 41,
+      "xpReward": 54,
+      "coinReward": 326
+    },
+    {
+      "id": "recipe_pasta_kitchen_pasta",
+      "factoryTypeId": "pasta_kitchen",
+      "inputs": {
+        "flour": 2,
+        "egg": 1
+      },
+      "outputGoodId": "pasta",
+      "outputQuantity": 1,
+      "productionTimeMs": 1020000,
+      "unlockLevel": 29,
+      "xpReward": 4,
+      "coinReward": 22
+    },
+    {
+      "id": "recipe_pasta_kitchen_baked_ziti",
+      "factoryTypeId": "pasta_kitchen",
+      "inputs": {
+        "pasta": 1,
+        "tomato_sauce": 1,
+        "cheese": 1
+      },
+      "outputGoodId": "baked_ziti",
+      "outputQuantity": 1,
+      "productionTimeMs": 2580000,
+      "unlockLevel": 29,
+      "xpReward": 44,
+      "coinReward": 261
+    },
+    {
+      "id": "recipe_pizzeria_lasagna",
+      "factoryTypeId": "pizzeria",
+      "inputs": {
+        "pasta": 1,
+        "cheese": 1
+      },
+      "outputGoodId": "lasagna",
+      "outputQuantity": 1,
+      "productionTimeMs": 2580000,
+      "unlockLevel": 29,
+      "xpReward": 17,
+      "coinReward": 100
+    },
+    {
+      "id": "recipe_glassworks_glass_pane",
+      "factoryTypeId": "glassworks",
+      "inputs": {
+        "sand": 3
+      },
+      "outputGoodId": "glass_pane",
+      "outputQuantity": 2,
+      "productionTimeMs": 1080000,
+      "unlockLevel": 31,
+      "xpReward": 5,
+      "coinReward": 29
+    },
+    {
+      "id": "recipe_glassworks_stained_glass",
+      "factoryTypeId": "glassworks",
+      "inputs": {
+        "glass_pane": 2
+      },
+      "outputGoodId": "stained_glass",
+      "outputQuantity": 1,
+      "productionTimeMs": 2880000,
+      "unlockLevel": 36,
+      "xpReward": 6,
+      "coinReward": 33
+    },
+    {
+      "id": "recipe_juice_bar_apple_juice",
+      "factoryTypeId": "juice_bar",
+      "inputs": {
+        "apple": 3
+      },
+      "outputGoodId": "apple_juice",
+      "outputQuantity": 1,
+      "productionTimeMs": 1140000,
+      "unlockLevel": 34,
+      "xpReward": 19,
+      "coinReward": 113
+    },
+    {
+      "id": "recipe_juice_bar_melon_juice",
+      "factoryTypeId": "juice_bar",
+      "inputs": {
+        "melon": 3
+      },
+      "outputGoodId": "melon_juice",
+      "outputQuantity": 1,
+      "productionTimeMs": 1140000,
+      "unlockLevel": 34,
+      "xpReward": 29,
+      "coinReward": 172
+    },
+    {
+      "id": "recipe_juice_bar_watermelon_juice",
+      "factoryTypeId": "juice_bar",
+      "inputs": {
+        "watermelon": 3
+      },
+      "outputGoodId": "watermelon_juice",
+      "outputQuantity": 1,
+      "productionTimeMs": 1140000,
+      "unlockLevel": 36,
+      "xpReward": 34,
+      "coinReward": 201
+    },
+    {
+      "id": "recipe_juice_bar_tropical_smoothie",
+      "factoryTypeId": "juice_bar",
+      "inputs": {
+        "apple_juice": 1,
+        "banana": 2
+      },
+      "outputGoodId": "tropical_smoothie",
+      "outputQuantity": 1,
+      "productionTimeMs": 3060000,
+      "unlockLevel": 42,
+      "xpReward": 49,
+      "coinReward": 294
+    },
+    {
+      "id": "recipe_juice_bar_citrus_blend",
+      "factoryTypeId": "juice_bar",
+      "inputs": {
+        "mango": 2,
+        "orange": 2
+      },
+      "outputGoodId": "citrus_blend",
+      "outputQuantity": 1,
+      "productionTimeMs": 3480000,
+      "unlockLevel": 53,
+      "xpReward": 74,
+      "coinReward": 442
+    },
+    {
+      "id": "recipe_leatherworks_leather",
+      "factoryTypeId": "leatherworks",
+      "inputs": {
+        "wool": 3,
+        "thread": 1
+      },
+      "outputGoodId": "leather",
+      "outputQuantity": 1,
+      "productionTimeMs": 1140000,
+      "unlockLevel": 37,
+      "xpReward": 18,
+      "coinReward": 109
+    },
+    {
+      "id": "recipe_leatherworks_leather_bag",
+      "factoryTypeId": "leatherworks",
+      "inputs": {
+        "leather": 2,
+        "thread": 1
+      },
+      "outputGoodId": "leather_bag",
+      "outputQuantity": 1,
+      "productionTimeMs": 3000000,
+      "unlockLevel": 40,
+      "xpReward": 48,
+      "coinReward": 285
+    },
+    {
+      "id": "recipe_leatherworks_leather_belt",
+      "factoryTypeId": "leatherworks",
+      "inputs": {
+        "leather": 2,
+        "ring": 1
+      },
+      "outputGoodId": "leather_belt",
+      "outputQuantity": 1,
+      "productionTimeMs": 3000000,
+      "unlockLevel": 40,
+      "xpReward": 53,
+      "coinReward": 317
+    },
+    {
+      "id": "recipe_candle_maker_candle",
+      "factoryTypeId": "candle_maker",
+      "inputs": {
+        "beeswax": 2,
+        "cotton": 1
+      },
+      "outputGoodId": "candle",
+      "outputQuantity": 1,
+      "productionTimeMs": 1260000,
+      "unlockLevel": 43,
+      "xpReward": 11,
+      "coinReward": 63
+    },
+    {
+      "id": "recipe_candle_maker_scented_candle",
+      "factoryTypeId": "candle_maker",
+      "inputs": {
+        "candle": 2,
+        "lavender_oil": 1
+      },
+      "outputGoodId": "scented_candle",
+      "outputQuantity": 1,
+      "productionTimeMs": 3120000,
+      "unlockLevel": 43,
+      "xpReward": 70,
+      "coinReward": 417
+    },
+    {
+      "id": "recipe_cheese_cave_aged_cheese_wheel",
+      "factoryTypeId": "cheese_cave",
+      "inputs": {
+        "cheese": 3
+      },
+      "outputGoodId": "aged_cheese_wheel",
+      "outputQuantity": 1,
+      "productionTimeMs": 1320000,
+      "unlockLevel": 46,
+      "xpReward": 37,
+      "coinReward": 224
+    },
+    {
+      "id": "recipe_cheese_cave_honey_cheese_platter",
+      "factoryTypeId": "cheese_cave",
+      "inputs": {
+        "aged_cheese_wheel": 1,
+        "honey": 1
+      },
+      "outputGoodId": "honey_cheese_platter",
+      "outputQuantity": 1,
+      "productionTimeMs": 3240000,
+      "unlockLevel": 46,
+      "xpReward": 50,
+      "coinReward": 299
+    },
+    {
+      "id": "recipe_coffee_roastery_roasted_beans",
+      "factoryTypeId": "coffee_roastery",
+      "inputs": {
+        "coffee_bean": 3
+      },
+      "outputGoodId": "roasted_beans",
+      "outputQuantity": 1,
+      "productionTimeMs": 1380000,
+      "unlockLevel": 51,
+      "xpReward": 54,
+      "coinReward": 324
+    },
+    {
+      "id": "recipe_coffee_roastery_espresso_shot",
+      "factoryTypeId": "coffee_roastery",
+      "inputs": {
+        "roasted_beans": 2
+      },
+      "outputGoodId": "espresso_shot",
+      "outputQuantity": 1,
+      "productionTimeMs": 3420000,
+      "unlockLevel": 52,
+      "xpReward": 119,
+      "coinReward": 713
+    },
+    {
+      "id": "recipe_tea_house_dried_tea",
+      "factoryTypeId": "tea_house",
+      "inputs": {
+        "tea_leaf": 3
+      },
+      "outputGoodId": "dried_tea",
+      "outputQuantity": 1,
+      "productionTimeMs": 1500000,
+      "unlockLevel": 59,
+      "xpReward": 68,
+      "coinReward": 408
+    },
+    {
+      "id": "recipe_tea_house_iced_tea",
+      "factoryTypeId": "tea_house",
+      "inputs": {
+        "dried_tea": 2,
+        "sugar": 1
+      },
+      "outputGoodId": "iced_tea",
+      "outputQuantity": 1,
+      "productionTimeMs": 3720000,
+      "unlockLevel": 59,
+      "xpReward": 155,
+      "coinReward": 928
+    },
+    {
+      "id": "recipe_tea_house_ginger_tea",
+      "factoryTypeId": "tea_house",
+      "inputs": {
+        "dried_tea": 2,
+        "ginger": 1
+      },
+      "outputGoodId": "ginger_tea",
+      "outputQuantity": 1,
+      "productionTimeMs": 3960000,
+      "unlockLevel": 66,
+      "xpReward": 178,
+      "coinReward": 1065
+    },
+    {
+      "id": "recipe_brewery_malt",
+      "factoryTypeId": "brewery",
+      "inputs": {
+        "barley": 3
+      },
+      "outputGoodId": "malt",
+      "outputQuantity": 1,
+      "productionTimeMs": 1500000,
+      "unlockLevel": 61,
+      "xpReward": 2,
+      "coinReward": 13
+    },
+    {
+      "id": "recipe_brewery_oat_malt",
+      "factoryTypeId": "brewery",
+      "inputs": {
+        "oats": 3
+      },
+      "outputGoodId": "oat_malt",
+      "outputQuantity": 1,
+      "productionTimeMs": 1500000,
+      "unlockLevel": 61,
+      "xpReward": 3,
+      "coinReward": 19
+    },
+    {
+      "id": "recipe_brewery_beer",
+      "factoryTypeId": "brewery",
+      "inputs": {
+        "malt": 2,
+        "oat_malt": 1
+      },
+      "outputGoodId": "beer",
+      "outputQuantity": 1,
+      "productionTimeMs": 3780000,
+      "unlockLevel": 61,
+      "xpReward": 8,
+      "coinReward": 50
+    },
+    {
+      "id": "recipe_chocolatier_cocoa_nibs",
+      "factoryTypeId": "chocolatier",
+      "inputs": {
+        "cacao_pod": 3
+      },
+      "outputGoodId": "cocoa_nibs",
+      "outputQuantity": 1,
+      "productionTimeMs": 1620000,
+      "unlockLevel": 69,
+      "xpReward": 94,
+      "coinReward": 561
+    },
+    {
+      "id": "recipe_chocolatier_dark_chocolate",
+      "factoryTypeId": "chocolatier",
+      "inputs": {
+        "cocoa_nibs": 2
+      },
+      "outputGoodId": "dark_chocolate",
+      "outputQuantity": 1,
+      "productionTimeMs": 4080000,
+      "unlockLevel": 69,
+      "xpReward": 206,
+      "coinReward": 1234
+    },
+    {
+      "id": "recipe_chocolatier_chocolate_truffle",
+      "factoryTypeId": "chocolatier",
+      "inputs": {
+        "dark_chocolate": 1,
+        "cream": 1
+      },
+      "outputGoodId": "chocolate_truffle",
+      "outputQuantity": 1,
+      "productionTimeMs": 8400000,
+      "unlockLevel": 72,
+      "xpReward": 236,
+      "coinReward": 1417
+    },
+    {
+      "id": "recipe_chocolatier_luxury_truffle_box",
+      "factoryTypeId": "chocolatier",
+      "inputs": {
+        "chocolate_truffle": 2,
+        "vanilla": 1
+      },
+      "outputGoodId": "luxury_truffle_box",
+      "outputQuantity": 1,
+      "productionTimeMs": 16200000,
+      "unlockLevel": 80,
+      "xpReward": 584,
+      "coinReward": 3501
+    },
+    {
+      "id": "recipe_chocolatier_mango_chocolate_bar",
+      "factoryTypeId": "chocolatier",
+      "inputs": {
+        "dark_chocolate": 1,
+        "mango": 1
+      },
+      "outputGoodId": "mango_chocolate_bar",
+      "outputQuantity": 1,
+      "productionTimeMs": 8400000,
+      "unlockLevel": 72,
+      "xpReward": 247,
+      "coinReward": 1484
+    },
+    {
+      "id": "recipe_distillery_brandy",
+      "factoryTypeId": "distillery",
+      "inputs": {
+        "grape": 4
+      },
+      "outputGoodId": "brandy",
+      "outputQuantity": 1,
+      "productionTimeMs": 1800000,
+      "unlockLevel": 78,
+      "xpReward": 101,
+      "coinReward": 605
+    },
+    {
+      "id": "recipe_distillery_applejack",
+      "factoryTypeId": "distillery",
+      "inputs": {
+        "apple": 4
+      },
+      "outputGoodId": "applejack",
+      "outputQuantity": 1,
+      "productionTimeMs": 1800000,
+      "unlockLevel": 78,
+      "xpReward": 25,
+      "coinReward": 151
+    },
+    {
+      "id": "recipe_distillery_aged_brandy_blend",
+      "factoryTypeId": "distillery",
+      "inputs": {
+        "brandy": 1,
+        "applejack": 1
+      },
+      "outputGoodId": "aged_brandy_blend",
+      "outputQuantity": 1,
+      "productionTimeMs": 4680000,
+      "unlockLevel": 85,
+      "xpReward": 139,
+      "coinReward": 832
+    },
+    {
+      "id": "recipe_distillery_brandy_truffle",
+      "factoryTypeId": "distillery",
+      "inputs": {
+        "aged_brandy_blend": 1,
+        "dark_chocolate": 1
+      },
+      "outputGoodId": "brandy_truffle",
+      "outputQuantity": 1,
+      "productionTimeMs": 9780000,
+      "unlockLevel": 90,
+      "xpReward": 386,
+      "coinReward": 2314
+    },
+    {
+      "id": "recipe_distillery_gourmet_gift_basket",
+      "factoryTypeId": "distillery",
+      "inputs": {
+        "aged_brandy_blend": 1,
+        "dark_chocolate": 1,
+        "aged_cheese_wheel": 1,
+        "saffron": 1,
+        "horse_milk": 1
+      },
+      "outputGoodId": "gourmet_gift_basket",
+      "outputQuantity": 1,
+      "productionTimeMs": 31080000,
+      "unlockLevel": 98,
+      "xpReward": 585,
+      "coinReward": 3507
+    },
+    {
+      "id": "recipe_soap_works_olive_oil",
+      "factoryTypeId": "soap_works",
+      "inputs": {
+        "olive": 3
+      },
+      "outputGoodId": "olive_oil",
+      "outputQuantity": 1,
+      "productionTimeMs": 1860000,
+      "unlockLevel": 85,
+      "xpReward": 128,
+      "coinReward": 768
+    },
+    {
+      "id": "recipe_soap_works_soap",
+      "factoryTypeId": "soap_works",
+      "inputs": {
+        "olive_oil": 1,
+        "goat_milk": 1
+      },
+      "outputGoodId": "soap",
+      "outputQuantity": 1,
+      "productionTimeMs": 4680000,
+      "unlockLevel": 85,
+      "xpReward": 147,
+      "coinReward": 882
+    },
+    {
+      "id": "recipe_soap_works_luxury_soap",
+      "factoryTypeId": "soap_works",
+      "inputs": {
+        "soap": 2,
+        "saffron": 1
+      },
+      "outputGoodId": "luxury_soap",
+      "outputQuantity": 1,
+      "productionTimeMs": 10140000,
+      "unlockLevel": 95,
+      "xpReward": 386,
+      "coinReward": 2314
+    },
+    {
+      "id": "recipe_cosmetics_saffron_perfume",
+      "factoryTypeId": "cosmetics",
+      "inputs": {
+        "saffron": 1,
+        "lavender_oil": 1
+      },
+      "outputGoodId": "saffron_perfume",
+      "outputQuantity": 1,
+      "productionTimeMs": 10140000,
+      "unlockLevel": 95,
+      "xpReward": 104,
+      "coinReward": 622
+    },
+    {
+      "id": "recipe_furniture_leather_armchair",
+      "factoryTypeId": "furniture",
+      "inputs": {
+        "leather": 2,
+        "planks": 2
+      },
+      "outputGoodId": "leather_armchair",
+      "outputQuantity": 1,
+      "productionTimeMs": 3000000,
+      "unlockLevel": 40,
+      "xpReward": 42,
+      "coinReward": 253
+    },
+    {
+      "id": "recipe_toy_factory_teddy_bear",
+      "factoryTypeId": "toy_factory",
+      "inputs": {
+        "leather": 1,
+        "fabric": 1
+      },
+      "outputGoodId": "teddy_bear",
+      "outputQuantity": 1,
+      "productionTimeMs": 3000000,
+      "unlockLevel": 40,
+      "xpReward": 45,
+      "coinReward": 270
+    },
+    {
+      "id": "recipe_cheese_cave_tea_cheese_pairing",
+      "factoryTypeId": "cheese_cave",
+      "inputs": {
+        "aged_cheese_wheel": 2,
+        "dried_tea": 1
+      },
+      "outputGoodId": "tea_cheese_pairing",
+      "outputQuantity": 1,
+      "productionTimeMs": 7440000,
+      "unlockLevel": 59,
+      "xpReward": 160,
+      "coinReward": 959
     }
   ]
 }
