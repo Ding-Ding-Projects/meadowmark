@@ -1,0 +1,139 @@
+/* Meadowmark site — design tokens.
+   Complete light palette lives on bare :root. Dark overrides are layered
+   twice: once for automatic prefers-color-scheme, once for an explicit
+   [data-theme="dark"] toggle, so an explicit choice always wins. */
+:root {
+  --mm-primary: #3a6b3f;
+  --mm-primary-container: #c3ecc4;
+  --mm-on-primary: #ffffff;
+  --mm-on-primary-container: #002204;
+  --mm-secondary: #8a6d1f;
+  --mm-secondary-container: #ffe08c;
+  --mm-on-secondary: #ffffff;
+  --mm-on-secondary-container: #2b1e00;
+  --mm-tertiary: #3d6373;
+  --mm-tertiary-container: #c1e8fb;
+  --mm-on-tertiary: #ffffff;
+  --mm-on-tertiary-container: #001f29;
+  --mm-error: #ba1a1a;
+  --mm-error-container: #ffdad6;
+  --mm-on-error: #ffffff;
+  --mm-on-error-container: #410002;
+  --mm-bg: #f7fbf1;
+  --mm-on-bg: #191d17;
+  --mm-surface: #f7fbf1;
+  --mm-on-surface: #191d17;
+  --mm-surface-variant: #dee5d7;
+  --mm-on-surface-variant: #424940;
+  --mm-surface-1: #eef4e6;
+  --mm-surface-2: #e8f0de;
+  --mm-surface-3: #e2ebd6;
+  --mm-surface-4: #e0e9d3;
+  --mm-surface-5: #dbe5cc;
+  --mm-outline: #72796f;
+  --mm-outline-variant: #c2c9bb;
+  --mm-scrim: #000000;
+  --mm-shadow: #000000;
+  --mm-elev-1: 0 1px 2px rgba(0,0,0,.14), 0 1px 3px 1px rgba(0,0,0,.10);
+  --mm-elev-2: 0 1px 2px rgba(0,0,0,.16), 0 2px 6px 2px rgba(0,0,0,.10);
+  --mm-elev-3: 0 4px 8px 3px rgba(0,0,0,.12), 0 1px 3px rgba(0,0,0,.18);
+  --mm-radius-xs: 4px;
+  --mm-radius-sm: 8px;
+  --mm-radius-md: 12px;
+  --mm-radius-lg: 16px;
+  --mm-radius-xl: 28px;
+  --mm-radius-full: 999px;
+  --mm-font-family: system-ui, -apple-system, "Segoe UI", "Segoe UI Variable", Roboto, "Noto Sans", "Noto Sans HK", "Microsoft JhengHei", "PingFang HK", Arial, sans-serif;
+  --mm-font-scale: 1;
+  --mm-density: 0;
+  --mm-motion: 1;
+  --mm-accent: var(--mm-primary);
+  --mm-focus-ring: 3px solid #0b57d0;
+  --mm-space-1: 4px;
+  --mm-space-2: 8px;
+  --mm-space-3: 12px;
+  --mm-space-4: 16px;
+  --mm-space-5: 24px;
+  --mm-space-6: 32px;
+  --mm-space-7: 48px;
+  --mm-space-8: 64px;
+  --mm-tab-size: 220px;
+  --mm-header-h: 64px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --mm-primary: #a8d5a8;
+    --mm-primary-container: #22522a;
+    --mm-on-primary: #0a390f;
+    --mm-on-primary-container: #c3ecc4;
+    --mm-secondary: #e2c26c;
+    --mm-secondary-container: #695300;
+    --mm-on-secondary: #3d2f00;
+    --mm-on-secondary-container: #ffe08c;
+    --mm-tertiary: #a5cddf;
+    --mm-tertiary-container: #244b5a;
+    --mm-on-tertiary: #06333f;
+    --mm-on-tertiary-container: #c1e8fb;
+    --mm-error: #ffb4ab;
+    --mm-error-container: #93000a;
+    --mm-on-error: #690005;
+    --mm-on-error-container: #ffdad6;
+    --mm-bg: #10140f;
+    --mm-on-bg: #e0e4da;
+    --mm-surface: #10140f;
+    --mm-on-surface: #e0e4da;
+    --mm-surface-variant: #424940;
+    --mm-on-surface-variant: #c2c9bb;
+    --mm-surface-1: #171c15;
+    --mm-surface-2: #1b2118;
+    --mm-surface-3: #1f261b;
+    --mm-surface-4: #212819;
+    --mm-surface-5: #252c1c;
+    --mm-outline: #8c9388;
+    --mm-outline-variant: #424940;
+    --mm-scrim: #000000;
+    --mm-shadow: #000000;
+    --mm-focus-ring: 3px solid #a8c8ff;
+    --mm-accent: var(--mm-primary);
+  }
+}
+
+:root[data-theme="dark"] {
+  --mm-primary: #a8d5a8;
+  --mm-primary-container: #22522a;
+  --mm-on-primary: #0a390f;
+  --mm-on-primary-container: #c3ecc4;
+  --mm-secondary: #e2c26c;
+  --mm-secondary-container: #695300;
+  --mm-on-secondary: #3d2f00;
+  --mm-on-secondary-container: #ffe08c;
+  --mm-tertiary: #a5cddf;
+  --mm-tertiary-container: #244b5a;
+  --mm-on-tertiary: #06333f;
+  --mm-on-tertiary-container: #c1e8fb;
+  --mm-error: #ffb4ab;
+  --mm-error-container: #93000a;
+  --mm-on-error: #690005;
+  --mm-on-error-container: #ffdad6;
+  --mm-bg: #10140f;
+  --mm-on-bg: #e0e4da;
+  --mm-surface: #10140f;
+  --mm-on-surface: #e0e4da;
+  --mm-surface-variant: #424940;
+  --mm-on-surface-variant: #c2c9bb;
+  --mm-surface-1: #171c15;
+  --mm-surface-2: #1b2118;
+  --mm-surface-3: #1f261b;
+  --mm-surface-4: #212819;
+  --mm-surface-5: #252c1c;
+  --mm-outline: #8c9388;
+  --mm-outline-variant: #424940;
+  --mm-scrim: #000000;
+  --mm-shadow: #000000;
+  --mm-focus-ring: 3px solid #a8c8ff;
+  --mm-accent: var(--mm-primary);
+}
+
+:root[data-density="compact"] { --mm-density: -1; }
+:root[data-density="comfortable"] { --mm-density: 1; }
