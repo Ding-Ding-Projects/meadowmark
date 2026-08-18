@@ -109,7 +109,21 @@ export type DecorationKind =
   | 'sign'
   | 'flower_bed'
   | 'topiary'
-  | 'gazebo';
+  | 'gazebo'
+  // The set below is added by the "wiring" lane (see
+  // packages/renderer/src/adapters/state-to-engine.ts) so it has a
+  // side-effect-free (no occupancy, no pick target) channel to place
+  // ambient village life and state-driven visual cues. Each name is
+  // validated as an actually-registered mesh-dsl asset the first time
+  // state-to-engine.ts runs — see `assertLifeAssetsRegistered()` there
+  // for the full list and why every one of these exists.
+  | 'cart'
+  | 'barrel'
+  | 'crate'
+  | 'market_stall'
+  | 'duck'
+  | 'sparkle_ready'
+  | 'chimney_smoke';
 
 export interface DecorationView {
   id: string;

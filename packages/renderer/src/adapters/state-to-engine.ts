@@ -15,11 +15,19 @@
  * is not registered, and the one remaining fallback path (an unknown
  * buildingTypeId content adds later) is logged via console.warn rather
  * than rendered as something else without comment.
+ *
+ * "Village life" wiring (buildVillageLife/buildReadySparkles/
+ * buildChimneySmoke, near the bottom): several parallel asset lanes are
+ * registering new props and effects meshes this file references by name
+ * before this worktree necessarily has them. Referencing a name that
+ * turns out to be unregistered is deliberate here, not a bug to route
+ * around - see EXPECTED_LIFE_ASSET_NAMES and assertLifeAssetsRegistered()
+ * for the single loud startup error that names every asset still missing.
  */
 
-import type { FactoryInstance, GameState, PlacedBuilding } from '@meadowmark/shared';
+import type { AnimalShed, AnimalUnit, FactoryInstance, GameState, PlacedBuilding, RngState } from '@meadowmark/shared';
 import { chance, createRng, nextInt, pickWeighted, seedFromString } from '@meadowmark/shared';
-import { growthStages, resolveRoadTile } from '@meadowmark/engine';
+import { getAsset, growthStages, listAssetNames, resolveRoadTile } from '@meadowmark/engine';
 import type {
   AnimalKind,
   AnimalView,
@@ -549,6 +557,249 @@ function reservedTileSet(
 }
 
 // ---------------------------------------------------------------------------
+// Village life: wires up the props and effects six parallel asset lanes
+// are registering, none of which the town would otherwise render even
+// once they exist. See the module doc for the asset names this section
+// depends on and how missing ones are surfaced.
+// ---------------------------------------------------------------------------
+
+/**
+ * Every mesh-dsl asset name this section references but does not itself
+ * register. These are the other lanes' work: 'cart', 'barrel', 'crate' and
+ * 'market_stall' are roadside/market/factory props (assets/props.ts or a
+ * new file in that spirit); 'duck' is ambient pond wildlife
+ * (assets/characters.ts); 'sparkle_ready' is a small hovering glyph over
+ * anything with product waiting to be collected, and 'chimney_smoke' is a
+ * puff hovering over a factory that is actively producing right now
+ * (both presumably assets/props.ts "effects").
+ *
+ * Checked exactly once, eagerly, the first time stateToEngineView() runs.
+ * If any are missing this throws ONE error naming all of them, rather
+ * than letting the renderer discover the gap one InstancedMesh crash at a
+ * time deep in a frame - see mesh-dsl's requireAsset() for the per-name
+ * version of that error this pre-empts.
+ */
+const EXPECTED_LIFE_ASSET_NAMES: readonly DecorationKind[] = [
+  'cart',
+  'barrel',
+  'crate',
+  'market_stall',
+  'duck',
+  'sparkle_ready',
+  'chimney_smoke',
+];
+
+let lifeAssetsValidated = false;
+function assertLifeAssetsRegistered(): void {
+  if (lifeAssetsValidated) return;
+  lifeAssetsValidated = true;
+  const missing = EXPECTED_LIFE_ASSET_NAMES.filter((name) => getAsset(name) === undefined);
+  if (missing.length > 0) {
+    throw new Error(
+      `state-to-engine: the village-life wiring expects these mesh-dsl assets to be registered by ` +
+        `other asset lanes, but they are missing: ${missing.join(', ')}. Known assets: ` +
+        `${listAssetNames().join(', ')}. (See EXPECTED_LIFE_ASSET_NAMES in state-to-engine.ts.)`,
+    );
+  }
+}
+
+/** Finds an unoccupied tile within `radius` rings of `origin`, preferring
+ * the nearest ring, deterministically shuffled by `rng` so which side of a
+ * building a prop lands on varies without ever landing on top of
+ * something. Marks the chosen tile into `occupied` before returning it so
+ * a second call in the same pass cannot double-place. Returns null once
+ * every candidate tile is exhausted. */
+function findFreeNeighborTile(
+  origin: { x: number; y: number },
+  radius: number,
+  rng: RngState,
+  gridWidth: number,
+  gridHeight: number,
+  reserved: ReadonlySet<string>,
+  pond: ReadonlySet<string>,
+  occupied: Set<string>,
+): { x: number; y: number } | null {
+  for (let ring = 1; ring <= radius; ring++) {
+    const candidates: Array<{ x: number; y: number }> = [];
+    for (let dx = -ring; dx <= ring; dx++) {
+      for (let dy = -ring; dy <= ring; dy++) {
+        if (Math.max(Math.abs(dx), Math.abs(dy)) !== ring) continue; // ring border only
+        const x = origin.x + dx;
+        const y = origin.y + dy;
+        if (x < 0 || y < 0 || x >= gridWidth || y >= gridHeight) continue;
+        const key = `${x},${y}`;
+        if (reserved.has(key) || pond.has(key) || occupied.has(key)) continue;
+        candidates.push({ x, y });
+      }
+    }
+    if (candidates.length === 0) continue;
+    const pick = candidates[nextInt(rng, 0, candidates.length - 1)]!;
+    occupied.add(`${pick.x},${pick.y}`);
+    return pick;
+  }
+  return null;
+}
+
+/** Roadside carts, a huddle of market stalls by the farmers' market, and
+ * barrels/crates stacked outside every factory - the incidental clutter
+ * that makes a town read as a lived-in place rather than a diagram. Every
+ * placement is derived from the world seed plus a stable id (building id,
+ * factory id, road-tile coordinate), so it never shuffles on reload, and
+ * every chosen tile is folded into `occupied` so the general scenery pass
+ * that runs afterward can never land a tree on top of a cart. */
+function buildVillageLife(
+  state: GameState,
+  buildings: readonly PlacedBuilding[],
+  factories: readonly FactoryInstance[],
+  roadPositions: readonly { x: number; y: number }[],
+  reserved: ReadonlySet<string>,
+  pond: ReadonlySet<string>,
+): { decorations: DecorationView[]; occupied: Set<string> } {
+  assertLifeAssetsRegistered();
+
+  const gridWidth = state.town.gridWidth;
+  const gridHeight = state.town.gridHeight;
+  const occupied = new Set<string>();
+  const decorations: DecorationView[] = [];
+  let idCounter = 0;
+
+  const place = (
+    kind: DecorationKind,
+    origin: { x: number; y: number },
+    radius: number,
+    rng: RngState,
+  ): void => {
+    const tile = findFreeNeighborTile(origin, radius, rng, gridWidth, gridHeight, reserved, pond, occupied);
+    if (!tile) return; // hemmed in on every side this frame; skip rather than overlap something real
+    decorations.push({
+      id: `life-${idCounter++}`,
+      kind,
+      position: tile,
+      rotation: nextInt(rng, 0, 3) as 0 | 1 | 2 | 3,
+    });
+  };
+
+  // Market: a farmers' market gets a small cluster of stalls plus a cart,
+  // seeded per building id so the exact stalls stay put across reloads.
+  for (const building of buildings) {
+    if (building.buildingTypeId !== 'farmers_market') continue;
+    const marketCenter = {
+      x: building.position.x + Math.floor(building.footprint.width / 2),
+      y: building.position.y + Math.floor(building.footprint.height / 2),
+    };
+    const rng = createRng(seedFromString(`life-market:${building.id}`));
+    const stallCount = nextInt(rng, 2, 3);
+    for (let i = 0; i < stallCount; i++) place('market_stall', marketCenter, 3, rng);
+    place('cart', marketCenter, 3, rng);
+  }
+
+  // Factories: a couple of barrels or crates parked outside every one,
+  // seeded per factory id.
+  for (const factory of factories) {
+    const origin = factory.position ?? { x: FACTORY_ORIGIN.x, y: FACTORY_ORIGIN.y };
+    const rng = createRng(seedFromString(`life-factory:${factory.id}`));
+    const propCount = nextInt(rng, 1, 3);
+    for (let i = 0; i < propCount; i++) {
+      const kind = pickWeighted<DecorationKind>(rng, ['barrel', 'crate'], [3, 2]);
+      place(kind, origin, 2, rng);
+    }
+  }
+
+  // Roads: a sparse scatter of carts along the network, one seeded roll
+  // per road tile so the same stretch of road always gets (or never gets)
+  // its cart.
+  for (const roadTile of roadPositions) {
+    const rng = createRng(seedFromString(`life-road:${roadTile.x},${roadTile.y}`));
+    if (!chance(rng, 0.06)) continue;
+    place('cart', roadTile, 1, rng);
+  }
+
+  // Ducks paddling the pond - a handful, seeded off the pond's own tiles
+  // rather than a building id, since the pond has none.
+  if (pond.size > 0) {
+    const pondTilesArray = [...pond].map((key) => {
+      const [xStr, yStr] = key.split(',');
+      return { x: Number(xStr), y: Number(yStr) };
+    });
+    const rng = createRng(worldScenerySeed(state) ^ 0xd0c4d0c4);
+    const duckCount = Math.min(pondTilesArray.length, nextInt(rng, 1, 2));
+    for (let i = 0; i < duckCount; i++) {
+      const tile = pondTilesArray[nextInt(rng, 0, pondTilesArray.length - 1)]!;
+      const key = `${tile.x},${tile.y}`;
+      if (occupied.has(key)) continue;
+      occupied.add(key);
+      decorations.push({
+        id: `life-${idCounter++}`,
+        kind: 'duck',
+        position: tile,
+        rotation: nextInt(rng, 0, 3) as 0 | 1 | 2 | 3,
+      });
+    }
+  }
+
+  return { decorations, occupied };
+}
+
+/**
+ * Ready-state cues: a sparkle over a crop plot that has actually finished
+ * growing, a factory with at least one finished-or-blocked queue slot, and
+ * an animal whose product has actually finished its cycle. Every one of
+ * these is read from the real simulation state passed to this frame - no
+ * decorative guess, no "probably done by now" timer of its own.
+ */
+function buildReadySparkles(
+  cropPlots: readonly CropPlotView[],
+  factories: readonly FactoryInstance[],
+  animalSheds: readonly AnimalShed[],
+  now: number,
+): DecorationView[] {
+  const sparkles: DecorationView[] = [];
+
+  for (const plot of cropPlots) {
+    if (plot.growthStage !== 'ready') continue;
+    sparkles.push({ id: `sparkle-crop-${plot.id}`, kind: 'sparkle_ready', position: plot.position, rotation: 0 });
+  }
+
+  for (const factory of factories) {
+    // A slot is "output waiting" once it has finished (readyAt reached) or
+    // was already finished and blocked from delivering to a full barn
+    // (paused) - both are real product sitting there for the player to
+    // collect, not a guess about how the queue is probably doing.
+    const hasReadyOutput = factory.queue.some((slot) => slot.paused || slot.readyAt <= now);
+    if (!hasReadyOutput) continue;
+    const position = factory.position ?? { x: FACTORY_ORIGIN.x, y: FACTORY_ORIGIN.y };
+    sparkles.push({ id: `sparkle-factory-${factory.id}`, kind: 'sparkle_ready', position, rotation: 0 });
+  }
+
+  for (const shed of animalSheds) {
+    for (const unit of shed.animals) {
+      if (!animalUnitReady(unit, now)) continue;
+      sparkles.push({ id: `sparkle-animal-${unit.id}`, kind: 'sparkle_ready', position: shed.position, rotation: 0 });
+    }
+  }
+
+  return sparkles;
+}
+
+function animalUnitReady(unit: AnimalUnit, now: number): boolean {
+  return unit.feedStartedAt !== null && unit.readyAt !== null && now >= unit.readyAt;
+}
+
+/** Chimney smoke over every factory with a queue slot genuinely running
+ * right now (started, not yet finished, not paused-and-blocked) - never a
+ * factory that is idle, finished, or stalled behind a full barn. */
+function buildChimneySmoke(factories: readonly FactoryInstance[], now: number): DecorationView[] {
+  const smoke: DecorationView[] = [];
+  for (const factory of factories) {
+    const isProducing = factory.queue.some((slot) => !slot.paused && slot.startedAt <= now && now < slot.readyAt);
+    if (!isProducing) continue;
+    const position = factory.position ?? { x: FACTORY_ORIGIN.x, y: FACTORY_ORIGIN.y };
+    smoke.push({ id: `smoke-${factory.id}`, kind: 'chimney_smoke', position, rotation: 0 });
+  }
+  return smoke;
+}
+
+// ---------------------------------------------------------------------------
 // Tiles / weather
 // ---------------------------------------------------------------------------
 
@@ -645,7 +896,27 @@ export function stateToEngineView(state: GameState, now: number): GameStateView 
 
   const reserved = reservedTileSet(state, state.town.buildings, state.zoo.enclosures, roadPositions);
   const waterTiles = pondTiles(state.town.gridWidth, state.town.gridHeight, worldScenerySeed(state));
-  const scenery = buildScenery(state, reserved, waterTiles);
+
+  // Village life (roadside carts, market stalls, factory barrels, pond
+  // ducks) is placed before the general scenery pass, and every tile it
+  // claims is folded into `reserved` so a tree can never spawn on top of
+  // a cart - see buildVillageLife()'s own doc.
+  const villageLife = buildVillageLife(
+    state,
+    state.town.buildings,
+    state.factories.factories,
+    roadPositions,
+    reserved,
+    waterTiles,
+  );
+  const reservedWithLife = new Set(reserved);
+  for (const key of villageLife.occupied) reservedWithLife.add(key);
+  const scenery = buildScenery(state, reservedWithLife, waterTiles);
+
+  const cropPlots = mapCropPlots(state, now);
+  const animals = mapAnimals(state);
+  const readySparkles = buildReadySparkles(cropPlots, state.factories.factories, state.animals.sheds, now);
+  const chimneySmoke = buildChimneySmoke(state.factories.factories, now);
 
   return {
     tiles: state.terrain
@@ -655,10 +926,17 @@ export function stateToEngineView(state: GameState, now: number): GameStateView 
         }))
       : buildTiles(state.town.gridWidth, state.town.gridHeight, soilTiles, waterTiles),
     buildings: [...buildings, ...zooBuildings, ...factoryBuildings, barnBuilding],
-    cropPlots: mapCropPlots(state, now),
-    animals: mapAnimals(state),
+    cropPlots,
+    animals,
     roads,
-    decorations: [...decorations, ...mapFieldPlotBeds(state), ...scenery],
+    decorations: [
+      ...decorations,
+      ...mapFieldPlotBeds(state),
+      ...scenery,
+      ...villageLife.decorations,
+      ...readySparkles,
+      ...chimneySmoke,
+    ],
     weather: state.weather
       ? { kind: state.weather.kind, timeOfDay: buildWeather(now).timeOfDay }
       : buildWeather(now),
