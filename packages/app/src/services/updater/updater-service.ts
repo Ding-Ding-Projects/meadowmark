@@ -168,6 +168,15 @@ export class UpdaterService {
     }
   }
 
+  /** Stops new scheduled checks, cancels active work, and resolves once no check remains in flight. */
+  async stopAndWaitUntilIdle(): Promise<void> {
+    this.stopBackgroundSchedule();
+    this.cancel();
+    while (this.checkInFlight) {
+      await new Promise<void>((resolve) => setTimeout(resolve, 25));
+    }
+  }
+
   /**
    * Returns from the `ready` state to `idle` without discarding the
    * staged package - this is the "Later" action. The next {@link check}
