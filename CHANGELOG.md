@@ -37,6 +37,18 @@ All notable changes to Meadowmark are documented in this file.
   `window.meadowmark.history`, with a new "History" tab in Settings that
   lists, searches, labels, restores, and exports recorded revisions. See
   `docs/features/history.md`.
+- Export engine wiring: the Electron main process now serializes the
+  settings document and the farm save into any of the ten formats the
+  export engine supports, always computing and showing a loss report
+  before writing, and writes through the native save dialog and the app's
+  atomic-write path. Exposed through preload as `window.meadowmark.exports`,
+  with a new "Export" tab in Settings. See `docs/features/exports.md`.
+- App-logo customization wiring: the Electron main process now runs the
+  decode/edit/convert/verify/persist pipeline for shipped presets and PNG
+  uploads picked through the native file dialog, exposed through preload
+  as `window.meadowmark.logo`, with a new "Logo" tab in Settings showing
+  live previews and a reset action. See
+  `docs/features/app-logo-customization.md`.
 
 ### Fixed
 
