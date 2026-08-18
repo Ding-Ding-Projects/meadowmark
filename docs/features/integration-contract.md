@@ -25,8 +25,10 @@ Every mismatch between what the UI contract expects and what the real
 `GAP:` at its exact call site, rather than silently faked or hidden. That
 mark is the honest source of truth for what does not work yet — do not
 duplicate the list here where it can drift; read the adapter files. As of
-this writing there are roughly 30 `GAP:` markers across the four adapter
-files. The highest-impact ones, because they leave whole panels showing no
+this writing there are 47 `GAP:` markers across the four adapter
+files (`grep -rn "GAP:" packages/renderer/src/adapters/*.ts | wc -l`);
+that count will drift as gaps close or new ones are found, so re-run the
+grep rather than trusting this number long-term. The highest-impact ones, because they leave whole panels showing no
 real content in the running app:
 
 - **No museum system exists in `@meadowmark/shared` or `balance/` at all.**
