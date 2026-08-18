@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The town — Meadowmark</title>
+<meta name="description" content="Houses, thirteen population-gated community buildings, town charm, and roads villagers actually walk.">
+<link rel="canonical" href="https://ding-ding-projects.github.io/meadowmark/docs/town.html">
+<meta property="og:title" content="The town — Meadowmark">
+<meta property="og:description" content="Houses, thirteen population-gated community buildings, town charm, and roads villagers actually walk.">
+<meta property="og:url" content="https://ding-ding-projects.github.io/meadowmark/docs/town.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Meadowmark">
+<meta property="og:image" content="https://ding-ding-projects.github.io/meadowmark/og-image.svg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Meadowmark wordmark over a low-poly farm and town skyline">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#3a6b3f">
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/components.css">
+</head>
+<body>
+<div class="mm-shell" data-dock="left">
+  <div id="mm-header-host"></div>
+  <main class="mm-main" id="main">
+    <div class="mm-breadcrumbs"><a href="index.html">Documentation</a> / The town</div>
+    <article class="mm-article">
+      <h1>🏘️ <span class="i18n-en">The town</span><span class="i18n-yue" lang="yue"> 小鎮</span></h1>
+
+      <h2><span class="i18n-en">What it does</span><span class="i18n-yue" lang="yue"> 做乜嘢</span></h2>
+      <p><span class="i18n-en">A 3D grid the player builds on directly. Houses cost coins and materials, take ten minutes to six hours to build, and each adds 8 to 40 population. Community buildings are gated behind population and each switches a system on: Town Hall, Farmers Market, Train Station (population 8), Dock (18), Mine (22), Zoo (25), Museum (30), Restaurant, Cinema, School, Hospital, Fire Station, Airport and Sports Arena. Decorations feed a town-charm score that pays a small daily coin bonus. Roads connect it all, and villagers walk them.</span>
+      <span class="i18n-yue" lang="yue">一個玩家直接喺上面起嘢嘅 3D 網格。屋要金幣同材料，起十分鐘到六個鐘唔等，每間加 8 到 40 人口。社區建築要夠人口先解鎖，每座都會開啟一個系統：市政廳、農墟、火車站（人口 8）、碼頭（18）、礦場（22）、動物園（25）、博物館（30）、餐廳、戲院、學校、醫院、消防局、機場、體育場。裝飾會加人氣值，俾一啲每日金幣獎勵。馬路連晒成個鎮，村民真係會沿路行。</span></p>
+
+      <h2><span class="i18n-en">How it works</span><span class="i18n-yue" lang="yue"> 點運作</span></h2>
+      <p><span class="i18n-en">The town is alive whether or not you are — villagers keep walking the road network during offline resume, resolved by the same headless tick as everything else, and rendered once the engine is watching again.</span>
+      <span class="i18n-yue" lang="yue">唔理你喺唔喺線，個鎮都係活嘅——村民就算你唔喺線都會繼續沿路網行，跟其他嘢一樣用返嗰套無畫面 tick 去計，等引擎再睇緊嘅時候先畫返出嚟。</span></p>
+
+      <h2><span class="i18n-en">Failure modes</span><span class="i18n-yue" lang="yue"> 失敗情況</span></h2>
+      <p><span class="i18n-en">Because population gates community buildings, a save with population miscounted would misgate every downstream system — this is exactly the kind of cross-system dependency the design plan's architecture calls out for the balance validator to catch (no unlock orphaned, no chain unreachable).</span>
+      <span class="i18n-yue" lang="yue">因為人口係社區建築嘅解鎖條件，人口計錯就會令所有下游系統都跟住錯——呢種跨系統依賴正正係設計計劃「架構」部分要求平衡驗證工具去捕捉（冇孤兒解鎖，冇去唔到嘅鏈）。</span></p>
+
+      <h2><span class="i18n-en">What is not yet implemented</span><span class="i18n-yue" lang="yue"> 仲未整好嘅部分</span></h2>
+      <p><span class="i18n-en">No public build of Meadowmark has shipped yet (see the <a href="../changelog.html">changelog</a>). Building costs, build times, and the population-gate list for all thirteen community buildings are balance data, alongside the mesh definitions for every building the town can hold.</span>
+      <span class="i18n-yue" lang="yue">Meadowmark 暫時未有公開發佈（睇<a href="../changelog.html">更新日誌</a>）。建築成本、建造時間，同十三座社區建築嘅人口門檻，都係平衡數據，同小鎮可以擺嘅每座建築嘅 mesh 定義一齊管理。</span></p>
+
+      <div class="mm-related">
+        <h2><span class="i18n-en">Related reading</span><span class="i18n-yue" lang="yue"> 相關文章</span></h2>
+        <ul>
+          <li><a href="expansions.html"><span class="i18n-en">Expansions</span><span class="i18n-yue" lang="yue"> 擴地</span></a></li>
+          <li><a href="camera-rendering.html"><span class="i18n-en">Camera & the 3D world</span><span class="i18n-yue" lang="yue"> 鏡頭同 3D 世界</span></a></li>
+          <li><a href="village.html"><span class="i18n-en">The village</span><span class="i18n-yue" lang="yue"> 村莊</span></a></li>
+        </ul>
+      </div>
+    </article>
+  </main>
+</div>
+<div id="mm-footer-host"></div>
+<script src="../js/overlay.js"></script>
+<script src="../js/color-picker.js"></script>
+<script src="../js/strings.js"></script>
+<script src="../js/theme.js"></script>
+<script src="../js/i18n.js"></script>
+<script src="../js/export.js"></script>
+<script src="../js/regex-builder.js"></script>
+<script src="../js/tabs.js"></script>
+<script src="../js/command-palette.js"></script>
+<script src="../js/notifications.js"></script>
+<script src="../js/appearance-editor.js"></script>
+<script src="../js/app.js"></script>
+<script>MMApp.init({ rootPrefix: "../", currentHref: "/docs/town.html" });</script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Animals — Meadowmark</title>
+<meta name="description" content="Six species — chickens, cows, sheep, pigs, goats and bees — fed by animal feed, each with an upgradeable shed.">
+<link rel="canonical" href="https://ding-ding-projects.github.io/meadowmark/docs/animals.html">
+<meta property="og:title" content="Animals — Meadowmark">
+<meta property="og:description" content="Six species — chickens, cows, sheep, pigs, goats and bees — fed by animal feed, each with an upgradeable shed.">
+<meta property="og:url" content="https://ding-ding-projects.github.io/meadowmark/docs/animals.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Meadowmark">
+<meta property="og:image" content="https://ding-ding-projects.github.io/meadowmark/og-image.svg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Meadowmark wordmark over a low-poly farm and town skyline">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#3a6b3f">
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/components.css">
+</head>
+<body>
+<div class="mm-shell" data-dock="left">
+  <div id="mm-header-host"></div>
+  <main class="mm-main" id="main">
+    <div class="mm-breadcrumbs"><a href="index.html">Documentation</a> / Animals</div>
+    <article class="mm-article">
+      <h1>🐔 <span class="i18n-en">Animals</span><span class="i18n-yue" lang="yue"> 動物</span></h1>
+
+      <h2><span class="i18n-en">What it does</span><span class="i18n-yue" lang="yue"> 做乜嘢</span></h2>
+      <p><span class="i18n-en">Animals run as a parallel branch to crops, fed by animal feed: chickens produce eggs in 20 minutes, cows produce milk in 1 hour, sheep produce wool in 2 hours, pigs produce bacon in 4 hours, goats in 5 hours, and bees produce honey in 8 hours. Each species needs its own shed, and sheds upgrade for more slots.</span>
+      <span class="i18n-yue" lang="yue">動物同作物平行運作，用飼料餵：雞 20 分鐘生蛋，牛 1 個鐘產奶，羊 2 個鐘出羊毛，豬 4 個鐘出煙肉，山羊 5 個鐘，蜜蜂 8 個鐘產蜜糖。每種動物要自己嘅棚，棚可以升級加位。</span></p>
+
+      <h2><span class="i18n-en">How it works</span><span class="i18n-yue" lang="yue"> 點運作</span></h2>
+      <p><span class="i18n-en">Animal feed itself is a crop-derived good made in the Feed Mill, so animals sit downstream of the fields — a farm with no wheat or corn production cannot feed a growing herd. Animal goods (eggs, milk, wool, bacon, honey) feed into factory recipes exactly as crops do, most visibly in Cake (flour plus cream plus sugar plus an egg) and Pizza (dough plus cheese plus tomato).</span>
+      <span class="i18n-yue" lang="yue">飼料本身係作物加工出嚟嘅貨，喺飼料廠整，所以動物係田地嘅下游——冇小麥或者粟米生產嘅農場，養唔起越嚟越多嘅牲畜。動物產品（蛋、奶、羊毛、煙肉、蜜糖）同作物一樣會餵去工廠配方，最明顯係蛋糕（麵粉加忌廉加糖加蛋）同薄餅（麵糰加芝士加蕃茄）。</span></p>
+
+      <h2><span class="i18n-en">Failure modes</span><span class="i18n-yue" lang="yue"> 失敗情況</span></h2>
+      <p><span class="i18n-en">As with crops, a full barn pauses rather than discards animal output, and the interface states which good is blocking the queue.</span>
+      <span class="i18n-yue" lang="yue">同作物一樣，倉滿咗會暫停而唔係扔咗動物產出，介面會講清楚係邊種貨品阻住條隊列。</span></p>
+
+      <h2><span class="i18n-en">What is not yet implemented</span><span class="i18n-yue" lang="yue"> 仲未整好嘅部分</span></h2>
+      <p><span class="i18n-en">No public build of Meadowmark has shipped yet (see the <a href="../changelog.html">changelog</a>). Shed capacity, feed costs and animal grow times are balance data alongside the crop table, checked by the same validator for reachability and cycle-freedom.</span>
+      <span class="i18n-yue" lang="yue">Meadowmark 暫時未有公開發佈（睇<a href="../changelog.html">更新日誌</a>）。棚嘅容量、飼料成本同動物生長時間同作物表一齊係平衡數據，用同一個驗證工具去確認可達性同冇循環。</span></p>
+
+      <div class="mm-related">
+        <h2><span class="i18n-en">Related reading</span><span class="i18n-yue" lang="yue"> 相關文章</span></h2>
+        <ul>
+          <li><a href="fields-crops.html"><span class="i18n-en">Fields & crops</span><span class="i18n-yue" lang="yue"> 田地同作物</span></a></li>
+          <li><a href="factories.html"><span class="i18n-en">Factories & production chains</span><span class="i18n-yue" lang="yue"> 工廠同生產鏈</span></a></li>
+        </ul>
+      </div>
+    </article>
+  </main>
+</div>
+<div id="mm-footer-host"></div>
+<script src="../js/overlay.js"></script>
+<script src="../js/color-picker.js"></script>
+<script src="../js/strings.js"></script>
+<script src="../js/theme.js"></script>
+<script src="../js/i18n.js"></script>
+<script src="../js/export.js"></script>
+<script src="../js/regex-builder.js"></script>
+<script src="../js/tabs.js"></script>
+<script src="../js/command-palette.js"></script>
+<script src="../js/notifications.js"></script>
+<script src="../js/appearance-editor.js"></script>
+<script src="../js/app.js"></script>
+<script>MMApp.init({ rootPrefix: "../", currentHref: "/docs/animals.html" });</script>
+</body>
+</html>

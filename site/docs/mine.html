@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mine — Meadowmark</title>
+<meta name="description" content="From level 22. A grid of rock beneath the town, one energy per tile dug.">
+<link rel="canonical" href="https://ding-ding-projects.github.io/meadowmark/docs/mine.html">
+<meta property="og:title" content="Mine — Meadowmark">
+<meta property="og:description" content="From level 22. A grid of rock beneath the town, one energy per tile dug.">
+<meta property="og:url" content="https://ding-ding-projects.github.io/meadowmark/docs/mine.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Meadowmark">
+<meta property="og:image" content="https://ding-ding-projects.github.io/meadowmark/og-image.svg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Meadowmark wordmark over a low-poly farm and town skyline">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#3a6b3f">
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/components.css">
+</head>
+<body>
+<div class="mm-shell" data-dock="left">
+  <div id="mm-header-host"></div>
+  <main class="mm-main" id="main">
+    <div class="mm-breadcrumbs"><a href="index.html">Documentation</a> / Mine</div>
+    <article class="mm-article">
+      <h1>⛏️ <span class="i18n-en">Mine</span><span class="i18n-yue" lang="yue"> 礦場</span></h1>
+
+      <h2><span class="i18n-en">What it does</span><span class="i18n-yue" lang="yue"> 做乜嘢</span></h2>
+      <p><span class="i18n-en">Unlocking from level 22. A grid of rock beneath the town, one energy per tile dug. Tiles hide ore (copper, iron, silver, gold, platinum), gems, tools (picks, dynamite clearing a cross, TNT clearing a block) and artifact fragments. Six fragments complete an artifact, which goes to the Museum for cash and a small permanent bonus.</span>
+      <span class="i18n-yue" lang="yue">22 級解鎖。小鎮下面嘅石格網，每挖一格用一點能量。格入面藏住礦石（銅、鐵、銀、金、白金）、寶石、工具（鎬、清十字嘅炸藥、清一整塊嘅 TNT）同文物碎片。六塊碎片砌成一件文物，交去博物館換 Cash 同一個細細嘅永久獎勵。</span></p>
+
+      <h2><span class="i18n-en">How it works</span><span class="i18n-yue" lang="yue"> 點運作</span></h2>
+      <p><span class="i18n-en">The foundry smelts ore into bars, feeding jewellery, furniture and perfume — this is the mine's link back into the factory chain system. The mine regenerates daily, so it is a renewable energy sink rather than a resource that can be exhausted permanently.</span>
+      <span class="i18n-yue" lang="yue">鑄造廠會將礦石熔成金屬條，餵去珠寶、傢俬同香水——呢個係礦場連返工廠生產鏈嘅接口。礦場每日重生，所以佢係一個可再生嘅能量消耗途徑，唔會俾人永久挖光。</span></p>
+
+      <h2><span class="i18n-en">Failure modes</span><span class="i18n-yue" lang="yue"> 失敗情況</span></h2>
+      <p><span class="i18n-en">Energy is a hard cap on how much mine digging can happen in one sitting, and it regenerates on a fixed timer — the interface should make the remaining energy and its regeneration time visible before the player commits to digging.</span>
+      <span class="i18n-yue" lang="yue">能量係一次過挖礦數量嘅硬上限，跟固定時間表回復——介面應該喺玩家決定挖之前，清楚顯示剩返幾多能量同幾時回滿。</span></p>
+
+      <h2><span class="i18n-en">What is not yet implemented</span><span class="i18n-yue" lang="yue"> 仲未整好嘅部分</span></h2>
+      <p><span class="i18n-en">No public build of Meadowmark has shipped yet (see the <a href="../changelog.html">changelog</a>). The tile-content probability table, the six-fragment artifact sets, and their Museum payouts are balance data validated for reachability.</span>
+      <span class="i18n-yue" lang="yue">Meadowmark 暫時未有公開發佈（睇<a href="../changelog.html">更新日誌</a>）。格內容機率表、六塊一套嘅文物組合，同佢哋喺博物館嘅回報，都係平衡數據，會做可達性驗證。</span></p>
+
+      <div class="mm-related">
+        <h2><span class="i18n-en">Related reading</span><span class="i18n-yue" lang="yue"> 相關文章</span></h2>
+        <ul>
+          <li><a href="factories.html"><span class="i18n-en">Factories & production chains</span><span class="i18n-yue" lang="yue"> 工廠同生產鏈</span></a></li>
+          <li><a href="museum.html"><span class="i18n-en">Museum</span><span class="i18n-yue" lang="yue"> 博物館</span></a></li>
+          <li><a href="zoo.html"><span class="i18n-en">Zoo</span><span class="i18n-yue" lang="yue"> 動物園</span></a></li>
+          <li><a href="expansions.html"><span class="i18n-en">Expansions</span><span class="i18n-yue" lang="yue"> 擴地</span></a></li>
+        </ul>
+      </div>
+    </article>
+  </main>
+</div>
+<div id="mm-footer-host"></div>
+<script src="../js/overlay.js"></script>
+<script src="../js/color-picker.js"></script>
+<script src="../js/strings.js"></script>
+<script src="../js/theme.js"></script>
+<script src="../js/i18n.js"></script>
+<script src="../js/export.js"></script>
+<script src="../js/regex-builder.js"></script>
+<script src="../js/tabs.js"></script>
+<script src="../js/command-palette.js"></script>
+<script src="../js/notifications.js"></script>
+<script src="../js/appearance-editor.js"></script>
+<script src="../js/app.js"></script>
+<script>MMApp.init({ rootPrefix: "../", currentHref: "/docs/mine.html" });</script>
+</body>
+</html>

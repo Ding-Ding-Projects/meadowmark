@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Saves & coming back — Meadowmark</title>
+<meta name="description" content="Versioned JSON saves, atomic writes on Windows, and how offline progress resolves on resume.">
+<link rel="canonical" href="https://ding-ding-projects.github.io/meadowmark/docs/saves-offline.html">
+<meta property="og:title" content="Saves & coming back — Meadowmark">
+<meta property="og:description" content="Versioned JSON saves, atomic writes on Windows, and how offline progress resolves on resume.">
+<meta property="og:url" content="https://ding-ding-projects.github.io/meadowmark/docs/saves-offline.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Meadowmark">
+<meta property="og:image" content="https://ding-ding-projects.github.io/meadowmark/og-image.svg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Meadowmark wordmark over a low-poly farm and town skyline">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#3a6b3f">
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/components.css">
+</head>
+<body>
+<div class="mm-shell" data-dock="left">
+  <div id="mm-header-host"></div>
+  <main class="mm-main" id="main">
+    <div class="mm-breadcrumbs"><a href="index.html">Documentation</a> / Saves & coming back</div>
+    <article class="mm-article">
+      <h1>💾 <span class="i18n-en">Saves & coming back</span><span class="i18n-yue" lang="yue"> 存檔同返嚟</span></h1>
+
+      <h2><span class="i18n-en">What it does</span><span class="i18n-yue" lang="yue"> 做乜嘢</span></h2>
+      <p><span class="i18n-en">Saves are versioned JSON, written locally, with no cloud sync and no account. On resume, the simulation ticks forward by the elapsed real-world time, clamped to thirty days, so timers complete, production runs until the barn fills, animals finish, the mine regenerates, and a summary shows exactly what happened while you were away.</span>
+      <span class="i18n-yue" lang="yue">存檔係本機嘅版本化 JSON 檔案，冇雲端同步，亦都唔使帳號。返嚟嗰陣，模擬會跟返實際過咗嘅時間推前（最多推 30 日），時限會完成、生產會做到倉滿為止、動物會完成、礦場會重生，仲有個總結話你知走咗嗰段時間發生咗乜。</span></p>
+
+      <h2><span class="i18n-en">How it works</span><span class="i18n-yue" lang="yue"> 點運作</span></h2>
+      <p><span class="i18n-en">Saves are written through an atomic-write helper that retries the rename on EPERM, EACCES and EBUSY — a plain rename can fail on Windows whenever the destination file is momentarily open, which a virus scanner, the search indexer or a sync client does to every file you just wrote. A project-wide guard refuses a bare fs.rename anywhere in the tree so this cannot be bypassed by accident. The simulation itself is headless and deterministic: tick(state, elapsedMs) -&gt; state runs with no three.js and no DOM, over a seeded random number generator, which is what makes offline progress the exact same code path as live play rather than a second implementation that quietly drifts from the first.</span>
+      <span class="i18n-yue" lang="yue">存檔透過一個原子寫入輔助工具寫入，遇到 EPERM、EACCES、EBUSY 會自動重試——喺 Windows 度，普通嘅 rename 只要目標檔案暫時俾人打開咗就會失敗，而防毒軟件、搜尋索引或者同步軟件成日都會打開你啱啱寫嘅檔案。項目入面有個守衛，唔畀成個 repo 出現裸嘅 fs.rename，所以呢個保護唔會俾人唔小心繞過。模擬本身係無畫面同確定性嘅：tick(state, elapsedMs) -&gt; state 完全唔使 three.js 同 DOM，跟住一個有種子嘅隨機數產生器行，呢個令離線進度同即時遊玩用返完全同一條程式碼路徑，而唔係另一份會慢慢同原本唔一致嘅實作。</span></p>
+
+      <h2><span class="i18n-en">Failure modes</span><span class="i18n-yue" lang="yue"> 失敗情況</span></h2>
+      <p><span class="i18n-en">The clamp to thirty days means a save left untouched for months resumes as thirty days of progress, not months — this is a deliberate bound, stated plainly in the return summary rather than left for the player to notice a discrepancy. A save that fails to write (after every atomic-write retry is exhausted) must not corrupt the previous valid save; the write targets a temporary file and only replaces the real save file on a successful rename.</span>
+      <span class="i18n-yue" lang="yue">推前上限係三十日，即係擺咗幾個月冇開嘅存檔，返嚟都淨係當三十日進度計，唔係幾個月——呢個係刻意嘅上限，會喺總結度講清楚，唔會等玩家自己發現唔對路。就算原子寫入重試晒都失敗，都唔應該整爛之前個有效存檔；寫入會先寫去暫存檔案，成功 rename 咗先會取代返正式存檔。</span></p>
+
+      <h2><span class="i18n-en">What is not yet implemented</span><span class="i18n-yue" lang="yue"> 仲未整好嘅部分</span></h2>
+      <p><span class="i18n-en">No public build of Meadowmark has shipped yet (see the <a href="../changelog.html">changelog</a>). The save schema, its migrations, and the offline-resume tick loop live in packages/shared and are verified by asserting tick(24h) equals 1,440 applications of tick(1min) over long horizons — this is checked in the change that introduces it rather than left to a screenshot to catch.</span>
+      <span class="i18n-yue" lang="yue">Meadowmark 暫時未有公開發佈（睇<a href="../changelog.html">更新日誌</a>）。存檔格式、遷移邏輯，同離線推進嘅 tick 循環都喺 packages/shared 入面，驗證方法係喺長時段度斷言 tick(24h) 等於 1,440 次 tick(1min)——呢個係喺加入嗰個改動入面就驗證，唔係靠張截圖先發現有事。</span></p>
+
+      <div class="mm-related">
+        <h2><span class="i18n-en">Related reading</span><span class="i18n-yue" lang="yue"> 相關文章</span></h2>
+        <ul>
+          <li><a href="progression.html"><span class="i18n-en">Currencies & progression</span><span class="i18n-yue" lang="yue"> 貨幣同進度</span></a></li>
+          <li><a href="camera-rendering.html"><span class="i18n-en">Camera & the 3D world</span><span class="i18n-yue" lang="yue"> 鏡頭同 3D 世界</span></a></li>
+          <li><a href="factories.html"><span class="i18n-en">Factories & production chains</span><span class="i18n-yue" lang="yue"> 工廠同生產鏈</span></a></li>
+        </ul>
+      </div>
+    </article>
+  </main>
+</div>
+<div id="mm-footer-host"></div>
+<script src="../js/overlay.js"></script>
+<script src="../js/color-picker.js"></script>
+<script src="../js/strings.js"></script>
+<script src="../js/theme.js"></script>
+<script src="../js/i18n.js"></script>
+<script src="../js/export.js"></script>
+<script src="../js/regex-builder.js"></script>
+<script src="../js/tabs.js"></script>
+<script src="../js/command-palette.js"></script>
+<script src="../js/notifications.js"></script>
+<script src="../js/appearance-editor.js"></script>
+<script src="../js/app.js"></script>
+<script>MMApp.init({ rootPrefix: "../", currentHref: "/docs/saves-offline.html" });</script>
+</body>
+</html>

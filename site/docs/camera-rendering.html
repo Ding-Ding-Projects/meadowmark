@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Camera & the 3D world — Meadowmark</title>
+<meta name="description" content="Free-orbit camera, procedurally generated meshes, lighting, instancing and placement.">
+<link rel="canonical" href="https://ding-ding-projects.github.io/meadowmark/docs/camera-rendering.html">
+<meta property="og:title" content="Camera & the 3D world — Meadowmark">
+<meta property="og:description" content="Free-orbit camera, procedurally generated meshes, lighting, instancing and placement.">
+<meta property="og:url" content="https://ding-ding-projects.github.io/meadowmark/docs/camera-rendering.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Meadowmark">
+<meta property="og:image" content="https://ding-ding-projects.github.io/meadowmark/og-image.svg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Meadowmark wordmark over a low-poly farm and town skyline">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#3a6b3f">
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/components.css">
+</head>
+<body>
+<div class="mm-shell" data-dock="left">
+  <div id="mm-header-host"></div>
+  <main class="mm-main" id="main">
+    <div class="mm-breadcrumbs"><a href="index.html">Documentation</a> / Camera & the 3D world</div>
+    <article class="mm-article">
+      <h1>🎥 <span class="i18n-en">Camera & the 3D world</span><span class="i18n-yue" lang="yue"> 鏡頭同 3D 世界</span></h1>
+
+      <h2><span class="i18n-en">What it does</span><span class="i18n-yue" lang="yue"> 做乜嘢</span></h2>
+      <p><span class="i18n-en">The world is real 3D, rendered with three.js on WebGL2, bundled into the installer with no CDN and no remote assets — it works with the network unplugged. The camera has full freedom: zoom, pan, rotate and tilt, with every camera action also reachable by keyboard. Because the player can orbit freely, every building must read correctly from all sides — there are no front-only facades.</span>
+      <span class="i18n-yue" lang="yue">呢個世界係真正嘅 3D，用 three.js 喺 WebGL2 上面畫，全部包咗喺安裝程式入面，冇 CDN、冇遠端素材——拔咗網都照玩得。鏡頭完全自由：可以放大縮小、平移、旋轉同傾斜，每個鏡頭動作都有鍵盤操作。因為玩家可以自由環繞，每座建築由邊個角度睇都要靚——冇淨係得正面靚嘅門面。</span></p>
+
+      <h2><span class="i18n-en">How it works</span><span class="i18n-yue" lang="yue"> 點運作</span></h2>
+      <p><span class="i18n-en">A perspective camera at a narrow field of view and long distance gives a miniature tilt-shift diorama read rather than a flat isometric one. Yaw is unrestricted with an optional snap to four corners, pitch is clamped between 20 and 75 degrees, zoom is clamped, and pan is bounded to the town plus a margin. All assets — buildings, crops, animals, props — are generated from a committed mesh language (boxes, prisms, extruded polygons, roofs, lathes) and vertex-coloured from a semantic palette, so there are no binary art files to lose track of and the whole world restyles when the palette changes. Lighting is hemisphere fill plus a directional sun with soft shadows and contact shadows, and a day/night cycle following the real local clock that can be switched off. Performance work — instanced meshes, merged static chunk geometry, and a billboard level-of-detail swap at far zoom — targets 60fps at 1080p on integrated graphics. Placement uses a ghost mesh with a valid/invalid tint, grid snap, R to rotate, and a squash-stretch drop animation that respects reduced motion.</span>
+      <span class="i18n-yue" lang="yue">透視相機用窄視角同長距離，整出微縮景觀嘅移軸攝影效果，而唔係平面等角視覺。水平旋轉唔受限（可以選擇 snap 去四個角），俯仰角限制喺 20 至 75 度之間，縮放有上下限，平移範圍限制喺小鎮加少少邊界。所有素材——建築、作物、動物、道具——都用一套已提交嘅 mesh 語言（盒、稜柱、擠出多邊形、屋頂、車床形狀）生成，跟住用語意色板上色，所以冇二進位美術檔案要追蹤，色板一改成個世界都會變。燈光係半球環境光加一個有柔和陰影同接觸陰影嘅方向性太陽光，仲有跟返本機真實時鐘行、可以關閉嘅日夜循環。效能方面——實例化 mesh、合併靜態區塊幾何、遠距離用告示板 LOD 切換——目標喺內建顯示卡都跑到 1080p 60fps。擺放用有效／無效色調嘅幽靈模型、格線吸附、R 鍵旋轉，仲有一個尊重減少動態設定嘅擠壓彈跳落地動畫。</span></p>
+
+      <h2><span class="i18n-en">Failure modes</span><span class="i18n-yue" lang="yue"> 失敗情況</span></h2>
+      <p><span class="i18n-en">Picking raycasts against a simplified collider set, never against full geometry, so placement stays responsive even as the town's real geometry grows. Render quality is exposed both as raw advanced values and as a novice Speed level 1 to 5 mapped onto them, with the mapping documented so it can be checked rather than trusted; when the raw values match no level, the control reports Custom rather than silently snapping to the nearest one.</span>
+      <span class="i18n-yue" lang="yue">揀選（picking）用簡化嘅碰撞體去做光線投射，唔會用完整幾何，所以就算小鎮嘅真實幾何越嚟越多，擺放都仲係反應夠快。畫質分兩層公開：原始進階數值，同一個對應埋去嘅新手「速度」1 至 5 級掣，呢個對應關係有記錄低，可以查證而唔係靠信；如果原始數值同任何一級都對唔上，個掣會顯示「自訂」，而唔係靜雞雞 snap 去最近嗰級。</span></p>
+
+      <h2><span class="i18n-en">What is not yet implemented</span><span class="i18n-yue" lang="yue"> 仲未整好嘅部分</span></h2>
+      <p><span class="i18n-en">No public build of Meadowmark has shipped yet (see the <a href="../changelog.html">changelog</a>). The 3D is measured, not eyeballed: draw-call and instance counts are recorded per release so a regression shows up as arithmetic rather than a vague sense that a build feels slower. Screenshots are always taken from the installed Squirrel.Windows build, never from a development server.</span>
+      <span class="i18n-yue" lang="yue">Meadowmark 暫時未有公開發佈（睇<a href="../changelog.html">更新日誌</a>）。3D 部分係度量出嚟，唔係靠肉眼睇：每次發佈都會記錄 draw call 同實例數量，所以效能退步會變成一條算式，而唔係「感覺好似慢咗」呢種模糊講法。截圖永遠喺已裝好嘅 Squirrel.Windows 版本入面影，唔會用開發伺服器。</span></p>
+
+      <div class="mm-related">
+        <h2><span class="i18n-en">Related reading</span><span class="i18n-yue" lang="yue"> 相關文章</span></h2>
+        <ul>
+          <li><a href="saves-offline.html"><span class="i18n-en">Saves & coming back</span><span class="i18n-yue" lang="yue"> 存檔同返嚟</span></a></li>
+          <li><a href="town.html"><span class="i18n-en">The town</span><span class="i18n-yue" lang="yue"> 小鎮</span></a></li>
+          <li><a href="zoo.html"><span class="i18n-en">Zoo</span><span class="i18n-yue" lang="yue"> 動物園</span></a></li>
+        </ul>
+      </div>
+    </article>
+  </main>
+</div>
+<div id="mm-footer-host"></div>
+<script src="../js/overlay.js"></script>
+<script src="../js/color-picker.js"></script>
+<script src="../js/strings.js"></script>
+<script src="../js/theme.js"></script>
+<script src="../js/i18n.js"></script>
+<script src="../js/export.js"></script>
+<script src="../js/regex-builder.js"></script>
+<script src="../js/tabs.js"></script>
+<script src="../js/command-palette.js"></script>
+<script src="../js/notifications.js"></script>
+<script src="../js/appearance-editor.js"></script>
+<script src="../js/app.js"></script>
+<script>MMApp.init({ rootPrefix: "../", currentHref: "/docs/camera-rendering.html" });</script>
+</body>
+</html>
