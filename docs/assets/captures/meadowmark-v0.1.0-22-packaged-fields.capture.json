@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "capture": {
+    "file": "meadowmark-v0.1.0-22-packaged-fields.png",
+    "format": "image/png",
+    "sha256": "a6d26eb630f52a3dc65b3bd15eae3d8d26160d0f6e9caaea14a90a698af14923",
+    "pixelDimensions": {
+      "width": 2160,
+      "height": 1350
+    },
+    "viewport": {
+      "width": 1440,
+      "height": 900,
+      "unit": "css-pixels"
+    },
+    "capturedAt": "2026-08-18T16:47:00Z",
+    "capturedAtPrecision": "approximate-to-the-minute"
+  },
+  "source": {
+    "releaseTag": "v0.1.0-22",
+    "releaseUrl": "https://github.com/Ding-Ding-Projects/meadowmark/releases/tag/v0.1.0-22",
+    "targetCommit": "dd2a44fa5264656a62802af04cac3bd192668b9d",
+    "packageAsset": {
+      "name": "meadowmark-0.1.0-full.nupkg",
+      "url": "https://github.com/Ding-Ding-Projects/meadowmark/releases/download/v0.1.0-22/meadowmark-0.1.0-full.nupkg",
+      "sha256": "c1c22f9963c330ce64692b324db6d675f44c68b76ee39e3feaa22c8b9e88869d"
+    },
+    "executable": "lib/net45/Meadowmark.exe"
+  },
+  "method": {
+    "platform": "Windows",
+    "applicationSource": "The executable was extracted from the published release package.",
+    "launch": "The packaged executable was launched on an isolated headless desktop.",
+    "capture": "The first rendered frame was captured through the Chromium DevTools Protocol."
+  },
+  "proof": [
+    "The executable extracted from the published v0.1.0-22 package launched and rendered its first frame.",
+    "The captured frame shows the Meadowmark Fields destination, navigation rail, status HUD, terrain, plots, and empty-plot controls."
+  ],
+  "limitations": [
+    "This evidence proves packaged launch and first paint only.",
+    "It does not prove control interaction, persistence, accessibility, feature integration, other destinations, installer execution, or automated checks."
+  ]
+}
