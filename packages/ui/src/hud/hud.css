@@ -1,58 +1,278 @@
+/*
+ * HUD — game furniture, not stat chips.
+ *
+ * Every readout is a chunky rounded capsule with a thick warm border, a
+ * gradient fill and a large circular icon badge that overhangs the left
+ * end and visually breaks out of the capsule. That overhang is the one
+ * detail that makes this read as a game HUD instead of a row of design-
+ * system chips: the badge sits partly outside its own container, exactly
+ * like a coin purse icon bolted onto a scoreboard.
+ *
+ * Two floating clusters, not one long row: currency (coins, cash) at the
+ * top-left, status (level/XP, population, energy, barn) at the top-right.
+ * Both sit below the custom title bar and stay clear of the bottom dock.
+ */
+
 .mm-hud {
   position: fixed;
-  top: calc(32px + var(--mm-space-3));
-  left: var(--mm-space-3);
-  right: var(--mm-space-3);
+  top: calc(var(--mm-titlebar-height) + var(--mm-space-4));
+  left: var(--mm-space-4);
+  right: var(--mm-space-4);
   z-index: var(--mm-z-hud);
   display: flex;
   flex-wrap: wrap;
-  gap: var(--mm-space-3);
-  align-items: center;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--mm-space-4);
   pointer-events: none;
 }
 .mm-hud > * {
   pointer-events: auto;
 }
+
+.mm-hud-cluster {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--mm-space-4) var(--mm-space-5);
+}
+.mm-hud-cluster--currency {
+  justify-content: flex-start;
+}
+.mm-hud-cluster--status {
+  justify-content: flex-end;
+  margin-left: auto;
+}
+
+/* ---- Currency / count capsule ---- */
+
 .mm-hud-stat {
+  position: relative;
   display: inline-flex;
   align-items: center;
-  gap: var(--mm-space-1);
-  background: var(--mm-color-surface-container-high);
+  gap: var(--mm-space-2);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--mm-hud-accent, var(--mm-color-primary)) 20%, var(--mm-color-surface-container-high)),
+    var(--mm-color-surface-container-high)
+  );
   color: var(--mm-color-on-surface);
+  border: 3px solid color-mix(in srgb, var(--mm-hud-accent, var(--mm-color-primary)) 55%, var(--mm-color-outline));
   border-radius: var(--mm-shape-full);
-  padding: var(--mm-space-1) var(--mm-space-3);
-  box-shadow: var(--mm-elevation-1);
-  min-height: 36px;
-  font-size: var(--mm-type-label-large-size);
+  padding: var(--mm-space-2) var(--mm-space-4) var(--mm-space-2) var(--mm-space-8);
+  min-height: 48px;
+  box-shadow:
+    0 4px 0 color-mix(in srgb, var(--mm-hud-accent, var(--mm-color-primary)) 70%, var(--mm-color-shadow) 20%),
+    0 6px 10px rgba(0, 0, 0, 0.25);
 }
-.mm-hud-stat__icon { font-size: 18px; }
-.mm-hud-xp {
+
+.mm-hud-stat__badge {
+  position: absolute;
+  left: -14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
-  gap: var(--mm-space-2);
-  background: var(--mm-color-surface-container-high);
+  justify-content: center;
+  background: radial-gradient(
+    circle at 32% 28%,
+    color-mix(in srgb, var(--mm-hud-accent, var(--mm-color-primary)) 55%, white 25%),
+    var(--mm-hud-accent, var(--mm-color-primary))
+  );
+  border: 3px solid var(--mm-color-surface-container-lowest);
+  box-shadow:
+    0 3px 0 color-mix(in srgb, var(--mm-hud-accent, var(--mm-color-primary)) 60%, var(--mm-color-shadow) 30%),
+    0 4px 8px rgba(0, 0, 0, 0.3);
+  font-size: 22px;
+  line-height: 1;
+}
+
+.mm-hud-stat__value {
+  font-weight: 800;
+  font-size: 20px;
+  line-height: 1;
+  letter-spacing: 0.2px;
+  font-variant-numeric: tabular-nums;
+  transition: color var(--mm-motion-duration-short3) var(--mm-motion-easing-standard);
+}
+
+/* Fill readouts (population, energy) also show a small "how full" track
+ * beneath the number rather than only a bare N/cap figure. */
+.mm-hud-stat__fill {
+  position: absolute;
+  left: var(--mm-space-8);
+  right: var(--mm-space-4);
+  bottom: 6px;
+  height: 4px;
   border-radius: var(--mm-shape-full);
-  padding: var(--mm-space-1) var(--mm-space-3);
-  box-shadow: var(--mm-elevation-1);
-  min-width: 160px;
+  background: color-mix(in srgb, var(--mm-hud-accent, var(--mm-color-primary)) 20%, var(--mm-color-surface-container-highest));
+  overflow: hidden;
+}
+.mm-hud-stat__fill-bar {
+  height: 100%;
+  border-radius: var(--mm-shape-full);
+  background: var(--mm-hud-accent, var(--mm-color-primary));
+  transition: width var(--mm-motion-duration-medium2) var(--mm-motion-easing-standard);
+}
+.mm-hud-stat--with-fill {
+  padding-bottom: calc(var(--mm-space-2) + 8px);
+}
+
+.mm-hud-stat--coins { --mm-hud-accent: var(--mm-color-warning); }
+.mm-hud-stat--cash { --mm-hud-accent: var(--mm-color-success); }
+.mm-hud-stat--population { --mm-hud-accent: var(--mm-color-tertiary); }
+.mm-hud-stat--energy { --mm-hud-accent: var(--mm-color-error); }
+.mm-hud-stat--barn { --mm-hud-accent: var(--mm-color-secondary); }
+
+/* Brief value-change feedback: a scale pop and a warm colour flash on the
+ * numeral itself, distinct from the floating "+N" text spawned elsewhere.
+ * Under prefers-reduced-motion the pop is disabled (tokens.css collapses
+ * every --mm-motion-duration-* to ~1ms) but the colour flash still runs
+ * briefly and the value itself updates instantly either way — this is
+ * presentation layered on an already-correct number, never a delay of it. */
+.mm-hud-stat__value--pop {
+  animation: mm-hud-value-pop var(--mm-motion-duration-medium3) var(--mm-motion-easing-standard);
+}
+@keyframes mm-hud-value-pop {
+  0% { transform: scale(1); color: var(--mm-hud-accent, var(--mm-color-primary)); }
+  35% { transform: scale(1.22); color: var(--mm-hud-accent, var(--mm-color-primary)); }
+  100% { transform: scale(1); color: var(--mm-color-on-surface); }
+}
+
+/* ---- XP / level capsule ---- */
+
+.mm-hud-xp {
+  --mm-hud-accent: var(--mm-color-primary);
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--mm-space-3);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--mm-color-primary) 18%, var(--mm-color-surface-container-high)),
+    var(--mm-color-surface-container-high)
+  );
+  border: 3px solid color-mix(in srgb, var(--mm-color-primary) 55%, var(--mm-color-outline));
+  border-radius: var(--mm-shape-full);
+  padding: var(--mm-space-2) var(--mm-space-4) var(--mm-space-2) var(--mm-space-8);
+  min-height: 48px;
+  min-width: 180px;
+  box-shadow:
+    0 4px 0 color-mix(in srgb, var(--mm-color-primary) 70%, var(--mm-color-shadow) 20%),
+    0 6px 10px rgba(0, 0, 0, 0.25);
 }
 .mm-hud-xp__level {
-  background: var(--mm-color-primary);
-  color: var(--mm-color-on-primary);
-  border-radius: var(--mm-shape-full);
-  padding: 2px var(--mm-space-2);
-  font-size: var(--mm-type-label-small-size);
-  font-weight: 700;
-}
-.mm-hud-xp__bar { flex: 1 1 auto; min-width: 80px; }
-.mm-hud-barn {
+  position: absolute;
+  left: -14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
-  gap: var(--mm-space-2);
-  background: var(--mm-color-surface-container-high);
-  border-radius: var(--mm-shape-full);
-  padding: var(--mm-space-1) var(--mm-space-3);
-  box-shadow: var(--mm-elevation-1);
-  min-width: 120px;
+  justify-content: center;
+  background: radial-gradient(circle at 32% 28%, color-mix(in srgb, var(--mm-color-primary) 55%, white 25%), var(--mm-color-primary));
+  color: var(--mm-color-on-primary);
+  border: 3px solid var(--mm-color-surface-container-lowest);
+  box-shadow:
+    0 3px 0 color-mix(in srgb, var(--mm-color-primary) 60%, var(--mm-color-shadow) 30%),
+    0 4px 8px rgba(0, 0, 0, 0.3);
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1;
 }
-.mm-hud-barn__bar { flex: 1 1 auto; min-width: 60px; }
+.mm-hud-xp__bar { flex: 1 1 auto; min-width: 100px; }
+
+/* Level-up celebration: the level badge itself pops and flashes. Layered
+ * over the shared .mm-celebrate glow from effects.css that already
+ * applies to the whole capsule; both respect prefers-reduced-motion via
+ * the global motion-duration override. */
+.mm-celebrate .mm-hud-xp__level {
+  animation: mm-hud-value-pop var(--mm-motion-duration-long1) var(--mm-motion-easing-standard);
+}
+
+/* ---- Barn capsule ---- */
+
+.mm-hud-barn {
+  --mm-hud-accent: var(--mm-color-secondary);
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--mm-space-3);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--mm-color-secondary) 18%, var(--mm-color-surface-container-high)),
+    var(--mm-color-surface-container-high)
+  );
+  border: 3px solid color-mix(in srgb, var(--mm-color-secondary) 55%, var(--mm-color-outline));
+  border-radius: var(--mm-shape-full);
+  padding: var(--mm-space-2) var(--mm-space-4) var(--mm-space-2) var(--mm-space-8);
+  min-height: 48px;
+  min-width: 140px;
+  box-shadow:
+    0 4px 0 color-mix(in srgb, var(--mm-color-secondary) 70%, var(--mm-color-shadow) 20%),
+    0 6px 10px rgba(0, 0, 0, 0.25);
+}
+.mm-hud-barn__icon {
+  position: absolute;
+  left: -14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 32% 28%, color-mix(in srgb, var(--mm-color-secondary) 55%, white 25%), var(--mm-color-secondary));
+  border: 3px solid var(--mm-color-surface-container-lowest);
+  box-shadow:
+    0 3px 0 color-mix(in srgb, var(--mm-color-secondary) 60%, var(--mm-color-shadow) 30%),
+    0 4px 8px rgba(0, 0, 0, 0.3);
+  font-size: 20px;
+  line-height: 1;
+}
+.mm-hud-barn__bar { flex: 1 1 auto; min-width: 70px; }
+
+/* ---- Shared: thick glossy fill track override for the XP / barn bars ----
+ * The generic .mm-progress-linear from components.css is a thin 4px bar;
+ * inside the HUD it becomes a chunky rounded track with a glossy top
+ * highlight on its filled portion, matching the rest of the game chrome. */
+
+.mm-hud-xp__bar .mm-progress-linear,
+.mm-hud-barn__bar .mm-progress-linear {
+  height: 12px;
+  border: 2px solid color-mix(in srgb, var(--mm-hud-accent) 40%, var(--mm-color-outline-variant));
+  background: color-mix(in srgb, var(--mm-hud-accent) 12%, var(--mm-color-surface-container-highest));
+}
+.mm-hud-xp__bar .mm-progress-linear__bar,
+.mm-hud-barn__bar .mm-progress-linear__bar {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--mm-hud-accent) 65%, white 35%),
+    var(--mm-hud-accent)
+  );
+  position: relative;
+}
+/* Glossy top highlight, drawn as a pseudo-element so it never distorts the
+ * bar's own width transition. */
+.mm-hud-xp__bar .mm-progress-linear__bar::after,
+.mm-hud-barn__bar .mm-progress-linear__bar::after {
+  content: "";
+  position: absolute;
+  inset: 1px 1px auto 1px;
+  height: 40%;
+  border-radius: var(--mm-shape-full);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mm-hud-stat__value--pop,
+  .mm-celebrate .mm-hud-xp__level {
+    animation-duration: 1ms;
+  }
+}
