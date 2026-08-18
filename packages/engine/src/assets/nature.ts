@@ -5,15 +5,41 @@
 
 import { box, cone, cylinder, defineAsset, getAsset, group, sphere, type MeshNode } from '../mesh-dsl.js';
 import type { PaletteKey } from '../palette.js';
+// CropKind/GrowthStage are owned by state-view.ts (the renderer's public
+// contract) - re-declaring a narrower local union here is exactly how this
+// file drifted out of sync with balance/crops.json's 17 real crop ids
+// before (see the state-to-engine.ts adapter's former CROP_KIND_BY_ID
+// fallback-to-berry table). Importing the real union means a crop id
+// balance/ adds and state-view.ts picks up can never silently compile here
+// without also getting a mesh defined for it below.
+import type { CropKind, GrowthStage } from '../state-view.js';
 
-export type CropKind = 'wheat' | 'carrot' | 'corn' | 'berry';
-export type GrowthStage = 'seed' | 'sprout' | 'growing' | 'ready';
+export type { CropKind, GrowthStage };
 export type TerrainKind = 'grass' | 'soil' | 'sand' | 'stone' | 'water';
 
+/** Every CropKind (balance/crops.json's 17 real crop ids, plus 'berry' as
+ * the generic catch-all) mapped to the palette colour its fruiting body
+ * renders in. Kept exhaustive via `Record<CropKind, ...>` — TypeScript
+ * itself now fails the build if a new CropKind is added to state-view.ts
+ * without a colour here, closing the drift path that produced the old gap. */
 const cropColor: Record<CropKind, PaletteKey> = {
   wheat: 'cropWheat',
-  carrot: 'cropCarrot',
   corn: 'cropCorn',
+  carrot: 'cropCarrot',
+  sugarcane: 'cropSugarcane',
+  cotton: 'cropCotton',
+  strawberry: 'cropStrawberry',
+  tomato: 'cropTomato',
+  potato: 'cropPotato',
+  soybean: 'cropSoybean',
+  rice: 'cropRice',
+  pumpkin: 'cropPumpkin',
+  chilli: 'cropChilli',
+  coffee_bean: 'cropCoffeeBean',
+  lavender: 'cropLavender',
+  grape: 'cropGrape',
+  blueberry: 'cropBlueberry',
+  vanilla: 'cropVanilla',
   berry: 'cropBerry',
 };
 
@@ -43,7 +69,7 @@ function cropNode(kind: CropKind, stage: GrowthStage): MeshNode {
   }
 }
 
-const cropKinds: CropKind[] = ['wheat', 'carrot', 'corn', 'berry'];
+const cropKinds = Object.keys(cropColor) as CropKind[];
 for (const kind of cropKinds) {
   for (const stage of growthStages) {
     defineAsset(`crop_${kind}_${stage}`, cropNode(kind, stage));
@@ -206,4 +232,59 @@ defineAsset(
 defineAsset(
   'hedge',
   box({ width: 1.0, height: 0.4, depth: 0.3, color: 'leafDark', transform: { translate: [0, 0.2, 0] } }),
+);
+
+/** A small ornamental flower bed decoration - a raised soil ring dotted
+ * with tiny coloured blooms, distinct from the plain 'field_plot_empty'
+ * farm bed above (that one is functional/farmland, this one is charm
+ * decoration placed via the town's decoration catalog). */
+defineAsset(
+  'flower_bed',
+  group([
+    cylinder({ radiusTop: 0.32, radiusBottom: 0.34, height: 0.08, radialSegments: 12, color: 'soilDry', transform: { translate: [0, 0.04, 0] } }),
+    ...[0, 1, 2, 3, 4, 5].map((i) => {
+      const angle = (i / 6) * Math.PI * 2;
+      const bloom: PaletteKey = i % 3 === 0 ? 'cropStrawberry' : i % 3 === 1 ? 'accentWarm' : 'cropLavender';
+      return sphere({
+        radius: 0.045,
+        widthSegments: 5,
+        heightSegments: 4,
+        color: bloom,
+        transform: { translate: [Math.cos(angle) * 0.22, 0.1, Math.sin(angle) * 0.22] },
+      });
+    }),
+  ]),
+);
+
+/** A topiary spiral - three stacked, shrinking spheres, the classic
+ * clipped-hedge garden ornament. */
+defineAsset(
+  'topiary',
+  group([
+    cylinder({ radiusTop: 0.05, radiusBottom: 0.06, height: 0.18, radialSegments: 8, color: 'trunk', transform: { translate: [0, 0.09, 0] } }),
+    sphere({ radius: 0.2, widthSegments: 8, heightSegments: 6, color: 'leafDark', transform: { translate: [0, 0.38, 0] } }),
+    sphere({ radius: 0.15, widthSegments: 8, heightSegments: 6, color: 'leaf', transform: { translate: [0, 0.66, 0] } }),
+    sphere({ radius: 0.1, widthSegments: 7, heightSegments: 5, color: 'leafLight', transform: { translate: [0, 0.86, 0] } }),
+  ]),
+);
+
+/** A garden gazebo - a small open-sided roofed pavilion on six posts. */
+defineAsset(
+  'gazebo',
+  group([
+    cylinder({ radiusTop: 0.62, radiusBottom: 0.62, height: 0.04, radialSegments: 8, color: 'stone', transform: { translate: [0, 0.02, 0] } }),
+    ...[0, 1, 2, 3, 4, 5].map((i) => {
+      const angle = (i / 6) * Math.PI * 2;
+      return cylinder({
+        radiusTop: 0.025,
+        radiusBottom: 0.025,
+        height: 0.7,
+        radialSegments: 6,
+        color: 'wallWhite',
+        transform: { translate: [Math.cos(angle) * 0.52, 0.35, Math.sin(angle) * 0.52] },
+      });
+    }),
+    cone({ radius: 0.68, height: 0.42, radialSegments: 8, color: 'roofSlate', transform: { translate: [0, 0.9, 0] } }),
+    sphere({ radius: 0.05, widthSegments: 6, heightSegments: 5, color: 'accent', transform: { translate: [0, 1.32, 0] } }),
+  ]),
 );
