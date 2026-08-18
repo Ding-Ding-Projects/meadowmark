@@ -47,4 +47,16 @@ registerCopy({
     en: { 1: "Regex", 3: "Use regex" },
     yue: { 1: "正規表達式", 3: "用 regex" },
   },
+  "nav.regionLabel": {
+    en: { 1: "Main navigation", 3: "Where do you want to go?" },
+    yue: { 1: "主導航", 3: "想去邊度玩？" },
+  },
+  "common.action.closeNamed": {
+    en: { 1: "Close {name}", 3: "Close {name}" },
+    yue: { 1: "關閉{name}", 3: "收埋{name}" },
+  },
+  "common.action.dismiss": {
+    en: { 1: "Dismiss", 3: "Dismiss" },
+    yue: { 1: "不理它", 3: "把你抋走" },
+  },
 });

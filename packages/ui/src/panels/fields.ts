@@ -85,7 +85,7 @@ export function renderFieldsPanel(host: HTMLElement, view: FieldsView, coins: nu
     onClick: () => bridge.dispatch({ type: "field/unlockPlot" }),
   });
 
-  const grid = h("div.mm-grid", { role: "grid", "aria-label": t("panel.fields.gridLabel") });
+  const grid = h("div.mm-grid", { role: "group", "aria-label": t("panel.fields.gridLabel") });
 
   function renderGrid(): void {
     preserveFocusedDescendant(grid, () => {

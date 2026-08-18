@@ -1,6 +1,8 @@
 import { h, uid } from "../dom";
 import { openMenu } from "./menu";
 
+let nextSelectId = 0;
+
 export interface SelectOption {
   value: string;
   label: string;
@@ -19,21 +21,30 @@ export interface SelectOptions {
 export function select(opts: SelectOptions): HTMLDivElement {
   const current = opts.options.find((o) => o.value === opts.value);
   const labelId = uid("select-label");
+  let expanded = false;
   const trigger = h(
     "button.mm-text-field__input",
     {
       type: "button",
       style: { textAlign: "left", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center" },
       "aria-haspopup": "listbox",
+      // The visible label below is the accessible name -- programmatically
+      // associated here rather than relying on adjacency, which most screen
+      // readers do not infer for a <button> the way they do for a native
+      // <select> or a <label for>-linked <input>.
       "aria-labelledby": labelId,
       "aria-expanded": "false",
       onclick: () => {
+        expanded = true;
         trigger.setAttribute("aria-expanded", "true");
         openMenu({
           anchor: trigger,
           role: "listbox",
-          onClose: () => trigger.setAttribute("aria-expanded", "false"),
           filterAriaLabel: opts.labelText,
+          onClose: () => {
+            expanded = false;
+            trigger.setAttribute("aria-expanded", "false");
+          },
           items: opts.options.map((o) => ({
             id: o.value,
             label: o.label,
@@ -53,7 +64,7 @@ export function select(opts: SelectOptions): HTMLDivElement {
   return h(
     "div.mm-text-field",
     {},
-    h("span.mm-text-field__label", { id: labelId }, opts.labelText),
+    h("label.mm-text-field__label", { id: labelId }, opts.labelText),
     h("div.mm-select", {}, trigger)
   );
 }

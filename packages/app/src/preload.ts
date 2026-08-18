@@ -1,31 +1,8 @@
 /** Sandboxed preload bridge. Value imports stay limited to Electron and the leaf channel table. */
 import { contextBridge, ipcRenderer } from 'electron';
 import { IPC_CHANNELS } from './ipc-channels';
-<<<<<<< HEAD
 import type { MeadowmarkApi, NarratorEngineHandler, PublicUpdaterState, RuntimeStatusSnapshot } from './runtime-contract';
 import type { GameState, Settings } from './app-types';
-=======
-import type { AppInfo, GameState, Settings, SettingsLoadPayload } from './app-types';
-import type {
-  SettingsKey,
-  SettingsLoadResult,
-  SettingsProvenance,
-  SettingsValues,
-} from './services/settings';
-import type {
-  CommitResult,
-  DiffResult,
-  ExportOptions,
-  HistoryAvailability,
-  PruneResult,
-  RecordSummary,
-  RetentionPolicy,
-  Revision,
-} from './services/history';
-import type { ExportFormat, ExportWriteResult, LossReport } from './services/exports';
-import type { ExportDatasetId } from './ipc';
-import type { LogoManifest, LogoPresetSummary } from './services/logo';
->>>>>>> worktree-wf_53ab3037-0c3-5
 
 export type { MeadowmarkApi } from './runtime-contract';
 
@@ -68,23 +45,7 @@ function registerNarratorEngine(handler: NarratorEngineHandler): () => void {
     ipcRenderer.removeListener(IPC_CHANNELS.narratorEngineRequest, listener);
     removeNarratorEngineListener = null;
   };
-<<<<<<< HEAD
   return removeNarratorEngineListener;
-=======
-  exports: {
-    lossReport: (datasetId: ExportDatasetId, format: ExportFormat) => Promise<LossReport>;
-    write: (datasetId: ExportDatasetId, format: ExportFormat) => Promise<ExportWriteResult | { canceled: true }>;
-  };
-  logo: {
-    listPresets: () => Promise<readonly LogoPresetSummary[]>;
-    getManifest: () => Promise<LogoManifest | null>;
-    previewPreset: (presetId: string) => Promise<string>;
-    previewCurrent: () => Promise<string | null>;
-    applyPreset: (presetId: string) => Promise<LogoManifest>;
-    pickAndApplyCustom: () => Promise<LogoManifest | { canceled: true }>;
-    reset: () => Promise<void>;
-  };
->>>>>>> worktree-wf_53ab3037-0c3-5
 }
 
 const api: MeadowmarkApi = {
@@ -213,7 +174,6 @@ const api: MeadowmarkApi = {
     prune: (policy) => invoke(IPC_CHANNELS.historyPrune, policy),
     exportRedacted: (format) => invoke(IPC_CHANNELS.historyExportRedacted, format),
   },
-<<<<<<< HEAD
   updater: {
     state: () => invoke(IPC_CHANNELS.updaterState),
     check: () => invoke(IPC_CHANNELS.updaterCheck),
@@ -227,21 +187,6 @@ const api: MeadowmarkApi = {
     onChanged: (callback: (status: RuntimeStatusSnapshot) => void) => subscribe(IPC_CHANNELS.runtimeStatusChanged, callback),
   },
   appInfo: () => invoke(IPC_CHANNELS.appInfo),
-=======
-  exports: {
-    lossReport: (datasetId, format) => ipcRenderer.invoke(IPC_CHANNELS.exportsLossReport, datasetId, format),
-    write: (datasetId, format) => ipcRenderer.invoke(IPC_CHANNELS.exportsWrite, datasetId, format),
-  },
-  logo: {
-    listPresets: () => ipcRenderer.invoke(IPC_CHANNELS.logoListPresets),
-    getManifest: () => ipcRenderer.invoke(IPC_CHANNELS.logoGetManifest),
-    previewPreset: (presetId) => ipcRenderer.invoke(IPC_CHANNELS.logoPreviewPreset, presetId),
-    previewCurrent: () => ipcRenderer.invoke(IPC_CHANNELS.logoPreviewCurrent),
-    applyPreset: (presetId) => ipcRenderer.invoke(IPC_CHANNELS.logoApplyPreset, presetId),
-    pickAndApplyCustom: () => ipcRenderer.invoke(IPC_CHANNELS.logoPickAndApplyCustom),
-    reset: () => ipcRenderer.invoke(IPC_CHANNELS.logoReset),
-  },
->>>>>>> worktree-wf_53ab3037-0c3-5
 };
 
 contextBridge.exposeInMainWorld('meadowmark', api);

@@ -161,6 +161,31 @@ export function openSuperConfirm(opts: SuperConfirmOptions): void {
       const last = focusable[focusable.length - 1]!;
       if (ev.shiftKey && document.activeElement === first) { ev.preventDefault(); last.focus(); }
       else if (!ev.shiftKey && document.activeElement === last) { ev.preventDefault(); first.focus(); }
+      return;
+    }
+    // This is the destructive-action gate -- of every modal in the app, the
+    // one where a keyboard user tabbing straight past it into the page
+    // behind the scrim matters most. Trap focus exactly as the ordinary
+    // dialog does.
+    if (ev.key === "Tab") {
+      const focusables = surface.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusables.length === 0) {
+        ev.preventDefault();
+        surface.focus();
+        return;
+      }
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (!first || !last) return;
+      if (ev.shiftKey && document.activeElement === first) {
+        ev.preventDefault();
+        last.focus();
+      } else if (!ev.shiftKey && document.activeElement === last) {
+        ev.preventDefault();
+        first.focus();
+      }
     }
   }
 
