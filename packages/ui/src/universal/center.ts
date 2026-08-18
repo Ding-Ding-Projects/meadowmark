@@ -94,7 +94,7 @@ function bridgeButton(label: string, seam: string, operation: (() => Promise<unk
   });
 }
 
-function factualSummary(value: Record<string, unknown>): string {
+function factualSummary(value: object): string {
   return Object.entries(value)
     .filter(([, item]) => item === null || ["string", "number", "boolean"].includes(typeof item))
     .map(([key, item]) => `${key}: ${String(item)}`)
@@ -642,7 +642,7 @@ function renderHistorySurface(): HTMLElement {
     host.textContent = "";
     if (!result.ok) host.appendChild(emptyState(local("History unavailable", "歷史不可用"), result.error));
     else if (!result.value.length) host.appendChild(emptyState(local("No recorded revisions", "未有記錄修訂"), local("An unchanged state creates no revision.", "冇變更就唔會建立修訂。")));
-    else for (const entry of result.value) host.appendChild(h("article.mm-card.mm-card--outlined", {}, h("strong", {}, String(entry.label ?? entry.action ?? "Revision")), h("span", {}, `${String(entry.committedAt ?? "time unavailable")} · ${String(entry.hash ?? "hash unavailable")}`)));
+    else for (const entry of result.value) host.appendChild(h("article.mm-card.mm-card--outlined", {}, h("strong", {}, entry.labels[0] ?? entry.action ?? entry.message), h("span", {}, `${entry.date} · ${entry.hash}`)));
   });
   const formats = ["json", "jsonl", "yaml", "toml", "xml", "csv", "tsv", "markdown", "html"] as const;
   const exportButtons = formats.map((format) => bridgeButton(format.toUpperCase(), `window.meadowmark.exports.save(source, "${format}")`, undefined));

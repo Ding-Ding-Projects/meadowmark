@@ -18,11 +18,17 @@
     "start": "npm run build && electron packages/app/dist/main.cjs",
     "lines": "node tools/line-count/count.mjs",
     "check:inventory": "node tools/inventory/check.mjs",
+    "check:inventory-negative": "node tools/inventory/negative-regression.mjs",
+    "check:line-count": "node tools/line-count/self-test.mjs",
+    "check:site": "node site/tools/check-contract.mjs",
+    "check:release": "node tools/release/verify-contract.mjs && node tools/release/verify-icon.mjs",
+    "check:runtime-contract": "tsc -p tools/type-contracts/tsconfig.json --noEmit",
     "check:atomic": "node tools/guards/no-bare-rename.mjs",
     "check:preload-sandbox": "node tools/guards/no-fs-in-preload.mjs",
     "check:balance": "node packages/shared/dist/balance-validate.js"
   },
   "devDependencies": {
+    "@electron/asar": "^3.4.1",
     "electron": "^40.0.0",
     "electron-builder": "^26.0.12",
     "electron-builder-squirrel-windows": "^26.0.12",

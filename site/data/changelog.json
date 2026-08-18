@@ -1,5 +1,15 @@
 [
   {
+    "version": "v0.1.0-22",
+    "date": "2026-08-18",
+    "status": "published",
+    "releaseTag": "v0.1.0-22",
+    "commit": "dd2a44fa5264656a62802af04cac3bd192668b9d",
+    "category": "Interface",
+    "en": "Corrected renderer-to-engine and renderer-to-interface state mappings, restored generated nature content, and aligned the bridge declarations used by the published desktop build.",
+    "yue": "修正 renderer 去引擎同介面嘅狀態映射、補回生成式自然內容，並對齊已發佈桌面版本使用嘅 bridge 宣告。"
+  },
+  {
     "version": "v0.1.0-21",
     "date": "2026-08-17",
     "status": "published",

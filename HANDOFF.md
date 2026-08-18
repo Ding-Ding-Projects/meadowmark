@@ -1,32 +1,30 @@
 # Meadowmark handoff
 
-Prepared on 2026-08-18 after fetching `origin/main` at
-`dd2a44fa5264656a62802af04cac3bd192668b9d` and merging it normally into the
-documentation branch. The resulting handoff commit preserves documentation tip
-`287e62bb4a640d88756909cedb741d3e91d92871` and `dd2a44f` as its two parents. No
-commit was rebased or dropped.
+Prepared on 2026-08-18 after normally integrating the six preserved
+implementation tips, the documentation handoff, and the packaged capture
+evidence onto the `dd2a44f` baseline. No commit was rebased or dropped.
 
-This is a handoff-only closeout. It did not build an installer, publish or verify
-a new release, capture the application, integrate the preserved implementation
-branches into `main`, or delete repository state.
+This is a handoff-only closeout, not a release pass. It did not build an installer or
+publish or verify a new release after integration. It did preserve a real
+published-package first-paint capture for the existing `v0.1.0-22` baseline.
 
 ## Read this first
 
-The latest published baseline is `v0.1.0-22`, targeting `dd2a44f`. Six substantial
-lanes are preserved in separate branches, but none of their tips is an ancestor
-of that published commit. Source checks passed in several individual lanes; the
-lanes have not been combined, built, or exercised as one application.
+The latest published baseline is `v0.1.0-22`, targeting `dd2a44f`. The six
+implementation tips are now combined on the integration candidate, and focused
+source checks were rerun there. The combined candidate was not packaged,
+installed, or exercised as one application.
 
-The only real built-application capture remains
-[`meadowmark-packaged-terrain-fields.png`](docs/assets/captures/meadowmark-packaged-terrain-fields.png)
-from commit [`c328d7d`](https://github.com/Ding-Ding-Projects/meadowmark/commit/c328d7d3552aa46f22766de9d5bf763cdfe15bc1).
-It shows launch and first paint after the welcome modal was dismissed: baseline
-terrain, field beds, the navigation rail, HUD, and the Fields empty state. Its
+The newest real built-application capture is
+[`meadowmark-v0.1.0-22-packaged-fields.png`](docs/assets/captures/meadowmark-v0.1.0-22-packaged-fields.png),
+with machine-readable provenance in the adjacent
+[`capture.json`](docs/assets/captures/meadowmark-v0.1.0-22-packaged-fields.capture.json).
+It was taken from the published `v0.1.0-22` package targeting `dd2a44f`; its
 SHA-256 is
-`a22908afd6b002b973535c8a18c1d915f04b6268ed4a6b2284734a87283b7d2a`.
-It does not prove `dd2a44f`, any preserved lane tip, application interaction,
-settings persistence, accessibility, narrow layouts, update behavior, or a
-complete capture matrix.
+`a6d26eb630f52a3dc65b3bd15eae3d8d26160d0f6e9caaea14a90a698af14923`.
+It proves package launch and first paint only. It does not prove the later
+integration candidate, application interaction, settings persistence,
+accessibility, narrow layouts, update behavior, or a complete capture matrix.
 
 ## Published baseline
 
@@ -56,24 +54,21 @@ The successful release workflow proves that those three assets were produced
 and published from `dd2a44f`. It is not interaction, visual, accessibility,
 playability, update, rollback, or end-to-end service evidence.
 
-## Preserved implementation lanes
+## Integrated implementation lanes
 
-Each commit exists locally and on the listed pushed branch. `git merge-base
---is-ancestor <tip> dd2a44f` returned false for every tip below, so none is part
-of the published baseline.
+Each source tip was merged normally with a dedicated integration commit:
 
-| Lane | Local branch / pushed branch | Preserved tip | State |
+| Lane | Source tip | Integration commit | State |
 | --- | --- | --- | --- |
-| Documentation truth | `agent/yumtong-docs-truth` / `origin/agent/release-docs-truth` | [`287e62b`](https://github.com/Ding-Ding-Projects/meadowmark/commit/287e62bb4a640d88756909cedb741d3e91d92871) | Public documentation, community files, categorized feature articles, and release-history corrections; merged with `dd2a44f` only in this local branch. |
-| Browser site | `agent/yumtong-site-universal` / `origin/agent/site-capabilities` | [`d25112a`](https://github.com/Ding-Ding-Projects/meadowmark/commit/d25112a0700691b65c4db11f6684acd0c0597f5e) | Browser-local capability surface and contract check; still records `v0.1.0-21` and must be reconciled with `v0.1.0-22`. |
-| Desktop UI | `agent/yumtong-ui-universal` / `origin/agent/desktop-control-centre` | [`5e36e62`](https://github.com/Ding-Ding-Projects/meadowmark/commit/5e36e6223e8ed92f421fc4139b9075af5b3be8dc) | Universal control centre and UI-side bridge consumers; source-checked only. |
-| Completeness inventory | `agent/yumtong-inventory-guards` / `origin/agent/inventory-contract` | [`007a65c`](https://github.com/Ding-Ding-Projects/meadowmark/commit/007a65c669b06e7912c69efed437e290bccd9556) | Per-surface canonical inventory, schema, fail-closed checker, negative matrix, and line-counter self-test. |
-| Release contract | `agent/yumtong-release-contract` / `origin/agent/release-hardening` | [`f74f8ca`](https://github.com/Ding-Ding-Projects/meadowmark/commit/f74f8caa1c5d43352e56b9f7551836dc6a804640) | Unsigned Windows packaging contract, deterministic icon family, and fail-closed publication workflow; its stricter release gate remains false. |
-| Application runtime | `agent/yumtong-app-runtime` / `origin/agent/runtime-seam` | [`809ee93`](https://github.com/Ding-Ding-Projects/meadowmark/commit/809ee9314c192f31bb55f9d306c88a7acf5c8d93) | Main-process runtime services, bounded IPC/preload contract, updater metadata, and renderer response validation; type-checked only. |
+| Application runtime | [`809ee93`](https://github.com/Ding-Ding-Projects/meadowmark/commit/809ee9314c192f31bb55f9d306c88a7acf5c8d93) | `8825015` | Main-process services, bounded IPC/preload contract, updater metadata, and renderer response validation integrated. |
+| Desktop UI | [`5e36e62`](https://github.com/Ding-Ding-Projects/meadowmark/commit/5e36e6223e8ed92f421fc4139b9075af5b3be8dc) | `6a626d8` | Nine-panel control centre and renderer-side capability consumers integrated. |
+| Browser site | [`d25112a`](https://github.com/Ding-Ding-Projects/meadowmark/commit/d25112a0700691b65c4db11f6684acd0c0597f5e) | `ea1632f` | Browser-local capability surface integrated; release metadata was reconciled to `v0.1.0-22`. |
+| Completeness inventory | [`007a65c`](https://github.com/Ding-Ding-Projects/meadowmark/commit/007a65c669b06e7912c69efed437e290bccd9556) | `bb9df2e` | 45-contract, 26-surface inventory and fail-closed checker integrated. |
+| Release contract | [`f74f8ca`](https://github.com/Ding-Ding-Projects/meadowmark/commit/f74f8caa1c5d43352e56b9f7551836dc6a804640) | `e6179ca` | Deterministic icon and fail-closed unsigned publication contract integrated. |
+| Documentation truth | [`287e62b`](https://github.com/Ding-Ding-Projects/meadowmark/commit/287e62bb4a640d88756909cedb741d3e91d92871) | `dad8dcb` | Community files, categorized feature articles, release history, and handoff integrated. |
 
-The primary checkout was still at `6e7760b` when the linked checkout inventory was
-read. The next owner should update it normally from `origin/main` before using it
-as the integration checkout.
+The published `v0.1.0-22` commit predates these integration commits. No release
+contains their combined result.
 
 ## Exact source-check record
 
@@ -86,7 +81,7 @@ do not prove the combined application or a packaged interaction.
 | `287e62b` | documentation local-link scan | Exit 0: 38 Markdown files had no missing local target. Task-local PowerShell scan. |
 | `287e62b` | public-vocabulary scan | Exit 0: no private conversation term was found in the changed public documentation. Task-local PowerShell scan. |
 | `287e62b` | `git diff --check` | Exit 0. |
-| `d25112a` | `node site/tools/check-contract.mjs` | Exit 0: 24 exact surfaces and 14 runtime contracts. The check still names historical release `v0.1.0-21`, so it must be updated and rerun after integration. |
+| integrated candidate | `node site/tools/check-contract.mjs` | Exit 0: 24 exact surfaces, 14 runtime contracts, and verified published baseline `v0.1.0-22`. |
 | `d25112a` | `Get-ChildItem site/js/*.js \| ForEach-Object { node --check $_.FullName }` | Exit 0 for all 16 JavaScript files. |
 | `5e36e62` | `npm run typecheck --workspace @meadowmark/ui` | Exit 0 in the exact UI checkout. |
 | `5e36e62` | `npm run build --workspace @meadowmark/shared` | Exit 0 in the exact UI checkout. |
@@ -94,19 +89,20 @@ do not prove the combined application or a packaged interaction.
 | `5e36e62` | `npm run typecheck --workspace @meadowmark/renderer` | Exit 0 in the exact UI checkout. |
 | `5e36e62` | `npx --no-install tsx packages/ui/src/universal/contract-test.ts` | Exit 0 only loaded the module. `runUniversalContractTests()` is exported but has no caller, so this is not a contract verdict; wire and invoke the runner before treating it as a check. |
 | `007a65c` | `node tools/line-count/self-test.mjs` | Exit 0. Categorization, newline arithmetic, mismatch failure, and invalid-revision failure passed. |
-| `007a65c` | `node tools/inventory/check.mjs` | Exit 1 by design: release blocked. It reported one isolated endpoint-drift violation because `site/capabilities.html` is absent until the site lane integrates, plus 1,145 `missing`, 25 `partial`, and 0 `done` rows. |
+| integrated candidate | `node tools/inventory/check.mjs` | Exit 1 by design: release blocked by 1,145 `missing`, 25 `partial`, and 0 `done` rows. Endpoint discovery and registration are aligned after site integration. |
 | `007a65c` | `node tools/inventory/negative-regression.mjs` | Exit 0 in the independent handoff review: all 10,647 deliberate removals or mutations turned red, and exact restoration turned green. |
 | `f74f8ca` | `node tools/release/verify-contract.mjs` | Exit 0. Publication remains fail-closed until capture and built-artifact evidence is recorded. |
 | `f74f8ca` | `node tools/release/verify-icon.mjs` | Exit 0. The committed ICO contains 16, 20, 24, 32, 40, 48, 64, 128, and 256 pixel frames. |
 | `809ee93` | `npm run typecheck --workspace @meadowmark/app` | Exit 0 in the exact runtime checkout. No package build followed the handoff pivot. |
 | `809ee93` | `git diff --check` | Exit 0. |
+| integrated candidate | `npm run check:runtime-contract` | Exit 0 after its deliberate first run turned red on renderer/runtime payload drift. It now checks exact namespace keys and every runtime method consumed by the universal UI. |
+| integrated candidate | UI and renderer typechecks | Exit 0 for `@meadowmark/ui` and `@meadowmark/renderer` after the history DTO repair. |
 | all six lane diffs | public-vocabulary scan | Exit 0 across the documentation, site, UI, inventory, release, and runtime changed files. |
 | `dd2a44f` | Release workflow run `32159906150` | Success for build, unsigned Squirrel packaging, and publication only. It ran no tests, lint, UI interaction, or captures. |
 
-No full integrated test suite was run because the six lane tips are still
-separate. No package or installer was built after the handoff pivot. The source
-checks above must not be summarized as a passing application, runtime, or release
-verification result.
+No full integrated test suite was run. No package or installer was built after
+the handoff pivot. The source checks above must not be summarized as a passing
+application, runtime, or release verification result.
 
 ## Completeness inventory and release gate
 
@@ -119,18 +115,15 @@ surfaces, producing 1,170 contract/surface rows:
 | `partial` | 25 |
 | `done` | 0 |
 
-The inventory checker is intentionally red. Its one structural violation is the
-site endpoint that will exist only after `d25112a` integrates; the 1,170 status
-rows remain the substantive release boundary even after that drift is resolved.
+The inventory checker is intentionally red. Endpoint discovery and registration
+are structurally aligned; the 1,170 incomplete status rows are the substantive
+release boundary.
 
-The published `dd2a44f` baseline still carries the older one-field gate
-`{"rendersVerified": true}`. The replacement gate at `f74f8ca` has
+The integrated candidate carries the hardened release gate with
 `rendersVerified: false` and null `sourceCommit`, `manifestPath`, and
-`manifestSha256` fields. Therefore the hardened release contract is not
-authorized to publish a candidate after it integrates. The stricter false gate
-is correct: no final-candidate capture manifest or built-artifact interaction
-proof exists. Do not describe the stricter gate as current `main` state before
-`f74f8ca` is integrated.
+`manifestSha256` fields. It is not authorized to publish. The false gate is
+correct: no final-candidate capture manifest or built-artifact interaction proof
+exists.
 
 ## Source checks versus built-artifact interaction
 
@@ -141,19 +134,20 @@ packaged application.
 
 Built-artifact interaction means launching the packaged executable and exercising
 the exact path through the real main process, preload bridge, renderer, UI, and
-persistent stores. No preserved lane has that proof. The repository has only the
-narrow `c328d7d` packaged first-paint capture described above; it does not show a
-completed player action and is therefore visual launch evidence, not interaction
-evidence.
+persistent stores. No integrated lane has that proof. The repository has the
+narrow `v0.1.0-22` packaged first-paint capture described above; it does not show
+a completed player action and is therefore visual launch evidence, not
+interaction evidence.
 
 ## Known unimplemented and unproved seams
 
 ### Integration and evidence
 
-- The site, desktop UI, inventory, release, and runtime lane tips have not been
-  integrated with each other or with `origin/main`.
-- No combined typecheck, build, contract run, installer build, install, launch,
-  or interaction pass exists for the integrated candidate.
+- The site, desktop UI, inventory, release, runtime, documentation, and capture
+  evidence tips are integrated on the local candidate.
+- Combined app, UI, and renderer typechecks plus site, release, icon,
+  line-counter, and runtime-contract source checks passed. No combined package,
+  installer, install, launch, or interaction pass exists for the candidate.
 - No final-candidate capture manifest exists. Required destination, settings,
   editor, dialog, empty/error, narrow, light, dark, and contrast states remain
   uncaptured.
@@ -163,10 +157,10 @@ evidence.
 
 ### Desktop service and UI seams
 
-- The runtime lane exposes broad settings, schedules, logo, converter, exports,
+- The runtime exposes broad settings, schedules, logo, converter, exports,
   Ollama, narrator, authenticator, locks, history, updater, and status APIs in
-  source. The UI lane is separate, so their combined IPC/preload/renderer/UI
-  behavior is not integrated or exercised.
+  source. The UI consumes a checked subset, but their combined
+  IPC/preload/renderer/UI behavior is not exercised in a packaged artifact.
 - Shared School-mode watching and unlock, scheduled-value persistence mapping,
   logo host round-trip, narrator host persistence, guided authenticator and lock
   registration, Support Tickets, bundled documentation and changelog browsing,
@@ -181,8 +175,8 @@ evidence.
   and process authority, complete PDF/media/archive conversion, complete Ollama
   management, durable unlimited queues, and server delivery are not implemented.
 - The verified dim-sum photo/startup surprise is still absent.
-- The site contract still identifies `v0.1.0-21`; release data and assertions must
-  move to `v0.1.0-22` during integration.
+- The committed site contract and release data identify the verified
+  `v0.1.0-22` baseline with exact published asset sizes and SHA-256 digests.
 - The live site root responds, but `/capabilities.html` returns 404 and the live
   `data/release.json` still reports `published: false`, with null `tag` and
   `assetUrl`. The site lane is neither integrated nor deployed.
@@ -206,18 +200,18 @@ evidence.
 
 ### Release and installation seams
 
-- `rendersVerified` remains false, so the hardened release lane is correctly
+- `rendersVerified` remains false, so the hardened release path is correctly
   blocked.
 - The icon and release-contract source checks passed, but no installer was built
   from `f74f8ca` and no packaged executable or installer icon was inspected.
 - The hardened workflow requires a new committed semantic package version, but
-  both `origin/main` and `f74f8ca` still declare `0.1.0`, a version already used
-  by `v0.1.0-22` and earlier releases. After `f74f8ca` integrates, publication
-  must remain blocked until an authorized release task commits a unique version.
+  the integrated candidate still declares `0.1.0`, a version already used by
+  `v0.1.0-22` and earlier releases. Publication must remain blocked until an
+  authorized release task commits a unique version.
 - Update availability, download, restart, rollback, repair, invalid metadata,
   corrupt package, cancellation, offline behavior, and unsaved-work protection
   remain unexercised.
-- `v0.1.0-22` does not contain any of the six preserved lane tips. No release
+- `v0.1.0-22` does not contain any of the integrated lane tips. No release
   contains their combined work, and this handoff did not create or verify
   another release.
 
@@ -236,31 +230,24 @@ repository name and link are intentionally omitted here.
 
 ## Next owner and action
 
-The next owner should use a current `main` checkout and integrate the six preserved
-tips semantically, resolving their shared changes rather than taking one side of a
-conflict. Recommended order:
+The implementation lanes are integrated. The next release-grade owner should:
 
-1. Integrate runtime `809ee93`, then UI `5e36e62`, and reconcile the shared bridge
-   types and host methods.
-2. Integrate site `d25112a`; update its verified historical release data from
-   `v0.1.0-21` to `v0.1.0-22` without converting source checks into runtime claims.
-3. Integrate documentation `287e62b`, preserving the current release and lane
-   evidence in this handoff.
-4. Integrate inventory `007a65c`; resolve the site endpoint drift, rerun the
-   checker, and keep the release blocked for every incomplete row.
-5. Integrate release contract `f74f8ca`; keep `rendersVerified: false` until a
-   final candidate is built, installed, interacted with, and captured through the
-   approved headless route with a committed manifest.
-6. Run every source check above against the combined commit, then build through
-   `build.bat /s` and `build-installer.bat /s`. Treat those as build/package
-   evidence only.
-7. Exercise real packaged player and service interactions, capture the required
-   surface matrix, populate only evidence that actually exists, and rerun the
-   fail-closed inventory and release checks.
-8. Post the integrated handoff to Meadowmark issue #2. Do not close it until the
-   integrated commit, packaged interaction, release evidence, and remaining
-   completion criteria are genuinely verified.
+1. Commit a new semantic application version; `0.1.0` is already published and
+   the hardened release workflow correctly refuses its reuse.
+2. Repair the unsigned executable/icon resource path. PE resource editing is
+   disabled while installer verification requires the committed icon family.
+3. Build through `build.bat /s` and `build-installer.bat /s`, then verify the
+   generated Squirrel assets against the exact candidate commit.
+4. Exercise real packaged player and service interactions, wire the remaining UI
+   authority seams, and capture the required surface matrix through the approved
+   hidden-desktop route.
+5. Populate only evidence that actually exists, rerun the fail-closed inventory
+   and release checks, and set `rendersVerified` only for a matching committed
+   manifest.
+6. Keep Meadowmark issue #2 open until the release-grade objective and its
+   evidence are complete.
 
-Until those steps complete, the honest state is: published baseline available,
-six implementation lanes preserved, the hardened lane's release gate false,
-zero complete inventory rows, and no release-grade integrated candidate.
+Until those steps complete, the honest state is: the implementation lanes are
+integrated, the published baseline remains `v0.1.0-22`, the hardened release gate
+is false, zero inventory rows are complete, and the integrated candidate has no
+package or runtime interaction verdict.

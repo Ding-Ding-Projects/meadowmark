@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": false,
+    "declaration": false,
+    "declarationMap": false,
+    "noEmit": true,
+    "rootDir": "../..",
+    "types": ["node", "electron", "vite/client"]
+  },
+  "include": [
+    "runtime-api.compat.ts",
+    "../../packages/app/src/runtime-contract.ts",
+    "../../packages/ui/src/universal/bridge.ts"
+  ]
+}

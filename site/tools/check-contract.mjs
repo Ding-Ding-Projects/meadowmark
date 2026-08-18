@@ -51,16 +51,17 @@ assert.equal(await browserContract.totp(rfcConfig, 59000), "94287082", "TOTP mus
 assert.equal(nav.filter((item) => item.id === "capabilities" && item.href === "/capabilities.html").length, 1, "capabilities navigation item must exist exactly once");
 assert.equal(release.schemaVersion, 2);
 assert.equal(release.currentBaseline.published, true);
-assert.equal(release.currentBaseline.tag, "v0.1.0-21");
-assert.equal(release.currentBaseline.targetCommit, "6e7760b993ad07356efe4b641220578b267fe807");
-assert.equal(release.currentBaseline.installer.sha256, "bc63fff4f39b0d9b530ac76302540911f4a02ff31f4d6083ee2f49382816a245");
+assert.equal(release.currentBaseline.tag, "v0.1.0-22");
+assert.equal(release.currentBaseline.targetCommit, "dd2a44fa5264656a62802af04cac3bd192668b9d");
+assert.equal(release.currentBaseline.installer.sha256, "2e2fca4551649241917e06ba5007574f3c9f276ada0a21bb6a8e1d43019fc334");
 assert.equal(release.pendingRelease.published, false);
 assert.equal(release.pendingRelease.tag, null);
 assert.ok(changelog.length > 0);
+assert.equal(changelog[0].version, "v0.1.0-22");
+assert.equal(changelog[0].commit, "dd2a44fa5264656a62802af04cac3bd192668b9d");
 changelog.forEach((entry) => {
-  assert.equal(entry.version, "v0.1.0-21");
   assert.equal(entry.status, "published");
-  assert.equal(entry.releaseTag, "v0.1.0-21");
+  assert.equal(entry.releaseTag, entry.version);
   assert.match(entry.commit, /^[0-9a-f]{40}$/);
 });
 

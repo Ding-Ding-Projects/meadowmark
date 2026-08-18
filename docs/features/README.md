@@ -1,7 +1,7 @@
 # Meadowmark feature documentation
 
 This is the categorized documentation index for Meadowmark at published
-baseline `v0.1.0-21` / `6e7760b`. Each feature article records behavior,
+baseline `v0.1.0-22` / `dd2a44f`. Each feature article records behavior,
 configuration, failure modes, security considerations, verification evidence,
 and suggested related articles. A source module is not treated as UI or runtime
 proof.

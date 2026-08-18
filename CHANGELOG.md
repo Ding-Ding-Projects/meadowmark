@@ -5,6 +5,18 @@ the commit targeted by that release. The release workflow publishes a new
 monotonic build tag for successful pushes; tag numbers are therefore not a
 promise that every integer exists.
 
+## [v0.1.0-22] - 2026-08-18
+
+[Release](https://github.com/Ding-Ding-Projects/meadowmark/releases/tag/v0.1.0-22) ·
+[commit `dd2a44f`](https://github.com/Ding-Ding-Projects/meadowmark/commit/dd2a44fa5264656a62802af04cac3bd192668b9d)
+
+- Corrected renderer-to-engine and renderer-to-interface state mappings and
+  aligned the bridge declarations used by the published desktop build.
+- Restored generated nature content and expanded the interface content and
+  token definitions used by the packaged first-paint surface.
+- Shipped unsigned `Setup.exe`, the full `.nupkg`, and `RELEASES`. GitHub
+  Actions ran no tests or lint by standing project policy.
+
 ## [v0.1.0-21] - 2026-08-18
 
 [Release](https://github.com/Ding-Ding-Projects/meadowmark/releases/tag/v0.1.0-21) ·
@@ -13,8 +25,8 @@ promise that every integer exists.
 - Published the first release after packaged terrain and field-bed rendering
   evidence opened the release hold.
 - Contains the settings-service IPC bridge and terrain/field-bed first-paint
-  repair. The repository's only packaged capture was recorded from the earlier
-  `c328d7d` artifact and is baseline evidence, not a complete surface matrix.
+  repair. At publication, its only packaged capture came from the earlier
+  `c328d7d` artifact and was baseline evidence, not a complete surface matrix.
 - Shipped unsigned `Setup.exe`, the full `.nupkg`, and `RELEASES`. GitHub
   Actions ran no tests or lint by standing project policy.
 
