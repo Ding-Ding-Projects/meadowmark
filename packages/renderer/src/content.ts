@@ -113,13 +113,13 @@ interface AchievementEntry {
   tiers: AchievementTierEntry[];
 }
 
-const goods = (goodsJson as { goods: GoodEntry[] }).goods;
-const crops = (cropsJson as { crops: CropEntry[] }).crops;
-const animals = (animalsJson as { animals: AnimalEntry[] }).animals;
-const recipes = (factoriesJson as { recipes: RecipeEntry[] }).recipes;
-const factoryTypes = (factoriesJson as { factoryTypes: FactoryTypeEntry[] }).factoryTypes;
-const buildings = (buildingsJson as { buildings: BuildingEntry[] }).buildings;
-const achievementsCatalogRaw = (achievementsJson as { achievements: AchievementEntry[] }).achievements;
+const goods = (goodsJson as unknown as { goods: GoodEntry[] }).goods;
+const crops = (cropsJson as unknown as { crops: CropEntry[] }).crops;
+const animals = (animalsJson as unknown as { animals: AnimalEntry[] }).animals;
+const recipes = (factoriesJson as unknown as { recipes: RecipeEntry[] }).recipes;
+const factoryTypes = (factoriesJson as unknown as { factoryTypes: FactoryTypeEntry[] }).factoryTypes;
+const buildings = (buildingsJson as unknown as { buildings: BuildingEntry[] }).buildings;
+const achievementsCatalogRaw = (achievementsJson as unknown as { achievements: AchievementEntry[] }).achievements;
 
 /** Good id -> its balance entry, for anywhere the UI needs a display name/sell value. */
 export const goodsById: ReadonlyMap<string, GoodEntry> = new Map(goods.map((g) => [g.id, g]));

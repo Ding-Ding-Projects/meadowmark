@@ -5,8 +5,6 @@
  * from or normalizes against the adapters in ./adapters/.
  */
 
-import './window-bridge.js';
-
 import {
   evaluateAchievements,
   migrate,
