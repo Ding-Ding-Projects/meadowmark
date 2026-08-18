@@ -11,7 +11,7 @@
 <meta property="og:url" content="https://ding-ding-projects.github.io/meadowmark/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Meadowmark">
-<meta property="og:image" content="https://ding-ding-projects.github.io/meadowmark/og-image.svg">
+<meta property="og:image" content="https://ding-ding-projects.github.io/meadowmark/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="The Meadowmark wordmark over a low-poly farm and town skyline">
@@ -95,13 +95,13 @@
     <section class="mm-card" style="margin-top:var(--mm-space-6)" id="download" data-anchor="download">
       <h2 data-str="download.title"></h2>
       <p id="download-status" data-str="download.not_yet"></p>
-      <!-- The download button intentionally does not link to a guessed
-           release-asset URL. No release has shipped yet, so there is
-           nothing verifiable to point at. Once a release exists, this
-           becomes a direct link to that release's immutable asset URL
-           (e.g. https://github.com/Ding-Ding-Projects/meadowmark/releases/download/vX.Y.Z/Meadowmark-Setup-X.Y.Z.exe),
-           resolved from the published release manifest — never guessed. -->
-      <a class="mm-btn" href="https://github.com/Ding-Ding-Projects/meadowmark/releases" aria-disabled="false" data-str="download.view_releases"></a>
+      <!-- The download button's state is driven entirely by
+           data/release.json (published/tag/assetUrl), read at runtime by
+           js/release.js. It never links to a guessed release-asset URL:
+           when release.json says published: false, this stays a link to
+           the Releases page. Flipping the switch later is a one-file
+           data edit, not a hunt through every page's HTML. -->
+      <a class="mm-btn" id="download-btn" href="https://github.com/Ding-Ding-Projects/meadowmark/releases" aria-disabled="false" data-str="download.view_releases"></a>
       <p class="hint" style="margin-top:var(--mm-space-3)">
         <span class="i18n-en">When a release does ship, it will be an unsigned Squirrel.Windows installer. Windows will show an "unknown publisher" / SmartScreen warning — that is expected, not a bug, because this project permanently does not use code signing.</span>
         <span class="i18n-yue" lang="yue">將來出版本嘅時候，會係一個未簽署嘅 Squirrel.Windows 安裝程式。Windows 會出「未知發行者」/ SmartScreen 警告——呢個係預期會出現，唔係 bug，因為呢個項目永遠都唔會用程式碼簽署。</span>
@@ -134,7 +134,11 @@
 <script src="js/command-palette.js"></script>
 <script src="js/notifications.js"></script>
 <script src="js/appearance-editor.js"></script>
+<script src="js/release.js"></script>
 <script src="js/app.js"></script>
-<script>MMApp.init({ rootPrefix: "", currentHref: "/" });</script>
+<script>
+  MMApp.init({ rootPrefix: "", currentHref: "/" });
+  MMRelease.init("");
+</script>
 </body>
 </html>

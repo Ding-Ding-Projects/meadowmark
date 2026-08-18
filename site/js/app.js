@@ -24,7 +24,7 @@
       headerHost.innerHTML = '<div class="mm-topbar"><a class="brand" href="' + rootPrefix + 'index.html">Meadowmark</a></div><div class="mm-tabpanel" id="mm-tabpanel"></div>';
     });
 
-    fetchPartial(rootPrefix + "partials/footer.html").then((html) => {
+    const footerReady = fetchPartial(rootPrefix + "partials/footer.html").then((html) => {
       footerHost.innerHTML = html.replaceAll("__ROOT__", rootPrefix);
     }).catch(() => { footerHost.innerHTML = ""; });
 
@@ -72,7 +72,12 @@
 
     MMPalette.installShortcut(rootPrefix);
 
-    if (window.MMAppearanceEditor) MMAppearanceEditor.installContextMenus();
+    // Wait for both partials so the footer's own text (loaded
+    // asynchronously, same as the header) is tagged for "Edit
+    // appearance…" too, not just the statically-rendered #main content.
+    Promise.all([headerReady, footerReady]).then(() => {
+      if (window.MMAppearanceEditor) MMAppearanceEditor.installContextMenus();
+    });
 
     return headerReady;
   }

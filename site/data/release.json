@@ -1,0 +1,6 @@
+{
+  "published": false,
+  "tag": null,
+  "assetUrl": null,
+  "note": "Flip published to true and fill tag/assetUrl once a real GitHub Release with a verified installer asset exists. Never guess assetUrl — copy it from the published release's own asset list."
+}
