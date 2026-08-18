@@ -9,7 +9,8 @@
     "packages/shared",
     "packages/engine",
     "packages/ui",
-    "packages/app"
+    "packages/app",
+    "packages/renderer"
   ],
   "scripts": {
     "build": "npm run build --workspaces --if-present",
