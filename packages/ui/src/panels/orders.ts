@@ -44,8 +44,10 @@ export function renderOrdersPanel(host: HTMLElement, view: OrdersView, bridge: H
               onClick: () => bridge.dispatch({ type: "order/fill", orderIndex: slot.index }),
             }),
             button({
-              label: slot.rerollCost !== null ? t("panel.orders.reroll", { cost: formatMoney(slot.rerollCost) }) : t("panel.orders.reroll", { cost: formatMoney(0) }),
+              label: slot.rerollCost !== null ? t("panel.orders.reroll", { cost: formatMoney(slot.rerollCost) }) : t("panel.orders.rerollUnavailable"),
               variant: "outlined",
+              disabled: slot.rerollCost === null,
+              disabledReason: slot.rerollCost === null ? t("panel.orders.rerollUnavailableReason") : undefined,
               onClick: () => bridge.dispatch({ type: "order/reroll", orderIndex: slot.index }),
             })
           )

@@ -123,7 +123,7 @@ export function radioGroup(
   function select(value: string): void {
     onChange(value);
     Array.from(root.children).forEach((child, i) => {
-      const isSelected = options[i].value === value;
+      const isSelected = options[i]?.value === value;
       child.setAttribute("aria-checked", String(isSelected));
       child.setAttribute("tabindex", isSelected ? "0" : "-1");
     });

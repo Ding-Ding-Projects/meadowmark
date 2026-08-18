@@ -73,16 +73,21 @@ export function tabs(opts: TabsOptions): { root: HTMLDivElement; setActive: (id:
 
   tabList.addEventListener("keydown", (ev) => {
     const ids = orderedIds();
+    if (ids.length === 0) return;
     const idx = ids.indexOf(activeId);
     const forwardKey = isVertical ? "ArrowDown" : "ArrowRight";
     const backKey = isVertical ? "ArrowUp" : "ArrowLeft";
     if (ev.key === forwardKey) {
       ev.preventDefault();
-      setActive(ids[(idx + 1) % ids.length]);
+      const nextId = ids[(idx + 1) % ids.length];
+      if (nextId === undefined) return;
+      setActive(nextId);
       buttons.get(activeId)?.focus();
     } else if (ev.key === backKey) {
       ev.preventDefault();
-      setActive(ids[(idx - 1 + ids.length) % ids.length]);
+      const prevId = ids[(idx - 1 + ids.length) % ids.length];
+      if (prevId === undefined) return;
+      setActive(prevId);
       buttons.get(activeId)?.focus();
     }
   });

@@ -16,7 +16,7 @@ export function segmentedButton(options: SegmentedOption[], value: string, onCha
           "aria-pressed": String(opt.value === value),
           onclick: () => {
             onChange(opt.value);
-            Array.from(root.children).forEach((c, i) => c.setAttribute("aria-pressed", String(options[i].value === opt.value)));
+            Array.from(root.children).forEach((c, i) => c.setAttribute("aria-pressed", String(options[i]?.value === opt.value)));
           },
         },
         opt.label

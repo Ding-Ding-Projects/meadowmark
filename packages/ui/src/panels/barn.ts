@@ -28,8 +28,12 @@ export function renderBarnPanel(host: HTMLElement, view: BarnView, bridge: HostB
       })
   );
 
+  const nextCapacityText = view.nextCapacity !== null ? String(view.nextCapacity) : t("panel.barn.capacityUnknown");
   const upgradeBtn = button({
-    label: view.upgradeCost !== null ? t("panel.barn.upgrade", { cost: formatMoney(view.upgradeCost), cap: view.nextCapacity }) : t("panel.barn.maxCapacity"),
+    label:
+      view.upgradeCost !== null
+        ? t("panel.barn.upgrade", { cost: formatMoney(view.upgradeCost), cap: nextCapacityText })
+        : t("panel.barn.maxCapacity"),
     variant: "filled",
     disabled: view.upgradeCost === null,
     disabledReason: view.upgradeCost === null ? t("panel.barn.maxCapacityReason") : undefined,

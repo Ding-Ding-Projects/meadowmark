@@ -23,6 +23,20 @@ first 100 matches.
 
 Size is persisted (`card` default, or `fullscreen`) via `paletteSizeStore`.
 
+## Keyboard navigation into rich results
+
+Every row is keyboard-reachable end to end, not just pointer-reachable —
+this matters specifically because the palette itself is opened with a
+keyboard shortcut. From the search input, Arrow Down moves focus to the
+first result row; from a row, Arrow Up/Down move to the previous/next row.
+For a setting row, Enter is the deliberate key that steps focus INTO the
+row's live embedded control (Tab reaches it too, via ordinary DOM focus
+order, since the control sits inside the row). While focus is inside that
+embedded control, Escape leaves the control and returns focus to the row —
+it does not close the whole palette; the palette-level Escape-to-close
+handler only fires when the key event is not first intercepted by the
+control.
+
 ## Configuration
 
 `mountUi` registers one destination per top-level nav tab out of the box.
@@ -36,13 +50,12 @@ module.
   contributes zero results rather than breaking the whole palette — a
   misbehaving source degrades gracefully instead of taking every other
   source down with it.
-- Rich setting-control rows do not currently support keyboard Enter-to-focus
-  the embedded control (only pointer interaction reaches it) — a follow-up
-  should extend keyboard navigation to step into a focused result's embedded
-  control.
-
 ## Verification
 
 Manual: open with `Ctrl+Shift+F`, confirm every registered nav destination
 appears and teleports correctly (tab switches, target highlights); confirm a
-broken/throwing source does not prevent other results from rendering.
+broken/throwing source does not prevent other results from rendering; from
+the keyboard only, Arrow-Down from the search field into the result list,
+Arrow Up/Down between rows, Enter into a setting row's embedded control,
+adjust the control, then Escape back out to the row without the palette
+closing.

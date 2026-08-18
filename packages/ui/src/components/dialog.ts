@@ -54,9 +54,17 @@ export function openDialog(opts: DialogOptions): OpenDialogHandle {
       const focusables = surface.querySelectorAll<HTMLElement>(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
       );
-      if (focusables.length === 0) return;
+      if (focusables.length === 0) {
+        // Nothing focusable rendered yet (or ever) inside the dialog — trap
+        // focus on the dialog surface itself rather than throwing, so a
+        // keyboard user is never stranded with Tab doing nothing useful.
+        ev.preventDefault();
+        surface.focus();
+        return;
+      }
       const first = focusables[0];
       const last = focusables[focusables.length - 1];
+      if (!first || !last) return;
       if (ev.shiftKey && document.activeElement === first) {
         ev.preventDefault();
         last.focus();
