@@ -8,17 +8,13 @@ import { BrowserWindow, app, ipcMain } from 'electron';
 import { JsonStore } from './store';
 import type { AppInfo, GameState, Settings } from './app-types';
 import { SHIPPED_DISPLAY_NAME } from './identity';
+import { IPC_CHANNELS } from './ipc-channels';
 
-export const IPC_CHANNELS = {
-  windowMinimize: 'window:minimize',
-  windowMaximize: 'window:maximize',
-  windowClose: 'window:close',
-  loadGame: 'game:load',
-  saveGame: 'game:save',
-  loadSettings: 'settings:load',
-  saveSettings: 'settings:save',
-  appInfo: 'app:info',
-} as const;
+// Re-exported for convenience so main.ts (which is NOT sandboxed and can
+// safely pull in the rest of this module's graph) can keep importing
+// IPC_CHANNELS from here. preload.ts must import it from './ipc-channels'
+// directly instead -- see that file's header comment for why.
+export { IPC_CHANNELS };
 
 const gameStore = new JsonStore<GameState | null>({
   fileName: 'save.json',
