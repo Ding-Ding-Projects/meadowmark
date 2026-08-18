@@ -22,6 +22,19 @@ if "%SILENT%"=="1" set "SILENT_MODE=1"
 set "REPO_ROOT=%~dp0"
 if "%REPO_ROOT:~-1%"=="\" set "REPO_ROOT=%REPO_ROOT:~0,-1%"
 
+REM Defense in depth: isolate electron-builder from any certificate or signer
+REM variables inherited from the host/CI environment. The YAML policy remains
+REM authoritative; these process-local values prevent auto-discovery and keep
+REM a developer's certificate settings from changing this unsigned artifact.
+set "CSC_IDENTITY_AUTO_DISCOVERY=false"
+set "USE_SYSTEM_SIGNCODE=false"
+set "CSC_LINK="
+set "WIN_CSC_LINK="
+set "CSC_NAME="
+set "WIN_CSC_NAME="
+set "CSC_KEY_PASSWORD="
+set "WIN_CSC_KEY_PASSWORD="
+
 echo [build-installer] Meadowmark installer build
 echo [build-installer] Repository root: %REPO_ROOT%
 echo.
