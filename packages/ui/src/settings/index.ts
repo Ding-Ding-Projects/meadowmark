@@ -12,6 +12,7 @@ import { select } from "../components/select";
 import { slider, switchControl } from "../components/form-controls";
 import { searchField } from "../search/regex-builder";
 import { funnyLevelSliders } from "./funny-level";
+import { renderHistoryPanel } from "../history";
 import { AppSettings, classifyRenderQuality, renderQualityPreset, settingsStore, TabDock, ThemeMode } from "./store";
 import { LanguageMode, setLanguageMode, i18nStore } from "../i18n";
 import { t } from "../i18n";
@@ -299,6 +300,7 @@ export function mountSettings(host: HTMLElement): () => void {
       { id: "appearance", label: t("settings.tab.appearance"), panel: appearancePanel },
       { id: "language", label: t("settings.tab.language"), panel: languagePanel },
       { id: "render", label: t("settings.tab.render"), panel: renderPanel },
+      { id: "history", label: t("settings.tab.history"), panel: renderHistoryPanel() },
     ],
   });
 

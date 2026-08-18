@@ -141,9 +141,9 @@
       "id": "local-history",
       "title": "Local Git-backed version history for saves, settings, and other user records",
       "surface": "app",
-      "status": "missing",
-      "implementation": null,
-      "article": null,
+      "status": "partial",
+      "implementation": "packages/app/src/services/history/history-store.ts",
+      "article": "docs/features/history.md",
       "tests": null,
       "capture": null
     },

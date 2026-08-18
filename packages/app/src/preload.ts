@@ -25,6 +25,16 @@ import type {
   SettingsProvenance,
   SettingsValues,
 } from './services/settings';
+import type {
+  CommitResult,
+  DiffResult,
+  ExportOptions,
+  HistoryAvailability,
+  PruneResult,
+  RecordSummary,
+  RetentionPolicy,
+  Revision,
+} from './services/history';
 
 export interface SettingsServiceSnapshot {
   values: SettingsValues;
@@ -57,6 +67,16 @@ export interface MeadowmarkApi {
     resetAllToDefaults: () => Promise<SettingsServiceSnapshot>;
   };
   appInfo: () => Promise<AppInfo>;
+  history: {
+    init: () => Promise<HistoryAvailability>;
+    listRevisions: (options?: { recordPath?: string; limit?: number }) => Promise<Revision[]>;
+    listRecords: () => Promise<RecordSummary[]>;
+    diffRevisions: (fromHash: string, toHash: string, recordPath?: string) => Promise<DiffResult>;
+    restoreRevision: (hash: string, recordPath: string) => Promise<{ content: string; commit: CommitResult }>;
+    labelRevision: (hash: string, label: string) => Promise<void>;
+    prune: (policy: RetentionPolicy) => Promise<PruneResult>;
+    exportHistory: (options?: ExportOptions) => Promise<string>;
+  };
 }
 
 const api: MeadowmarkApi = {
@@ -86,6 +106,17 @@ const api: MeadowmarkApi = {
     resetAllToDefaults: () => ipcRenderer.invoke(IPC_CHANNELS.settingsServiceResetAllToDefaults),
   },
   appInfo: () => ipcRenderer.invoke(IPC_CHANNELS.appInfo),
+  history: {
+    init: () => ipcRenderer.invoke(IPC_CHANNELS.historyInit),
+    listRevisions: (options) => ipcRenderer.invoke(IPC_CHANNELS.historyListRevisions, options ?? {}),
+    listRecords: () => ipcRenderer.invoke(IPC_CHANNELS.historyListRecords),
+    diffRevisions: (fromHash, toHash, recordPath) =>
+      ipcRenderer.invoke(IPC_CHANNELS.historyDiffRevisions, fromHash, toHash, recordPath),
+    restoreRevision: (hash, recordPath) => ipcRenderer.invoke(IPC_CHANNELS.historyRestoreRevision, hash, recordPath),
+    labelRevision: (hash, label) => ipcRenderer.invoke(IPC_CHANNELS.historyLabelRevision, hash, label),
+    prune: (policy) => ipcRenderer.invoke(IPC_CHANNELS.historyPrune, policy),
+    exportHistory: (options) => ipcRenderer.invoke(IPC_CHANNELS.historyExport, options ?? {}),
+  },
 };
 
 contextBridge.exposeInMainWorld('meadowmark', api);
