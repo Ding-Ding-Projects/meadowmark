@@ -1,3 +1,35 @@
 {
-  "rendersVerified": true
+  "schemaVersion": 2,
+  "rendersVerified": false,
+  "renderEvidence": {
+    "sourceCommit": null,
+    "manifestPath": null,
+    "manifestSha256": null,
+    "evidenceOnlyPrefix": "tools/release/evidence/"
+  },
+  "node": {
+    "version": "v22.23.2",
+    "platform": "win-x64",
+    "archiveUrl": "https://nodejs.org/dist/v22.23.2/node-v22.23.2-win-x64.zip",
+    "sha256": "1177b4137ba5adaa56354ae40f1080c7450e8ae09cecb47da459d1c52ac99f97"
+  },
+  "application": {
+    "productName": "Meadowmark",
+    "masterLogoDefinition": "design/icons/meadowmark-master.json",
+    "masterLogo": "design/icons/meadowmark-master.svg",
+    "windowsIcon": "design/icons/meadowmark.ico",
+    "windowsIconSizes": [16, 20, 24, 32, 40, 48, 64, 128, 256]
+  },
+  "artifacts": {
+    "outputDirectory": "release",
+    "setupPattern": "Meadowmark-Setup-{version}.exe",
+    "releaseIndex": "RELEASES",
+    "fullPackagePattern": "*-{version}-full.nupkg",
+    "evidenceDirectory": "release/evidence"
+  },
+  "dimSum": {
+    "catalogUrl": "https://raw.githubusercontent.com/Ding-Ding-Projects/dim-sum-photos/main/catalog/index.json",
+    "repository": "Ding-Ding-Projects/dim-sum-photos",
+    "releaseTagPrefix": "catalog-v1"
+  }
 }
