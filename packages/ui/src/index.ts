@@ -89,11 +89,17 @@ export function mountUi(root: HTMLElement, opts: MountUiOptions): MountedUi {
 
   disposers.push(mountHud(root, opts.state$));
 
+  const dock = s.tabDock;
+  const isVerticalDock = dock === "left" || dock === "right";
+
   const panelHost = h("div", {
-    style: { position: "fixed", right: "12px", top: "72px", bottom: "12px", width: "min(420px, 92vw)", zIndex: "var(--mm-z-panel)" },
+    style: {
+      width: isVerticalDock ? "min(420px, 100%)" : "min(640px, 100%)",
+      maxWidth: "100%",
+      maxHeight: "100%",
+      minHeight: "0",
+    },
   });
-  root.appendChild(panelHost);
-  disposers.push(() => panelHost.remove());
 
   let currentDisposer: (() => void) | null = null;
   function mountPanel(id: string): void {
@@ -176,12 +182,64 @@ export function mountUi(root: HTMLElement, opts: MountUiOptions): MountedUi {
     onActivate: mountPanel,
     tabs: tabDefs.map((d) => ({ id: d.id, label: d.label, panel: h("div") })),
   });
-  const navHost = h("div", {
-    style: { position: "fixed", left: "0", top: "32px", bottom: "0", zIndex: "var(--mm-z-panel)", pointerEvents: "auto" },
-  });
+  const navHost = h("div", { style: { flex: "0 0 auto" } });
   navHost.appendChild(navTabsHandle.root);
-  root.appendChild(navHost);
-  disposers.push(() => navHost.remove());
+
+  const panelSlot = h("div", {
+    style: {
+      flex: "1 1 auto",
+      minWidth: "0",
+      minHeight: "0",
+      display: "flex",
+      justifyContent: isVerticalDock ? "flex-start" : "center",
+      padding: "12px",
+      overflow: "hidden",
+    },
+  });
+  panelSlot.appendChild(panelHost);
+
+  // A single flex shell lays the nav rail and the active panel out
+  // side-by-side (row/row-reverse for a left/right dock) or stacked
+  // (column/column-reverse for top/bottom), so the two can never overlap
+  // regardless of viewport width or how long the nav labels run in
+  // bilingual mode — two independently `position: fixed` boxes (the
+  // previous approach) had no way to know about each other's size, and
+  // reliably overlapped once the window narrowed or labels grew.
+  const shell = h("div", {
+    style: {
+      position: "fixed",
+      left: "0",
+      right: "0",
+      bottom: "0",
+      display: "flex",
+      flexDirection: dock === "left" ? "row" : dock === "right" ? "row-reverse" : dock === "top" ? "column" : "column-reverse",
+      zIndex: "var(--mm-z-panel)",
+      pointerEvents: "auto",
+    },
+  });
+  shell.appendChild(navHost);
+  shell.appendChild(panelSlot);
+  root.appendChild(shell);
+  disposers.push(() => shell.remove());
+
+  // The shell must start below the HUD status bar, never under it — the
+  // HUD wraps onto extra rows at narrow widths, in bilingual mode, and at
+  // high display scale, so its height is not a constant. Track its real
+  // rendered bottom edge instead of guessing a fixed pixel offset.
+  const hudEl = root.querySelector<HTMLElement>(".mm-hud");
+  function updateShellTop(): void {
+    const hudBottom = hudEl ? hudEl.getBoundingClientRect().bottom : 32;
+    shell.style.top = `${Math.max(32, hudBottom + 8)}px`;
+  }
+  updateShellTop();
+  if (hudEl && typeof ResizeObserver !== "undefined") {
+    const hudObserver = new ResizeObserver(updateShellTop);
+    hudObserver.observe(hudEl);
+    disposers.push(() => hudObserver.disconnect());
+  }
+  window.addEventListener("resize", updateShellTop);
+  disposers.push(() => window.removeEventListener("resize", updateShellTop));
+
   mountPanel("fields");
 
   const removeHotkey = installCommandPaletteHotkey();

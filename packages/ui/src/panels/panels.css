@@ -33,7 +33,14 @@
 }
 .mm-grid-tile {
   position: relative;
-  aspect-ratio: 1;
+  /* Not a fixed aspect-ratio square: bilingual mode's "en — yue" labels are
+     routinely wider and taller than a single English word, and a hard
+     aspect-ratio box would clip that second line instead of growing to fit
+     it. min-height/min-width still keep tiles from ever going below a
+     comfortable touch target or looking cramped in the common (short-label,
+     English-only) case. */
+  min-height: var(--mm-touch-target-min);
+  min-width: var(--mm-touch-target-min);
   border-radius: var(--mm-shape-medium);
   background: var(--mm-color-surface-container);
   border: 1px solid var(--mm-color-outline-variant);
@@ -42,9 +49,8 @@
   align-items: center;
   justify-content: center;
   gap: var(--mm-space-1);
+  padding: var(--mm-space-2) var(--mm-space-1);
   cursor: pointer;
-  min-height: var(--mm-touch-target-min);
-  min-width: var(--mm-touch-target-min);
 }
 .mm-grid-tile:hover { box-shadow: var(--mm-elevation-1); }
 .mm-grid-tile:focus-visible { outline: 2px solid var(--mm-color-primary); outline-offset: 2px; }
@@ -55,13 +61,23 @@
   color: var(--mm-color-on-surface);
   font-size: var(--mm-type-label-medium-size);
   line-height: var(--mm-type-label-medium-line);
+  text-align: center;
+  /* Wrap onto up to three lines (bilingual "en — yue" labels can run long)
+     rather than truncating with an ellipsis on a single line — the label
+     must stay fully readable, not just short-mode readable. */
+  white-space: normal;
+  overflow-wrap: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 .mm-grid-tile__timer {
-  position: absolute;
-  bottom: 2px;
+  /* Was `position: absolute; bottom: 2px`, which overlapped the label text
+     whenever the label needed more than one line — true even in
+     English-only mode for longer crop names, and routine in bilingual
+     mode. Flowing it as a normal flex child (it renders after the label)
+     stacks it below instead of floating on top of it. */
   font-size: var(--mm-type-label-small-size);
   color: var(--mm-color-on-surface-variant);
 }

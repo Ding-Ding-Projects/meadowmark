@@ -251,7 +251,24 @@
   border-color: var(--mm-color-primary);
   background: var(--mm-color-primary-container);
 }
-.mm-tab__close { margin-left: var(--mm-space-1); }
+.mm-tab__close {
+  margin-left: var(--mm-space-1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(var(--mm-touch-target-min) * var(--mm-density-scale));
+  height: calc(var(--mm-touch-target-min) * var(--mm-density-scale));
+  padding: 0;
+  border: none;
+  border-radius: var(--mm-shape-full);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 0.85em;
+  cursor: pointer;
+}
+.mm-tab__close:hover { background: color-mix(in srgb, var(--mm-color-on-surface) var(--mm-state-hover-opacity), transparent); }
+.mm-tab__close:focus-visible { outline: 2px solid var(--mm-color-primary); outline-offset: 1px; }
 
 .mm-tooltip {
   position: fixed;

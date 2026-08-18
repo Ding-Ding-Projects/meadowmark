@@ -1,4 +1,5 @@
 import { h } from "../dom";
+import { t } from "../i18n";
 
 export type TabDock = "top" | "bottom" | "left" | "right";
 
@@ -51,13 +52,20 @@ export function tabs(opts: TabsOptions): { root: HTMLDivElement; setActive: (id:
       h("span", {}, def.label),
       def.closable
         ? h(
-            "span.mm-tab__close",
+            "button.mm-tab__close",
             {
-              role: "button",
-              "aria-label": `Close ${def.label}`,
+              type: "button",
+              "aria-label": t("common.action.closeNamed", { name: def.label }),
               onclick: (ev: MouseEvent) => {
                 ev.stopPropagation();
                 def.onClose?.();
+              },
+              onkeydown: (ev: KeyboardEvent) => {
+                // A real <button> already fires click on Enter/Space, but
+                // the click handler's stopPropagation only runs on the
+                // click event — stop the keydown here too so it never
+                // bubbles into the tab's own arrow-key/activation handling.
+                if (ev.key === "Enter" || ev.key === " ") ev.stopPropagation();
               },
             },
             "✕"
