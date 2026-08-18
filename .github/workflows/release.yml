@@ -1,0 +1,172 @@
+name: Release
+
+# Every push to main, and every manual dispatch, publishes exactly one new
+# uniquely-tagged non-draft GitHub Release carrying a real, freshly-built
+# Squirrel.Windows installer.
+#
+# This workflow runs NO tests and NO lint. That is a deliberate standing
+# project decision, not an oversight: this project's checking happens
+# locally, before the push, with committed test scripts a developer or
+# agent runs and reports on directly. A workflow run here only builds,
+# packages, and publishes -- it fails only when the build or packaging
+# itself fails, never on a code-quality verdict.
+#
+# Releases are non-idempotent side effects (a real tag, a real published
+# release, real uploaded assets), so this workflow deliberately has NO
+# `concurrency: cancel-in-progress` group. Cancelling a publish mid-upload
+# can strand a tag without its artifacts, which is worse than letting two
+# runs queue.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build, package, and publish (Windows)
+    runs-on: windows-latest
+    env:
+      # Resolution order: an optional repo-scoped fine-grained PAT, then
+      # the organization token, then the workflow's own token as the last
+      # fallback.
+      GH_TOKEN: ${{ secrets.RELEASE_TOKEN || secrets.ORG_TOKEN || secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Record workflow start time
+        id: timing
+        shell: pwsh
+        run: |
+          $start = Get-Date -AsUTC
+          "start_iso=$($start.ToString('o'))" >> $env:GITHUB_OUTPUT
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Bootstraps the same way a local run does. On a GitHub-hosted
+      # Windows runner, Node is already provisioned by actions/setup-node
+      # above, so this mainly resolves npm packages -- but running the
+      # committed script rather than a hand-copied `npm ci` keeps CI and a
+      # local manual release on the exact same path.
+      - name: Bootstrap dependencies
+        shell: cmd
+        run: call download-dependencies.bat /s
+
+      - name: Build workspaces
+        shell: cmd
+        run: npm run build
+
+      - name: Generate line-count report
+        shell: pwsh
+        run: |
+          node tools/line-count/count.mjs | Out-File -FilePath lines.md -Encoding utf8
+
+      - name: Check completeness inventory
+        shell: cmd
+        # Informational: the inventory is expected to show mostly
+        # "missing" rows for a long time. This never fails the release --
+        # it only fails (and would fail this step) if a row dishonestly
+        # claims "done" for a file that doesn't exist.
+        run: node tools/inventory/check.mjs
+
+      - name: Package Squirrel.Windows installer (unsigned)
+        shell: cmd
+        run: npm run dist
+
+      - name: Locate build artifacts
+        id: artifacts
+        shell: pwsh
+        run: |
+          $setup = Get-ChildItem -Path release -Recurse -Filter "*Setup*.exe" | Select-Object -First 1
+          $releasesFile = Get-ChildItem -Path release -Recurse -Filter "RELEASES" | Select-Object -First 1
+          $nupkg = Get-ChildItem -Path release -Recurse -Filter "*-full.nupkg" | Select-Object -First 1
+
+          if (-not $setup) {
+            Write-Error "No Setup.exe found under release\ -- packaging did not produce an installer."
+            exit 1
+          }
+          if (-not $releasesFile) {
+            Write-Error "No RELEASES file found under release\."
+            exit 1
+          }
+          if (-not $nupkg) {
+            Write-Error "No full .nupkg found under release\."
+            exit 1
+          }
+
+          "setup_path=$($setup.FullName)" >> $env:GITHUB_OUTPUT
+          "releases_path=$($releasesFile.FullName)" >> $env:GITHUB_OUTPUT
+          "nupkg_path=$($nupkg.FullName)" >> $env:GITHUB_OUTPUT
+
+      - name: Compute release tag
+        id: tag
+        shell: pwsh
+        run: |
+          $pkg = Get-Content package.json -Raw | ConvertFrom-Json
+          # A version-plus-run-number tag guarantees uniqueness across
+          # runs even when package.json's own version hasn't been bumped
+          # between two pushes.
+          $tag = "v$($pkg.version)-$($env:GITHUB_RUN_NUMBER)"
+          "tag=$tag" >> $env:GITHUB_OUTPUT
+
+      - name: Record workflow end time and duration
+        id: timing_end
+        shell: pwsh
+        run: |
+          $end = Get-Date -AsUTC
+          $start = [DateTime]::Parse("${{ steps.timing.outputs.start_iso }}").ToUniversalTime()
+          $duration = $end - $start
+          $durationStr = "{0:D2}:{1:D2}:{2:D2}" -f [int]$duration.TotalHours, $duration.Minutes, $duration.Seconds
+          "end_iso=$($end.ToString('o'))" >> $env:GITHUB_OUTPUT
+          "duration=$durationStr" >> $env:GITHUB_OUTPUT
+
+      - name: Write release notes
+        id: notes
+        shell: pwsh
+        run: |
+          $notesPath = "release-notes.md"
+          $lines = Get-Content lines.md -Raw
+
+          @"
+          ## Meadowmark ${{ steps.tag.outputs.tag }}
+
+          Unsigned Windows installer built via Squirrel.Windows. Code signing is
+          permanently disabled for this project -- Windows will show an
+          "unknown publisher" / SmartScreen warning when you run the installer.
+          Meadowmark is free, with no purchases of any kind.
+
+          This build ran no tests and no lint in CI (a deliberate standing
+          project decision; checks run locally before push).
+
+          ### Workflow timing
+
+          - Workflow started: ${{ steps.timing.outputs.start_iso }}
+          - Workflow completed: ${{ steps.timing_end.outputs.end_iso }}
+          - Workflow duration: ${{ steps.timing_end.outputs.duration }}
+
+          ### Line count
+
+          $lines
+          "@ | Out-File -FilePath $notesPath -Encoding utf8
+
+          "notes_path=$notesPath" >> $env:GITHUB_OUTPUT
+
+      - name: Publish GitHub Release
+        shell: pwsh
+        run: |
+          gh release create "${{ steps.tag.outputs.tag }}" `
+            "${{ steps.artifacts.outputs.setup_path }}" `
+            "${{ steps.artifacts.outputs.releases_path }}" `
+            "${{ steps.artifacts.outputs.nupkg_path }}" `
+            --title "Meadowmark ${{ steps.tag.outputs.tag }}" `
+            --notes-file "${{ steps.notes.outputs.notes_path }}" `
+            --target "${{ github.sha }}"
