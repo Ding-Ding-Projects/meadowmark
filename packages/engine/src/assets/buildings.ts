@@ -8,7 +8,7 @@
  * on a face that is never meant to be seen.
  */
 
-import { box, cylinder, defineAsset, group, prism, roof, type MeshNode } from '../mesh-dsl.js';
+import { box, cone, cylinder, defineAsset, group, prism, roof, type MeshNode } from '../mesh-dsl.js';
 
 /** A simple gabled house: a box body plus a roof, walls readable on all sides. */
 function houseNode(opts: {
@@ -133,7 +133,7 @@ function factoryNode(opts: {
   width: number;
   depth: number;
   height: number;
-  wall: 'wallBrick' | 'wallStone' | 'wallTimber';
+  wall: 'wallBrick' | 'wallStone' | 'wallTimber' | 'wallWhite';
   roofColor: 'roofSlate' | 'roofBarn';
   chimneyHeight: number;
 }): MeshNode {
