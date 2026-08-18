@@ -16,7 +16,7 @@ import {
   type GameState,
 } from '@meadowmark/shared';
 import { createRenderer } from '@meadowmark/engine';
-import { mountUi, notifyError, notifyInfo, notifySuccess, type HostBridge } from '@meadowmark/ui';
+import { hydrateSettingsFromHost, mountUi, notifyError, notifyInfo, notifySuccess, type HostBridge } from '@meadowmark/ui';
 
 import { achievementCatalog, dailyTaskTemplates, regattaScoreBarCap, regattaTaskTemplates, tickConfig } from './content.js';
 import { stateToEngineView } from './adapters/state-to-engine.js';
@@ -80,6 +80,7 @@ async function boot(): Promise<void> {
   }
 
   wireTitleBar();
+  await hydrateSettingsFromHost();
 
   const now = Date.now();
   const raw = await window.meadowmark.loadGame();

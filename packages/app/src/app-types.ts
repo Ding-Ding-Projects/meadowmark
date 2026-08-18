@@ -16,6 +16,12 @@ export interface Settings {
   [key: string]: unknown;
 }
 
+export interface SettingsLoadPayload {
+  values: Settings;
+  provenance: Record<string, unknown>;
+  warnings: string[];
+}
+
 export interface AppInfo {
   name: string;
   version: string;

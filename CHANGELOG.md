@@ -26,3 +26,8 @@ All notable changes to Meadowmark are documented in this file.
   Squirrel.Windows installer release on every push to `main`, with no
   test/lint gate (a deliberate project decision) and no code signing (a
   permanent project decision).
+- Settings service wiring: the Electron main process now backs settings IPC
+  with the validated versioned settings service, the preload exposes service
+  load/set/reset operations, and the settings UI hydrates and saves overlapping
+  appearance/general values through that bridge while preserving the browser
+  localStorage fallback.
