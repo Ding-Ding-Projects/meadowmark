@@ -1,0 +1,27 @@
+import { registerCopy } from "./index";
+
+registerCopy({
+  "regex.builder.title": { en: { 1: "Regex builder", 3: "Regex builder" }, yue: { 1: "正規表達式產生器", 3: "Regex 砌字機" } },
+  "regex.builder.patternLabel": { en: { 1: "Pattern", 3: "Pattern" }, yue: { 1: "樣式", 3: "樣式" } },
+  "regex.builder.flagsLabel": { en: { 1: "Flags", 3: "Flags" }, yue: { 1: "旗標", 3: "旗標" } },
+  "regex.builder.sampleLabel": { en: { 1: "Sample text", 3: "Try it on some text" }, yue: { 1: "測試文字", 3: "攞啲文字試下" } },
+  "regex.builder.samplePlaceholder": { en: { 1: "Type or paste text to test against…", 3: "Paste something to poke at…" }, yue: { 1: "打啲字嚟試下…", 3: "貼啲嘢嚟玩下…" } },
+  "regex.builder.copy": { en: { 1: "Copy pattern", 3: "Copy it" }, yue: { 1: "複製樣式", 3: "抄低佢" } },
+  "regex.builder.matchCount": { en: { 1: "{count} matches", 3: "{count} matches found" }, yue: { 1: "搵到 {count} 個", 3: "搵到 {count} 個中招嘅" } },
+  "regex.builder.truncated": { en: { 1: "(truncated)", 3: "(stopped early — that's plenty)" }, yue: { 1: "（已截斷）", 3: "（夠喇夠喇，唔使全部）" } },
+  "regex.token.anyChar": { en: { 1: "Any char" }, yue: { 1: "任何字" } },
+  "regex.token.digit": { en: { 1: "Digit" }, yue: { 1: "數字" } },
+  "regex.token.word": { en: { 1: "Word char" }, yue: { 1: "文字符號" } },
+  "regex.token.whitespace": { en: { 1: "Whitespace" }, yue: { 1: "空白" } },
+  "regex.token.startAnchor": { en: { 1: "Start" }, yue: { 1: "開頭" } },
+  "regex.token.endAnchor": { en: { 1: "End" }, yue: { 1: "結尾" } },
+  "regex.token.charClass": { en: { 1: "Char class" }, yue: { 1: "字元組" } },
+  "regex.token.negCharClass": { en: { 1: "Not in class" }, yue: { 1: "唔喺呢組" } },
+  "regex.token.group": { en: { 1: "Group" }, yue: { 1: "分組" } },
+  "regex.token.namedGroup": { en: { 1: "Named group" }, yue: { 1: "命名分組" } },
+  "regex.token.alternation": { en: { 1: "Or" }, yue: { 1: "或者" } },
+  "regex.token.zeroOrMore": { en: { 1: "0 or more" }, yue: { 1: "0次或以上" } },
+  "regex.token.oneOrMore": { en: { 1: "1 or more" }, yue: { 1: "1次或以上" } },
+  "regex.token.zeroOrOne": { en: { 1: "Optional" }, yue: { 1: "可有可無" } },
+  "regex.token.exactCount": { en: { 1: "Exact count" }, yue: { 1: "指定次數" } },
+});
