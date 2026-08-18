@@ -1,0 +1,16 @@
+{
+  "name": "@meadowmark/app",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Meadowmark Electron main process and preload bridge.",
+  "main": "dist/main.cjs",
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "esbuild": "^0.24.0",
+    "typescript": "^5.9.2"
+  }
+}
