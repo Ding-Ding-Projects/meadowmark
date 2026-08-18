@@ -41,6 +41,10 @@ declare global {
         prune(policy: { keepLatest?: number; keepSince?: Date; neverPruneLabeled?: boolean }): Promise<unknown>;
         exportHistory(options?: { redactPaths?: string[]; format?: 'json' | 'text' }): Promise<string>;
       };
+      exports: {
+        lossReport(datasetId: 'settings' | 'save', format: string): Promise<unknown>;
+        write(datasetId: 'settings' | 'save', format: string): Promise<unknown>;
+      };
     };
   }
 }

@@ -26,6 +26,8 @@ import "./i18n/confirm";
 import "./i18n/settings";
 import "./i18n/content";
 import "./i18n/history";
+import "./i18n/exports";
+import "./i18n/logo";
 
 import { mountHud } from "./hud";
 import { renderFieldsPanel } from "./panels/fields";

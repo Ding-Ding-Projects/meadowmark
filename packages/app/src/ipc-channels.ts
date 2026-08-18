@@ -45,4 +45,13 @@ export const IPC_CHANNELS = {
   historyLabelRevision: 'history:label-revision',
   historyPrune: 'history:prune',
   historyExport: 'history:export',
+  exportsLossReport: 'exports:loss-report',
+  exportsWrite: 'exports:write',
+  logoListPresets: 'logo:list-presets',
+  logoGetManifest: 'logo:get-manifest',
+  logoPreviewPreset: 'logo:preview-preset',
+  logoPreviewCurrent: 'logo:preview-current',
+  logoApplyPreset: 'logo:apply-preset',
+  logoPickAndApplyCustom: 'logo:pick-and-apply-custom',
+  logoReset: 'logo:reset',
 } as const;

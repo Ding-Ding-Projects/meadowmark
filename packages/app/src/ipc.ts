@@ -5,7 +5,8 @@
  */
 
 import path from 'node:path';
-import { BrowserWindow, app, ipcMain } from 'electron';
+import fs from 'node:fs/promises';
+import { BrowserWindow, app, dialog, ipcMain } from 'electron';
 import { JsonStore, dataDir } from './store';
 import type { AppInfo, GameState, Settings, SettingsLoadPayload } from './app-types';
 import { SHIPPED_DISPLAY_NAME } from './identity';
@@ -29,6 +30,33 @@ import {
   type RetentionPolicy,
   type Revision,
 } from './services/history';
+import {
+  computeLossReport,
+  extensionForFormat,
+  suggestExportFileName,
+  writeExportFile,
+  type ExportFormat,
+  type ExportSource,
+  type ExportWriteResult,
+  type LossReport,
+} from './services/exports';
+import {
+  applyCustomSelection,
+  applyPresetSelection,
+  encodePng,
+  getCurrentLogoManifest,
+  getPresetImage,
+  listLogoPresets,
+  readLogoAsset,
+  resetLogoToShippedDefault,
+  type LogoManifest,
+  type LogoPresetSummary,
+} from './services/logo';
+
+/** The datasets this build knows how to turn into an ExportSource. Every
+ * user-owned record the app persists should eventually get an entry here;
+ * this starts with the two records the app already owns end to end. */
+export type ExportDatasetId = 'settings' | 'save';
 
 // Re-exported for convenience so main.ts (which is NOT sandboxed and can
 // safely pull in the rest of this module's graph) can keep importing
@@ -244,6 +272,134 @@ export function registerIpcHandlers(getMainWindow: () => BrowserWindow | null): 
   ipcMain.handle(IPC_CHANNELS.historyExport, async (_event, options: ExportOptions = {}): Promise<string> => {
     return getHistoryStore().exportHistory(options);
   });
+
+  ipcMain.handle(
+    IPC_CHANNELS.exportsLossReport,
+    async (_event, datasetId: ExportDatasetId, format: ExportFormat): Promise<LossReport> => {
+      const source = await buildExportSource(datasetId);
+      return computeLossReport(source, format);
+    },
+  );
+
+  ipcMain.handle(
+    IPC_CHANNELS.exportsWrite,
+    async (
+      _event,
+      datasetId: ExportDatasetId,
+      format: ExportFormat,
+    ): Promise<ExportWriteResult | { canceled: true }> => {
+      const source = await buildExportSource(datasetId);
+      const defaultPath = suggestExportFileName(source, format);
+      const filters = [{ name: format.toUpperCase(), extensions: [extensionForFormat(format)] }];
+      const win = getMainWindow();
+      const result = win
+        ? await dialog.showSaveDialog(win, { defaultPath, filters })
+        : await dialog.showSaveDialog({ defaultPath, filters });
+      if (result.canceled || !result.filePath) {
+        return { canceled: true };
+      }
+      const written = await writeExportFile(source, format, result.filePath);
+      await recordHistorySnapshot(
+        `exports/${datasetId}`,
+        written.serialized.contents,
+        `Exported ${datasetId} as ${format}`,
+        'export',
+      );
+      return written;
+    },
+  );
+
+  ipcMain.handle(IPC_CHANNELS.logoListPresets, (): readonly LogoPresetSummary[] => {
+    return listLogoPresets();
+  });
+
+  ipcMain.handle(IPC_CHANNELS.logoGetManifest, async (): Promise<LogoManifest | null> => {
+    return getCurrentLogoManifest(logoUserDataDir());
+  });
+
+  ipcMain.handle(IPC_CHANNELS.logoPreviewPreset, (_event, presetId: string): string => {
+    return pngDataUrl(encodePng(getPresetImage(presetId)));
+  });
+
+  ipcMain.handle(IPC_CHANNELS.logoPreviewCurrent, async (): Promise<string | null> => {
+    const dir = logoUserDataDir();
+    const manifest = await getCurrentLogoManifest(dir);
+    if (!manifest) return null;
+    const [firstVariant, ...restVariants] = manifest.variantFiles;
+    if (!firstVariant) return null;
+    const largest = restVariants.reduce((best, v) => (v.size > best.size ? v : best), firstVariant);
+    const png = await readLogoAsset(dir, manifest, { size: largest.size });
+    return pngDataUrl(png);
+  });
+
+  ipcMain.handle(IPC_CHANNELS.logoApplyPreset, async (_event, presetId: string): Promise<LogoManifest> => {
+    const manifest = await applyPresetSelection(logoUserDataDir(), presetId);
+    await recordHistorySnapshot('logo/manifest.json', JSON.stringify(manifest, null, 2), `Set logo to preset "${presetId}"`, 'logo');
+    return manifest;
+  });
+
+  ipcMain.handle(
+    IPC_CHANNELS.logoPickAndApplyCustom,
+    async (): Promise<LogoManifest | { canceled: true }> => {
+      const win = getMainWindow();
+      const openOptions: Electron.OpenDialogOptions = {
+        properties: ['openFile'],
+        filters: [{ name: 'PNG image', extensions: ['png'] }],
+      };
+      const picked = win ? await dialog.showOpenDialog(win, openOptions) : await dialog.showOpenDialog(openOptions);
+      if (picked.canceled || picked.filePaths.length === 0) {
+        return { canceled: true };
+      }
+      const filePath = picked.filePaths[0];
+      if (!filePath) return { canceled: true };
+      const bytes = await fs.readFile(filePath);
+      const manifest = await applyCustomSelection(logoUserDataDir(), bytes, {
+        fit: 'contain',
+        background: { r: 255, g: 255, b: 255, a: 0 },
+      });
+      await recordHistorySnapshot('logo/manifest.json', JSON.stringify(manifest, null, 2), 'Set logo to a custom upload', 'logo');
+      return manifest;
+    },
+  );
+
+  ipcMain.handle(IPC_CHANNELS.logoReset, async (): Promise<void> => {
+    await resetLogoToShippedDefault(logoUserDataDir());
+    await recordHistorySnapshot('logo/manifest.json', 'null', 'Reset logo to the shipped default', 'logo');
+  });
+}
+
+function logoUserDataDir(): string {
+  return app.getPath('userData');
+}
+
+function pngDataUrl(png: Buffer): string {
+  return `data:image/png;base64,${png.toString('base64')}`;
+}
+
+/** Builds the generic ExportSource for one of the app's known datasets,
+ * straight from the live store each dataset already owns. Both stores hold
+ * intentionally loose placeholder shapes (see app-types.ts) rather than the
+ * real domain schema from @meadowmark/shared, so the cast to ExportSource's
+ * JsonValue is the same boundary loosening ipc.ts already does elsewhere in
+ * this file when handing the placeholder types to a typed subsystem. */
+async function buildExportSource(datasetId: ExportDatasetId): Promise<ExportSource> {
+  if (datasetId === 'settings') {
+    const store = await getSettingsStore();
+    const values = store.getBase() as unknown as Record<string, unknown>;
+    return {
+      name: 'meadowmark-settings',
+      schemaVersion: '1',
+      title: 'Meadowmark settings',
+      value: values as unknown as ExportSource['value'],
+    };
+  }
+  const state = await gameStore.load();
+  return {
+    name: 'meadowmark-save',
+    schemaVersion: '1',
+    title: 'Meadowmark save',
+    value: (state ?? {}) as unknown as ExportSource['value'],
+  };
 }
 
 /** Applies a restored history record back to the live file it came from.

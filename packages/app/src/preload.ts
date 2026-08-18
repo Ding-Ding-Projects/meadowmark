@@ -35,6 +35,9 @@ import type {
   RetentionPolicy,
   Revision,
 } from './services/history';
+import type { ExportFormat, ExportWriteResult, LossReport } from './services/exports';
+import type { ExportDatasetId } from './ipc';
+import type { LogoManifest, LogoPresetSummary } from './services/logo';
 
 export interface SettingsServiceSnapshot {
   values: SettingsValues;
@@ -77,6 +80,19 @@ export interface MeadowmarkApi {
     prune: (policy: RetentionPolicy) => Promise<PruneResult>;
     exportHistory: (options?: ExportOptions) => Promise<string>;
   };
+  exports: {
+    lossReport: (datasetId: ExportDatasetId, format: ExportFormat) => Promise<LossReport>;
+    write: (datasetId: ExportDatasetId, format: ExportFormat) => Promise<ExportWriteResult | { canceled: true }>;
+  };
+  logo: {
+    listPresets: () => Promise<readonly LogoPresetSummary[]>;
+    getManifest: () => Promise<LogoManifest | null>;
+    previewPreset: (presetId: string) => Promise<string>;
+    previewCurrent: () => Promise<string | null>;
+    applyPreset: (presetId: string) => Promise<LogoManifest>;
+    pickAndApplyCustom: () => Promise<LogoManifest | { canceled: true }>;
+    reset: () => Promise<void>;
+  };
 }
 
 const api: MeadowmarkApi = {
@@ -116,6 +132,19 @@ const api: MeadowmarkApi = {
     labelRevision: (hash, label) => ipcRenderer.invoke(IPC_CHANNELS.historyLabelRevision, hash, label),
     prune: (policy) => ipcRenderer.invoke(IPC_CHANNELS.historyPrune, policy),
     exportHistory: (options) => ipcRenderer.invoke(IPC_CHANNELS.historyExport, options ?? {}),
+  },
+  exports: {
+    lossReport: (datasetId, format) => ipcRenderer.invoke(IPC_CHANNELS.exportsLossReport, datasetId, format),
+    write: (datasetId, format) => ipcRenderer.invoke(IPC_CHANNELS.exportsWrite, datasetId, format),
+  },
+  logo: {
+    listPresets: () => ipcRenderer.invoke(IPC_CHANNELS.logoListPresets),
+    getManifest: () => ipcRenderer.invoke(IPC_CHANNELS.logoGetManifest),
+    previewPreset: (presetId) => ipcRenderer.invoke(IPC_CHANNELS.logoPreviewPreset, presetId),
+    previewCurrent: () => ipcRenderer.invoke(IPC_CHANNELS.logoPreviewCurrent),
+    applyPreset: (presetId) => ipcRenderer.invoke(IPC_CHANNELS.logoApplyPreset, presetId),
+    pickAndApplyCustom: () => ipcRenderer.invoke(IPC_CHANNELS.logoPickAndApplyCustom),
+    reset: () => ipcRenderer.invoke(IPC_CHANNELS.logoReset),
   },
 };
 
