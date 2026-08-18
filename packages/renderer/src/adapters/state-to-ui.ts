@@ -71,7 +71,14 @@ function mapFields(state: GameState): FieldsView {
     .filter((c) => c.unlockLevel <= state.economy.level)
     .map((c) => ({
       id: c.id,
-      nameKey: c.displayName,
+      // GAP FIXED: this used to pass c.displayName (a literal string like
+      // "Wheat") straight into a slot that `t()` treats as a lookup key,
+      // which can only ever resolve if a copy table happens to register a
+      // key that is literally the English word "Wheat" - it never did, so
+      // every crop picker rendered "⟨missing:Wheat⟩" in the UI. The real
+      // key is namespaced per crop id and registered with real translations
+      // in packages/ui/src/i18n/content.ts.
+      nameKey: `content.crop.${c.id}.name`,
       iconId: `crop_${c.id}`,
       growthMs: c.growTimeMs,
       // Every crop yields 1 unit of its own good id on harvest (see fields.ts harvest()).

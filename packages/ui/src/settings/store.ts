@@ -152,7 +152,12 @@ export async function hydrateSettingsFromHost(): Promise<void> {
 }
 
 function hostSettingsBridge(): HostSettingsBridge | null {
-  const maybeWindow = window as Window & { meadowmark?: HostSettingsBridge };
+  // The renderer package declares window.meadowmark with its own wider
+  // signatures (setMany takes Record<string, unknown> there). Both describe
+  // the same runtime object, but TypeScript will not relate the two
+  // structurally, so this goes through `unknown` deliberately rather than
+  // pretending the declarations overlap.
+  const maybeWindow = window as unknown as { meadowmark?: HostSettingsBridge };
   return maybeWindow.meadowmark ?? null;
 }
 
