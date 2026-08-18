@@ -5,12 +5,13 @@ import { app, autoUpdater as electronAutoUpdater } from 'electron';
 import { atomicWriteFile } from '../../atomic-write.js';
 import {
   DEFAULT_BACKGROUND_CHECK_INTERVAL_MS,
+  DEFAULT_RELEASE_NOTES_URL_TEMPLATE,
+  DEFAULT_UPDATE_FEED_URL,
   MAX_PACKAGE_BYTES,
   MAX_RELEASES_FILE_BYTES,
   MIN_BACKGROUND_CHECK_INTERVAL_MS,
   RELEASES_FILE_NAME,
   UNSIGNED_UPDATE_WARNING,
-  UPDATE_FEED_PLACEHOLDER,
 } from './feed-config.js';
 import {
   DownloadHttpError,
@@ -77,9 +78,12 @@ export class UpdaterService {
   private checkInFlight = false;
 
   constructor(config: UpdaterConfig = {}) {
-    const rawFeedUrl = config.feedUrl ?? UPDATE_FEED_PLACEHOLDER;
+    const rawFeedUrl = config.feedUrl === undefined ? DEFAULT_UPDATE_FEED_URL : config.feedUrl;
     this.feedUrl = normalizeFeedUrl(rawFeedUrl);
-    this.releaseNotesUrlTemplate = config.releaseNotesUrlTemplate ?? null;
+    this.releaseNotesUrlTemplate =
+      config.releaseNotesUrlTemplate === undefined
+        ? DEFAULT_RELEASE_NOTES_URL_TEMPLATE
+        : config.releaseNotesUrlTemplate;
     this.minCheckIntervalMs = Math.max(
       config.minCheckIntervalMs ?? DEFAULT_BACKGROUND_CHECK_INTERVAL_MS,
       MIN_BACKGROUND_CHECK_INTERVAL_MS,
@@ -202,7 +206,7 @@ export class UpdaterService {
       return this.state;
     }
     if (!this.feedUrl) {
-      const next: UpdaterState = { status: 'no-feed-configured', placeholderUrl: UPDATE_FEED_PLACEHOLDER };
+      const next: UpdaterState = { status: 'no-feed-configured', placeholderUrl: DEFAULT_UPDATE_FEED_URL };
       this.setState(next);
       return next;
     }
@@ -498,10 +502,10 @@ export class UpdaterService {
   }
 }
 
-/** Normalizes a feed URL, treating null/empty/whitespace-only/placeholder values as "not configured". */
+/** Normalizes a feed URL, treating null or empty values as explicitly not configured. */
 function normalizeFeedUrl(rawUrl: string | null | undefined): string | null {
   const trimmed = (rawUrl ?? '').trim();
-  if (trimmed.length === 0 || trimmed === UPDATE_FEED_PLACEHOLDER) {
+  if (trimmed.length === 0) {
     return null;
   }
   return trimmed.endsWith('/') ? trimmed : `${trimmed}/`;

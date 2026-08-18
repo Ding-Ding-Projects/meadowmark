@@ -100,6 +100,7 @@ interface ScheduleDocument {
 }
 
 interface PendingNarratorRequest {
+  kind: Exclude<NarratorRequestKind, 'cancel'>;
   resolve: (value: unknown) => void;
   reject: (error: Error) => void;
   timer: NodeJS.Timeout;
@@ -148,7 +149,13 @@ export class RendererNarratorEnginePort implements NarratorEnginePort {
     if (!request) return;
     clearTimeout(request.timer);
     this.pending.delete(id);
-    if (ok) request.resolve(value);
+    if (ok) {
+      try {
+        request.resolve(this.validateResponse(request.kind, value));
+      } catch (error) {
+        request.reject(error instanceof Error ? error : new Error(String(error)));
+      }
+    }
     else request.reject(new Error(typeof value === 'string' ? value : 'Narrator engine request failed.'));
   }
 
@@ -157,7 +164,7 @@ export class RendererNarratorEnginePort implements NarratorEnginePort {
     this.rejectAll(new Error('The narrator bridge is shutting down.'));
   }
 
-  private request<T>(kind: NarratorRequestKind, payload?: SpeakInstruction): Promise<T> {
+  private request<T>(kind: Exclude<NarratorRequestKind, 'cancel'>, payload?: SpeakInstruction): Promise<T> {
     if (!this.sender) return Promise.reject(new Error('The narrator renderer is unavailable.'));
     const id = randomUUID();
     return new Promise<T>((resolve, reject) => {
@@ -166,7 +173,7 @@ export class RendererNarratorEnginePort implements NarratorEnginePort {
         reject(new Error(`Narrator engine request "${kind}" timed out.`));
       }, 15_000);
       timer.unref?.();
-      this.pending.set(id, { resolve: (value) => resolve(value as T), reject, timer });
+      this.pending.set(id, { kind, resolve: (value) => resolve(value as T), reject, timer });
       this.sender?.({ id, kind, payload });
     });
   }
@@ -177,6 +184,43 @@ export class RendererNarratorEnginePort implements NarratorEnginePort {
       request.reject(error);
     }
     this.pending.clear();
+  }
+
+  private validateResponse(kind: Exclude<NarratorRequestKind, 'cancel'>, value: unknown): unknown {
+    if (kind === 'screenReader') {
+      if (typeof value !== 'boolean') throw new Error('Narrator engine returned an invalid screen-reader state.');
+      return value;
+    }
+    if (kind === 'listVoices') {
+      if (!Array.isArray(value) || value.length > 256) throw new Error('Narrator engine returned an invalid voice list.');
+      return value.map((candidate) => {
+        if (!candidate || typeof candidate !== 'object' || Array.isArray(candidate)) {
+          throw new Error('Narrator engine returned an invalid voice descriptor.');
+        }
+        const voice = candidate as Partial<VoiceDescriptor>;
+        if (
+          typeof voice.id !== 'string' || voice.id.length === 0 || voice.id.length > 512 ||
+          typeof voice.name !== 'string' || voice.name.length > 256 ||
+          typeof voice.lang !== 'string' || voice.lang.length > 64 ||
+          typeof voice.localService !== 'boolean'
+        ) throw new Error('Narrator engine returned an invalid voice descriptor.');
+        return { id: voice.id, name: voice.name, lang: voice.lang, localService: voice.localService };
+      });
+    }
+    if (!value || typeof value !== 'object' || Array.isArray(value)) {
+      throw new Error('Narrator engine returned an invalid speech result.');
+    }
+    const outcome = value as Partial<SpeakOutcome> & Record<string, unknown>;
+    if (!['completed', 'voice-not-installed', 'no-voice-for-language', 'error'].includes(String(outcome.kind))) {
+      throw new Error('Narrator engine returned an unknown speech result.');
+    }
+    for (const field of ['usedVoiceId', 'usedVoiceName', 'fellBackToVoiceId', 'message']) {
+      const fieldValue = outcome[field];
+      if (fieldValue !== undefined && fieldValue !== null && (typeof fieldValue !== 'string' || fieldValue.length > 1_024)) {
+        throw new Error('Narrator engine returned an oversized speech result.');
+      }
+    }
+    return value;
   }
 }
 
