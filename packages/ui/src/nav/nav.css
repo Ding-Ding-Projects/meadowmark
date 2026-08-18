@@ -80,8 +80,15 @@
   flex: 1 1 auto;
   min-height: 0;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  /* Anchored to the upper-right rather than dead centre: a mobile builder
+     keeps its play area clear, and the old centre/centre placement sat the
+     panel directly over the middle of the town, exactly where the player
+     is looking. This leaves the left and lower two-thirds or so of the
+     screen showing the world at every supported width, while the panel
+     card's own max-width (below) keeps it from ever eating the whole
+     slot on a narrow viewport. */
+  align-items: flex-start;
+  justify-content: flex-end;
   padding: 16px;
   overflow: hidden;
   pointer-events: none;
