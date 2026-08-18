@@ -227,12 +227,24 @@ export interface HelicopterOrder {
   refillAt: number | null;
 }
 
+/** Rolled once, the instant the reputation bar fills — never invented later at open time. */
+export interface HeliChestReward {
+  cash: number;
+  boosterKind: BoosterKind;
+  boosterQuantity: number;
+  expansionPermits: number;
+  /** Species id -> card count granted toward its zoo hatch requirement. */
+  animalCards: Record<string, number>;
+}
+
 export interface HelicopterState {
   orders: HelicopterOrder[];
   reputationBar: number;
   reputationBarCap: number;
   /** True when the bar is full and a chest is waiting to be opened. */
   chestReady: boolean;
+  /** Set the instant chestReady flips true; cleared back to null once the chest is opened. */
+  chestReward: HeliChestReward | null;
 }
 
 // ---------------------------------------------------------------------------
@@ -248,6 +260,14 @@ export interface ShipCrate {
   rewardXp: number;
 }
 
+/** Rolled once, the instant the sixth crate is collected — never invented later at open time. */
+export interface ShipChestReward {
+  cash: number;
+  expansionPermits: number;
+  /** Species id -> card count granted toward its zoo hatch requirement. */
+  animalCards: Record<string, number>;
+}
+
 export interface ShipState {
   unlocked: boolean;
   crates: ShipCrate[];
@@ -255,6 +275,8 @@ export interface ShipState {
   windowEndsAt: number | null;
   /** True once all crates have been filled for the current window and the chest is waiting. */
   chestReady: boolean;
+  /** Set the instant chestReady flips true; cleared back to null once the chest is opened. */
+  chestReward: ShipChestReward | null;
 }
 
 // ---------------------------------------------------------------------------

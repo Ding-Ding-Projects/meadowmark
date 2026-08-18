@@ -1,10 +1,10 @@
 /**
  * Ship: dock unlocks at level 18. 6 crates x 3 distinct goods, 24-hour
  * window. Each crate pays coins+xp individually; filling all six opens a
- * chest with cash, animal cards, and expansion permits.
+ * chest with cash and expansion permits.
  */
 
-import type { GameEvent, GameState, GoodId, ShipCrate, ShipState } from "./types.js";
+import type { GameEvent, GameState, GoodId, ShipChestReward, ShipCrate, ShipState } from "./types.js";
 import type { RngState } from "./rng.js";
 import { nextInt, scopedRng } from "./rng.js";
 import { addXp, removeGood } from "./economy.js";
@@ -18,6 +18,19 @@ export const SHIP_WINDOW_MS = DAY_MS;
 /** Windows are fixed 24h intervals, so the catch-up cap is just the offline clamp expressed in windows (30). */
 export const SHIP_MAX_CATCHUP_BOUNDARIES = Math.floor(MAX_OFFLINE_MS / SHIP_WINDOW_MS);
 
+export const SHIP_CHEST_CASH_MIN = 10;
+export const SHIP_CHEST_CASH_MAX = 20;
+export const SHIP_CHEST_EXPANSION_PERMITS_MIN = 2;
+export const SHIP_CHEST_EXPANSION_PERMITS_MAX = 4;
+
+/** Rolls the all-six chest's contents. Called once, the instant the sixth crate is collected — never re-rolled at open time, so what the UI shows before opening is exactly what the player receives. */
+function rollShipChestReward(rng: RngState): ShipChestReward {
+  return {
+    cash: nextInt(rng, SHIP_CHEST_CASH_MIN, SHIP_CHEST_CASH_MAX),
+    expansionPermits: nextInt(rng, SHIP_CHEST_EXPANSION_PERMITS_MIN, SHIP_CHEST_EXPANSION_PERMITS_MAX),
+  };
+}
+
 export interface ShippableGood {
   goodId: GoodId;
   unlockLevel: number;
@@ -25,7 +38,7 @@ export interface ShippableGood {
 }
 
 export function createEmptyShip(): ShipState {
-  return { unlocked: false, crates: [], windowStartedAt: null, windowEndsAt: null, chestReady: false };
+  return { unlocked: false, crates: [], windowStartedAt: null, windowEndsAt: null, chestReady: false, chestReward: null };
 }
 
 export function maybeUnlockShip(state: GameState): GameState {
@@ -62,7 +75,7 @@ export function rollShipWindow(
   // nothing to offer this cycle, which is a real, handleable state rather
   // than an invariant violation.
   if (distinct.length === 0) {
-    return { unlocked: true, crates: [], windowStartedAt: now, windowEndsAt: now + SHIP_WINDOW_MS, chestReady: false };
+    return { unlocked: true, crates: [], windowStartedAt: now, windowEndsAt: now + SHIP_WINDOW_MS, chestReady: false, chestReward: null };
   }
 
   const crates: ShipCrate[] = [];
@@ -84,7 +97,7 @@ export function rollShipWindow(
     });
   }
 
-  return { unlocked: true, crates, windowStartedAt: now, windowEndsAt: now + SHIP_WINDOW_MS, chestReady: false };
+  return { unlocked: true, crates, windowStartedAt: now, windowEndsAt: now + SHIP_WINDOW_MS, chestReady: false, chestReward: null };
 }
 
 export function loadCrate(state: GameState, crateId: string, quantity: number): { state: GameState; loaded: number } {
@@ -103,6 +116,7 @@ export function loadCrate(state: GameState, crateId: string, quantity: number): 
 /** Collects a fully-loaded crate's coin/xp reward and removes it from the board (it stays empty until the next window rolls). */
 export function collectCrate(
   state: GameState,
+  rng: RngState,
   crateId: string,
   now: number,
 ): { state: GameState; collected: boolean; events: GameEvent[]; reason?: "notFull" } {
@@ -113,8 +127,12 @@ export function collectCrate(
   const xpResult = addXp(state.economy, crate.rewardXp, now);
   const events: GameEvent[] = [...xpResult.events];
   let chestReady = state.ship.chestReady;
+  let chestReward = state.ship.chestReward;
   if (crates.length === 0 && !chestReady) {
     chestReady = true;
+    // Rolled once, right here, so the reward the UI shows before opening is
+    // exactly what will be granted — never a guess invented at open time.
+    chestReward = rollShipChestReward(rng);
     events.push({ type: "shipChestReady", at: now });
   }
 
@@ -122,27 +140,22 @@ export function collectCrate(
     state: {
       ...state,
       economy: { ...xpResult.economy, coins: xpResult.economy.coins + crate.rewardCoins },
-      ship: { ...state.ship, crates, chestReady },
+      ship: { ...state.ship, crates, chestReady, chestReward },
     },
     collected: true,
     events,
   };
 }
 
-export interface ShipChestReward {
-  cash: number;
-  expansionPermits: number;
-  animalCards: Record<string, number>;
-}
-
-/** Opens the delivery chest, applying every field of the reward: cash, expansion permits, and each species' animal cards toward its zoo hatch count. */
-export function openShipChest(state: GameState, reward: ShipChestReward): GameState {
-  if (!state.ship.chestReady) return state;
+/** Grants the already-rolled chestReward (cash and expansion permits) and clears it. A no-op if the chest isn't ready or (only possible on a corrupt/old save) its reward was never rolled. */
+export function openShipChest(state: GameState): GameState {
+  const reward = state.ship.chestReward;
+  if (!state.ship.chestReady || !reward) return state;
   let next: GameState = {
     ...state,
     economy: { ...state.economy, cash: state.economy.cash + reward.cash },
     expansions: { ...state.expansions, permits: state.expansions.permits + reward.expansionPermits },
-    ship: { ...state.ship, chestReady: false },
+    ship: { ...state.ship, chestReady: false, chestReward: null },
   };
   for (const [speciesId, count] of Object.entries(reward.animalCards)) {
     if (count > 0) next = addAnimalCards(next, speciesId, count);

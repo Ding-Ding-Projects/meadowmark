@@ -155,60 +155,53 @@ export function applyAction(state: GameState, counters: AchievementCounters, act
       return rerollOrder(state, rng, slot.id, orderableGoods).state;
     }
 
-    case 'vehicle/load': {
-      if (action.vehicle === 'train') {
-        const wagon = state.train.wagons[0];
-        if (!wagon) return state;
-        return loadWagon(state, wagon.id, action.goodId, action.amount).state;
-      }
-      if (action.vehicle === 'ship') {
-        const crate = state.ship.crates[action.slotIndex];
-        if (!crate) return state;
-        return loadCrate(state, crate.id, action.amount).state;
-      }
-      // helicopter: GAP - heli orders are fulfilled atomically from
-      // inventory (fulfillHeliOrder), there is no incremental "load"
-      // concept, so a load action attempts the full atomic fulfillment.
-      const order = state.helicopter.orders[action.slotIndex];
+    // Train: three independent wagons, each addressed by its own index -
+    // every wagon is individually loadable, dispatchable, and collectible
+    // (this used to be hardcoded to wagons[0] only; the other two wagons
+    // were invisible and unusable from the UI).
+    case 'train/load': {
+      const wagon = state.train.wagons[action.wagonIndex];
+      if (!wagon) return state;
+      return loadWagon(state, wagon.id, action.goodId, action.amount).state;
+    }
+    case 'train/dispatch': {
+      const wagon = state.train.wagons[action.wagonIndex];
+      if (!wagon) return state;
+      return departWagon(state, rng, wagon.id, now).state;
+    }
+    case 'train/collect': {
+      const wagon = state.train.wagons[action.wagonIndex];
+      if (!wagon) return state;
+      return collectWagon(state, rng, wagon.id, trainRequestGoods, now).state;
+    }
+
+    // Helicopter: orders are fulfilled atomically from inventory (there is
+    // no incremental "load" concept for them), and the reputation chest is
+    // opened as its own explicit action once its already-rolled reward is
+    // ready.
+    case 'helicopter/fulfill': {
+      const order = state.helicopter.orders[action.orderIndex];
       if (!order) return state;
-      return fulfillHeliOrder(state, order.id, now).state;
+      return fulfillHeliOrder(state, rng, order.id, now).state;
     }
+    case 'helicopter/openChest':
+      return openHeliChest(state);
 
-    case 'vehicle/dispatch': {
-      if (action.vehicle === 'train') {
-        const wagon = state.train.wagons[0];
-        if (!wagon) return state;
-        return departWagon(state, rng, wagon.id, now).state;
-      }
-      // GAP: helicopter and ship have no manual "depart" step in this
-      // simulation - the helicopter fulfills atomically and the ship's
-      // delivery window rolls automatically inside tick()/tickShip().
-      return state;
+    // Ship: crates are loaded incrementally like the train's wagons, then
+    // collected individually once full; the all-six chest opens as its own
+    // explicit action once its already-rolled reward is ready.
+    case 'ship/load': {
+      const crate = state.ship.crates[action.crateIndex];
+      if (!crate) return state;
+      return loadCrate(state, crate.id, action.amount).state;
     }
-
-    case 'vehicle/collect': {
-      if (action.vehicle === 'train') {
-        const wagon = state.train.wagons[0];
-        if (!wagon) return state;
-        return collectWagon(state, rng, wagon.id, trainRequestGoods, now).state;
-      }
-      if (action.vehicle === 'ship') {
-        let next = state;
-        for (const crate of state.ship.crates) {
-          if (crate.quantityLoaded >= crate.quantityNeeded) {
-            next = collectCrate(next, crate.id, now).state;
-          }
-        }
-        if (next.ship.chestReady) {
-          next = openShipChest(next, shipChestReward);
-        }
-        return next;
-      }
-      if (state.helicopter.chestReady) {
-        return openHeliChest(state, heliChestReward);
-      }
-      return state;
+    case 'ship/collect': {
+      const crate = state.ship.crates[action.crateIndex];
+      if (!crate) return state;
+      return collectCrate(state, rng, crate.id, now).state;
     }
+    case 'ship/openChest':
+      return openShipChest(state);
 
     case 'town/place': {
       const catalog = buildingCatalogByType[action.buildingId];

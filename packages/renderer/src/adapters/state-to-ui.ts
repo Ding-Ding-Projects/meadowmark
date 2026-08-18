@@ -28,18 +28,20 @@ import type {
   BuildingCatalogEntry as UiBuildingCatalogEntry,
   CropDef,
   DailiesView,
-  DeliveryVehicleView,
   FactoriesView,
   FactoryInstance as UiFactoryInstance,
   FieldsView,
   GameStateView,
+  HelicopterView,
   MineView,
   MuseumView,
   OfflineSummaryView,
   OrdersView,
   PlacedBuilding as UiPlacedBuilding,
   RecipeDef,
+  ShipView,
   TownView,
+  TrainView,
   VillageView,
   ZooView,
 } from '@meadowmark/ui';
@@ -215,95 +217,106 @@ function mapOrders(state: GameState): OrdersView {
   return { slots };
 }
 
-function mapTrain(state: GameState, now: number): DeliveryVehicleView {
-  // GAP: the real train has 3 independent wagons (TrainState.wagons);
-  // ui/src/contracts.ts's DeliveryVehicleView models exactly one vehicle
-  // per kind. Wagon 0 is surfaced as "the" train; the other two wagons are
-  // invisible to the UI layer until the contract grows a wagon index.
-  const wagon = state.train.wagons[0];
-  if (!wagon) {
-    return { id: 'train', kind: 'train', state: 'idle', cargo: [], departsAt: null, returnsAt: null, chestReward: null };
-  }
+function mapTrain(state: GameState, now: number): TrainView {
+  // FIXED GAP: the real train has 3 independent wagons (TrainState.wagons)
+  // and used to be collapsed onto wagon 0 only, leaving the other two
+  // invisible and unusable. Every wagon is now its own TrainWagonView.
+  const wagons = state.train.wagons.map((wagon, index) => {
+    const requests = wagon.requests.map((r) => ({
+      goodId: r.goodId,
+      quantityNeeded: r.quantityNeeded,
+      quantityLoaded: r.quantityLoaded,
+      available: state.inventory[r.goodId] ?? 0,
+    }));
 
-  const cargo = wagon.requests.map((r, index) => ({
-    index,
-    goodId: r.goodId,
-    amount: r.quantityLoaded,
-    requestedGoodId: r.goodId,
-    requestedAmount: r.quantityNeeded,
-  }));
+    let vehicleState: 'loading' | 'departed' | 'arrived' = 'loading';
+    if (wagon.departedAt !== null) {
+      vehicleState = wagon.returnsAt !== null && now >= wagon.returnsAt ? 'arrived' : 'departed';
+    }
 
-  let vehicleState: DeliveryVehicleView['state'] = 'idle';
-  if (wagon.departedAt === null) {
-    vehicleState = wagon.requests.some((r) => r.quantityLoaded > 0) ? 'loading' : 'idle';
-  } else if (wagon.returnsAt !== null && now >= wagon.returnsAt) {
-    vehicleState = 'arrived';
-  } else {
-    vehicleState = 'returning';
-  }
+    // Real material rewards, straight from state - empty until the wagon
+    // has actually departed and rolled one (see train.ts's departWagon()).
+    const rewardMaterials = Object.entries(wagon.rewardMaterials).map(([goodId, amount]) => ({ goodId, amount }));
 
-  return {
-    id: wagon.id,
-    kind: 'train',
-    state: vehicleState,
-    cargo,
-    departsAt: wagon.departedAt,
-    returnsAt: wagon.returnsAt,
-    // GAP: the train pays out rewardMaterials directly on collection, not
-    // through a chest - there's no coins/xp/cash/goods bundle to report.
-    chestReward: null,
-  };
-}
-
-function mapHelicopter(state: GameState): DeliveryVehicleView {
-  // GAP: the real helicopter has 2 independent orders, each with its own
-  // (possibly multi-good) requirement list, fulfilled atomically. This
-  // collapses both orders into cargo slots and, since CargoSlot only
-  // carries one good, surfaces only each order's FIRST requirement.
-  const cargo = state.helicopter.orders.map((order, index) => {
-    const req = order.requirements[0] ?? null;
     return {
+      id: wagon.id,
       index,
-      goodId: req?.goodId ?? null,
-      amount: 0,
-      requestedGoodId: req?.goodId ?? null,
-      requestedAmount: req?.quantity ?? 0,
+      requests,
+      state: vehicleState,
+      departedAt: wagon.departedAt,
+      returnsAt: wagon.returnsAt,
+      rewardMaterials,
     };
   });
 
+  return { wagons };
+}
+
+function mapHelicopter(state: GameState): HelicopterView {
+  const orders = state.helicopter.orders.map((order, index) => {
+    const requirements = order.requirements.map((r) => ({
+      goodId: r.goodId,
+      amount: r.quantity,
+      available: state.inventory[r.goodId] ?? 0,
+    }));
+    const bag: Record<string, number> = {};
+    for (const r of order.requirements) bag[r.goodId] = r.quantity;
+
+    return {
+      id: order.id,
+      index,
+      state: order.requirements.length > 0 ? ('available' as const) : ('refilling' as const),
+      requirements,
+      rewardCoins: order.rewardCoins,
+      rewardReputationStars: order.rewardReputationStars,
+      refillAt: order.refillAt,
+      canFulfill: order.requirements.length > 0 && hasAll(state.inventory, bag),
+    };
+  });
+
+  // The chest's contents are rolled by shared the instant the bar fills
+  // (see helicopter.ts's fulfillHeliOrder()) and live in state.helicopter.
+  // chestReward - real state, never a placeholder guessed here. A save
+  // from before that reward existed can have chestReady true with no
+  // roll recorded; that renders as an honest "unknown" rather than a
+  // fabricated number.
+  const reward = state.helicopter.chestReward;
   return {
-    id: 'helicopter',
-    kind: 'helicopter',
-    state: state.helicopter.chestReady ? 'arrived' : cargo.some((c) => c.requestedGoodId) ? 'loading' : 'idle',
-    cargo,
-    departsAt: null,
-    returnsAt: null,
-    chestReward: null,
+    orders,
+    reputationBar: state.helicopter.reputationBar,
+    reputationBarCap: state.helicopter.reputationBarCap,
+    chestReady: state.helicopter.chestReady,
+    chestReward:
+      state.helicopter.chestReady && reward
+        ? { cash: reward.cash, boosterKind: reward.boosterKind, boosterQuantity: reward.boosterQuantity, expansionPermits: reward.expansionPermits }
+        : null,
   };
 }
 
-function mapShip(state: GameState): DeliveryVehicleView {
-  const cargo = state.ship.crates.map((c, index) => ({
+function mapShip(state: GameState): ShipView {
+  const crates = state.ship.crates.map((c, index) => ({
+    id: c.id,
     index,
     goodId: c.goodId,
-    amount: c.quantityLoaded,
-    requestedGoodId: c.goodId,
-    requestedAmount: c.quantityNeeded,
+    quantityNeeded: c.quantityNeeded,
+    quantityLoaded: c.quantityLoaded,
+    available: state.inventory[c.goodId] ?? 0,
+    rewardCoins: c.rewardCoins,
+    rewardXp: c.rewardXp,
+    canCollect: c.quantityLoaded >= c.quantityNeeded,
   }));
 
-  let vehicleState: DeliveryVehicleView['state'] = 'idle';
-  if (!state.ship.unlocked) vehicleState = 'idle';
-  else if (state.ship.chestReady) vehicleState = 'arrived';
-  else if (cargo.some((c) => c.amount > 0)) vehicleState = 'loading';
-
+  // The chest's contents are rolled by shared the instant the sixth crate
+  // is collected (see ship.ts's collectCrate()) and live in
+  // state.ship.chestReward - real state, never a placeholder guessed here.
+  const reward = state.ship.chestReward;
   return {
-    id: 'ship',
-    kind: 'ship',
-    state: vehicleState,
-    cargo,
-    departsAt: state.ship.windowStartedAt,
-    returnsAt: state.ship.windowEndsAt,
-    chestReward: null,
+    unlocked: state.ship.unlocked,
+    crates,
+    windowStartedAt: state.ship.windowStartedAt,
+    windowEndsAt: state.ship.windowEndsAt,
+    chestReady: state.ship.chestReady,
+    chestReward: state.ship.chestReady && reward ? { cash: reward.cash, expansionPermits: reward.expansionPermits } : null,
   };
 }
 
