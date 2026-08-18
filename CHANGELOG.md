@@ -31,3 +31,13 @@ All notable changes to Meadowmark are documented in this file.
   load/set/reset operations, and the settings UI hydrates and saves overlapping
   appearance/general values through that bridge while preserving the browser
   localStorage fallback.
+
+### Fixed
+
+- Render terrain tiles from the engine's `state.tiles` feed and field-bed
+  meshes for every unlocked plot, so the default world no longer appears as
+  only a flat green plane.
+- Replace internal missing-key text in the crop picker with a readable
+  fallback, including `Wheat`.
+- Improve navigation-rail contrast, offset the HUD below the custom title
+  bar, and replace placeholder field-plot squares with labelled empty plots.

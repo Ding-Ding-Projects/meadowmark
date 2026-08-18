@@ -1,6 +1,6 @@
 .mm-hud {
   position: fixed;
-  top: var(--mm-space-3);
+  top: calc(32px + var(--mm-space-3));
   left: var(--mm-space-3);
   right: var(--mm-space-3);
   z-index: var(--mm-z-hud);

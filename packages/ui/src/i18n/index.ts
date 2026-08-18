@@ -91,7 +91,7 @@ function nearestLevel(levels: Partial<Record<FunnyLevel, string>>, target: Funny
 
 function resolveOne(key: string, lang: "en" | "yue", level: FunnyLevel, vars?: Record<string, string | number>): string {
   const entry = registry.get(key);
-  if (!entry) return `⟨missing:${key}⟩`;
+  if (!entry) return readableFallback(key);
   let text = nearestLevel(entry[lang], level);
   if (vars) {
     for (const [k, v] of Object.entries(vars)) {
@@ -99,6 +99,15 @@ function resolveOne(key: string, lang: "en" | "yue", level: FunnyLevel, vars?: R
     }
   }
   return text;
+}
+
+function readableFallback(key: string): string {
+  const lastSegment = key.split(".").pop() ?? key;
+  return lastSegment
+    .replace(/[_-]+/g, " ")
+    .replace(/([a-z])([A-Z])/g, "$1 $2")
+    .replace(/\s+/g, " ")
+    .trim() || key;
 }
 
 /** Resolves a copy key against current i18n settings. In bilingual mode returns "en — yue". */

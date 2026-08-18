@@ -176,7 +176,7 @@ export function mountUi(root: HTMLElement, opts: MountUiOptions): MountedUi {
     tabs: tabDefs.map((d) => ({ id: d.id, label: d.label, panel: h("div") })),
   });
   const navHost = h("div", {
-    style: { position: "fixed", left: "0", top: "0", bottom: "0", zIndex: "var(--mm-z-panel)", pointerEvents: "auto" },
+    style: { position: "fixed", left: "0", top: "32px", bottom: "0", zIndex: "var(--mm-z-panel)", pointerEvents: "auto" },
   });
   navHost.appendChild(navTabsHandle.root);
   root.appendChild(navHost);

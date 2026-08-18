@@ -3,11 +3,12 @@
  * rocks, water tiles, fences and hedges.
  */
 
-import { box, cone, cylinder, defineAsset, group, sphere, type MeshNode } from '../mesh-dsl.js';
+import { box, cone, cylinder, defineAsset, getAsset, group, sphere, type MeshNode } from '../mesh-dsl.js';
 import type { PaletteKey } from '../palette.js';
 
 export type CropKind = 'wheat' | 'carrot' | 'corn' | 'berry';
 export type GrowthStage = 'seed' | 'sprout' | 'growing' | 'ready';
+export type TerrainKind = 'grass' | 'soil' | 'sand' | 'stone' | 'water';
 
 const cropColor: Record<CropKind, PaletteKey> = {
   wheat: 'cropWheat',
@@ -49,10 +50,53 @@ for (const kind of cropKinds) {
   }
 }
 
+const terrainColors: Record<TerrainKind, { base: PaletteKey; accent: PaletteKey }> = {
+  grass: { base: 'grass', accent: 'grassDry' },
+  soil: { base: 'soil', accent: 'soilDry' },
+  sand: { base: 'sand', accent: 'soilDry' },
+  stone: { base: 'stone', accent: 'stoneDark' },
+  water: { base: 'water', accent: 'waterDeep' },
+};
+
+function terrainTileNode(kind: TerrainKind): MeshNode {
+  const { base, accent } = terrainColors[kind];
+  const tileHeight = kind === 'water' ? 0.025 : 0.03;
+  const y = kind === 'water' ? -0.02 : 0.015;
+  return group([
+    box({ width: 0.98, height: tileHeight, depth: 0.98, color: base, transform: { translate: [0, y, 0] } }),
+    box({ width: 0.02, height: 0.006, depth: 0.78, color: accent, transform: { translate: [-0.34, y + tileHeight / 2 + 0.003, -0.02] } }),
+    box({ width: 0.02, height: 0.006, depth: 0.62, color: accent, transform: { translate: [0.24, y + tileHeight / 2 + 0.003, 0.08] } }),
+  ]);
+}
+
+export function ensureTerrainAssetsRegistered(): void {
+  for (const kind of Object.keys(terrainColors) as TerrainKind[]) {
+    const name = `terrain_${kind}`;
+    if (!getAsset(name)) defineAsset(name, terrainTileNode(kind));
+  }
+}
+ensureTerrainAssetsRegistered();
+
 /** Naming convention every consumer relies on. */
 export function cropAssetName(kind: CropKind, stage: GrowthStage): string {
   return `crop_${kind}_${stage}`;
 }
+
+/** Empty field plot bed, rendered under every unlocked plot. */
+export function ensureFieldPlotAssetRegistered(): void {
+  if (getAsset('field_plot_empty')) return;
+  defineAsset(
+    'field_plot_empty',
+    group([
+      box({ width: 0.86, height: 0.035, depth: 0.86, color: 'soil', transform: { translate: [0, 0.0175, 0] } }),
+      box({ width: 0.86, height: 0.04, depth: 0.08, color: 'soilDry', transform: { translate: [0, 0.04, -0.43] } }),
+      box({ width: 0.86, height: 0.04, depth: 0.08, color: 'soilDry', transform: { translate: [0, 0.04, 0.43] } }),
+      box({ width: 0.08, height: 0.04, depth: 0.86, color: 'soilDry', transform: { translate: [-0.43, 0.04, 0] } }),
+      box({ width: 0.08, height: 0.04, depth: 0.86, color: 'soilDry', transform: { translate: [0.43, 0.04, 0] } }),
+    ]),
+  );
+}
+ensureFieldPlotAssetRegistered();
 
 /** Trees — a few silhouettes so a forest doesn't read as one repeated stamp. */
 defineAsset(

@@ -4,9 +4,11 @@
 
 `panels/fields.ts` renders the plot grid, a crop picker, Plant All and
 Harvest All actions, and per-plot growth-timer countdowns updated every
-second. Each plot tile shows an icon reflecting its plot state (empty,
-growing, ready, withered) and, while growing, a live countdown to when it
-will be ready.
+second. Each plot tile shows an icon and short text label reflecting its
+plot state (empty, growing, ready, withered) and, while growing, a live
+countdown to when it will be ready. The renderer adapter also maps every
+unlocked plot to a visible field-bed mesh in the 3D world, so an empty
+new game shows real plot geometry rather than a flat green plane.
 
 Clicking an empty or withered plot plants the currently selected crop;
 clicking a ready plot harvests it. Plant All and Harvest All dispatch the
@@ -30,5 +32,7 @@ expected to have already filtered to the player's unlocked crops.
 ## Verification
 
 Manual: mock a fields view with plots in each of the four states and confirm
-the correct icon and accessible label per state, that the countdown
-decreases, and that Plant All / Harvest All dispatch the expected actions.
+the correct icon, short visible label, and accessible label per state, that
+the countdown decreases, and that Plant All / Harvest All dispatch the
+expected actions. Runtime: launch the built app, dismiss the welcome modal,
+and confirm the WebGL canvas shows terrain tiles and field-bed plots.
