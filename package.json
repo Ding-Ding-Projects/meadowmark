@@ -1,0 +1,29 @@
+{
+  "name": "meadowmark",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Meadowmark - a 3D town-and-farm building game for Windows. Grow, produce, deliver, and build a town. Electron + TypeScript + three.js, fully offline, and nothing in it is ever for sale.",
+  "license": "MIT",
+  "workspaces": [
+    "packages/shared",
+    "packages/engine",
+    "packages/ui",
+    "packages/app"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "dist": "npm run build && electron-builder --win squirrel --config electron-builder.yml",
+    "start": "npm run build && electron packages/app/dist/main.cjs",
+    "lines": "node tools/line-count/count.mjs",
+    "check:inventory": "node tools/inventory/check.mjs",
+    "check:atomic": "node tools/guards/no-bare-rename.mjs",
+    "check:balance": "node packages/shared/dist/balance-validate.js"
+  },
+  "devDependencies": {
+    "electron": "^40.0.0",
+    "electron-builder": "^26.0.12",
+    "electron-builder-squirrel-windows": "^26.0.12",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.0"
+  }
+}

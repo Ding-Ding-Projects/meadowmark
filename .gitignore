@@ -1,0 +1,8 @@
+node_modules/
+dist/
+out/
+release/
+*.log
+.vite/
+packages/*/dist/
+tools/**/out/
