@@ -98,7 +98,12 @@ async function boot(): Promise<void> {
 
   const rendererBridge = createRendererBridge(canvas, renderer);
 
-  const uiStore = new Store(stateToUiView(state, now, pendingOfflineSummary));
+  // Building selection is presentational-only (see ui-actions.ts's
+  // 'town/select' case): it never touches GameState, so it lives here
+  // alongside state rather than inside the reducer.
+  let selectedBuildingInstanceId: string | null = null;
+
+  const uiStore = new Store(stateToUiView(state, now, pendingOfflineSummary, selectedBuildingInstanceId));
 
   const host: HostBridge = {
     // Refined below once window.meadowmark.appInfo() resolves. Windows is
@@ -108,7 +113,19 @@ async function boot(): Promise<void> {
     dispatch(action) {
       if (action.type === 'offlineSummary/acknowledge') {
         pendingOfflineSummary = null;
-        uiStore.set(stateToUiView(state, Date.now(), pendingOfflineSummary));
+        uiStore.set(stateToUiView(state, Date.now(), pendingOfflineSummary, selectedBuildingInstanceId));
+        return;
+      }
+
+      if (action.type === 'town/select') {
+        // Presentational only, per ui-actions.ts's own 'town/select' case:
+        // this never touches GameState, so it's handled here and never
+        // reaches applyAction at all. A demolished building's id simply
+        // stops matching anything in mapTown()'s placed list, which
+        // self-heals the info panel back to "no selection" without this
+        // needing to watch for that.
+        selectedBuildingInstanceId = action.instanceId;
+        uiStore.set(stateToUiView(state, Date.now(), pendingOfflineSummary, selectedBuildingInstanceId));
         return;
       }
 
@@ -130,7 +147,7 @@ async function boot(): Promise<void> {
         if (described) (described.kind === 'success' ? notifySuccess : notifyInfo)(described.message);
       }
 
-      uiStore.set(stateToUiView(state, Date.now(), pendingOfflineSummary));
+      uiStore.set(stateToUiView(state, Date.now(), pendingOfflineSummary, selectedBuildingInstanceId));
       renderer.setState(stateToEngineView(state, Date.now()));
     },
   };
@@ -169,7 +186,7 @@ async function boot(): Promise<void> {
       if (described) (described.kind === 'success' ? notifySuccess : notifyInfo)(described.message);
     }
 
-    uiStore.set(stateToUiView(state, tickNow, pendingOfflineSummary));
+    uiStore.set(stateToUiView(state, tickNow, pendingOfflineSummary, selectedBuildingInstanceId));
     renderer.setState(stateToEngineView(state, tickNow));
   }, TICK_INTERVAL_MS);
 

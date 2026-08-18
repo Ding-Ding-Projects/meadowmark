@@ -13,6 +13,10 @@ registerCopy({
   "panel.fields.plotGrowing": { en: { 1: "Plot {index}, growing, {remaining} remaining" }, yue: { 1: "第 {index} 格，生長緊，仲有 {remaining}" } },
   "panel.fields.plotEmptyShort": { en: { 1: "Empty" }, yue: { 1: "空置" } },
   "panel.fields.plotWitheredShort": { en: { 1: "Withered" }, yue: { 1: "枯咗" } },
+  "panel.fields.unlockPlot": { en: { 1: "Unlock plot ({cost} coins)", 3: "Buy another plot ({cost} coins)" }, yue: { 1: "解鎖田格（{cost} 金幣）", 3: "加開一格（使 {cost} 金幣）" } },
+  "panel.fields.unlockPlotMax": { en: { 1: "All plots unlocked", 3: "Every plot is yours already" }, yue: { 1: "田格已全部解鎖", 3: "格仔全部都係你嘅喇" } },
+  "panel.fields.unlockPlotMaxReason": { en: { 1: "There are no more plots to unlock." }, yue: { 1: "冇更多田格可以解鎖。" } },
+  "panel.fields.unlockPlotUnaffordable": { en: { 1: "Not enough coins to unlock the next plot." }, yue: { 1: "金幣唔夠解鎖下一格。" } },
 
   // Factories
   "panel.factories.title": { en: { 1: "Factories", 3: "Factories" }, yue: { 1: "工廠", 3: "工廠" } },
@@ -21,6 +25,7 @@ registerCopy({
   "panel.factories.recipeMissingIngredients": { en: { 1: "Missing ingredients", 3: "Not enough stock for this one" }, yue: { 1: "材料唔夠", 3: "貨唔夠喎" } },
   "panel.factories.pausedBarnFull": { en: { 1: "Queue paused: barn full", 3: "Paused — the barn is stuffed full" }, yue: { 1: "已暫停：穀倉爆晒", 3: "暫停緊，穀倉塞到爆" } },
   "panel.factories.viewBarn": { en: { 1: "View barn" }, yue: { 1: "睇穀倉" } },
+  "panel.factories.collect": { en: { 1: "Collect", 3: "Grab it!" }, yue: { 1: "收取", 3: "攞晒佢" } },
 
   // Barn
   "panel.barn.title": { en: { 1: "Barn", 3: "Barn" }, yue: { 1: "穀倉", 3: "穀倉" } },
@@ -66,6 +71,12 @@ registerCopy({
   "panel.town.demolish": { en: { 1: "Demolish", 3: "Wreck it" }, yue: { 1: "拆卸", 3: "拆咗佢" } },
   "panel.town.demolishTitle": { en: { 1: "Demolish {building}?" }, yue: { 1: "拆卸 {building}？" } },
   "panel.town.demolishDetail": { en: { 1: "This permanently removes {building} and everything stored inside it. This cannot be undone.", 3: "{building} goes bye-bye forever, contents and all. No takebacks." }, yue: { 1: "呢個動作會永久移除 {building} 同入面所有嘢，唔可以復原。", 3: "{building} 同入面啲嘢會永遠消失，冇得返轉頭。" } },
+  "panel.town.placedTitle": { en: { 1: "Placed buildings" }, yue: { 1: "已放置嘅建築" } },
+  "panel.town.placedEmpty": { en: { 1: "Nothing built yet — place something from the catalogue above.", 3: "Empty plot of dirt so far — go build something" }, yue: { 1: "仲未起過嘢－喺上面目錄揀樣嚟起先。", 3: "而家淨係得塊地，起樣嘢先啦" } },
+  "panel.town.select": { en: { 1: "Select" }, yue: { 1: "揀選" } },
+  "panel.town.deselect": { en: { 1: "Deselect" }, yue: { 1: "取消揀選" } },
+  "panel.town.underConstruction": { en: { 1: "Under construction" }, yue: { 1: "起緊緊" } },
+  "panel.town.viewBarn": { en: { 1: "View barn" }, yue: { 1: "睇穀倉" } },
 
   // Zoo
   "panel.zoo.title": { en: { 1: "Zoo", 3: "Zoo" }, yue: { 1: "動物園", 3: "動物園" } },
