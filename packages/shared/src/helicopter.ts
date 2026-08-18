@@ -4,10 +4,12 @@
  * boosters, and animal cards.
  */
 
-import type { GameEvent, GameState, GoodId, HelicopterOrder, HelicopterState, OrderRequirement } from "./types.js";
+import type { BoosterKind, GameEvent, GameState, GoodId, HelicopterOrder, HelicopterState, OrderRequirement } from "./types.js";
 import type { RngState } from "./rng.js";
 import { nextInt } from "./rng.js";
 import { hasAll, removeAll } from "./economy.js";
+import { grantBooster } from "./boosters.js";
+import { addAnimalCards } from "./zoo.js";
 import { MINUTE_MS, isReady } from "./time.js";
 
 export const HELICOPTER_ORDER_COUNT = 2;
@@ -107,15 +109,28 @@ export function fulfillHeliOrder(
 
 export interface HeliChestReward {
   cash: number;
-  boosterKinds: string[];
+  boosterKinds: BoosterKind[];
   animalCards: Record<string, number>;
 }
 
+/**
+ * Opens the reputation-bar chest, applying every field of the reward:
+ * cash straight to the wallet, each named booster kind into inventory
+ * (one of that kind per entry in the array), and each species' animal
+ * cards added toward that species' zoo hatch count.
+ */
 export function openHeliChest(state: GameState, reward: HeliChestReward): GameState {
   if (!state.helicopter.chestReady) return state;
-  return {
+  let next: GameState = {
     ...state,
     economy: { ...state.economy, cash: state.economy.cash + reward.cash },
     helicopter: { ...state.helicopter, reputationBar: 0, chestReady: false },
   };
+  for (const kind of reward.boosterKinds) {
+    next = grantBooster(next, kind, 1);
+  }
+  for (const [speciesId, count] of Object.entries(reward.animalCards)) {
+    if (count > 0) next = addAnimalCards(next, speciesId, count);
+  }
+  return next;
 }

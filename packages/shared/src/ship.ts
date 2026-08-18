@@ -8,6 +8,7 @@ import type { GameEvent, GameState, GoodId, ShipCrate, ShipState } from "./types
 import type { RngState } from "./rng.js";
 import { nextInt, scopedRng } from "./rng.js";
 import { addXp, removeGood } from "./economy.js";
+import { addAnimalCards } from "./zoo.js";
 import { DAY_MS, MAX_OFFLINE_MS } from "./time.js";
 
 export const SHIP_UNLOCK_LEVEL = 18;
@@ -134,14 +135,19 @@ export interface ShipChestReward {
   animalCards: Record<string, number>;
 }
 
+/** Opens the delivery chest, applying every field of the reward: cash, expansion permits, and each species' animal cards toward its zoo hatch count. */
 export function openShipChest(state: GameState, reward: ShipChestReward): GameState {
   if (!state.ship.chestReady) return state;
-  return {
+  let next: GameState = {
     ...state,
     economy: { ...state.economy, cash: state.economy.cash + reward.cash },
     expansions: { ...state.expansions, permits: state.expansions.permits + reward.expansionPermits },
     ship: { ...state.ship, chestReady: false },
   };
+  for (const [speciesId, count] of Object.entries(reward.animalCards)) {
+    if (count > 0) next = addAnimalCards(next, speciesId, count);
+  }
+  return next;
 }
 
 /**

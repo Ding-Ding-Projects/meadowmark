@@ -22,6 +22,7 @@ export * from "./weather.js";
 export * from "./expansions.js";
 export * from "./zoo.js";
 export * from "./mine.js";
+export * from "./museum.js";
 export * from "./boosters.js";
 export * from "./achievements.js";
 export * from "./dailies.js";

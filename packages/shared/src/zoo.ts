@@ -85,12 +85,21 @@ function isAdjacent(a: ZooEnclosure, b: ZooEnclosure): boolean {
  * match bonus (species habitat === enclosure habitat) and a family
  * grouping bonus (an adjacent enclosure holds a species of the same
  * family), so where you place things actually matters.
+ *
+ * `museumBonus` is an optional extra fractional multiplier (e.g. 0.02 ==
+ * +2%) the caller can pass in from museum.ts's museumBonusTotal(state,
+ * catalog, "zooIncomeBonus") for any completed exhibits that grant a zoo
+ * income bonus. Defaults to 0 so every existing call site keeps behaving
+ * exactly as before. It's a plain number rather than reading museum
+ * state directly, since this module has no dependency on museum.ts (and
+ * shouldn't need one just to price a permanent bonus).
  */
 export function collectZooIncome(
   state: GameState,
   enclosureId: string,
   catalogBySpecies: Record<string, ZooSpeciesCatalogEntry>,
   now: number,
+  museumBonus = 0,
 ): { state: GameState; coinsGained: number; zooBucksGained: number } {
   const enclosure = state.zoo.enclosures.find((e) => e.id === enclosureId);
   if (!enclosure || !enclosure.speciesId) return { state, coinsGained: 0, zooBucksGained: 0 };
@@ -101,7 +110,7 @@ export function collectZooIncome(
   const intervals = Math.floor(elapsed / ZOO_INCOME_INTERVAL_MS);
   if (intervals <= 0) return { state, coinsGained: 0, zooBucksGained: 0 };
 
-  let multiplier = 1;
+  let multiplier = 1 + museumBonus;
   if (species.habitat === enclosure.habitat) multiplier += 0.25;
 
   const hasFamilyNeighbor = state.zoo.enclosures.some((other) => {

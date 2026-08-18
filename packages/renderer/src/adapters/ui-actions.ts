@@ -20,14 +20,18 @@ import {
   collectCrate,
   collectProduction,
   collectWagon,
+  collectZooIncome,
   departWagon,
   digTile,
+  donateArtifact,
   fulfillHeliOrder,
   fulfillOrder,
   harvest,
   harvestAll,
+  hatchSpecies,
   loadCrate,
   loadWagon,
+  museumBonusTotal,
   openHeliChest,
   openShipChest,
   placeBuilding,
@@ -42,10 +46,16 @@ import {
   animalCatalogByType,
   buildingCatalogByType,
   cropCatalog,
+  dailyChestReward,
   goodsById,
+  heliChestReward,
+  museumExhibitCatalog,
+  museumExhibitCatalogById,
   orderableGoods,
   recipeCatalog,
+  shipChestReward,
   trainRequestGoods,
+  zooSpeciesCatalog,
 } from '../content.js';
 
 /**
@@ -190,15 +200,12 @@ export function applyAction(state: GameState, counters: AchievementCounters, act
           }
         }
         if (next.ship.chestReady) {
-          // GAP: no balance data defines the ship chest's reward - this is
-          // a small honest placeholder rather than a real reward table.
-          next = openShipChest(next, { cash: 5, expansionPermits: 1, animalCards: {} });
+          next = openShipChest(next, shipChestReward);
         }
         return next;
       }
       if (state.helicopter.chestReady) {
-        // GAP: same as the ship - no balance data for the heli chest reward.
-        return openHeliChest(state, { cash: 5, boosterKinds: [], animalCards: {} });
+        return openHeliChest(state, heliChestReward);
       }
       return state;
     }
@@ -222,8 +229,10 @@ export function applyAction(state: GameState, counters: AchievementCounters, act
     }
 
     case 'zoo/assign':
-      // assignSpeciesToEnclosure() itself needs no catalog, so this one
-      // actually works even without a real zoo species catalog.
+      // Only a species the player has actually hatched (see zoo/hatch
+      // below) may be put in an enclosure - assignSpeciesToEnclosure()
+      // itself is a dumb setter with no such check, so the gate lives here.
+      if (!state.zoo.hatchedSpecies.includes(action.animalId)) return state;
       return {
         ...state,
         zoo: {
@@ -231,10 +240,18 @@ export function applyAction(state: GameState, counters: AchievementCounters, act
           enclosures: state.zoo.enclosures.map((e) => (e.id === action.enclosureId ? { ...e, speciesId: action.animalId } : e)),
         },
       };
-    case 'zoo/collect':
-      // GAP: collectZooIncome() needs a ZooSpeciesCatalogEntry (habitat,
-      // family, base income) that balance/ does not ship (no zoo.json).
-      return state;
+    case 'zoo/collect': {
+      const zooBonus = museumBonusTotal(state, museumExhibitCatalog, 'zooIncomeBonus');
+      const result = collectZooIncome(state, action.enclosureId, zooSpeciesCatalog, now, zooBonus);
+      return result.state;
+    }
+    case 'zoo/hatch': {
+      const species = zooSpeciesCatalog[action.speciesId];
+      if (!species) return state;
+      const result = hatchSpecies(state, species);
+      if (result.hatched) counters.animalsHatched += 1;
+      return result.state;
+    }
 
     case 'mine/dig': {
       const result = digTile(state, action.tileIndex);
@@ -242,9 +259,10 @@ export function applyAction(state: GameState, counters: AchievementCounters, act
       return result.state;
     }
 
-    case 'museum/donate':
-      // GAP: @meadowmark/shared has no museum system at all.
-      return state;
+    case 'museum/donate': {
+      const result = donateArtifact(state, museumExhibitCatalogById, action.setId, action.artifactId);
+      return result.state;
+    }
 
     case 'achievement/claim':
       // Achievements pay out automatically the instant a counter crosses a
@@ -257,9 +275,7 @@ export function applyAction(state: GameState, counters: AchievementCounters, act
       // simulation - only the completed set pays out via claimDailyChest.
       return state;
     case 'daily/claimStreak': {
-      // GAP: no balance data defines the daily chest's reward - small
-      // honest placeholder values.
-      const result = claimDailyChest(state, 200, 1);
+      const result = claimDailyChest(state, dailyChestReward.rewardCoins, dailyChestReward.rewardCash);
       return result.state;
     }
 

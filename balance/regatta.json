@@ -1,0 +1,9 @@
+{
+  "templates": [
+    { "description": "Harvest crops", "targetKind": "harvest", "minQuantity": 20, "maxQuantity": 40, "scoreValue": 10 },
+    { "description": "Fulfill orders", "targetKind": "orderFulfilled", "minQuantity": 3, "maxQuantity": 6, "scoreValue": 15 },
+    { "description": "Collect factory goods", "targetKind": "factoryCollect", "minQuantity": 10, "maxQuantity": 20, "scoreValue": 12 },
+    { "description": "Dig mine tiles", "targetKind": "mineDig", "minQuantity": 15, "maxQuantity": 30, "scoreValue": 12 }
+  ],
+  "scoreBarCap": 100
+}

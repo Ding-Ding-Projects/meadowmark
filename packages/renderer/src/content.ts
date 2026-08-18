@@ -5,30 +5,26 @@
  * This is the one place in the renderer package that reads content data.
  * Every adapter and every action dispatcher receives its catalogs from
  * here rather than re-reading JSON itself.
- *
- * GAP: balance/ has no JSON file for daily task templates or regatta task
- * templates (dailies.ts and village.ts both take a caller-supplied
- * template list; balance/ only covers crops/goods/animals/factories/
- * buildings/achievements/unlocks). DAILY_TASK_TEMPLATES and
- * REGATTA_TASK_TEMPLATES below are a small hand-authored placeholder set
- * so those subsystems have something to roll from. Whichever lane owns
- * balance/ should add real dailies.json / regatta.json content and this
- * file should switch to loading it.
  */
 
 import type {
   AchievementCatalogEntry,
   AnimalCatalogEntry,
+  BoosterKind,
   BuildingCatalogEntry,
   CropCatalogEntry,
   DailyTaskTemplate,
+  HeliChestReward,
   HeliOrderableGood,
   OrderableGood,
   RecipeCatalogEntry,
   RegattaTaskTemplate,
+  ShipChestReward,
   ShippableGood,
   TickConfig,
 } from '@meadowmark/shared';
+import type { MuseumExhibitDef } from '@meadowmark/shared';
+import type { ZooSpeciesCatalogEntry } from '@meadowmark/shared';
 
 import goodsJson from '../../../balance/goods.json';
 import cropsJson from '../../../balance/crops.json';
@@ -36,6 +32,11 @@ import animalsJson from '../../../balance/animals.json';
 import factoriesJson from '../../../balance/factories.json';
 import buildingsJson from '../../../balance/buildings.json';
 import achievementsJson from '../../../balance/achievements.json';
+import zooJson from '../../../balance/zoo.json';
+import museumJson from '../../../balance/museum.json';
+import dailiesJson from '../../../balance/dailies.json';
+import regattaJson from '../../../balance/regatta.json';
+import chestsJson from '../../../balance/chests.json';
 
 interface GoodEntry {
   id: string;
@@ -113,6 +114,62 @@ interface AchievementEntry {
   tiers: AchievementTierEntry[];
 }
 
+interface ZooSpeciesEntry {
+  speciesId: string;
+  displayName: string;
+  iconId: string;
+  habitat: 'grass' | 'water' | 'rock' | 'arctic';
+  family: string;
+  cardsNeeded: number;
+  baseIncomeCoins: number;
+  baseIncomeZooBucks: number;
+}
+
+interface MuseumArtifactEntry {
+  id: string;
+  displayName: string;
+  iconId: string;
+  setId: string;
+}
+
+interface MuseumExhibitEntry {
+  exhibitId: string;
+  displayName: string;
+  artifactIds: string[];
+  rewardCoins: number;
+  rewardCash: number;
+  bonusKind: MuseumExhibitDef['bonusKind'];
+  bonusValue: number;
+}
+
+interface DailyTaskTemplateEntry {
+  targetKind: string;
+  descriptionTemplate: string;
+  targetIdPool: string[] | null;
+  minQuantity: number;
+  maxQuantity: number;
+}
+
+interface RegattaTaskTemplateEntry {
+  description: string;
+  targetKind: string;
+  minQuantity: number;
+  maxQuantity: number;
+  scoreValue: number;
+}
+
+interface ChestRewardEntry {
+  cash: number;
+  boosterKinds?: BoosterKind[];
+  animalCards?: Record<string, number>;
+  expansionPermits?: number;
+}
+
+interface DailyChestRewardEntry {
+  rewardCoins: number;
+  rewardCash: number;
+}
+
 const goods = (goodsJson as unknown as { goods: GoodEntry[] }).goods;
 const crops = (cropsJson as unknown as { crops: CropEntry[] }).crops;
 const animals = (animalsJson as unknown as { animals: AnimalEntry[] }).animals;
@@ -120,6 +177,12 @@ const recipes = (factoriesJson as unknown as { recipes: RecipeEntry[] }).recipes
 const factoryTypes = (factoriesJson as unknown as { factoryTypes: FactoryTypeEntry[] }).factoryTypes;
 const buildings = (buildingsJson as unknown as { buildings: BuildingEntry[] }).buildings;
 const achievementsCatalogRaw = (achievementsJson as unknown as { achievements: AchievementEntry[] }).achievements;
+const zooSpeciesRaw = (zooJson as unknown as { species: ZooSpeciesEntry[] }).species;
+const museumArtifactsRaw = (museumJson as unknown as { artifacts: MuseumArtifactEntry[] }).artifacts;
+const museumExhibitsRaw = (museumJson as unknown as { exhibits: MuseumExhibitEntry[] }).exhibits;
+const dailyTaskTemplatesRaw = (dailiesJson as unknown as { templates: DailyTaskTemplateEntry[] }).templates;
+const regattaTaskTemplatesRaw = (regattaJson as unknown as { templates: RegattaTaskTemplateEntry[]; scoreBarCap: number });
+const chestsRaw = chestsJson as unknown as { helicopter: ChestRewardEntry; ship: ChestRewardEntry; daily: DailyChestRewardEntry };
 
 /** Good id -> its balance entry, for anywhere the UI needs a display name/sell value. */
 export const goodsById: ReadonlyMap<string, GoodEntry> = new Map(goods.map((g) => [g.id, g]));
@@ -238,58 +301,77 @@ export const heliOrderableGoods: HeliOrderableGood[] = orderableGoodPool;
 export const shippableGoods: ShippableGood[] = orderableGoodPool;
 export const trainRequestGoods = goods.map((g) => ({ goodId: g.id, unlockLevel: g.unlockLevel }));
 
-/**
- * GAP: no dailies.json/regatta.json in balance/. This is a small
- * hand-authored placeholder template set built from real crop/good ids so
- * the daily-task and regatta systems have real, playable content rather
- * than being permanently empty. Replace with real balance data when that
- * lane ships it.
- */
-export const dailyTaskTemplates: DailyTaskTemplate[] = [
-  {
-    targetKind: 'harvest',
-    describe: (q) => `Harvest ${q} crops`,
-    targetIdPool: null,
-    minQuantity: 5,
-    maxQuantity: 15,
-  },
-  {
-    targetKind: 'orderFulfilled',
-    describe: (q) => `Fill ${q} orders`,
-    targetIdPool: null,
-    minQuantity: 1,
-    maxQuantity: 3,
-  },
-  {
-    targetKind: 'factoryCollect',
-    describe: (q) => `Collect ${q} factory products`,
-    targetIdPool: null,
-    minQuantity: 3,
-    maxQuantity: 8,
-  },
-  {
-    targetKind: 'animalCollect',
-    describe: (q) => `Collect ${q} animal products`,
-    targetIdPool: null,
-    minQuantity: 3,
-    maxQuantity: 8,
-  },
-  {
-    targetKind: 'mineDig',
-    describe: (q) => `Dig ${q} mine tiles`,
-    targetIdPool: null,
-    minQuantity: 5,
-    maxQuantity: 12,
-  },
-];
+/** balance/dailies.json's 5 rotating task templates, with `descriptionTemplate`'s "{q}" placeholder turned into the `describe` closure DailyTaskTemplate expects. */
+export const dailyTaskTemplates: DailyTaskTemplate[] = dailyTaskTemplatesRaw.map((t) => ({
+  targetKind: t.targetKind,
+  describe: (q: number) => t.descriptionTemplate.replace('{q}', String(q)),
+  targetIdPool: t.targetIdPool,
+  minQuantity: t.minQuantity,
+  maxQuantity: t.maxQuantity,
+}));
 
-export const regattaTaskTemplates: RegattaTaskTemplate[] = [
-  { description: 'Harvest crops', targetKind: 'harvest', minQuantity: 20, maxQuantity: 40, scoreValue: 10 },
-  { description: 'Fulfill orders', targetKind: 'orderFulfilled', minQuantity: 3, maxQuantity: 6, scoreValue: 15 },
-  { description: 'Collect factory goods', targetKind: 'factoryCollect', minQuantity: 10, maxQuantity: 20, scoreValue: 12 },
-];
+/** balance/regatta.json's weekly regatta task templates. */
+export const regattaTaskTemplates: RegattaTaskTemplate[] = regattaTaskTemplatesRaw.templates.map((t) => ({
+  description: t.description,
+  targetKind: t.targetKind,
+  minQuantity: t.minQuantity,
+  maxQuantity: t.maxQuantity,
+  scoreValue: t.scoreValue,
+}));
 
-export const regattaScoreBarCap = 100;
+export const regattaScoreBarCap = regattaTaskTemplatesRaw.scoreBarCap;
+
+/** balance/zoo.json's species id -> the ZooSpeciesCatalogEntry shape zoo.ts's hatchSpecies/collectZooIncome need. */
+export const zooSpeciesCatalog: Record<string, ZooSpeciesCatalogEntry> = Object.fromEntries(
+  zooSpeciesRaw.map((s): [string, ZooSpeciesCatalogEntry] => [
+    s.speciesId,
+    {
+      speciesId: s.speciesId,
+      habitat: s.habitat,
+      family: s.family,
+      cardsNeeded: s.cardsNeeded,
+      baseIncomeCoins: s.baseIncomeCoins,
+      baseIncomeZooBucks: s.baseIncomeZooBucks,
+    },
+  ]),
+);
+
+/** balance/zoo.json's species id -> display metadata (name/icon), kept separately since ZooSpeciesCatalogEntry (shared's type) carries no display fields. */
+export const zooSpeciesMetaById: ReadonlyMap<string, ZooSpeciesEntry> = new Map(zooSpeciesRaw.map((s) => [s.speciesId, s]));
+export const zooSpeciesList: ZooSpeciesEntry[] = zooSpeciesRaw;
+
+/** balance/museum.json's artifact id -> display metadata (name/icon/owning exhibit). */
+export const museumArtifactsById: ReadonlyMap<string, MuseumArtifactEntry> = new Map(museumArtifactsRaw.map((a) => [a.id, a]));
+
+/** balance/museum.json's exhibit catalog, in the MuseumExhibitDef shape museum.ts's donateArtifact/museumBonusTotal need. */
+export const museumExhibitCatalog: MuseumExhibitDef[] = museumExhibitsRaw.map((e) => ({
+  exhibitId: e.exhibitId,
+  artifactIds: e.artifactIds,
+  rewardCoins: e.rewardCoins,
+  rewardCash: e.rewardCash,
+  bonusKind: e.bonusKind,
+  bonusValue: e.bonusValue,
+}));
+export const museumExhibitCatalogById: Record<string, MuseumExhibitDef> = Object.fromEntries(
+  museumExhibitCatalog.map((e): [string, MuseumExhibitDef] => [e.exhibitId, e]),
+);
+/** exhibitId -> display metadata (name), kept separately for the same reason as achievementMetaById above. */
+export const museumExhibitMetaById: ReadonlyMap<string, { displayName: string }> = new Map(
+  museumExhibitsRaw.map((e) => [e.exhibitId, { displayName: e.displayName }]),
+);
+
+/** balance/chests.json's helicopter/ship/daily chest rewards, in the shapes openHeliChest/openShipChest/claimDailyChest expect. */
+export const heliChestReward: HeliChestReward = {
+  cash: chestsRaw.helicopter.cash,
+  boosterKinds: chestsRaw.helicopter.boosterKinds ?? [],
+  animalCards: chestsRaw.helicopter.animalCards ?? {},
+};
+export const shipChestReward: ShipChestReward = {
+  cash: chestsRaw.ship.cash,
+  expansionPermits: chestsRaw.ship.expansionPermits ?? 0,
+  animalCards: chestsRaw.ship.animalCards ?? {},
+};
+export const dailyChestReward: DailyChestRewardEntry = chestsRaw.daily;
 
 /** Full TickConfig built from every catalog above, passed to tick()/resumeOffline() on every call. */
 export const tickConfig: TickConfig = {

@@ -1,0 +1,39 @@
+{
+  "templates": [
+    {
+      "targetKind": "harvest",
+      "descriptionTemplate": "Harvest {q} crops",
+      "targetIdPool": null,
+      "minQuantity": 5,
+      "maxQuantity": 15
+    },
+    {
+      "targetKind": "orderFulfilled",
+      "descriptionTemplate": "Fill {q} orders",
+      "targetIdPool": null,
+      "minQuantity": 1,
+      "maxQuantity": 3
+    },
+    {
+      "targetKind": "factoryCollect",
+      "descriptionTemplate": "Collect {q} factory products",
+      "targetIdPool": null,
+      "minQuantity": 3,
+      "maxQuantity": 8
+    },
+    {
+      "targetKind": "animalCollect",
+      "descriptionTemplate": "Collect {q} animal products",
+      "targetIdPool": null,
+      "minQuantity": 3,
+      "maxQuantity": 8
+    },
+    {
+      "targetKind": "mineDig",
+      "descriptionTemplate": "Dig {q} mine tiles",
+      "targetIdPool": null,
+      "minQuantity": 5,
+      "maxQuantity": 12
+    }
+  ]
+}

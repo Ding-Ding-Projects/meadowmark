@@ -18,6 +18,7 @@ import { createInitialWeather } from "./weather.js";
 import { createInitialExpansions } from "./expansions.js";
 import { createInitialZoo } from "./zoo.js";
 import { createInitialMine } from "./mine.js";
+import { createInitialMuseum } from "./museum.js";
 import { createInitialBoosters } from "./boosters.js";
 import { createInitialAchievements } from "./achievements.js";
 import { createInitialDailies, type DailyTaskTemplate } from "./dailies.js";
@@ -27,7 +28,7 @@ import { createEmptyTrain } from "./train.js";
 import { createEmptyHelicopter } from "./helicopter.js";
 import { createEmptyShip } from "./ship.js";
 
-export const CURRENT_SCHEMA_VERSION = 2;
+export const CURRENT_SCHEMA_VERSION = 3;
 
 export interface NewGameOptions {
   playerName: string;
@@ -84,6 +85,7 @@ export function newGame(options: NewGameOptions): GameState {
     expansions: createInitialExpansions(),
     zoo: createInitialZoo(),
     mine: createInitialMine(),
+    museum: createInitialMuseum(),
     boosters: createInitialBoosters(),
     achievements: createInitialAchievements(),
     dailies: createInitialDailies(now, options.dailyTaskTemplates),
@@ -146,6 +148,12 @@ const MIGRATIONS: Record<number, MigrationStep> = {
       weather: raw.weather ?? createInitialWeather(raw?.lastTickAt ?? Date.now()),
     };
   },
+  // v2 -> v3: added the museum system. A v2 save has no `museum` key at
+  // all, so it starts every existing player at "not yet unlocked, nothing
+  // donated" - the same state a save reaching the museum unlock level for
+  // the first time under v3 would start from. (The zoo catalog needs no
+  // migration: zoo state already existed; only its content tables grew.)
+  2: (raw) => ({ ...raw, museum: raw.museum ?? createInitialMuseum() }),
 };
 
 /**

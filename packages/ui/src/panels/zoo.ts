@@ -1,4 +1,4 @@
-/** Enclosures and animal cards. */
+/** Enclosures, animal cards, and the hatchery. */
 
 import { h, formatDuration } from "../dom";
 import { button } from "../components/button";
@@ -23,6 +23,13 @@ export function renderZooPanel(host: HTMLElement, view: ZooView, bridge: HostBri
           "aria-label": animal ? t(animal.nameKey) : t("panel.zoo.emptyEnclosure"),
           onclick: () => {
             if (!animal) {
+              if (view.availableAnimals.length === 0) {
+                openMenu({
+                  anchor: tile,
+                  items: [{ id: "none", label: t("panel.zoo.noHatchedSpecies"), disabled: true }],
+                });
+                return;
+              }
               openMenu({
                 anchor: tile,
                 items: view.availableAnimals.map((a) => ({
@@ -48,11 +55,44 @@ export function renderZooPanel(host: HTMLElement, view: ZooView, bridge: HostBri
   render();
   tickHandle = window.setInterval(render, 1000);
 
+  const collectionEl = h("div", { style: { display: "flex", flexDirection: "column", gap: "8px" } });
+  for (const card of view.speciesCards) {
+    const canHatch = !card.hatched && card.cardsHeld >= card.cardsNeeded;
+    collectionEl.appendChild(
+      h(
+        "div.mm-card.mm-card--outlined",
+        { style: { padding: "8px 12px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "8px" } },
+        h(
+          "div",
+          { style: { display: "flex", alignItems: "center", gap: "8px" } },
+          h("span", { "aria-hidden": "true" }, card.iconId),
+          h("span", {}, t(card.nameKey)),
+          h(
+            "span",
+            { style: { fontSize: "var(--mm-type-body-small-size)", opacity: "0.75" } },
+            t("panel.zoo.cardsProgress", { held: card.cardsHeld, needed: card.cardsNeeded })
+          )
+        ),
+        card.hatched
+          ? h("span", {}, t("panel.zoo.hatched"))
+          : button({
+              label: t("panel.zoo.hatch"),
+              variant: "tonal",
+              disabled: !canHatch,
+              disabledReason: t("panel.zoo.needMoreCards"),
+              onClick: () => bridge.dispatch({ type: "zoo/hatch", speciesId: card.speciesId }),
+            })
+      )
+    );
+  }
+
   const panel = h(
     "section.mm-panel",
     { "aria-label": t("panel.zoo.title") },
     h("div.mm-panel__header", {}, h("h2.mm-panel__title", {}, t("panel.zoo.title"))),
-    grid
+    grid,
+    h("h3", {}, t("panel.zoo.collectionTitle")),
+    collectionEl
   );
   host.appendChild(panel);
 

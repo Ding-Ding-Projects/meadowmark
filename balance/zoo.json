@@ -1,0 +1,124 @@
+{
+  "species": [
+    {
+      "speciesId": "lion",
+      "displayName": "Lion",
+      "iconId": "animal_lion",
+      "habitat": "grass",
+      "family": "big-cat",
+      "cardsNeeded": 10,
+      "baseIncomeCoins": 40,
+      "baseIncomeZooBucks": 2
+    },
+    {
+      "speciesId": "zebra",
+      "displayName": "Zebra",
+      "iconId": "animal_zebra",
+      "habitat": "grass",
+      "family": "herbivore",
+      "cardsNeeded": 8,
+      "baseIncomeCoins": 30,
+      "baseIncomeZooBucks": 1
+    },
+    {
+      "speciesId": "elephant",
+      "displayName": "Elephant",
+      "iconId": "animal_elephant",
+      "habitat": "grass",
+      "family": "herbivore",
+      "cardsNeeded": 12,
+      "baseIncomeCoins": 50,
+      "baseIncomeZooBucks": 3
+    },
+    {
+      "speciesId": "flamingo",
+      "displayName": "Flamingo",
+      "iconId": "animal_flamingo",
+      "habitat": "water",
+      "family": "bird",
+      "cardsNeeded": 8,
+      "baseIncomeCoins": 25,
+      "baseIncomeZooBucks": 1
+    },
+    {
+      "speciesId": "otter",
+      "displayName": "Otter",
+      "iconId": "animal_otter",
+      "habitat": "water",
+      "family": "aquatic",
+      "cardsNeeded": 9,
+      "baseIncomeCoins": 28,
+      "baseIncomeZooBucks": 1
+    },
+    {
+      "speciesId": "seal",
+      "displayName": "Seal",
+      "iconId": "animal_seal",
+      "habitat": "water",
+      "family": "aquatic",
+      "cardsNeeded": 8,
+      "baseIncomeCoins": 27,
+      "baseIncomeZooBucks": 1
+    },
+    {
+      "speciesId": "penguin",
+      "displayName": "Penguin",
+      "iconId": "animal_penguin",
+      "habitat": "arctic",
+      "family": "bird",
+      "cardsNeeded": 10,
+      "baseIncomeCoins": 32,
+      "baseIncomeZooBucks": 2
+    },
+    {
+      "speciesId": "polar_bear",
+      "displayName": "Polar Bear",
+      "iconId": "animal_polar_bear",
+      "habitat": "arctic",
+      "family": "bear",
+      "cardsNeeded": 14,
+      "baseIncomeCoins": 55,
+      "baseIncomeZooBucks": 3
+    },
+    {
+      "speciesId": "arctic_fox",
+      "displayName": "Arctic Fox",
+      "iconId": "animal_arctic_fox",
+      "habitat": "arctic",
+      "family": "predator",
+      "cardsNeeded": 9,
+      "baseIncomeCoins": 27,
+      "baseIncomeZooBucks": 1
+    },
+    {
+      "speciesId": "tiger",
+      "displayName": "Tiger",
+      "iconId": "animal_tiger",
+      "habitat": "rock",
+      "family": "big-cat",
+      "cardsNeeded": 12,
+      "baseIncomeCoins": 45,
+      "baseIncomeZooBucks": 2
+    },
+    {
+      "speciesId": "mountain_goat",
+      "displayName": "Mountain Goat",
+      "iconId": "animal_mountain_goat",
+      "habitat": "rock",
+      "family": "herbivore",
+      "cardsNeeded": 8,
+      "baseIncomeCoins": 26,
+      "baseIncomeZooBucks": 1
+    },
+    {
+      "speciesId": "eagle",
+      "displayName": "Eagle",
+      "iconId": "animal_eagle",
+      "habitat": "rock",
+      "family": "bird",
+      "cardsNeeded": 9,
+      "baseIncomeCoins": 33,
+      "baseIncomeZooBucks": 2
+    }
+  ]
+}
