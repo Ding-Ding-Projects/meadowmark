@@ -15,7 +15,7 @@ import type {
   GameState,
   ResourceBag,
 } from "./types";
-import { addGood, barnFreeSpace, hasAll, removeAll } from "./economy";
+import { addGood, addXp, barnFreeSpace, hasAll, removeAll } from "./economy";
 import { isReady } from "./time";
 
 export const FACTORY_BASE_QUEUE_SLOTS = 2;
@@ -78,28 +78,30 @@ export function collectProduction(
   slotIndex: number,
   recipe: RecipeCatalogEntry,
   now: number,
-): { state: GameState; collected: boolean; reason?: "notReady" | "barnFull" } {
+): { state: GameState; collected: boolean; events: GameEvent[]; reason?: "notReady" | "barnFull" } {
   const factory = state.factories.factories.find((f) => f.id === factoryId);
   const slot = factory?.queue[slotIndex];
   if (!factory || !slot || !isReady(slot.readyAt, now)) {
-    return { state, collected: false, reason: "notReady" };
+    return { state, collected: false, events: [], reason: "notReady" };
   }
   if (barnFreeSpace(state) < recipe.outputQuantity) {
-    return { state, collected: false, reason: "barnFull" };
+    return { state, collected: false, events: [], reason: "barnFull" };
   }
 
   const factories = state.factories.factories.map((f) =>
     f.id === factoryId ? { ...f, queue: f.queue.filter((_, i) => i !== slotIndex) } : f,
   );
+  const xpResult = addXp(state.economy, recipe.xpReward, now);
 
   return {
     state: {
       ...state,
-      economy: { ...state.economy, xp: state.economy.xp + recipe.xpReward, coins: state.economy.coins + recipe.coinReward },
+      economy: { ...xpResult.economy, coins: xpResult.economy.coins + recipe.coinReward },
       inventory: addGood(state.inventory, recipe.outputGoodId, recipe.outputQuantity),
       factories: { factories },
     },
     collected: true,
+    events: xpResult.events,
   };
 }
 

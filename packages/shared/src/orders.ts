@@ -9,7 +9,7 @@
 import type { GameEvent, GameState, GoodId, OrderRequirement, OrderSlot, OrdersState } from "./types";
 import type { RngState } from "./rng";
 import { nextInt, pickWeighted } from "./rng";
-import { hasAll, removeAll } from "./economy";
+import { addXp, hasAll, removeAll } from "./economy";
 import { MINUTE_MS, isReady } from "./time";
 
 export const ORDER_BOARD_SIZE = 6;
@@ -89,31 +89,32 @@ export function fulfillOrder(
   state: GameState,
   slotId: string,
   now: number,
-): { state: GameState; fulfilled: boolean; reason?: "missingGoods" | "empty" } {
+): { state: GameState; fulfilled: boolean; events: GameEvent[]; reason?: "missingGoods" | "empty" } {
   const slot = state.orders.slots.find((s) => s.id === slotId);
-  if (!slot || !slot.order) return { state, fulfilled: false, reason: "empty" };
+  if (!slot || !slot.order) return { state, fulfilled: false, events: [], reason: "empty" };
 
   const requiredBag: Record<string, number> = {};
   for (const req of slot.order.requirements) requiredBag[req.goodId] = req.quantity;
-  if (!hasAll(state.inventory, requiredBag)) return { state, fulfilled: false, reason: "missingGoods" };
+  if (!hasAll(state.inventory, requiredBag)) return { state, fulfilled: false, events: [], reason: "missingGoods" };
 
   const slots = state.orders.slots.map((s) =>
     s.id === slotId ? { ...s, order: null, refillAt: now + ORDER_REFILL_DELAY_MS } : s,
   );
+  const xpResult = addXp(state.economy, slot.order.rewardXp, now);
 
   return {
     state: {
       ...state,
       inventory: removeAll(state.inventory, requiredBag),
       economy: {
-        ...state.economy,
-        coins: state.economy.coins + slot.order.rewardCoins,
-        xp: state.economy.xp + slot.order.rewardXp,
-        reputationStars: state.economy.reputationStars + slot.order.rewardReputationStars,
+        ...xpResult.economy,
+        coins: xpResult.economy.coins + slot.order.rewardCoins,
+        reputationStars: xpResult.economy.reputationStars + slot.order.rewardReputationStars,
       },
       orders: { slots },
     },
     fulfilled: true,
+    events: xpResult.events,
   };
 }
 

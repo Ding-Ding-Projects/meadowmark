@@ -5,7 +5,7 @@
  */
 
 import type { AnimalsState, AnimalTypeId, AnimalUnit, GameEvent, GameState, ResourceBag } from "./types";
-import { addGood, barnFreeSpace, removeGood } from "./economy";
+import { addGood, addXp, barnFreeSpace, removeGood } from "./economy";
 import { isReady } from "./time";
 
 export interface AnimalCatalogEntry {
@@ -104,14 +104,14 @@ export function collectProduct(
   animalUnitId: string,
   catalog: AnimalCatalogEntry,
   now: number,
-): { state: GameState; collected: boolean; reason?: "notReady" | "barnFull" } {
+): { state: GameState; collected: boolean; events: GameEvent[]; reason?: "notReady" | "barnFull" } {
   const shed = state.animals.sheds.find((s) => s.id === shedId);
   const unit = shed?.animals.find((a) => a.id === animalUnitId);
   if (!shed || !unit || !isReady(unit.readyAt, now)) {
-    return { state, collected: false, reason: "notReady" };
+    return { state, collected: false, events: [], reason: "notReady" };
   }
   if (barnFreeSpace(state) < 1) {
-    return { state, collected: false, reason: "barnFull" };
+    return { state, collected: false, events: [], reason: "barnFull" };
   }
 
   const sheds = state.animals.sheds.map((s) =>
@@ -119,15 +119,17 @@ export function collectProduct(
       ? { ...s, animals: s.animals.map((a) => (a.id === animalUnitId ? { ...a, feedStartedAt: null, readyAt: null } : a)) }
       : s,
   );
+  const xpResult = addXp(state.economy, catalog.xpReward, now);
 
   return {
     state: {
       ...state,
-      economy: { ...state.economy, xp: state.economy.xp + catalog.xpReward, coins: state.economy.coins + catalog.coinReward },
+      economy: { ...xpResult.economy, coins: xpResult.economy.coins + catalog.coinReward },
       inventory: addGood(state.inventory, catalog.productGoodId, 1),
       animals: { sheds },
     },
     collected: true,
+    events: xpResult.events,
   };
 }
 
@@ -136,10 +138,11 @@ export function collectAll(
   state: GameState,
   catalogByType: Record<AnimalTypeId, AnimalCatalogEntry>,
   now: number,
-): { state: GameState; goodsGained: ResourceBag; partial: boolean } {
+): { state: GameState; goodsGained: ResourceBag; partial: boolean; events: GameEvent[] } {
   let inventory = state.inventory;
   let economy = state.economy;
   const goodsGained: ResourceBag = {};
+  const events: GameEvent[] = [];
   let partial = false;
 
   const sheds = state.animals.sheds.map((shed) => {
@@ -153,13 +156,15 @@ export function collectAll(
       }
       inventory = addGood(inventory, catalog.productGoodId, 1);
       goodsGained[catalog.productGoodId] = (goodsGained[catalog.productGoodId] ?? 0) + 1;
-      economy = { ...economy, xp: economy.xp + catalog.xpReward, coins: economy.coins + catalog.coinReward };
+      const xpResult = addXp(economy, catalog.xpReward, now);
+      economy = { ...xpResult.economy, coins: xpResult.economy.coins + catalog.coinReward };
+      events.push(...xpResult.events);
       return { ...animal, feedStartedAt: null, readyAt: null };
     });
     return { ...shed, animals };
   });
 
-  return { state: { ...state, inventory, economy, animals: { sheds } }, goodsGained, partial };
+  return { state: { ...state, inventory, economy, animals: { sheds } }, goodsGained, partial, events };
 }
 
 export function tickAnimals(state: GameState, now: number): { state: GameState; events: GameEvent[] } {

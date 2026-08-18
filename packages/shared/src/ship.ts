@@ -7,7 +7,7 @@
 import type { GameEvent, GameState, GoodId, ShipCrate, ShipState } from "./types";
 import type { RngState } from "./rng";
 import { nextInt } from "./rng";
-import { removeGood } from "./economy";
+import { addXp, removeGood } from "./economy";
 import { DAY_MS, isReady } from "./time";
 
 export const SHIP_UNLOCK_LEVEL = 18;
@@ -85,7 +85,8 @@ export function collectCrate(
   if (!crate || crate.quantityLoaded < crate.quantityNeeded) return { state, collected: false, events: [], reason: "notFull" };
 
   const crates = state.ship.crates.filter((c) => c.id !== crateId);
-  const events: GameEvent[] = [];
+  const xpResult = addXp(state.economy, crate.rewardXp, now);
+  const events: GameEvent[] = [...xpResult.events];
   let chestReady = state.ship.chestReady;
   if (crates.length === 0 && !chestReady) {
     chestReady = true;
@@ -95,7 +96,7 @@ export function collectCrate(
   return {
     state: {
       ...state,
-      economy: { ...state.economy, coins: state.economy.coins + crate.rewardCoins, xp: state.economy.xp + crate.rewardXp },
+      economy: { ...xpResult.economy, coins: xpResult.economy.coins + crate.rewardCoins },
       ship: { ...state.ship, crates, chestReady },
     },
     collected: true,

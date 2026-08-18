@@ -14,7 +14,7 @@ import type {
   Plot,
   ResourceBag,
 } from "./types";
-import { addGood, barnFreeSpace } from "./economy";
+import { addGood, addXp, barnFreeSpace } from "./economy";
 import { isReady } from "./time";
 
 export const STARTING_PLOT_COUNT = 6;
@@ -165,19 +165,19 @@ export function harvest(
   plotId: string,
   crop: CropCatalogEntry,
   now: number,
-): { state: GameState; harvested: boolean; reason?: "notReady" | "barnFull" } {
+): { state: GameState; harvested: boolean; events: GameEvent[]; reason?: "notReady" | "barnFull" } {
   const plot = state.fields.plots.find((p) => p.id === plotId);
   if (!plot || plot.cropId === null || !isReady(plot.readyAt, now)) {
-    return { state, harvested: false, reason: "notReady" };
+    return { state, harvested: false, events: [], reason: "notReady" };
   }
   if (barnFreeSpace(state) < 1) {
-    return { state, harvested: false, reason: "barnFull" };
+    return { state, harvested: false, events: [], reason: "barnFull" };
   }
 
   const plots = state.fields.plots.map((p) =>
     p.id === plotId ? { ...p, cropId: null, plantedAt: null, readyAt: null } : p,
   );
-  const { economy: economyAfterXp } = addXpForHarvest(state, crop.xpReward);
+  const { economy: economyAfterXp, events } = addXp(state.economy, crop.xpReward, now);
 
   return {
     state: {
@@ -187,15 +187,8 @@ export function harvest(
       fields: { ...state.fields, plots },
     },
     harvested: true,
+    events,
   };
-}
-
-function addXpForHarvest(state: GameState, xpReward: number) {
-  // Kept intentionally simple (no level-up rollover here) - the caller in
-  // tick.ts/the app layer is expected to route harvest xp through
-  // economy.addXp() for level-up events. This local helper exists only so
-  // fields.ts stays self-contained for direct unit testing of harvest().
-  return { economy: { ...state.economy, xp: state.economy.xp + xpReward } };
 }
 
 /**
@@ -207,7 +200,7 @@ export function harvestAll(
   state: GameState,
   catalog: Record<CropId, CropCatalogEntry>,
   now: number,
-): { state: GameState; result: HarvestAllResult } {
+): { state: GameState; result: HarvestAllResult; events: GameEvent[] } {
   const readyPlots = state.fields.plots.filter((p) => p.cropId !== null && isReady(p.readyAt, now));
 
   let plots = state.fields.plots;
@@ -215,6 +208,7 @@ export function harvestAll(
   let economy = state.economy;
   const goodsGained: ResourceBag = {};
   const harvestedPlotIds: string[] = [];
+  const events: GameEvent[] = [];
   let xpGained = 0;
   let coinsGained = 0;
   let partial = false;
@@ -231,7 +225,9 @@ export function harvestAll(
     goodsGained[crop.cropId] = (goodsGained[crop.cropId] ?? 0) + 1;
     xpGained += crop.xpReward;
     coinsGained += crop.coinReward;
-    economy = { ...economy, xp: economy.xp + crop.xpReward, coins: economy.coins + crop.coinReward };
+    const xpResult = addXp(economy, crop.xpReward, now);
+    economy = { ...xpResult.economy, coins: xpResult.economy.coins + crop.coinReward };
+    events.push(...xpResult.events);
     harvestedPlotIds.push(plot.id);
   }
 
@@ -245,5 +241,6 @@ export function harvestAll(
       partial,
       reason: partial ? "barnFull" : undefined,
     },
+    events,
   };
 }
