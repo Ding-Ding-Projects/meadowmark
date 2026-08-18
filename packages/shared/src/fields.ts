@@ -9,6 +9,7 @@ import type {
   FieldsState,
   GameEvent,
   GameState,
+  GridPosition,
   HarvestAllResult,
   PlantAllResult,
   Plot,
@@ -19,6 +20,24 @@ import { isReady } from "./time.js";
 
 export const STARTING_PLOT_COUNT = 6;
 export const MAX_PLOT_COUNT = 60;
+
+/**
+ * Default world-grid layout for plots: an 8-wide grid starting at a fixed
+ * farm origin on the town grid. This is the single source of truth for
+ * where a plot lives - `Plot.position` is computed from this at creation
+ * time (and by save.ts's v1->v2 migration for a plot that predates the
+ * `position` field) rather than the renderer re-deriving it from `index`
+ * on every frame.
+ */
+export const FIELD_ORIGIN: GridPosition = { x: 2, y: 2 };
+export const FIELD_GRID_WIDTH = 8;
+
+export function plotPosition(index: number): GridPosition {
+  return {
+    x: FIELD_ORIGIN.x + (index % FIELD_GRID_WIDTH),
+    y: FIELD_ORIGIN.y + Math.floor(index / FIELD_GRID_WIDTH),
+  };
+}
 
 /** Coin cost to unlock the plot at the given zero-based index (0..MAX_PLOT_COUNT-1). Escalates smoothly past the free starting plots. */
 export function plotUnlockCost(index: number): number {
@@ -33,6 +52,7 @@ export function createInitialFields(): FieldsState {
     plots.push({
       id: `plot-${i}`,
       index: i,
+      position: plotPosition(i),
       unlocked: i < STARTING_PLOT_COUNT,
       cropId: null,
       plantedAt: null,

@@ -69,6 +69,8 @@ export interface Plot {
   id: string;
   /** Index into the logical plot grid; stable across saves. */
   index: number;
+  /** World-grid position on the town grid; see fields.ts's plotPosition() for how `index` maps to this by default. */
+  position: GridPosition;
   unlocked: boolean;
   cropId: CropId | null;
   plantedAt: number | null;
@@ -106,6 +108,8 @@ export interface HarvestAllResult {
 export interface AnimalShed {
   id: string;
   animalTypeId: AnimalTypeId;
+  /** World-grid position on the town grid; see animals.ts's defaultShedPosition() for the fallback layout used when a shed is created without an explicit placement. */
+  position: GridPosition;
   /** Number of animal slots this shed currently has (upgradeable). */
   slots: number;
   animals: AnimalUnit[];
@@ -139,6 +143,8 @@ export interface FactoryQueueSlot {
 export interface FactoryInstance {
   id: string;
   factoryTypeId: FactoryTypeId;
+  /** World-grid position on the town grid; see factories.ts's defaultFactoryPosition() for the fallback layout used when a factory is created without an explicit placement. */
+  position: GridPosition;
   level: number;
   /** Number of concurrent queue slots this factory currently has (2 base, upgradeable to 6). */
   queueSlots: number;
@@ -280,6 +286,44 @@ export interface TownState {
   buildings: PlacedBuilding[];
   /** Aggregate charm score from decorations; paid out as a small daily coin bonus. */
   charmScore: number;
+}
+
+// ---------------------------------------------------------------------------
+// Terrain (town-grid ground cover)
+// ---------------------------------------------------------------------------
+
+export type TerrainKind = "grass" | "soil" | "water" | "sand" | "stone";
+
+export interface TerrainTile {
+  /** Row-major index into the town grid (index = y * gridWidth + x), stable across saves - same convention as MineTile.index. */
+  index: number;
+  kind: TerrainKind;
+}
+
+export interface TerrainState {
+  /** Mirrors TownState.gridWidth/gridHeight at the time terrain was generated, so `tiles[i]`'s x/y can always be recovered without a second source of truth for grid size. */
+  gridWidth: number;
+  gridHeight: number;
+  tiles: TerrainTile[];
+}
+
+// ---------------------------------------------------------------------------
+// Weather
+// ---------------------------------------------------------------------------
+
+export type WeatherKind = "clear" | "rain" | "snow" | "fog";
+
+export interface WeatherState {
+  kind: WeatherKind;
+  /**
+   * Epoch ms of the last WEATHER_CHANGE_INTERVAL_MS-interval boundary this
+   * state actually processed a reroll for. Drives tickWeather()'s
+   * catch-up loop (see weather.ts) so a multi-hour offline gap rerolls
+   * once per boundary actually crossed, deterministically, regardless of
+   * how the elapsed time was chunked into tick() calls - same shape as
+   * village.ts's lastTopUpAt.
+   */
+  lastChangeAt: number;
 }
 
 // ---------------------------------------------------------------------------
@@ -520,6 +564,8 @@ export interface GameState {
   helicopter: HelicopterState;
   ship: ShipState;
   town: TownState;
+  terrain: TerrainState;
+  weather: WeatherState;
   expansions: ExpansionsState;
   zoo: ZooState;
   mine: MineState;

@@ -26,6 +26,8 @@ import { tickTrain } from "./train.js";
 import { type HeliOrderableGood, tickHelicopter } from "./helicopter.js";
 import { type ShippableGood, tickShip } from "./ship.js";
 import { type BuildingCatalogEntry, tickTown } from "./town.js";
+import { tickTerrain } from "./terrain.js";
+import { tickWeather } from "./weather.js";
 import { maybeUnlockZoo } from "./zoo.js";
 import { maybeUnlockMine, tickMine } from "./mine.js";
 import { type DailyTaskTemplate, tickDailies } from "./dailies.js";
@@ -87,6 +89,16 @@ export function tick(state: GameState, elapsedMs: number, now: number, config: T
   }
   {
     const r = tickTrain(next, now);
+    next = r.state;
+    events.push(...r.events);
+  }
+  {
+    const r = tickTerrain(next, now);
+    next = r.state;
+    events.push(...r.events);
+  }
+  {
+    const r = tickWeather(next, now);
     next = r.state;
     events.push(...r.events);
   }

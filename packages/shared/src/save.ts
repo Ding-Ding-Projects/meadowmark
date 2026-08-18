@@ -9,8 +9,12 @@
 
 import type { GameState } from "./types.js";
 import { createRng, seedFromString } from "./rng.js";
-import { createInitialFields } from "./fields.js";
-import { createInitialTown } from "./town.js";
+import { createInitialFields, plotPosition } from "./fields.js";
+import { defaultFactoryPosition } from "./factories.js";
+import { defaultShedPosition } from "./animals.js";
+import { createInitialTown, TOWN_GRID_HEIGHT, TOWN_GRID_WIDTH } from "./town.js";
+import { createInitialTerrain, terrainTileIndex } from "./terrain.js";
+import { createInitialWeather } from "./weather.js";
 import { createInitialExpansions } from "./expansions.js";
 import { createInitialZoo } from "./zoo.js";
 import { createInitialMine } from "./mine.js";
@@ -23,7 +27,7 @@ import { createEmptyTrain } from "./train.js";
 import { createEmptyHelicopter } from "./helicopter.js";
 import { createEmptyShip } from "./ship.js";
 
-export const CURRENT_SCHEMA_VERSION = 1;
+export const CURRENT_SCHEMA_VERSION = 2;
 
 export interface NewGameOptions {
   playerName: string;
@@ -39,6 +43,13 @@ export interface NewGameOptions {
 export function newGame(options: NewGameOptions): GameState {
   const { playerName, now } = options;
   const seed = options.seed ?? seedFromString(`${playerName}:${now}`);
+
+  const fields = createInitialFields();
+  const soilIndices = new Set(
+    fields.plots
+      .filter((p) => p.unlocked)
+      .map((p) => terrainTileIndex(TOWN_GRID_WIDTH, p.position.x, p.position.y)),
+  );
 
   return {
     meta: { schemaVersion: CURRENT_SCHEMA_VERSION, createdAt: now, lastSavedAt: now, playerName },
@@ -60,7 +71,7 @@ export function newGame(options: NewGameOptions): GameState {
     inventory: {},
     barn: { capacity: 60, level: 1 },
 
-    fields: createInitialFields(),
+    fields,
     animals: { sheds: [] },
     factories: { factories: [] },
     orders: createEmptyOrderBoard(),
@@ -68,6 +79,8 @@ export function newGame(options: NewGameOptions): GameState {
     helicopter: createEmptyHelicopter(),
     ship: createEmptyShip(),
     town: createInitialTown(),
+    terrain: createInitialTerrain(TOWN_GRID_WIDTH, TOWN_GRID_HEIGHT, soilIndices),
+    weather: createInitialWeather(now),
     expansions: createInitialExpansions(),
     zoo: createInitialZoo(),
     mine: createInitialMine(),
@@ -87,8 +100,52 @@ export function newGame(options: NewGameOptions): GameState {
 type MigrationStep = (raw: any) => any;
 
 const MIGRATIONS: Record<number, MigrationStep> = {
-  // Example shape for the future: `1: (raw) => ({ ...raw, someNewField: default }),`
-  // No migrations exist yet since schema v1 is the first version.
+  /**
+   * v1 -> v2: gives factories, animal sheds, and field plots a real
+   * world-grid `position`, and introduces the `terrain`/`weather` state
+   * slices. A v1 save never had any of these, so every plot/factory/shed
+   * is assigned the exact same hard-coded layout the renderer used to
+   * compute on the fly (plotPosition/defaultFactoryPosition/
+   * defaultShedPosition) - the point being that a returning player's town
+   * looks exactly as it did before, just now backed by real saved state
+   * instead of a placeholder computed at render time. Terrain is
+   * synthesized the same way newGame() builds it for a fresh save: grass
+   * everywhere except each unlocked plot's own (now-real) position, which
+   * is marked soil.
+   */
+  1: (raw) => {
+    const gridWidth: number = raw?.town?.gridWidth ?? TOWN_GRID_WIDTH;
+    const gridHeight: number = raw?.town?.gridHeight ?? TOWN_GRID_HEIGHT;
+
+    const plots = Array.isArray(raw?.fields?.plots)
+      ? raw.fields.plots.map((p: any) => ({ ...p, position: p.position ?? plotPosition(p.index) }))
+      : raw?.fields?.plots;
+
+    const factories = Array.isArray(raw?.factories?.factories)
+      ? raw.factories.factories.map((f: any, i: number) => ({ ...f, position: f.position ?? defaultFactoryPosition(i) }))
+      : raw?.factories?.factories;
+
+    const sheds = Array.isArray(raw?.animals?.sheds)
+      ? raw.animals.sheds.map((s: any, i: number) => ({ ...s, position: s.position ?? defaultShedPosition(i) }))
+      : raw?.animals?.sheds;
+
+    const soilIndices = new Set<number>(
+      Array.isArray(plots)
+        ? plots
+            .filter((p: any) => p.unlocked && p.position)
+            .map((p: any) => terrainTileIndex(gridWidth, p.position.x, p.position.y))
+        : [],
+    );
+
+    return {
+      ...raw,
+      fields: raw.fields ? { ...raw.fields, plots } : raw.fields,
+      factories: raw.factories ? { ...raw.factories, factories } : raw.factories,
+      animals: raw.animals ? { ...raw.animals, sheds } : raw.animals,
+      terrain: raw.terrain ?? createInitialTerrain(gridWidth, gridHeight, soilIndices),
+      weather: raw.weather ?? createInitialWeather(raw?.lastTickAt ?? Date.now()),
+    };
+  },
 };
 
 /**

@@ -17,6 +17,8 @@ export * from "./train.js";
 export * from "./helicopter.js";
 export * from "./ship.js";
 export * from "./town.js";
+export * from "./terrain.js";
+export * from "./weather.js";
 export * from "./expansions.js";
 export * from "./zoo.js";
 export * from "./mine.js";
