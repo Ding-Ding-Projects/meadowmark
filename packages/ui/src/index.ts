@@ -62,6 +62,7 @@ export { openSuperConfirm } from "./confirm/super-confirm";
 export { attachContextMenu } from "./menus/context-menu";
 export { openCommandPalette, registerPaletteSource } from "./palette/command-palette";
 export { openRegexBuilder, searchField } from "./search/regex-builder";
+export { hydrateSettingsFromHost } from "./settings/store";
 
 export interface MountUiOptions {
   state$: ReadonlyStore<GameStateView>;

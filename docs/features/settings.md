@@ -25,8 +25,18 @@ did not just set.
 
 ## Configuration
 
-Persisted to `localStorage` under `meadowmark.settings.v1`; corrupt or
-missing storage falls back to documented defaults rather than throwing.
+In the packaged app, service-owned settings hydrate through the Electron
+preload bridge from `packages/app/src/services/settings/SettingsStore`, which
+validates and atomically persists the versioned `settings.json` document in
+the stable application data directory. The bridge currently persists the
+settings that overlap the existing UI: theme, density, accent colour, UI font
+family, UI font-size scale, and the dialog emoji toggle.
+
+The browser/static fallback still persists the whole UI settings snapshot to
+`localStorage` under `meadowmark.settings.v1`; corrupt or missing storage falls
+back to documented defaults rather than throwing. Local-only UI controls that
+are not yet part of the app settings service, such as tab docking and render
+quality, continue to use that fallback until their service schema lands.
 
 ## Failure modes
 
@@ -34,6 +44,10 @@ missing storage falls back to documented defaults rather than throwing.
   on initial mount (`mountUi`) and on every settings change — a settings
   change made before `mountUi` runs (unlikely in normal flow) would not be
   reflected until mount.
+- If the Electron settings service bridge fails to load, the UI keeps the
+  localStorage fallback instead of blocking startup. Service load warnings are
+  carried on the IPC payload, but the current settings panel does not yet show
+  them inline.
 - Settings search currently indexes a small hand-maintained list of entries
   rather than deriving one from the live tab panels; adding a new setting
   control requires adding a matching `SettingEntry` in `settings/index.ts` or
@@ -46,3 +60,6 @@ Manual: change each setting and confirm the live effect (theme, density,
 accent hue, font, language, funny level, emoji toggle, render quality);
 search for a setting's label and confirm the jump-to-tab action selects the
 correct tab.
+
+Yum Lerng Cha wiring note: the settings service IPC bridge was implemented
+without running tests, lint, type-checking, reviews, audits, or screenshots.

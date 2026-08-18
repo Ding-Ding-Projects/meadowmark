@@ -31,5 +31,10 @@ export const IPC_CHANNELS = {
   saveGame: 'game:save',
   loadSettings: 'settings:load',
   saveSettings: 'settings:save',
+  settingsServiceLoad: 'settings-service:load',
+  settingsServiceSet: 'settings-service:set',
+  settingsServiceSetMany: 'settings-service:set-many',
+  settingsServiceResetToDefault: 'settings-service:reset-to-default',
+  settingsServiceResetAllToDefaults: 'settings-service:reset-all-to-defaults',
   appInfo: 'app:info',
 } as const;
