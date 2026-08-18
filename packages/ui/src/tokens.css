@@ -158,6 +158,16 @@
   /* ---- Touch targets ---- */
   --mm-touch-target-min: 44px;
 
+  /*
+   * Height of the custom frameless-window title bar (see
+   * packages/renderer/index.html's #mm-titlebar, which is hard-coded to
+   * this same 32px so the two never fall out of step). It sits at z-index
+   * 10000 above every panel, so anything that positions itself against
+   * the viewport top - the HUD chips in particular - must offset by this
+   * much or the title bar renders on top of the first ~20px of content.
+   */
+  --mm-titlebar-height: 32px;
+
   /* ---- Density scaling multiplier, adjusted at runtime by settings ---- */
   --mm-density-scale: 1;
 

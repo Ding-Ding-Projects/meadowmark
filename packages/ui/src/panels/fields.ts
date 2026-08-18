@@ -9,15 +9,54 @@ import { select } from "../components/select";
 import { t } from "../i18n";
 import { FieldsView, HostBridge } from "../contracts";
 
+/**
+ * `CropDef.iconId` (see ../contracts.ts and state-to-ui.ts's mapFields) is
+ * an *asset name* like "crop_wheat" — the identifier the 3D engine's mesh
+ * registry uses, not a displayable glyph. Rendering it directly as this
+ * tile's text used to leak the raw asset id ("crop_wheat") onto the
+ * screen for every growing/ready plot. There is no real icon art for the
+ * 2D panel yet, so this maps the handful of crops with an obvious emoji
+ * match and falls back to a generic plant glyph for the rest — a labelled
+ * placeholder rather than a broken one. The plot's accessible name (see
+ * plotAriaLabel below) always names the real crop regardless of which
+ * glyph got picked.
+ */
+const CROP_EMOJI: Partial<Record<string, string>> = {
+  wheat: "🌾",
+  corn: "🌽",
+  carrot: "🥕",
+  sugarcane: "🎋",
+  strawberry: "🍓",
+  tomato: "🍅",
+  potato: "🥔",
+  rice: "🌾",
+  pumpkin: "🎃",
+  chilli: "🌶️",
+  coffee_bean: "☕",
+  lavender: "💜",
+  grape: "🍇",
+  blueberry: "🫐",
+};
+
+/**
+ * An "empty" plot has no icon at all - it renders as an honest dashed-
+ * outline tile (see .mm-grid-tile--empty in panels.css) plus this "+" so
+ * it reads as "plantable" rather than as a mystery placeholder. This used
+ * to return the "▫️" emoji, which Windows' emoji font renders as a small
+ * lavender-tinted square at the 28px size .mm-grid-tile__icon uses - it
+ * looked exactly like an undesigned filler glyph because that's
+ * essentially what it was.
+ */
 function plotIcon(plot: FieldsView["plots"][number], crops: FieldsView["availableCrops"]): string {
   // Narrow via a local binding rather than repeated `plot.state.kind` checks
   // — narrowing chained property accesses across statements is unreliable,
   // and this keeps the discriminated-union narrowing unambiguous.
   const state = plot.state;
-  if (state.kind === "empty") return "▫️";
+  if (state.kind === "empty") return "+";
   if (state.kind === "withered") return "🥀";
   const crop = crops.find((c) => c.id === state.cropId);
-  return crop?.iconId ?? "🌱";
+  if (!crop) return "🌱";
+  return CROP_EMOJI[crop.id] ?? "🌱";
 }
 
 export function renderFieldsPanel(host: HTMLElement, view: FieldsView, bridge: HostBridge): () => void {
@@ -53,7 +92,11 @@ export function renderFieldsPanel(host: HTMLElement, view: FieldsView, bridge: H
     grid.textContent = "";
     for (const plot of view.plots) {
       const stateClass =
-        plot.state.kind === "ready" ? "mm-grid-tile--ready" : "";
+        plot.state.kind === "ready"
+          ? "mm-grid-tile--ready"
+          : plot.state.kind === "empty"
+            ? "mm-grid-tile--empty"
+            : "";
       const tile = h(
         "button.mm-grid-tile",
         {

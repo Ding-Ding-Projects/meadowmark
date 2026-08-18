@@ -243,16 +243,26 @@ function mapAnimals(state: GameState): AnimalView[] {
 
 /**
  * GAP: @meadowmark/shared has no terrain/tile data and no weather system
- * at all (GameState has nothing named "weather"). Terrain defaults to
- * grass everywhere on the town grid; weather is always 'clear', and
- * timeOfDay is derived from the real wall-clock hour (fractional) purely
- * for a day/night visual, not from any simulated in-game clock.
+ * at all (GameState has nothing named "weather"). Weather is always
+ * 'clear', and timeOfDay is derived from the real wall-clock hour
+ * (fractional) purely for a day/night visual, not from any simulated
+ * in-game clock.
+ *
+ * Terrain defaults to grass everywhere on the town grid except every
+ * unlocked field plot's own tile, which is marked 'soil' so the field
+ * area reads as a farm from the very first frame - previously this was
+ * grass everywhere unconditionally, and renderer.ts's syncWorld() didn't
+ * even read GameStateView.tiles at all, so a freshly-unlocked, nothing-
+ * planted-yet field rendered as literally nothing: no crop meshes (see
+ * mapCropPlots below, which only emits a view for plots that have a crop
+ * planted) and no terrain marking either. Both gaps are now closed;
+ * marking the tile here is what makes an *unplanted* plot visible at all.
  */
-function buildTiles(gridWidth: number, gridHeight: number): TileView[] {
+function buildTiles(gridWidth: number, gridHeight: number, soilTiles: ReadonlySet<string>): TileView[] {
   const tiles: TileView[] = [];
   for (let y = 0; y < gridHeight; y++) {
     for (let x = 0; x < gridWidth; x++) {
-      tiles.push({ position: { x, y }, terrain: 'grass' });
+      tiles.push({ position: { x, y }, terrain: soilTiles.has(`${x},${y}`) ? 'soil' : 'grass' });
     }
   }
   return tiles;
@@ -303,8 +313,15 @@ export function stateToEngineView(state: GameState, now: number): GameStateView 
     rotation: 0,
   }));
 
+  const soilTiles = new Set(
+    state.fields.plots.filter((p) => p.unlocked).map((p) => {
+      const pos = plotPosition(p.index);
+      return `${pos.x},${pos.y}`;
+    }),
+  );
+
   return {
-    tiles: buildTiles(state.town.gridWidth, state.town.gridHeight),
+    tiles: buildTiles(state.town.gridWidth, state.town.gridHeight, soilTiles),
     buildings: [...buildings, ...zooBuildings],
     cropPlots: mapCropPlots(state, now),
     animals: mapAnimals(state),

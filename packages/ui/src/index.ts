@@ -24,6 +24,7 @@ import "./i18n/notifications";
 import "./i18n/palette";
 import "./i18n/confirm";
 import "./i18n/settings";
+import "./i18n/content";
 
 import { mountHud } from "./hud";
 import { renderFieldsPanel } from "./panels/fields";
