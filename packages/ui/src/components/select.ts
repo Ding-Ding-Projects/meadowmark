@@ -27,7 +27,7 @@ export function select(opts: SelectOptions): HTMLDivElement {
     {
       type: "button",
       style: { textAlign: "left", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center" },
-      "aria-haspopup": "listbox",
+      "aria-haspopup": "menu",
       // The visible <label> below is the accessible name — programmatically
       // associated here rather than relying on adjacency, which most screen
       // readers do not infer for a <button> the way they do for a native

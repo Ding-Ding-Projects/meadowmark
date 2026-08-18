@@ -6,7 +6,7 @@
   align-items: center;
   justify-content: center;
   gap: var(--mm-space-2);
-  min-height: calc(var(--mm-touch-target-min) * var(--mm-density-scale));
+  min-height: max(var(--mm-touch-target-min), calc(var(--mm-touch-target-min) * var(--mm-density-scale)));
   padding: 0 var(--mm-space-6);
   border-radius: var(--mm-shape-full);
   border: none;
@@ -38,8 +38,8 @@
 .mm-btn--danger { background: var(--mm-color-error); color: var(--mm-color-on-error); }
 .mm-btn--icon {
   padding: 0;
-  width: calc(var(--mm-touch-target-min) * var(--mm-density-scale));
-  min-height: calc(var(--mm-touch-target-min) * var(--mm-density-scale));
+  width: max(var(--mm-touch-target-min), calc(var(--mm-touch-target-min) * var(--mm-density-scale)));
+  min-height: max(var(--mm-touch-target-min), calc(var(--mm-touch-target-min) * var(--mm-density-scale)));
   background: transparent;
   color: var(--mm-color-on-surface-variant);
   border-radius: var(--mm-shape-full);
@@ -94,7 +94,10 @@
   display: flex;
   flex-direction: column-reverse;
   gap: var(--mm-space-2);
-  max-width: 360px;
+  /* Bounded against the viewport, not just a fixed pixel max, so a
+     narrow phone width (e.g. 320px) can never push this off the left
+     edge or force horizontal page scroll. */
+  max-width: min(360px, calc(100vw - (var(--mm-space-6) * 2)));
   pointer-events: none;
 }
 .mm-toast-region--bottom-left { right: auto; left: var(--mm-space-6); }
@@ -230,8 +233,25 @@
   color: var(--mm-color-on-surface);
   box-shadow: var(--mm-elevation-1);
 }
-.mm-tabs--top, .mm-tabs--bottom { flex-direction: row; border-bottom: 1px solid var(--mm-color-outline-variant); }
-.mm-tabs--left, .mm-tabs--right { flex-direction: column; border-right: 1px solid var(--mm-color-outline-variant); }
+.mm-tabs--top, .mm-tabs--bottom {
+  flex-direction: row;
+  border-bottom: 1px solid var(--mm-color-outline-variant);
+  /* A docked strip carrying every panel destination (15+ tabs) will not
+     fit at narrow widths with nowrap labels — scroll it rather than let
+     tabs clip or spill past the strip's own box. */
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+}
+.mm-tabs--left, .mm-tabs--right {
+  flex-direction: column;
+  border-right: 1px solid var(--mm-color-outline-variant);
+  /* Same reasoning, vertical axis: a docked rail with many tabs must
+     scroll within its own height rather than overflow past it. */
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 100%;
+}
 .mm-tab {
   display: flex; align-items: center; gap: var(--mm-space-2);
   padding: var(--mm-space-3) var(--mm-space-4);
@@ -256,8 +276,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: calc(var(--mm-touch-target-min) * var(--mm-density-scale));
-  height: calc(var(--mm-touch-target-min) * var(--mm-density-scale));
+  width: max(var(--mm-touch-target-min), calc(var(--mm-touch-target-min) * var(--mm-density-scale)));
+  height: max(var(--mm-touch-target-min), calc(var(--mm-touch-target-min) * var(--mm-density-scale)));
   padding: 0;
   border: none;
   border-radius: var(--mm-shape-full);

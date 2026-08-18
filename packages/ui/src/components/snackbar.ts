@@ -1,4 +1,5 @@
 import { h } from "../dom";
+import { t } from "../i18n";
 
 export type SnackbarSeverity = "info" | "success" | "warning" | "error";
 
@@ -35,7 +36,7 @@ export function snackbar(opts: SnackbarOptions): { el: HTMLDivElement; dismiss: 
       : null,
     h(
       "button.mm-btn.mm-btn--icon",
-      { type: "button", "aria-label": "Dismiss", style: { color: "inherit" }, onclick: () => dismiss() },
+      { type: "button", "aria-label": t("common.action.dismiss"), style: { color: "inherit" }, onclick: () => dismiss() },
       "✕"
     )
   );

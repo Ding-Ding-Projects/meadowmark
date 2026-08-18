@@ -13,7 +13,7 @@ const TILE_ICON: Record<MineView["grid"][number]["state"], string> = {
 
 export function renderMinePanel(host: HTMLElement, view: MineView, bridge: HostBridge): () => void {
   const grid = h("div.mm-grid", {
-    role: "grid",
+    role: "group",
     "aria-label": t("panel.mine.gridLabel"),
     style: { gridTemplateColumns: `repeat(${view.gridWidth}, minmax(48px, 1fr))` },
   });

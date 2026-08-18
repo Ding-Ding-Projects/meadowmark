@@ -71,7 +71,7 @@ export function renderFieldsPanel(host: HTMLElement, view: FieldsView, bridge: H
     onClick: () => bridge.dispatch({ type: "field/harvestAll" }),
   });
 
-  const grid = h("div.mm-grid", { role: "grid", "aria-label": t("panel.fields.gridLabel") });
+  const grid = h("div.mm-grid", { role: "group", "aria-label": t("panel.fields.gridLabel") });
 
   function renderGrid(): void {
     grid.textContent = "";

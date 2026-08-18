@@ -51,4 +51,8 @@ registerCopy({
     en: { 1: "Close {name}", 3: "Close {name}" },
     yue: { 1: "關閉{name}", 3: "收埋{name}" },
   },
+  "common.action.dismiss": {
+    en: { 1: "Dismiss", 3: "Dismiss" },
+    yue: { 1: "不理它", 3: "把你抋走" },
+  },
 });
