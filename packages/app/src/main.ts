@@ -10,6 +10,7 @@ import { BrowserWindow, app, ipcMain } from 'electron';
 import path from 'node:path';
 import { registerIpcHandlers } from './ipc';
 import { APP_ID } from './identity';
+import { IPC_CHANNELS } from './ipc-channels';
 
 const isDev = Boolean(process.env.MEADOWMARK_DEV);
 
@@ -81,10 +82,10 @@ function createMainWindow(): void {
   // Renderer state changes used by the custom title bar so its own
   // maximize/restore icon can reflect real window state.
   mainWindow.on('maximize', () => {
-    mainWindow?.webContents.send('window:maximized-changed', true);
+    mainWindow?.webContents.send(IPC_CHANNELS.windowMaximizedChanged, true);
   });
   mainWindow.on('unmaximize', () => {
-    mainWindow?.webContents.send('window:maximized-changed', false);
+    mainWindow?.webContents.send(IPC_CHANNELS.windowMaximizedChanged, false);
   });
 
   const rendererUrl = process.env.MEADOWMARK_RENDERER_URL;
