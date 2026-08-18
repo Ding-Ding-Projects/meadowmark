@@ -79,78 +79,78 @@ export type Palette = Record<PaletteKey, number>;
  * the difference, because every mesh only ever asks the palette for a key.
  */
 export const defaultPalette: Palette = {
-  roofClay: 0xc96a4b,
-  roofSlate: 0x54606e,
-  roofThatch: 0xcf9a4c,
-  roofBarn: 0x9c3b34,
+  roofClay: 0xd97a4f,
+  roofSlate: 0x49586a,
+  roofThatch: 0xe0a94a,
+  roofBarn: 0xb23f2e,
 
-  wallCream: 0xf1e6cf,
-  wallStone: 0xb9ada0,
-  wallBrick: 0xb3543f,
-  wallTimber: 0x8a6247,
-  wallWhite: 0xf7f4ee,
+  wallCream: 0xf5e8c8,
+  wallStone: 0xc2b39f,
+  wallBrick: 0xc25a3f,
+  wallTimber: 0x93683f,
+  wallWhite: 0xfaf6ec,
 
-  wood: 0x9a6b45,
-  woodDark: 0x6b4a30,
+  wood: 0xa8703f,
+  woodDark: 0x744f2c,
 
-  leaf: 0x5f9a4c,
-  leafDark: 0x3f7238,
-  leafLight: 0x7fbb5e,
-  trunk: 0x6b4a30,
+  leaf: 0x5fae3f,
+  leafDark: 0x36742e,
+  leafLight: 0x8fce54,
+  trunk: 0x744f2c,
 
-  soil: 0x6b4a34,
-  soilDry: 0x8a6a48,
-  grass: 0x6fae52,
-  grassDry: 0x9fa858,
+  soil: 0x6e4826,
+  soilDry: 0x9a743f,
+  grass: 0x5fb349,
+  grassDry: 0xb0a94a,
 
-  water: 0x4fa9c9,
-  waterDeep: 0x2f7396,
+  water: 0x3fb0d9,
+  waterDeep: 0x22688f,
 
-  stone: 0x9d9689,
-  stoneDark: 0x6f6a60,
+  stone: 0xaa9f8a,
+  stoneDark: 0x736a58,
 
-  metal: 0x9aa3ab,
-  metalDark: 0x565d63,
+  metal: 0x9aa8b3,
+  metalDark: 0x525b63,
 
-  glass: 0xbfe3ea,
+  glass: 0xb8e6f0,
 
-  accent: 0xe8b13e,
-  accentWarm: 0xe07a3f,
-  accentCool: 0x4c8fbd,
+  accent: 0xf0b830,
+  accentWarm: 0xe8752f,
+  accentCool: 0x3f8fcf,
 
-  skinLight: 0xf0c9a0,
-  skinMid: 0xc98d5e,
-  skinDark: 0x8a5a35,
-  hair: 0x4a3626,
+  skinLight: 0xf2cba0,
+  skinMid: 0xcf8a52,
+  skinDark: 0x8f552e,
+  hair: 0x3f2c1c,
 
-  clothPrimary: 0xd0553f,
-  clothSecondary: 0x3f7f9c,
+  clothPrimary: 0xdb4a34,
+  clothSecondary: 0x2f80a3,
 
-  cropWheat: 0xe3c559,
-  cropCarrot: 0xe08a34,
-  cropCorn: 0xe8d24a,
-  cropBerry: 0x8f3f6a,
+  cropWheat: 0xe8c848,
+  cropCarrot: 0xe87e22,
+  cropCorn: 0xf0d43a,
+  cropBerry: 0x9c3468,
   cropSeed: 0x5a4630,
-  cropSugarcane: 0xb7d66a,
-  cropCotton: 0xf4f4ef,
-  cropStrawberry: 0xd23c4c,
-  cropTomato: 0xd94430,
-  cropPotato: 0xc9a373,
-  cropSoybean: 0x9fc35a,
-  cropRice: 0xe6d8a0,
-  cropPumpkin: 0xe8842c,
-  cropChilli: 0xc4291f,
-  cropCoffeeBean: 0x5a3a28,
-  cropLavender: 0x8a6bb8,
-  cropGrape: 0x6a3f8f,
-  cropBlueberry: 0x3f5a9c,
-  cropVanilla: 0xe0c88a,
+  cropSugarcane: 0xa8dc4f,
+  cropCotton: 0xf7f4ee,
+  cropStrawberry: 0xdb2f42,
+  cropTomato: 0xe23a24,
+  cropPotato: 0xcfa268,
+  cropSoybean: 0x9fce3f,
+  cropRice: 0xecdca0,
+  cropPumpkin: 0xf07c1e,
+  cropChilli: 0xc91f14,
+  cropCoffeeBean: 0x4f3220,
+  cropLavender: 0x8f5fc9,
+  cropGrape: 0x622f8f,
+  cropBlueberry: 0x30539c,
+  cropVanilla: 0xe6c880,
 
-  road: 0x7d7871,
-  roadLine: 0xe8e0d0,
+  road: 0x726b60,
+  roadLine: 0xece2cc,
 
-  sand: 0xe0c98f,
-  snow: 0xf4f7fa,
+  sand: 0xe6c778,
+  snow: 0xf7f9fb,
 };
 
 /** Mutable palette instance the whole engine reads from. */
@@ -175,4 +175,35 @@ export function setPalette(next: Partial<Palette>): void {
 
 export function resetPalette(): void {
   activePalette = { ...defaultPalette };
+}
+
+/**
+ * A cheap deterministic pseudo-random number in [0, 1) derived from an
+ * integer seed. Not cryptographic; it only has to look scattered enough
+ * that repeated instances (a field of a thousand wheat plants, a thousand
+ * ground tiles) do not read as one flat repeated swatch.
+ */
+function seededUnit(seed: number): number {
+  const x = Math.sin(seed * 12.9898 + 78.233) * 43758.5453123;
+  return x - Math.floor(x);
+}
+
+/**
+ * Nudge a 0xRRGGBB colour by up to `amount` (a fraction of full brightness,
+ * e.g. 0.08 = +/-8%) so a large field of identical instanced meshes reads
+ * as varied plants/tiles rather than a repeated texture stamp.
+ *
+ * Pass a `seed` (an instance index, a tile coordinate hash, ...) for a
+ * result that is stable across frames and reproducible from the same
+ * seed; omit it to get a fresh jitter from `Math.random()` each call.
+ */
+export function varyColor(base: number, amount: number, seed?: number): number {
+  const jitterUnit = seed === undefined ? Math.random() : seededUnit(seed);
+  const factor = 1 + (jitterUnit * 2 - 1) * amount;
+  const clampChannel = (channel: number): number =>
+    Math.max(0, Math.min(255, Math.round(channel * factor)));
+  const r = clampChannel((base >> 16) & 0xff);
+  const g = clampChannel((base >> 8) & 0xff);
+  const b = clampChannel(base & 0xff);
+  return (r << 16) | (g << 8) | b;
 }

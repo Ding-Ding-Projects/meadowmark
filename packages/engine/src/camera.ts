@@ -74,9 +74,13 @@ export function createCameraController(opts: CreateCameraOptions): CameraControl
   const camera = new THREE.PerspectiveCamera(opts.fovDegrees ?? 20, opts.aspect, 0.5, 300);
 
   const target = new THREE.Vector3(0, 0, 0);
-  let distance = (limits.minDistance + limits.maxDistance) / 3;
+  // Sit closer to the ground than a pure "average of the clamps" framing
+  // would, and pitched down less steeply, so buildings read with real
+  // height and the town has depth instead of looking like a flat map
+  // viewed from directly overhead.
+  let distance = THREE.MathUtils.lerp(limits.minDistance, limits.maxDistance, 0.22);
   let yaw = Math.PI * 0.25;
-  let pitch = THREE.MathUtils.degToRad(45);
+  let pitch = THREE.MathUtils.degToRad(34);
 
   // The values the camera eases toward; smooth easing gives the diorama a
   // gentle, weighted feel and is disabled entirely under reduced motion.

@@ -4,6 +4,7 @@
  */
 
 import * as THREE from 'three';
+import { getPaletteColor, varyColor } from './palette.js';
 
 export interface DayNightOptions {
   /** When false, lighting is frozen at a fixed pleasant mid-morning look. */
@@ -34,10 +35,47 @@ export interface CreateSceneOptions {
 
 const FIXED_SUN_ANGLE = Math.PI * 0.35; // a fixed pleasant mid-morning elevation
 
+// The ground is subdivided (rather than one flat quad) purely so it can
+// carry a per-vertex colour attribute: subtle tile-to-tile tonal variation
+// plus a soft vignette toward the world edge, so a huge plane of a single
+// flat swatch does not read like a spreadsheet.
+const GROUND_SEGMENTS = 32;
+
+function buildGroundVertexColors(geometry: THREE.PlaneGeometry, worldSize: number): Float32Array {
+  const position = geometry.getAttribute('position') as THREE.BufferAttribute;
+  const colors = new Float32Array(position.count * 3);
+  const base = new THREE.Color(getPaletteColor('grass'));
+  const scratch = new THREE.Color();
+  const halfDiagonal = Math.max((worldSize * Math.SQRT2) / 2, 1);
+
+  for (let i = 0; i < position.count; i++) {
+    const x = position.getX(i);
+    const z = position.getZ(i);
+
+    // Deterministic per-vertex jitter so neighbouring frames never swim;
+    // quantising to whole tiles keeps the variation readable as patches
+    // of colour rather than noisy static.
+    const tileSeed = Math.round(x) * 7919 + Math.round(z) * 104729;
+    scratch.setHex(varyColor(base.getHex(), 0.07, tileSeed));
+
+    // A gentle vignette: tiles near the world edge sit a touch darker,
+    // drawing the eye back toward the town at the centre of the diorama.
+    const distanceFromCenter = Math.sqrt(x * x + z * z) / halfDiagonal;
+    const vignette = THREE.MathUtils.clamp(1 - distanceFromCenter * 0.35, 0.68, 1);
+    scratch.multiplyScalar(vignette);
+
+    colors[i * 3] = scratch.r;
+    colors[i * 3 + 1] = scratch.g;
+    colors[i * 3 + 2] = scratch.b;
+  }
+
+  return colors;
+}
+
 export function createScene(opts: CreateSceneOptions): SceneBundle {
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xbfe3ea);
-  scene.fog = new THREE.Fog(0xbfe3ea, opts.worldSize * 0.9, opts.worldSize * 2.4);
+  scene.background = new THREE.Color(0x7fd0ec);
+  scene.fog = new THREE.Fog(0x7fd0ec, opts.worldSize * 0.9, opts.worldSize * 2.4);
 
   const renderer = new THREE.WebGLRenderer({
     canvas: opts.canvas,
@@ -50,10 +88,16 @@ export function createScene(opts: CreateSceneOptions): SceneBundle {
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
 
-  const hemiLight = new THREE.HemisphereLight(0xdfefff, 0x4a3c2a, 0.9);
+  // Soft ambient bounce light: warm pale sky tint from above, a warmer
+  // brown ground-bounce tint from below. This is deliberately kept low
+  // relative to the key/fill pair below it, so the shadow the key light
+  // casts still reads as a real shadow instead of being washed flat.
+  const hemiLight = new THREE.HemisphereLight(0xfff2d9, 0x5a4326, 0.55);
   scene.add(hemiLight);
 
-  const sunLight = new THREE.DirectionalLight(0xfff3d6, 1.4);
+  // The warm key light: strong, saturated late-morning sun, casting the
+  // scene's real shadows.
+  const sunLight = new THREE.DirectionalLight(0xffe6b0, 1.65);
   sunLight.castShadow = true;
   const shadowMapSize = opts.shadowMapSize ?? 2048;
   sunLight.shadow.mapSize.set(shadowMapSize, shadowMapSize);
@@ -64,13 +108,24 @@ export function createScene(opts: CreateSceneOptions): SceneBundle {
   sunLight.shadow.camera.bottom = -shadowExtent;
   sunLight.shadow.camera.near = 1;
   sunLight.shadow.camera.far = opts.worldSize * 3;
-  sunLight.shadow.bias = -0.0015;
+  sunLight.shadow.bias = -0.0018;
+  sunLight.shadow.radius = 3;
   scene.add(sunLight);
   scene.add(sunLight.target);
 
-  const groundGeo = new THREE.PlaneGeometry(opts.worldSize, opts.worldSize);
+  // The cool fill light: a soft, unshadowed cross light from the opposite
+  // side of the key light. It is what keeps the shadow side of every
+  // building and prop readable as real geometry instead of going flat
+  // black, and its cool tint against the warm key is what gives surfaces
+  // actual colour modelling rather than a single flat wash of light.
+  const fillLight = new THREE.DirectionalLight(0x9fc6e6, 0.4);
+  fillLight.castShadow = false;
+  scene.add(fillLight);
+
+  const groundGeo = new THREE.PlaneGeometry(opts.worldSize, opts.worldSize, GROUND_SEGMENTS, GROUND_SEGMENTS);
   groundGeo.rotateX(-Math.PI / 2);
-  const groundMat = new THREE.MeshStandardMaterial({ color: 0x6fae52, roughness: 1 });
+  groundGeo.setAttribute('color', new THREE.BufferAttribute(buildGroundVertexColors(groundGeo, opts.worldSize), 3));
+  const groundMat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 1 });
   const ground = new THREE.Mesh(groundGeo, groundMat);
   ground.receiveShadow = true;
   scene.add(ground);
@@ -90,16 +145,22 @@ export function createScene(opts: CreateSceneOptions): SceneBundle {
     sunLight.position.set(horiz, height, radius * 0.4);
     sunLight.target.position.set(0, 0, 0);
 
+    // The fill light sits on the opposite side of the key light and a
+    // little higher, so it lights the shadow face of buildings without
+    // ever competing with the key for which side reads as "lit".
+    fillLight.position.set(-horiz * 0.6, Math.max(height * 0.7, radius * 0.25), -radius * 0.5);
+
     // Soft day/night colour + intensity blend; never fully dark so the
     // diorama stays readable at night.
     const dayness = THREE.MathUtils.clamp((Math.sin(angle) + 0.2) / 1.2, 0, 1);
-    sunLight.intensity = THREE.MathUtils.lerp(0.45, 1.4, dayness);
-    hemiLight.intensity = THREE.MathUtils.lerp(0.7, 0.95, dayness);
-    const dayColor = new THREE.Color(0xfff3d6);
-    const nightColor = new THREE.Color(0x8fa3d6);
+    sunLight.intensity = THREE.MathUtils.lerp(0.5, 1.85, dayness);
+    hemiLight.intensity = THREE.MathUtils.lerp(0.35, 0.55, dayness);
+    fillLight.intensity = THREE.MathUtils.lerp(0.12, 0.45, dayness);
+    const dayColor = new THREE.Color(0xffe6b0);
+    const nightColor = new THREE.Color(0x7d93d1);
     sunLight.color.copy(nightColor).lerp(dayColor, dayness);
-    const skyDay = new THREE.Color(0xbfe3ea);
-    const skyNight = new THREE.Color(0x53637d);
+    const skyDay = new THREE.Color(0x7fd0ec);
+    const skyNight = new THREE.Color(0x2c3a5e);
     const sky = skyNight.clone().lerp(skyDay, dayness);
     (scene.background as THREE.Color).copy(sky);
     if (scene.fog) (scene.fog as THREE.Fog).color.copy(sky);
