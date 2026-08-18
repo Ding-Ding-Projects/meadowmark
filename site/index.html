@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meadowmark — a 3D town-and-farm building game for Windows</title>
+<meta name="description" content="Meadowmark is a real-time town-and-farm building game for Windows, in the spirit of Township. Nothing in it is ever for sale.">
+<link rel="canonical" href="https://ding-ding-projects.github.io/meadowmark/">
+<meta property="og:title" content="Meadowmark — a 3D town-and-farm building game for Windows">
+<meta property="og:description" content="Grow crops, run factories, fill orders, build a town — a real 3D Township-style game. Nothing in it is ever for sale.">
+<meta property="og:url" content="https://ding-ding-projects.github.io/meadowmark/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Meadowmark">
+<meta property="og:image" content="https://ding-ding-projects.github.io/meadowmark/og-image.svg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Meadowmark wordmark over a low-poly farm and town skyline">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#3a6b3f">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+<div class="mm-shell" data-dock="left">
+  <div id="mm-header-host"></div>
+  <main class="mm-main" id="main">
+    <section class="mm-hero mm-card" data-editable="hero">
+      <span class="mm-badge">Windows · unsigned · free forever</span>
+      <h1>
+        <span class="i18n-en">Meadowmark</span>
+        <span class="i18n-yue" lang="yue">Meadowmark</span>
+      </h1>
+      <p style="font-size:1.25rem;max-width:60ch;margin:0 auto var(--mm-space-4)">
+        <span class="i18n-en">A real 3D town-and-farm building game for Windows, in the spirit of Township. Grow crops, run factories, fill orders, and grow a living town — rendered in three.js, on the wall clock, entirely on your machine.</span>
+        <span class="i18n-yue" lang="yue">一個真正 3D 嘅小鎮同農場建設遊戲，靈感嚟自 Township，喺 Windows 度玩。種田、開工廠、交訂單、起小鎮——用 three.js 畫，跟真實時鐘走，全部喺你部機度運行。</span>
+      </p>
+      <div class="mm-card" style="background:var(--mm-primary-container);color:var(--mm-on-primary-container);max-width:60ch;margin:0 auto var(--mm-space-4);padding:var(--mm-space-3) var(--mm-space-4)">
+        <strong>
+          <span class="i18n-en">Nothing in Meadowmark is ever for sale.</span>
+          <span class="i18n-yue" lang="yue">Meadowmark 入面冇任何嘢係賣㗎。</span>
+        </strong>
+        <p style="margin:6px 0 0">
+          <span class="i18n-en">No store, no premium tier, no advertising, no prompt asking anyone for money — ever. Premium currency ("Cash") is earned only, through play. Every capability is available to everyone who runs it.</span>
+          <span class="i18n-yue" lang="yue">冇商店、冇付費會籍、冇廣告，永遠唔會叫你俾錢。「Cash」呢種進階貨幣淨係靠打機賺——冇得買。裝咗個遊戲嘅人，人人都用得晒所有功能。</span>
+        </p>
+      </div>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <a class="mm-btn" href="#download">
+          <span class="i18n-en">Download</span><span class="i18n-yue" lang="yue"> 下載</span>
+        </a>
+        <a class="mm-btn outlined" href="docs/">
+          <span class="i18n-en">Read the documentation</span><span class="i18n-yue" lang="yue"> 睇文件</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="mm-card" style="margin-top:var(--mm-space-5)" id="screenshots" data-anchor="screenshots">
+      <h2><span class="i18n-en">Screenshots</span><span class="i18n-yue" lang="yue"> 截圖</span></h2>
+      <p class="hint">
+        <span class="i18n-en">Awaiting real captures from the built application. Screenshots are always taken from the installed Squirrel.Windows build — never from a development server or a mockup — once a build exists to capture.</span>
+        <span class="i18n-yue" lang="yue">仲未有真正遊戲截圖。所有截圖一定係喺裝咗嘅 Squirrel.Windows 版本入面影——唔會用開發伺服器或者設計稿——要等有得裝先影得到。</span>
+      </p>
+      <div class="mm-grid">
+        <div class="mm-shot-placeholder"><span><span class="i18n-en">Town overview — awaiting a real capture</span><span class="i18n-yue" lang="yue">小鎮全景——等緊真實截圖</span></span></div>
+        <div class="mm-shot-placeholder"><span><span class="i18n-en">Fields and factories — awaiting a real capture</span><span class="i18n-yue" lang="yue">田地同工廠——等緊真實截圖</span></span></div>
+        <div class="mm-shot-placeholder"><span><span class="i18n-en">Order board — awaiting a real capture</span><span class="i18n-yue" lang="yue">訂單板——等緊真實截圖</span></span></div>
+        <div class="mm-shot-placeholder"><span><span class="i18n-en">Free-orbit camera — awaiting a real capture</span><span class="i18n-yue" lang="yue">自由鏡頭——等緊真實截圖</span></span></div>
+      </div>
+    </section>
+
+    <section style="margin-top:var(--mm-space-6)" id="features" data-anchor="features">
+      <h2><span class="i18n-en">Every system in the game</span><span class="i18n-yue" lang="yue"> 遊戲入面每一個系統</span></h2>
+      <p class="hint">
+        <span class="i18n-en">This overview matches the project's design plan exactly. See the <a href="docs/">documentation</a> for a full article on each one.</span>
+        <span class="i18n-yue" lang="yue">呢個概覽同項目嘅設計計劃完全一致。每個系統嘅詳細文章，睇<a href="docs/">文件</a>。</span>
+      </p>
+      <div class="mm-grid">
+        <article class="mm-card" data-editable="feat-fields"><h3>🌾 <span class="i18n-en">Fields &amp; crops</span><span class="i18n-yue" lang="yue"> 田地同作物</span></h3><p><span class="i18n-en">Six starting plots, buyable up to sixty. Seventeen crops from a two-minute wheat harvest to a twenty-hour vanilla harvest, plant-all and harvest-all with honest partial results.</span><span class="i18n-yue" lang="yue">初始六塊田，最多買到六十塊。十七種作物，由兩分鐘嘅小麥到二十個鐘嘅雲呢拿，全種同全收都會誠實話你知有幾多做得成。</span></p></article>
+        <article class="mm-card" data-editable="feat-animals"><h3>🐔 <span class="i18n-en">Animals</span><span class="i18n-yue" lang="yue"> 動物</span></h3><p><span class="i18n-en">Six species — chickens, cows, sheep, pigs, goats, bees — fed by animal feed, each with an upgradeable shed.</span><span class="i18n-yue" lang="yue">六種動物——雞、牛、羊、豬、山羊、蜜蜂——用飼料餵，每種都有可以升級嘅棚。</span></p></article>
+        <article class="mm-card" data-editable="feat-factories"><h3>🏭 <span class="i18n-en">Factories &amp; production chains</span><span class="i18n-yue" lang="yue"> 工廠同生產鏈</span></h3><p><span class="i18n-en">About twenty-two factories, chains up to three tiers deep, production continues while the app is closed, and a full barn pauses a queue rather than discarding output.</span><span class="i18n-yue" lang="yue">大約二十二間工廠，生產鏈最多三層深，關咗個 app 都繼續生產，倉滿咗就暫停唔會扔嘢。</span></p></article>
+        <article class="mm-card" data-editable="feat-orders"><h3>📋 <span class="i18n-en">Order board</span><span class="i18n-yue" lang="yue"> 訂單板</span></h3><p><span class="i18n-en">Six slots, only ever asking for goods you can actually produce, paying coins, experience and reputation stars.</span><span class="i18n-yue" lang="yue">六個訂單位，淨係會要你整得到嘅貨，俾金幣、經驗同信譽星。</span></p></article>
+        <article class="mm-card" data-editable="feat-train"><h3>🚂 <span class="i18n-en">Train</span><span class="i18n-yue" lang="yue"> 火車</span></h3><p><span class="i18n-en">Three wagons trading goods for building materials — the only route to town buildings and barn upgrades.</span><span class="i18n-yue" lang="yue">三個車卡，用貨換建築材料——起小鎮建築同升級倉庫嘅唯一途徑。</span></p></article>
+        <article class="mm-card" data-editable="feat-heli"><h3>🚁 <span class="i18n-en">Helicopter</span><span class="i18n-yue" lang="yue"> 直升機</span></h3><p><span class="i18n-en">Two small fast orders every half hour; a filled reputation bar opens a chest.</span><span class="i18n-yue" lang="yue">每半個鐘兩張快速細訂單；信譽條滿咗開寶箱。</span></p></article>
+        <article class="mm-card" data-editable="feat-ship"><h3>🚢 <span class="i18n-en">Ship</span><span class="i18n-yue" lang="yue"> 船</span></h3><p><span class="i18n-en">From level 18. Six crates on a twenty-four-hour window, clearing all six opens a chest with expansion permits.</span><span class="i18n-yue" lang="yue">18 級開放。六個木箱，24 小時一輪，六個都清完開個有擴地許可嘅寶箱。</span></p></article>
+        <article class="mm-card" data-editable="feat-town"><h3>🏘️ <span class="i18n-en">The town</span><span class="i18n-yue" lang="yue"> 小鎮</span></h3><p><span class="i18n-en">Houses, thirteen community buildings gated by population, decorations that pay town charm, roads that villagers actually walk.</span><span class="i18n-yue" lang="yue">屋、十三種按人口解鎖嘅社區建築、加人氣值嘅裝飾、村民真係會行嘅馬路。</span></p></article>
+        <article class="mm-card" data-editable="feat-expansions"><h3>🗺️ <span class="i18n-en">Expansions</span><span class="i18n-yue" lang="yue"> 擴地</span></h3><p><span class="i18n-en">Around forty land parcels, costing coins and permits earned from ship chests, the mine and achievements.</span><span class="i18n-yue" lang="yue">大約四十塊地，要金幣同用船寶箱、礦場同成就賺返嚟嘅許可證。</span></p></article>
+        <article class="mm-card" data-editable="feat-zoo"><h3>🦁 <span class="i18n-en">Zoo</span><span class="i18n-yue" lang="yue"> 動物園</span></h3><p><span class="i18n-en">From level 25. Four habitats, animal cards, and a real layout decision — matching species to habitat pays bonuses.</span><span class="i18n-yue" lang="yue">25 級開放。四種棲息地、動物卡，擺位真係要諗——物種同棲息地夾啱有獎勵。</span></p></article>
+        <article class="mm-card" data-editable="feat-mine"><h3>⛏️ <span class="i18n-en">Mine</span><span class="i18n-yue" lang="yue"> 礦場</span></h3><p><span class="i18n-en">From level 22. A grid of rock hiding ore, gems, tools and artifact fragments, regenerating daily.</span><span class="i18n-yue" lang="yue">22 級開放。石格入面藏住礦石、寶石、工具同文物碎片，每日重生。</span></p></article>
+        <article class="mm-card" data-editable="feat-boosters"><h3>⚡ <span class="i18n-en">Boosters, achievements &amp; dailies</span><span class="i18n-yue" lang="yue"> 加速道具、成就同每日任務</span></h3><p><span class="i18n-en">Earned-only boosters, around forty tiered achievements, and five daily tasks seeded from the local date.</span><span class="i18n-yue" lang="yue">淨係靠賺嘅加速道具、大約四十個分級成就，同五個跟本機日期出嘅每日任務。</span></p></article>
+        <article class="mm-card" data-editable="feat-village"><h3>🏡 <span class="i18n-en">The village — entirely local</span><span class="i18n-yue" lang="yue"> 村莊——完全本機</span></h3><p><span class="i18n-en">Named offline villagers, a weekly local regatta. The game makes no network calls at all — no accounts, no telemetry, no other players.</span><span class="i18n-yue" lang="yue">有名有姓嘅離線村民、每週本機龍舟賽。呢個遊戲完全唔會上網——冇帳號、冇遙測、冇其他玩家。</span></p></article>
+      </div>
+    </section>
+
+    <section class="mm-card" style="margin-top:var(--mm-space-6)" id="download" data-anchor="download">
+      <h2 data-str="download.title"></h2>
+      <p id="download-status" data-str="download.not_yet"></p>
+      <!-- The download button intentionally does not link to a guessed
+           release-asset URL. No release has shipped yet, so there is
+           nothing verifiable to point at. Once a release exists, this
+           becomes a direct link to that release's immutable asset URL
+           (e.g. https://github.com/Ding-Ding-Projects/meadowmark/releases/download/vX.Y.Z/Meadowmark-Setup-X.Y.Z.exe),
+           resolved from the published release manifest — never guessed. -->
+      <a class="mm-btn" href="https://github.com/Ding-Ding-Projects/meadowmark/releases" aria-disabled="false" data-str="download.view_releases"></a>
+      <p class="hint" style="margin-top:var(--mm-space-3)">
+        <span class="i18n-en">When a release does ship, it will be an unsigned Squirrel.Windows installer. Windows will show an "unknown publisher" / SmartScreen warning — that is expected, not a bug, because this project permanently does not use code signing.</span>
+        <span class="i18n-yue" lang="yue">將來出版本嘅時候，會係一個未簽署嘅 Squirrel.Windows 安裝程式。Windows 會出「未知發行者」/ SmartScreen 警告——呢個係預期會出現，唔係 bug，因為呢個項目永遠都唔會用程式碼簽署。</span>
+      </p>
+    </section>
+
+    <section class="mm-card" style="margin-top:var(--mm-space-6)" id="requirements" data-anchor="requirements">
+      <h2><span class="i18n-en">System requirements</span><span class="i18n-yue" lang="yue"> 系統需求</span></h2>
+      <table class="mm-table">
+        <thead><tr><th><span class="i18n-en">Platform</span><span class="i18n-yue" lang="yue">平台</span></th><th><span class="i18n-en">Requirement</span><span class="i18n-yue" lang="yue">需求</span></th></tr></thead>
+        <tbody>
+          <tr><td><span class="i18n-en">Operating system</span><span class="i18n-yue" lang="yue">作業系統</span></td><td>Windows 10 or later (64-bit). <span class="i18n-en">No macOS or Linux build exists or is planned.</span><span class="i18n-yue" lang="yue">冇 macOS 或者 Linux 版本，亦都冇計劃整。</span></td></tr>
+          <tr><td><span class="i18n-en">Graphics</span><span class="i18n-yue" lang="yue">顯示卡</span></td><td><span class="i18n-en">A WebGL2-capable GPU. Integrated graphics is the target, not a minimum requiring a discrete card.</span><span class="i18n-yue" lang="yue">要有支援 WebGL2 嘅顯示卡。目標係內建顯示卡都撐得起，唔使獨立顯卡先玩得。</span></td></tr>
+          <tr><td><span class="i18n-en">Network</span><span class="i18n-yue" lang="yue">網絡</span></td><td><span class="i18n-en">None required. The game makes no network calls of any kind, ever.</span><span class="i18n-yue" lang="yue">完全唔使上網。呢個遊戲永遠都唔會發任何網絡請求。</span></td></tr>
+          <tr><td><span class="i18n-en">Cost</span><span class="i18n-yue" lang="yue">費用</span></td><td><span class="i18n-en">Free, forever, with no purchases of any kind.</span><span class="i18n-yue" lang="yue">永遠免費，完全冇任何形式嘅付費。</span></td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</div>
+<div id="mm-footer-host"></div>
+<script src="js/overlay.js"></script>
+<script src="js/color-picker.js"></script>
+<script src="js/strings.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/export.js"></script>
+<script src="js/regex-builder.js"></script>
+<script src="js/tabs.js"></script>
+<script src="js/command-palette.js"></script>
+<script src="js/notifications.js"></script>
+<script src="js/appearance-editor.js"></script>
+<script src="js/app.js"></script>
+<script>MMApp.init({ rootPrefix: "", currentHref: "/" });</script>
+</body>
+</html>
