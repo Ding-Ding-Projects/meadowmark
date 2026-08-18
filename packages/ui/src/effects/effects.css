@@ -1,0 +1,46 @@
+/* Floating "+N" feedback text (harvests, collections) and the level-up
+   celebration pulse. Both are purely decorative and both fully disable their
+   motion under prefers-reduced-motion while keeping the text legible. */
+
+.mm-float-num {
+  position: fixed;
+  z-index: var(--mm-z-toast);
+  transform: translate(-50%, 0);
+  pointer-events: none;
+  font-size: var(--mm-type-title-medium-size);
+  font-weight: 700;
+  color: var(--mm-color-primary);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  animation: mm-float-rise 1100ms var(--mm-motion-easing-standard-decelerate) forwards;
+}
+.mm-float-num--coins { color: var(--mm-color-primary); }
+.mm-float-num--cash { color: var(--mm-color-tertiary); }
+.mm-float-num--xp { color: var(--mm-color-secondary); }
+.mm-float-num--good { color: var(--mm-color-on-surface); }
+
+@keyframes mm-float-rise {
+  0% { opacity: 0; transform: translate(-50%, 4px); }
+  15% { opacity: 1; transform: translate(-50%, 0); }
+  100% { opacity: 0; transform: translate(-50%, -48px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mm-float-num { animation: mm-float-fade 900ms ease-out forwards; }
+}
+@keyframes mm-float-fade {
+  0% { opacity: 1; transform: translate(-50%, 0); }
+  80% { opacity: 1; transform: translate(-50%, 0); }
+  100% { opacity: 0; transform: translate(-50%, 0); }
+}
+
+.mm-celebrate {
+  animation: mm-celebrate-pop 900ms var(--mm-motion-easing-emphasized);
+}
+@keyframes mm-celebrate-pop {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 color-mix(in srgb, var(--mm-color-primary) 55%, transparent); }
+  30% { transform: scale(1.22); box-shadow: 0 0 0 6px color-mix(in srgb, var(--mm-color-primary) 35%, transparent); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 transparent; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mm-celebrate { animation: none; }
+}

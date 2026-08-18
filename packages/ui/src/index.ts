@@ -16,6 +16,8 @@ import "./components/components.css";
 import "./hud/hud.css";
 import "./panels/panels.css";
 import "./universal/universal.css";
+import "./effects/effects.css";
+import "./onboarding/onboarding.css";
 
 import "./i18n/common";
 import "./i18n/hud";
@@ -29,6 +31,7 @@ import "./i18n/content";
 import "./i18n/history";
 import "./i18n/exports";
 import "./i18n/logo";
+import "./i18n/onboarding";
 
 import { mountHud } from "./hud";
 import { renderFieldsPanel } from "./panels/fields";
@@ -47,6 +50,7 @@ import { renderDailiesPanel } from "./panels/dailies";
 import { renderVillagePanel } from "./panels/village";
 import { openOfflineSummaryDialog } from "./panels/offline-summary";
 import { mountSettings } from "./settings";
+import { mountOnboarding } from "./onboarding";
 import { tabs } from "./components/tabs";
 import { installCommandPaletteHotkey, registerPaletteSource } from "./palette/command-palette";
 import { settingsStore } from "./settings/store";
@@ -69,6 +73,8 @@ export { attachContextMenu } from "./menus/context-menu";
 export { openCommandPalette, registerPaletteSource } from "./palette/command-palette";
 export { openRegexBuilder, searchField } from "./search/regex-builder";
 export { hydrateSettingsFromHost } from "./settings/store";
+export { mountOnboarding, hasSeenOnboarding, resetOnboarding } from "./onboarding";
+export { spawnFloatingText, celebrate } from "./effects/feedback";
 
 export interface MountUiOptions {
   state$: ReadonlyStore<GameStateView>;
@@ -194,6 +200,12 @@ export function mountUi(root: HTMLElement, opts: MountUiOptions): MountedUi {
   root.appendChild(navHost);
   disposers.push(() => navHost.remove());
   mountPanel("fields");
+
+  // First-run only: a short, dismissible welcome pointing at the Fields tab.
+  // Never blocks anything above — mountOnboarding is a no-op past the first
+  // launch and appends its own card asynchronously-free (no await, nothing
+  // waits on it) if it does have something to show.
+  disposers.push(mountOnboarding({ onStartFirstAction: () => navTabsHandle.setActive("fields") }));
 
   const removeHotkey = installCommandPaletteHotkey();
   disposers.push(removeHotkey);

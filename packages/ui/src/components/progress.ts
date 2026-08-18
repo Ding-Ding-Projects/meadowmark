@@ -10,6 +10,17 @@ export function progressLinear(fraction: number, ariaLabel: string): HTMLDivElem
   );
 }
 
+/** Mutates an existing progressLinear() element in place rather than
+ * recreating it — lets a HUD or panel update a bar's value on every state
+ * tick without losing whatever CSS transition/animation is mid-flight. */
+export function updateProgressLinear(el: HTMLDivElement, fraction: number, ariaLabel: string): void {
+  const pct = Math.round(clamp(fraction, 0, 1) * 100);
+  el.setAttribute("aria-valuenow", String(pct));
+  el.setAttribute("aria-label", ariaLabel);
+  const bar = el.querySelector<HTMLDivElement>(".mm-progress-linear__bar");
+  if (bar) bar.style.width = `${pct}%`;
+}
+
 export function progressCircular(sizePx = 24, ariaLabel = "Loading"): HTMLDivElement {
   const el = h("div.mm-progress-circular", { role: "progressbar", "aria-label": ariaLabel, "aria-valuetext": "indeterminate" });
   el.innerHTML = `<svg width="${sizePx}" height="${sizePx}" viewBox="0 0 24 24" style="animation: mm-spin var(--mm-motion-duration-long4) linear infinite">

@@ -9,6 +9,7 @@
 import { h } from "../dom";
 import { tabs } from "../components/tabs";
 import { select } from "../components/select";
+import { button } from "../components/button";
 import { slider, switchControl } from "../components/form-controls";
 import { searchField } from "../search/regex-builder";
 import { funnyLevelSliders } from "./funny-level";
@@ -19,6 +20,8 @@ import { AppSettings, classifyRenderQuality, renderQualityPreset, settingsStore,
 import { LanguageMode, setLanguageMode, i18nStore } from "../i18n";
 import { t } from "../i18n";
 import { setTheme, setDensityScale } from "../tokens";
+import { resetOnboarding } from "../onboarding";
+import { notifyInfo } from "../notifications";
 
 interface SettingEntry {
   id: string;
@@ -80,13 +83,23 @@ export function mountSettings(host: HTMLElement): () => void {
     onChange: (v) => settingsStore.update((prev) => ({ ...prev, tabDock: v as TabDock })),
   });
 
+  const replayOnboardingBtn = button({
+    label: t("settings.general.replayOnboarding"),
+    variant: "outlined",
+    onClick: () => {
+      resetOnboarding();
+      notifyInfo(t("settings.general.replayOnboarding.done"));
+    },
+  });
+
   const generalPanel = h(
     "div",
     { style: { display: "flex", flexDirection: "column", gap: "16px" } },
     themeSelect,
     h("div", {}, h("label", {}, t("settings.general.densityLabel")), densitySlider),
     h("div", { style: { display: "flex", alignItems: "center", gap: "12px" } }, emojiToggle, h("span", {}, t("settings.general.emojiToggleLabel"))),
-    dockSelect
+    dockSelect,
+    replayOnboardingBtn
   );
 
   // -- Appearance tab -------------------------------------------------------
@@ -258,6 +271,7 @@ export function mountSettings(host: HTMLElement): () => void {
   const entries: SettingEntry[] = [
     { id: "theme", labelKey: "settings.general.themeLabel", tabId: "general", matches: (q) => t("settings.general.themeLabel").toLowerCase().includes(q) },
     { id: "density", labelKey: "settings.general.densityLabel", tabId: "general", matches: (q) => t("settings.general.densityLabel").toLowerCase().includes(q) },
+    { id: "replayOnboarding", labelKey: "settings.general.replayOnboarding", tabId: "general", matches: (q) => t("settings.general.replayOnboarding").toLowerCase().includes(q) },
     { id: "accent", labelKey: "settings.appearance.accentLabel", tabId: "appearance", matches: (q) => t("settings.appearance.accentLabel").toLowerCase().includes(q) },
     { id: "font", labelKey: "settings.appearance.fontFamilyLabel", tabId: "appearance", matches: (q) => t("settings.appearance.fontFamilyLabel").toLowerCase().includes(q) },
     { id: "language", labelKey: "settings.language.modeLabel", tabId: "language", matches: (q) => t("settings.language.modeLabel").toLowerCase().includes(q) },

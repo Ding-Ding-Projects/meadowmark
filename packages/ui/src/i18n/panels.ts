@@ -17,6 +17,7 @@ registerCopy({
   "panel.fields.unlockPlotMax": { en: { 1: "All plots unlocked", 3: "Every plot is yours already" }, yue: { 1: "田格已全部解鎖", 3: "格仔全部都係你嘅喇" } },
   "panel.fields.unlockPlotMaxReason": { en: { 1: "There are no more plots to unlock." }, yue: { 1: "冇更多田格可以解鎖。" } },
   "panel.fields.unlockPlotUnaffordable": { en: { 1: "Not enough coins to unlock the next plot." }, yue: { 1: "金幣唔夠解鎖下一格。" } },
+  "panel.fields.harvestAnnounce": { en: { 1: "Harvested {amount} {crop}" }, yue: { 1: "收成咗 {amount} 份 {crop}" } },
 
   // Factories
   "panel.factories.title": { en: { 1: "Factories", 3: "Factories" }, yue: { 1: "工廠", 3: "工廠" } },
@@ -121,6 +122,7 @@ registerCopy({
   "panel.zoo.hatch": { en: { 1: "Hatch", 3: "Hatch it!" }, yue: { 1: "孵化", 3: "孚返隻出嚟！" } },
   "panel.zoo.hatched": { en: { 1: "Hatched", 3: "Already hatched" }, yue: { 1: "已孵化", 3: "已經孵咗" } },
   "panel.zoo.needMoreCards": { en: { 1: "Collect more cards to hatch this species." }, yue: { 1: "要儲多啲咭先可以孵化。" } },
+  "panel.zoo.collectAnnounce": { en: { 1: "Collected from {animal}" }, yue: { 1: "已經收咗 {animal} 嘅出品" } },
 
   // Mine
   "panel.mine.title": { en: { 1: "Mine", 3: "Mine" }, yue: { 1: "礦場", 3: "礦場" } },

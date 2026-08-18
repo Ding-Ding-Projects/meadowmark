@@ -11,4 +11,9 @@ registerCopy({
   "hud.energy.label": { en: { 1: "{current} of {cap} energy", 3: "{current} / {cap} energy left" }, yue: { 1: "體力 {current}／{cap}", 3: "淨返 {current}／{cap} 電力" } },
   "hud.barn.label": { en: { 1: "Barn {used} of {cap} full", 3: "Barn is {used}/{cap} full" }, yue: { 1: "穀倉 {used}／{cap}", 3: "穀倉裝咗 {used}／{cap}" } },
   "hud.barn.progressLabel": { en: { 1: "Barn storage {used} of {cap}" }, yue: { 1: "穀倉存貨 {used}／{cap}" } },
+  "hud.gain.xp": { en: { 1: "+{value} XP" }, yue: { 1: "+{value} 經驗" } },
+  "hud.levelUp.toast": {
+    en: { 1: "Level {level}!", 3: "Level {level} unlocked — nice work!" },
+    yue: { 1: "升到 {level} 級喇！", 3: "叮！{level} 級新鮮出爐，勁！" },
+  },
 });

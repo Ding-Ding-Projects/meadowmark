@@ -20,6 +20,14 @@ registerCopy({
   "settings.general.dockRight": { en: { 1: "Right" }, yue: { 1: "右邊" } },
   "settings.general.dockTop": { en: { 1: "Top" }, yue: { 1: "頂部" } },
   "settings.general.dockBottom": { en: { 1: "Bottom" }, yue: { 1: "底部" } },
+  "settings.general.replayOnboarding": {
+    en: { 1: "Replay welcome tour", 3: "Show me that welcome card again" },
+    yue: { 1: "重新播放歡迎導覽", 3: "再畀我睇多次嗰張歡迎卡" },
+  },
+  "settings.general.replayOnboarding.done": {
+    en: { 1: "Welcome tour will show again on next launch" },
+    yue: { 1: "落次開啟遊戲會再顯示歡迎導覽" },
+  },
 
   "settings.appearance.accentLabel": { en: { 1: "Accent / seed colour" }, yue: { 1: "主色調" } },
   "settings.appearance.fontFamilyLabel": { en: { 1: "UI font family" }, yue: { 1: "介面字型" } },

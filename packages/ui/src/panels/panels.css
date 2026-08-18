@@ -65,8 +65,28 @@
   font-size: var(--mm-type-label-small-size);
   color: var(--mm-color-on-surface-variant);
 }
-.mm-grid-tile--ready { background: var(--mm-color-primary-container); border-color: var(--mm-color-primary); }
+.mm-grid-tile--ready {
+  background: var(--mm-color-primary-container);
+  border-color: var(--mm-color-primary);
+  animation: mm-ready-pulse 1800ms ease-in-out infinite;
+}
+.mm-grid-tile--ready::after {
+  content: "\2713";
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  font-size: var(--mm-type-label-small-size);
+  font-weight: 700;
+  color: var(--mm-color-on-primary-container);
+}
 .mm-grid-tile--paused { background: var(--mm-color-warning-container); border-color: var(--mm-color-warning); }
+@keyframes mm-ready-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--mm-color-primary) 45%, transparent); }
+  50% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--mm-color-primary) 0%, transparent); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mm-grid-tile--ready { animation: none; }
+}
 .mm-grid-tile--empty {
   background: transparent;
   border-style: dashed;
@@ -89,19 +109,67 @@
   justify-content: center;
 }
 .mm-queue-slot--filled { border-style: solid; background: var(--mm-color-surface-container); }
-.mm-queue-slot--paused { border-color: var(--mm-color-warning); background: var(--mm-color-warning-container); color: var(--mm-color-on-warning-container); }
+.mm-queue-slot--paused {
+  border-color: var(--mm-color-warning);
+  background: var(--mm-color-warning-container);
+  color: var(--mm-color-on-warning-container);
+  animation: mm-paused-pulse 1800ms ease-in-out infinite;
+}
+@keyframes mm-paused-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--mm-color-warning) 55%, transparent); }
+  50% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--mm-color-warning) 0%, transparent); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mm-queue-slot--paused { animation: none; }
+}
 
 .mm-order-board { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--mm-space-3); }
 .mm-order-slot { display: flex; flex-direction: column; gap: var(--mm-space-2); }
 .mm-order-req-row { display: flex; align-items: center; gap: var(--mm-space-2); font-size: var(--mm-type-body-medium-size); }
 .mm-order-req-row--missing { color: var(--mm-color-error); }
 
+<<<<<<< HEAD
 /* Delivery vehicles: train wagons, helicopter orders, ship crates. Each
    vehicle's items — 3 wagons, 2 orders, up to 6 crates — render as their own
    cards in this list rather than being collapsed into one "the vehicle". */
 .mm-vehicle-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--mm-space-3); }
 .mm-vehicle-card { display: flex; flex-direction: column; gap: var(--mm-space-2); padding: var(--mm-space-3); }
 .mm-vehicle-chest {
+=======
+.mm-vehicle-status--arrived {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mm-space-2);
+  color: var(--mm-color-primary);
+  font-weight: 700;
+}
+.mm-vehicle-status--arrived::before {
+  content: "\2713";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--mm-shape-full);
+  background: var(--mm-color-primary-container);
+  color: var(--mm-color-on-primary-container);
+  font-size: var(--mm-type-label-small-size);
+}
+.mm-vehicle-collect--ready {
+  animation: mm-ready-pulse 1800ms ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .mm-vehicle-collect--ready { animation: none; }
+}
+
+.mm-cargo-row { display: flex; gap: var(--mm-space-2); flex-wrap: wrap; }
+.mm-cargo-slot {
+  flex: 1 1 90px;
+  border: 1px solid var(--mm-color-outline-variant);
+  border-radius: var(--mm-shape-medium);
+  padding: var(--mm-space-2);
+  min-height: 72px;
+>>>>>>> worktree-wf_53ab3037-0c3-8
   display: flex;
   flex-direction: column;
   gap: var(--mm-space-2);
