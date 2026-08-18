@@ -1,0 +1,94 @@
+/* First-run welcome card. Bottom-centred so it never overlaps the HUD (top)
+   or the toast region (bottom corners), paints its own surface per the
+   overlay contract, and never blocks the rest of the interface underneath
+   it — pointer-events on the page stay live everywhere the card is not. */
+
+.mm-onboarding {
+  position: fixed;
+  left: 50%;
+  bottom: var(--mm-space-4);
+  transform: translateX(-50%);
+  z-index: var(--mm-z-overlay);
+  width: min(420px, calc(100vw - var(--mm-space-4) * 2));
+  max-height: calc(100vh - var(--mm-space-4) * 2);
+  overflow-y: auto;
+  background: var(--mm-color-surface-container-high);
+  color: var(--mm-color-on-surface);
+  border-radius: var(--mm-shape-large);
+  box-shadow: var(--mm-elevation-3);
+  padding: var(--mm-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--mm-space-3);
+  animation: mm-onboarding-in var(--mm-motion-duration-medium2, 300ms) var(--mm-motion-easing-standard-decelerate);
+}
+@media (prefers-reduced-motion: reduce) {
+  .mm-onboarding { animation: none; }
+}
+@keyframes mm-onboarding-in {
+  0% { opacity: 0; transform: translateX(-50%) translateY(12px); }
+  100% { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.mm-onboarding__close {
+  position: absolute;
+  top: var(--mm-space-2);
+  right: var(--mm-space-2);
+}
+.mm-onboarding__title {
+  margin: 0;
+  padding-right: var(--mm-space-6);
+  font-size: var(--mm-type-headline-small-size);
+  line-height: var(--mm-type-headline-small-line);
+}
+.mm-onboarding__lede {
+  margin: 0;
+  color: var(--mm-color-on-surface-variant);
+  font-size: var(--mm-type-body-medium-size);
+}
+.mm-onboarding__steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--mm-space-2);
+}
+.mm-onboarding__step {
+  display: flex;
+  align-items: center;
+  gap: var(--mm-space-2);
+  background: var(--mm-color-surface-container-low);
+  border-radius: var(--mm-shape-medium);
+  padding: var(--mm-space-2) var(--mm-space-3);
+  font-size: var(--mm-type-body-medium-size);
+}
+.mm-onboarding__step-icon { font-size: 20px; }
+.mm-onboarding__actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Spotlight ring placed on the Fields nav tab while the welcome card is
+   still open, pointing at the first real action without blocking it — the
+   ring sits entirely outside the tab's own box so it never changes hit
+   testing or clips the tab's label. */
+.mm-onboarding-spotlight {
+  position: relative;
+  animation: mm-onboarding-spotlight-pulse 1800ms ease-in-out infinite;
+}
+.mm-onboarding-spotlight::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border: 2px solid var(--mm-color-primary);
+  border-radius: var(--mm-shape-medium);
+  pointer-events: none;
+}
+@keyframes mm-onboarding-spotlight-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--mm-color-primary) 45%, transparent); }
+  50% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--mm-color-primary) 0%, transparent); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mm-onboarding-spotlight { animation: none; }
+}

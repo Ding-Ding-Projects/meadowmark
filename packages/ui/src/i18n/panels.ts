@@ -13,6 +13,7 @@ registerCopy({
   "panel.fields.plotGrowing": { en: { 1: "Plot {index}, growing, {remaining} remaining" }, yue: { 1: "第 {index} 格，生長緊，仲有 {remaining}" } },
   "panel.fields.plotEmptyShort": { en: { 1: "Empty" }, yue: { 1: "空置" } },
   "panel.fields.plotWitheredShort": { en: { 1: "Withered" }, yue: { 1: "枯咗" } },
+  "panel.fields.harvestAnnounce": { en: { 1: "Harvested {amount} {crop}" }, yue: { 1: "收成咗 {amount} 份 {crop}" } },
 
   // Factories
   "panel.factories.title": { en: { 1: "Factories", 3: "Factories" }, yue: { 1: "工廠", 3: "工廠" } },
@@ -71,6 +72,7 @@ registerCopy({
   "panel.zoo.title": { en: { 1: "Zoo", 3: "Zoo" }, yue: { 1: "動物園", 3: "動物園" } },
   "panel.zoo.gridLabel": { en: { 1: "Enclosures" }, yue: { 1: "圍欄" } },
   "panel.zoo.emptyEnclosure": { en: { 1: "Empty enclosure — assign an animal", 3: "Empty pen, needs a resident" }, yue: { 1: "空圍欄－揀隻動物", 3: "空晒，揀隻嚟住先" } },
+  "panel.zoo.collectAnnounce": { en: { 1: "Collected from {animal}" }, yue: { 1: "已經收咗 {animal} 嘅出品" } },
 
   // Mine
   "panel.mine.title": { en: { 1: "Mine", 3: "Mine" }, yue: { 1: "礦場", 3: "礦場" } },

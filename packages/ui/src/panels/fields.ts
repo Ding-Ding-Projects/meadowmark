@@ -6,6 +6,7 @@
 import { h, formatDuration } from "../dom";
 import { button } from "../components/button";
 import { select } from "../components/select";
+import { spawnFloatingText } from "../effects/feedback";
 import { t } from "../i18n";
 import { FieldsView, HostBridge } from "../contracts";
 
@@ -84,7 +85,7 @@ export function renderFieldsPanel(host: HTMLElement, view: FieldsView, bridge: H
           class: `mm-grid-tile ${stateClass}`.trim(),
           type: "button",
           "aria-label": plotAriaLabel(plot),
-          onclick: () => onPlotClick(plot),
+          onclick: () => onPlotClick(plot, tile),
         },
         h("span.mm-grid-tile__icon", { "aria-hidden": "true" }, plotIcon(plot, view.availableCrops)),
         h("span.mm-grid-tile__label", {}, plotLabel(plot, view.availableCrops))
@@ -106,10 +107,18 @@ export function renderFieldsPanel(host: HTMLElement, view: FieldsView, bridge: H
     return t("panel.fields.plotGrowing", { index: plot.index, remaining: formatDuration(state.readyAt - Date.now()) });
   }
 
-  function onPlotClick(plot: FieldsView["plots"][number]): void {
-    if (plot.state.kind === "empty" || plot.state.kind === "withered") {
+  function onPlotClick(plot: FieldsView["plots"][number], anchor: HTMLElement): void {
+    const state = plot.state;
+    if (state.kind === "empty" || state.kind === "withered") {
       bridge.dispatch({ type: "field/plant", plotId: plot.id, cropId: selectedCropId });
-    } else if (plot.state.kind === "ready") {
+    } else if (state.kind === "ready") {
+      // The yield amount is real data straight off the crop's own definition,
+      // not a guess — the harvest dispatch below is what actually credits
+      // it, this floating number is only a readability aid pointing at the
+      // exact tile it came from.
+      const crop = view.availableCrops.find((c) => c.id === state.cropId);
+      const amount = crop?.yieldAmount ?? 1;
+      spawnFloatingText(anchor, `+${amount}`, "good", t("panel.fields.harvestAnnounce", { amount, crop: cropLabel(state.cropId, view.availableCrops) }));
       bridge.dispatch({ type: "field/harvest", plotId: plot.id });
     }
   }

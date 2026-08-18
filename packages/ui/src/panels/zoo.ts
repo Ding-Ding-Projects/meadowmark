@@ -3,6 +3,7 @@
 import { h, formatDuration } from "../dom";
 import { button } from "../components/button";
 import { openMenu } from "../components/menu";
+import { spawnFloatingText } from "../effects/feedback";
 import { t } from "../i18n";
 import { HostBridge, ZooView } from "../contracts";
 
@@ -32,6 +33,7 @@ export function renderZooPanel(host: HTMLElement, view: ZooView, bridge: HostBri
                 })),
               });
             } else if (ready) {
+              spawnFloatingText(tile, "+1", "good", t("panel.zoo.collectAnnounce", { animal: t(animal.nameKey) }));
               bridge.dispatch({ type: "zoo/collect", enclosureId: enclosure.id });
             }
           },

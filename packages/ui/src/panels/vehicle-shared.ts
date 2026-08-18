@@ -37,6 +37,7 @@ export function renderVehiclePanel(
     }
 
     statusEl.textContent = statusText();
+    statusEl.className = view.state === "arrived" ? "mm-vehicle-status mm-vehicle-status--arrived" : "mm-vehicle-status";
     actionsEl.textContent = "";
     if (view.state === "idle" || view.state === "loading") {
       actionsEl.appendChild(
@@ -48,13 +49,13 @@ export function renderVehiclePanel(
       );
     }
     if (view.state === "arrived") {
-      actionsEl.appendChild(
-        button({
-          label: t("panel.vehicle.collect"),
-          variant: "filled",
-          onClick: () => bridge.dispatch({ type: "vehicle/collect", vehicle: view.kind }),
-        })
-      );
+      const collectBtn = button({
+        label: t("panel.vehicle.collect"),
+        variant: "filled",
+        onClick: () => bridge.dispatch({ type: "vehicle/collect", vehicle: view.kind }),
+      });
+      collectBtn.classList.add("mm-vehicle-collect--ready");
+      actionsEl.appendChild(collectBtn);
     }
   }
 

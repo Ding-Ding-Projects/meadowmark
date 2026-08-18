@@ -128,6 +128,32 @@
 .mm-order-req-row { display: flex; align-items: center; gap: var(--mm-space-2); font-size: var(--mm-type-body-medium-size); }
 .mm-order-req-row--missing { color: var(--mm-color-error); }
 
+.mm-vehicle-status--arrived {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mm-space-2);
+  color: var(--mm-color-primary);
+  font-weight: 700;
+}
+.mm-vehicle-status--arrived::before {
+  content: "\2713";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--mm-shape-full);
+  background: var(--mm-color-primary-container);
+  color: var(--mm-color-on-primary-container);
+  font-size: var(--mm-type-label-small-size);
+}
+.mm-vehicle-collect--ready {
+  animation: mm-ready-pulse 1800ms ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .mm-vehicle-collect--ready { animation: none; }
+}
+
 .mm-cargo-row { display: flex; gap: var(--mm-space-2); flex-wrap: wrap; }
 .mm-cargo-slot {
   flex: 1 1 90px;
