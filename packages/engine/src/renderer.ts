@@ -48,6 +48,17 @@ export interface RendererHandle {
   setSpeedLevel: (level: SpeedLevel) => void;
   setReducedMotion: (reduced: boolean) => void;
   on: (handler: RendererEventHandler) => () => void;
+  /**
+   * Convert a pointer position, in CSS pixels relative to the viewport (the
+   * same coordinate space as a `PointerEvent`'s `clientX`/`clientY`), into
+   * the ground-plane tile it is hovering over. Returns null when the ray
+   * does not hit the ground plane at all (pointer above the horizon, or the
+   * canvas has zero size). The renderer already uses this internally to
+   * drive the placement ghost; it is exposed too because it is the
+   * supported way for a consumer to answer "what tile is the cursor over"
+   * without reaching into the engine's camera or raycaster directly.
+   */
+  screenToTile: (clientX: number, clientY: number) => TileCoord | null;
   camera: {
     snapToCorner: (corner: 0 | 1 | 2 | 3) => void;
     panBy: (dx: number, dz: number) => void;
@@ -127,13 +138,99 @@ export function createRenderer(canvas: HTMLCanvasElement, opts: CreateRendererOp
   }
   canvas.addEventListener('click', onClick);
 
+  // ---- building placement: ghost tracks the cursor, snaps to the grid,
+  // rotates with R, drops with Enter/click, cancels with Escape, and is
+  // fully keyboard-operable with arrow keys when there is no pointer at
+  // all. See placement.ts for the ghost mesh, tint, and pop animation.
+
+  let isPlacing = false;
+  let placementTile: TileCoord = { x: 0, y: 0 };
+
+  function moveGhostTo(tile: TileCoord): boolean {
+    placementTile = tile;
+    return placement.moveTo(tile);
+  }
+
+  function tileFromClientPosition(clientX: number, clientY: number): TileCoord | null {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width === 0 || rect.height === 0) return null;
+    const ndcX = ((clientX - rect.left) / rect.width) * 2 - 1;
+    const ndcY = -((clientY - rect.top) / rect.height) * 2 + 1;
+    return pickGroundTile(ndcX, ndcY, cameraController.camera);
+  }
+
+  function beginPlacement(assetName: string, footprintWidth: number, footprintDepth: number): void {
+    placement.begin(assetName, footprintWidth, footprintDepth);
+    isPlacing = true;
+    // Placement owns the keyboard while it is active: a plain arrow key
+    // moves the ghost rather than also panning the camera underneath it,
+    // and R rotates the ghost rather than also tilting the camera.
+    cameraController.setKeyboardEnabled(false);
+    keyboardCursor.setVisible(false);
+    // Start the ghost on the last known keyboard-cursor tile so a
+    // keyboard-only player sees it somewhere sane before ever moving the
+    // mouse; a subsequent pointermove or arrow press will relocate it.
+    moveGhostTo(keyboardCursor.tile);
+  }
+
+  function endPlacement(): void {
+    isPlacing = false;
+    cameraController.setKeyboardEnabled(true);
+    keyboardCursor.setVisible(true);
+  }
+
+  function dropPlacement(): void {
+    const footprint = placement.drop();
+    if (!footprint) return; // invalid tile: stay in placement mode, try again
+    emit({ type: 'placementDrop', footprint });
+    endPlacement();
+  }
+
+  function cancelPlacement(): void {
+    placement.cancel();
+    endPlacement();
+  }
+
+  function onPointerMove(e: PointerEvent): void {
+    if (!isPlacing) return;
+    const tile = tileFromClientPosition(e.clientX, e.clientY);
+    if (tile) moveGhostTo(tile);
+  }
+  canvas.addEventListener('pointermove', onPointerMove);
+
   function onKeyDown(e: KeyboardEvent): void {
+    if (isPlacing) {
+      switch (e.code) {
+        case 'ArrowUp':
+          moveGhostTo({ x: placementTile.x, y: placementTile.y - 1 });
+          return;
+        case 'ArrowDown':
+          moveGhostTo({ x: placementTile.x, y: placementTile.y + 1 });
+          return;
+        case 'ArrowLeft':
+          moveGhostTo({ x: placementTile.x - 1, y: placementTile.y });
+          return;
+        case 'ArrowRight':
+          moveGhostTo({ x: placementTile.x + 1, y: placementTile.y });
+          return;
+        case 'KeyR':
+          placement.rotate();
+          return;
+        case 'Enter':
+          dropPlacement();
+          return;
+        case 'Escape':
+          cancelPlacement();
+          return;
+        default:
+          return;
+      }
+    }
     if (e.code === 'ArrowUp' && e.shiftKey) keyboardCursor.move(0, -1);
     else if (e.code === 'ArrowDown' && e.shiftKey) keyboardCursor.move(0, 1);
     else if (e.code === 'ArrowLeft' && e.shiftKey) keyboardCursor.move(-1, 0);
     else if (e.code === 'ArrowRight' && e.shiftKey) keyboardCursor.move(1, 0);
     else if (e.code === 'Enter' || e.code === 'Space') keyboardCursor.activate();
-    else if (e.code === 'KeyR') placement.rotate();
   }
   window.addEventListener('keydown', onKeyDown);
 
@@ -296,6 +393,7 @@ export function createRenderer(canvas: HTMLCanvasElement, opts: CreateRendererOp
     disposed = true;
     resizeObserver.disconnect();
     canvas.removeEventListener('click', onClick);
+    canvas.removeEventListener('pointermove', onPointerMove);
     window.removeEventListener('keydown', onKeyDown);
     unsubKeyboardActivate();
     cameraController.dispose();
@@ -318,6 +416,7 @@ export function createRenderer(canvas: HTMLCanvasElement, opts: CreateRendererOp
       listeners.add(handler);
       return () => listeners.delete(handler);
     },
+    screenToTile: tileFromClientPosition,
     camera: {
       snapToCorner: cameraController.snapToCorner,
       panBy: cameraController.panBy,
@@ -325,14 +424,11 @@ export function createRenderer(canvas: HTMLCanvasElement, opts: CreateRendererOp
       rotateBy: cameraController.rotateBy,
     },
     placement: {
-      begin: placement.begin,
-      moveTo: placement.moveTo,
+      begin: beginPlacement,
+      moveTo: moveGhostTo,
       rotate: placement.rotate,
-      drop: () => {
-        const footprint = placement.drop();
-        if (footprint) emit({ type: 'placementDrop', footprint });
-      },
-      cancel: placement.cancel,
+      drop: dropPlacement,
+      cancel: cancelPlacement,
     },
     keyboardCursor: {
       move: (dx, dy) => keyboardCursor.move(dx, dy),
