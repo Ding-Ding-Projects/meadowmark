@@ -64,11 +64,9 @@ import {
 const ENERGY_REGEN_PER_MINUTE = 60_000 / ENERGY_REGEN_INTERVAL_MS;
 
 function mapFields(state: GameState): FieldsView {
-  // GAP: GameAction (ui/src/contracts.ts) has no "unlock plot" action, so
-  // plot unlocking isn't reachable from the UI layer at all yet. Only
-  // currently-unlocked plots are surfaced; locked ones simply don't
-  // appear, rather than inventing a "locked" PlotState the contract
-  // doesn't define.
+  // Locked plots simply don't appear, rather than inventing a "locked"
+  // PlotState the contract doesn't define; the unlock cost for the next
+  // one (below) is what lets the panel offer unlocking at all.
   const plots = state.fields.plots
     .filter((p) => p.unlocked)
     .map((p) => ({
@@ -102,7 +100,10 @@ function mapFields(state: GameState): FieldsView {
       unlockLevel: c.unlockLevel,
     }));
 
-  return { plots, availableCrops };
+  const hasLockedPlot = state.fields.plots.some((p) => !p.unlocked);
+  const nextPlotUnlockCost = hasLockedPlot ? state.fields.nextPlotCost : null;
+
+  return { plots, availableCrops, nextPlotUnlockCost };
 }
 
 function mapFactories(state: GameState): FactoriesView {
@@ -320,7 +321,7 @@ function mapShip(state: GameState): ShipView {
   };
 }
 
-function mapTown(state: GameState): TownView {
+function mapTown(state: GameState, selectedBuildingInstanceId: string | null): TownView {
   const catalog: UiBuildingCatalogEntry[] = Object.values(buildingCatalogByType)
     .filter((entry) => entry.requiresLevel <= state.economy.level)
     .map((entry) => {
@@ -350,9 +351,7 @@ function mapTown(state: GameState): TownView {
   return {
     catalog,
     placed,
-    // GAP: building selection isn't modeled by GameAction; there is no
-    // "select building instance" action to drive this from.
-    selectedBuildingInstanceId: null,
+    selectedBuildingInstanceId,
   };
 }
 
@@ -531,7 +530,12 @@ export function mapOfflineSummary(summary: OfflineSummary): OfflineSummaryView {
   };
 }
 
-export function stateToUiView(state: GameState, now: number, pendingOfflineSummary: OfflineSummaryView | null): GameStateView {
+export function stateToUiView(
+  state: GameState,
+  now: number,
+  pendingOfflineSummary: OfflineSummaryView | null,
+  selectedBuildingInstanceId: string | null = null,
+): GameStateView {
   return {
     playerId: state.meta.playerName,
     resources: {
@@ -553,7 +557,7 @@ export function stateToUiView(state: GameState, now: number, pendingOfflineSumma
     train: mapTrain(state, now),
     helicopter: mapHelicopter(state),
     ship: mapShip(state),
-    town: mapTown(state),
+    town: mapTown(state, selectedBuildingInstanceId),
     zoo: mapZoo(state),
     mine: mapMine(state),
     museum: mapMuseum(state),

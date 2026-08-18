@@ -34,7 +34,7 @@ function renderRecipePicker(anchor: HTMLElement, factory: FactoryInstance, slotI
   });
 }
 
-function renderFactoryCard(factory: FactoryInstance, barn: BarnView, bridge: HostBridge): HTMLDivElement {
+function renderFactoryCard(factory: FactoryInstance, barn: BarnView, bridge: HostBridge, onNavigateToBarn: () => void): HTMLDivElement {
   const slotsRow = h("div.mm-queue-row", {});
   for (const slot of factory.slots) {
     let slotEl: HTMLElement;
@@ -48,22 +48,40 @@ function renderFactoryCard(factory: FactoryInstance, barn: BarnView, bridge: Hos
       slotEl = emptyBtn;
     } else {
       const recipe = factory.availableRecipes.find((r) => r.id === slot.recipeId);
+      const ready = slot.readyAt !== null && slot.readyAt <= Date.now();
       const remaining = slot.readyAt ? Math.max(0, slot.readyAt - Date.now()) : 0;
       const paused = slot.pausedBarnFull;
+
+      let statusEl: HTMLElement;
+      let actionBtn: HTMLElement;
+      if (paused) {
+        statusEl = h("strong", { role: "status" }, t("panel.factories.pausedBarnFull"));
+        // Barn-full is a cross-panel blocker: the fix (sell or upgrade the
+        // barn) lives on a different tab, so the control jumps there
+        // rather than sitting inert.
+        actionBtn = button({ label: t("panel.factories.viewBarn"), variant: "text", onClick: onNavigateToBarn });
+      } else if (ready) {
+        statusEl = h("strong", { role: "status" }, t("common.state.ready"));
+        actionBtn = button({
+          label: t("panel.factories.collect"),
+          variant: "filled",
+          onClick: () => bridge.dispatch({ type: "factory/collect", factoryId: factory.id, slotIndex: slot.index }),
+        });
+      } else {
+        statusEl = h("span", {}, formatDuration(remaining));
+        actionBtn = button({
+          label: t("common.action.cancel"),
+          variant: "text",
+          onClick: () => bridge.dispatch({ type: "factory/cancel", factoryId: factory.id, slotIndex: slot.index }),
+        });
+      }
+
       slotEl = h(
         "div.mm-queue-slot",
         { class: `mm-queue-slot mm-queue-slot--filled ${paused ? "mm-queue-slot--paused" : ""}`.trim() },
         h("span", {}, recipe ? t(recipe.nameKey) : slot.recipeId),
-        paused
-          ? h("strong", { role: "status" }, t("panel.factories.pausedBarnFull"))
-          : h("span", {}, formatDuration(remaining)),
-        paused
-          ? button({ label: t("panel.factories.viewBarn"), variant: "text" })
-          : button({
-              label: t("common.action.cancel"),
-              variant: "text",
-              onClick: () => bridge.dispatch({ type: "factory/cancel", factoryId: factory.id, slotIndex: slot.index }),
-            })
+        statusEl,
+        actionBtn
       );
     }
     slotsRow.appendChild(slotEl);
@@ -77,7 +95,7 @@ function renderFactoryCard(factory: FactoryInstance, barn: BarnView, bridge: Hos
   );
 }
 
-export function renderFactoriesPanel(host: HTMLElement, view: FactoriesView, barn: BarnView, bridge: HostBridge): () => void {
+export function renderFactoriesPanel(host: HTMLElement, view: FactoriesView, barn: BarnView, bridge: HostBridge, onNavigateToBarn: () => void): () => void {
   const list = h("div", { style: { display: "flex", flexDirection: "column", gap: "12px" } });
   let tickHandle: number;
 
@@ -89,7 +107,7 @@ export function renderFactoriesPanel(host: HTMLElement, view: FactoriesView, bar
       return;
     }
     for (const factory of view.factories) {
-      list.appendChild(renderFactoryCard(factory, barn, bridge));
+      list.appendChild(renderFactoryCard(factory, barn, bridge, onNavigateToBarn));
     }
     });
   }

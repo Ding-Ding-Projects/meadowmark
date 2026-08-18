@@ -96,6 +96,12 @@ export function mountUi(root: HTMLElement, opts: MountUiOptions): MountedUi {
   root.appendChild(panelHost);
   disposers.push(() => panelHost.remove());
 
+  // Forward-declared: assigned once navTabsHandle is created below.
+  // Referenced only from event handlers that fire after mount (never
+  // during mountPanel's own initial synchronous call), so it is always
+  // set by the time anything actually reads it.
+  let navTabsHandle: ReturnType<typeof tabs> | undefined;
+
   let currentDisposer: (() => void) | null = null;
   function mountPanel(id: string): void {
     currentDisposer?.();
@@ -103,10 +109,10 @@ export function mountUi(root: HTMLElement, opts: MountUiOptions): MountedUi {
     const state = opts.state$.getSnapshot();
     switch (id) {
       case "fields":
-        currentDisposer = renderFieldsPanel(panelHost, state.fields, opts.host);
+        currentDisposer = renderFieldsPanel(panelHost, state.fields, state.resources.coins, opts.host);
         break;
       case "factories":
-        currentDisposer = renderFactoriesPanel(panelHost, state.factories, state.barn, opts.host);
+        currentDisposer = renderFactoriesPanel(panelHost, state.factories, state.barn, opts.host, () => navTabsHandle?.setActive("barn"));
         break;
       case "barn":
         currentDisposer = renderBarnPanel(panelHost, state.barn, opts.host);
@@ -174,7 +180,7 @@ export function mountUi(root: HTMLElement, opts: MountUiOptions): MountedUi {
 
   // Each nav "tab" mounts the corresponding panel into panelHost rather than
   // holding all panels simultaneously in the DOM — keeps the surface light.
-  const navTabsHandle = tabs({
+  navTabsHandle = tabs({
     ariaLabel: t("nav.regionLabel"),
     dock: s.tabDock,
     activeId: "fields",
@@ -195,7 +201,7 @@ export function mountUi(root: HTMLElement, opts: MountUiOptions): MountedUi {
       kind: "destination" as const,
       id: `nav-${d.id}`,
       label: d.label,
-      teleport: () => navTabsHandle.setActive(d.id),
+      teleport: () => navTabsHandle?.setActive(d.id),
     }))
   );
 

@@ -31,6 +31,10 @@ registerCopy({
     en: { 1: "Nothing here yet.", 3: "Nothing here yet — quiet, isn't it?" },
     yue: { 1: "呢度暫時冇嘢。", 3: "呢度冇嘢，靜英英咁。" },
   },
+  "common.state.ready": {
+    en: { 1: "Ready", 3: "Ready and waiting!" },
+    yue: { 1: "完成", 3: "搞掂喇，快啲攞！" },
+  },
   "common.state.noMatches": {
     en: { 1: "No matches.", 3: "No matches found." },
     yue: { 1: "冇搵到。", 3: "乜都搵唔到。" },

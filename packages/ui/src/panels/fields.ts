@@ -44,7 +44,7 @@ function plotLabel(plot: FieldsView["plots"][number], crops: FieldsView["availab
   return cropLabel(state.cropId, crops);
 }
 
-export function renderFieldsPanel(host: HTMLElement, view: FieldsView, bridge: HostBridge): () => void {
+export function renderFieldsPanel(host: HTMLElement, view: FieldsView, coins: number, bridge: HostBridge): () => void {
   let selectedCropId = view.availableCrops[0]?.id ?? "";
   let tickHandle: number;
 
@@ -69,6 +69,19 @@ export function renderFieldsPanel(host: HTMLElement, view: FieldsView, bridge: H
     label: t("panel.fields.harvestAll"),
     variant: "filled",
     onClick: () => bridge.dispatch({ type: "field/harvestAll" }),
+  });
+
+  const canAffordUnlock = view.nextPlotUnlockCost !== null && view.nextPlotUnlockCost <= coins;
+  const unlockPlotBtn = button({
+    label:
+      view.nextPlotUnlockCost === null
+        ? t("panel.fields.unlockPlotMax")
+        : t("panel.fields.unlockPlot", { cost: view.nextPlotUnlockCost }),
+    variant: "outlined",
+    disabled: view.nextPlotUnlockCost === null || !canAffordUnlock,
+    disabledReason:
+      view.nextPlotUnlockCost === null ? t("panel.fields.unlockPlotMaxReason") : t("panel.fields.unlockPlotUnaffordable"),
+    onClick: () => bridge.dispatch({ type: "field/unlockPlot" }),
   });
 
   const grid = h("div.mm-grid", { role: "grid", "aria-label": t("panel.fields.gridLabel") });
@@ -126,7 +139,7 @@ export function renderFieldsPanel(host: HTMLElement, view: FieldsView, bridge: H
       "div.mm-panel__header",
       {},
       h("h2.mm-panel__title", {}, t("panel.fields.title")),
-      h("div.mm-panel__toolbar", {}, plantAllBtn, harvestAllBtn)
+      h("div.mm-panel__toolbar", {}, plantAllBtn, harvestAllBtn, unlockPlotBtn)
     ),
     cropSelect,
     grid

@@ -79,6 +79,7 @@ export function placeBuilding(
   position: GridPosition,
   id: string,
   now: number,
+  rotation: 0 | 90 | 180 | 270 = 0,
 ): { state: GameState; placed: boolean; reason?: string } {
   const check = canPlaceBuilding(state, catalog, position);
   if (!check.ok) return { state, placed: false, reason: check.reason };
@@ -88,7 +89,7 @@ export function placeBuilding(
     buildingTypeId: catalog.buildingTypeId,
     position,
     footprint: catalog.footprint,
-    rotation: 0,
+    rotation,
     buildStartedAt: now,
     buildReadyAt: now + catalog.buildTimeMs,
   };
@@ -101,6 +102,41 @@ export function placeBuilding(
       town: { ...state.town, buildings: [...state.town.buildings, building] },
     },
     placed: true,
+  };
+}
+
+/**
+ * Removes a placed building outright. No coin/material refund - demolition
+ * is a genuine loss, exactly like every other Township-style building game
+ * this project follows. If the building had already finished construction
+ * and was therefore already counted toward population/charm, that
+ * contribution is reversed so tearing a house down actually shrinks your
+ * population cap again rather than leaving a phantom bonus behind. A
+ * still-under-construction building contributed nothing yet, so nothing
+ * needs reversing for it.
+ */
+export function demolishBuilding(
+  state: GameState,
+  catalogByType: Record<BuildingTypeId, BuildingCatalogEntry>,
+  instanceId: string,
+): { state: GameState; demolished: boolean } {
+  const building = state.town.buildings.find((b) => b.id === instanceId);
+  if (!building) return { state, demolished: false };
+
+  const buildings = state.town.buildings.filter((b) => b.id !== instanceId);
+
+  const wasFinished = building.buildReadyAt === null;
+  const catalog = catalogByType[building.buildingTypeId];
+  const population = wasFinished && catalog ? Math.max(0, state.economy.population - catalog.populationReward) : state.economy.population;
+  const charmScore = wasFinished && catalog ? Math.max(0, state.town.charmScore - catalog.charmValue) : state.town.charmScore;
+
+  return {
+    state: {
+      ...state,
+      economy: { ...state.economy, population },
+      town: { ...state.town, buildings, charmScore },
+    },
+    demolished: true,
   };
 }
 
