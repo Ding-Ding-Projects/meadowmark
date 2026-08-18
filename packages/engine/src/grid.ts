@@ -3,7 +3,7 @@
  * occupancy, and neighbour queries used for road-tile joining.
  */
 
-import type { TileCoord } from './state-view.js';
+import type { RoadShape, TileCoord } from './state-view.js';
 
 export const TILE_SIZE = 1.0;
 
@@ -103,4 +103,49 @@ export function roadConnections(
     S: isRoad({ x: tile.x, y: tile.y + 1 }),
     W: isRoad({ x: tile.x - 1, y: tile.y }),
   };
+}
+
+/**
+ * Chooses which road mesh (straight/corner/junction/end) and yaw a road
+ * tile should use, purely from which of its four cardinal neighbours are
+ * also road tiles. Pure geometry with no game-state dependency, so both the
+ * renderer and any future editor/preview tooling can share it.
+ */
+export function resolveRoadTile(connections: { N: boolean; E: boolean; S: boolean; W: boolean }): {
+  shape: RoadShape;
+  rotation: 0 | 1 | 2 | 3;
+} {
+  const { N, E, S, W } = connections;
+  const count = [N, E, S, W].filter(Boolean).length;
+
+  if (count >= 3) {
+    // 3-way and 4-way junctions share one mesh today (it reads fine either
+    // way at this scale); rotation still derives from the missing side so
+    // it stays deterministic and stable across reloads.
+    if (!N) return { shape: 'junction', rotation: 0 };
+    if (!E) return { shape: 'junction', rotation: 1 };
+    if (!S) return { shape: 'junction', rotation: 2 };
+    if (!W) return { shape: 'junction', rotation: 3 };
+    return { shape: 'junction', rotation: 0 };
+  }
+
+  if (count === 2) {
+    if (N && S) return { shape: 'straight', rotation: 0 };
+    if (E && W) return { shape: 'straight', rotation: 1 };
+    if (N && E) return { shape: 'corner', rotation: 0 };
+    if (E && S) return { shape: 'corner', rotation: 1 };
+    if (S && W) return { shape: 'corner', rotation: 2 };
+    return { shape: 'corner', rotation: 3 }; // W && N
+  }
+
+  if (count === 1) {
+    if (N) return { shape: 'end', rotation: 0 };
+    if (E) return { shape: 'end', rotation: 1 };
+    if (S) return { shape: 'end', rotation: 2 };
+    return { shape: 'end', rotation: 3 }; // W
+  }
+
+  // An isolated road tile with no connected neighbours at all: still a
+  // valid (if lonely) placement, rendered as an end-cap.
+  return { shape: 'end', rotation: 0 };
 }

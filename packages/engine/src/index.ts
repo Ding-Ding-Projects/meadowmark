@@ -62,6 +62,7 @@ export {
   neighborsOf,
   footprintTiles,
   roadConnections,
+  resolveRoadTile,
   OccupancyGrid,
   CARDINAL_OFFSETS,
 } from './grid.js';

@@ -27,7 +27,31 @@ export interface TileCoord {
   y: number;
 }
 
-export type CropKind = 'wheat' | 'carrot' | 'corn' | 'berry';
+/**
+ * Every crop id balance/crops.json defines (17 today), plus 'berry' as a
+ * generic catch-all for any future crop id content adds before the engine
+ * ships it a dedicated mesh. Keep this union and assets/nature.ts's own
+ * cropColor/cropArchetype tables in sync by hand — see the comment there.
+ */
+export type CropKind =
+  | 'wheat'
+  | 'corn'
+  | 'carrot'
+  | 'sugarcane'
+  | 'cotton'
+  | 'strawberry'
+  | 'tomato'
+  | 'potato'
+  | 'soybean'
+  | 'rice'
+  | 'pumpkin'
+  | 'chilli'
+  | 'coffee_bean'
+  | 'lavender'
+  | 'grape'
+  | 'blueberry'
+  | 'vanilla'
+  | 'berry';
 export type GrowthStage = 'seed' | 'sprout' | 'growing' | 'ready';
 
 export interface CropPlotView {
@@ -39,7 +63,7 @@ export interface CropPlotView {
 
 export interface PlacedBuildingView {
   id: string;
-  /** Must match a registered asset name in mesh-dsl's registry, e.g. "house_small". */
+  /** Must match a registered asset name in mesh-dsl's registry, e.g. "house_tier_3". */
   assetName: string;
   position: TileCoord;
   /** 0-3, each step a 90-degree yaw. */
@@ -82,7 +106,10 @@ export type DecorationKind =
   | 'bench'
   | 'fountain'
   | 'statue'
-  | 'sign';
+  | 'sign'
+  | 'flower_bed'
+  | 'topiary'
+  | 'gazebo';
 
 export interface DecorationView {
   id: string;

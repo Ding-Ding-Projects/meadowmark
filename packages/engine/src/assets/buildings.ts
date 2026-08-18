@@ -61,70 +61,121 @@ function houseNode(opts: {
   return group(children);
 }
 
+/**
+ * house_tier_1 .. house_tier_7, matching balance/buildings.json's 7 house
+ * tiers 1:1 by name (buildingTypeId "house_tier_N" -> asset "house_tier_N",
+ * see state-to-engine.ts). Footprint sizes below track the catalog's real
+ * footprint growth (2x2 up to 4x4) so a tier-7 mansion visibly dwarfs a
+ * tier-1 starter house instead of the two rendering identically.
+ */
 defineAsset(
-  'house_small',
+  'house_tier_1',
   houseNode({
-    width: 1.6,
-    depth: 1.4,
-    wallHeight: 1.0,
-    roofHeight: 0.7,
+    width: 1.5,
+    depth: 1.3,
+    wallHeight: 0.85,
+    roofHeight: 0.6,
     wall: 'wallCream',
+    roofColor: 'roofClay',
+  }),
+);
+
+defineAsset(
+  'house_tier_2',
+  houseNode({
+    width: 1.7,
+    depth: 1.5,
+    wallHeight: 0.95,
+    roofHeight: 0.68,
+    wall: 'wallTimber',
+    roofColor: 'roofThatch',
+    chimney: true,
+  }),
+);
+
+defineAsset(
+  'house_tier_3',
+  houseNode({
+    width: 2.1,
+    depth: 1.7,
+    wallHeight: 1.1,
+    roofHeight: 0.78,
+    wall: 'wallStone',
     roofColor: 'roofClay',
     chimney: true,
   }),
 );
 
 defineAsset(
-  'house_medium',
-  houseNode({
-    width: 2.2,
-    depth: 1.8,
-    wallHeight: 1.3,
-    roofHeight: 0.9,
-    wall: 'wallStone',
-    roofColor: 'roofSlate',
-    chimney: true,
-  }),
-);
-
-defineAsset(
-  'house_cottage',
-  houseNode({
-    width: 1.8,
-    depth: 1.6,
-    wallHeight: 0.9,
-    roofHeight: 0.85,
-    wall: 'wallTimber',
-    roofColor: 'roofThatch',
-  }),
-);
-
-defineAsset(
-  'house_manor',
+  'house_tier_4',
   group([
     houseNode({
-      width: 3.0,
-      depth: 2.2,
-      wallHeight: 1.6,
+      width: 2.4,
+      depth: 2.0,
+      wallHeight: 1.25,
+      roofHeight: 0.85,
+      wall: 'wallStone',
+      roofColor: 'roofSlate',
+      chimney: true,
+    }),
+    box({ width: 0.5, height: 1.0, depth: 0.5, color: 'wallStone', transform: { translate: [1.25, 0.5, 0.9] } }),
+    roof({ width: 0.5, depth: 0.5, height: 0.3, color: 'roofSlate', transform: { translate: [1.25, 1.0, 0.9] } }),
+  ]),
+);
+
+defineAsset(
+  'house_tier_5',
+  group([
+    houseNode({
+      width: 2.7,
+      depth: 2.3,
+      wallHeight: 1.4,
+      roofHeight: 0.95,
+      wall: 'wallCream',
+      roofColor: 'roofSlate',
+      chimney: true,
+    }),
+    box({ width: 0.7, height: 1.15, depth: 0.7, color: 'wallCream', transform: { translate: [1.5, 0.575, -1.0] } }),
+    roof({ width: 0.7, depth: 0.7, height: 0.45, color: 'roofSlate', transform: { translate: [1.5, 1.15, -1.0] } }),
+  ]),
+);
+
+defineAsset(
+  'house_tier_6',
+  group([
+    houseNode({
+      width: 3.2,
+      depth: 2.4,
+      wallHeight: 1.55,
       roofHeight: 1.0,
       wall: 'wallWhite',
       roofColor: 'roofSlate',
       chimney: true,
     }),
-    box({
-      width: 0.9,
-      height: 1.3,
-      depth: 0.9,
-      color: 'wallWhite',
-      transform: { translate: [1.55, 0.65, 0] },
+    box({ width: 0.8, height: 1.3, depth: 0.8, color: 'wallWhite', transform: { translate: [1.75, 0.65, 1.0] } }),
+    roof({ width: 0.8, depth: 0.8, height: 0.5, color: 'roofSlate', transform: { translate: [1.75, 1.3, 1.0] } }),
+    box({ width: 0.8, height: 1.3, depth: 0.8, color: 'wallWhite', transform: { translate: [-1.75, 0.65, 1.0] } }),
+    roof({ width: 0.8, depth: 0.8, height: 0.5, color: 'roofSlate', transform: { translate: [-1.75, 1.3, 1.0] } }),
+  ]),
+);
+
+defineAsset(
+  'house_tier_7',
+  group([
+    houseNode({
+      width: 3.6,
+      depth: 3.2,
+      wallHeight: 1.75,
+      roofHeight: 1.1,
+      wall: 'wallWhite',
+      roofColor: 'roofSlate',
+      chimney: true,
     }),
-    roof({
-      width: 0.9,
-      depth: 0.9,
-      height: 0.55,
-      color: 'roofSlate',
-      transform: { translate: [1.55, 1.3, 0] },
-    }),
+    box({ width: 0.95, height: 1.5, depth: 0.95, color: 'wallWhite', transform: { translate: [2.0, 0.75, 1.1] } }),
+    roof({ width: 0.95, depth: 0.95, height: 0.6, color: 'roofSlate', transform: { translate: [2.0, 1.5, 1.1] } }),
+    box({ width: 0.95, height: 1.5, depth: 0.95, color: 'wallWhite', transform: { translate: [-2.0, 0.75, 1.1] } }),
+    roof({ width: 0.95, depth: 0.95, height: 0.6, color: 'roofSlate', transform: { translate: [-2.0, 1.5, 1.1] } }),
+    box({ width: 3.2, height: 0.12, depth: 0.9, color: 'stone', transform: { translate: [0, 0.06, 2.0] } }),
   ]),
 );
 
@@ -244,7 +295,7 @@ defineAsset(
 );
 
 defineAsset(
-  'factory_workshop',
+  'factory_furniture',
   factoryNode({
     width: 1.8,
     depth: 1.6,
@@ -254,6 +305,58 @@ defineAsset(
     chimneyHeight: 0.6,
   }),
 );
+
+/**
+ * The remaining 16 of balance/factories.json's 21 real factoryTypeIds
+ * (bakery/mill/dairy/textile/furniture above already cover 5 with
+ * hand-tuned silhouettes). Rather than leave these falling back to a
+ * borrowed mesh, every one gets its own registered `factory_<id>` asset,
+ * generated from the same factoryNode() primitive with wall colour, roof
+ * colour, size and chimney height cycled deterministically by list
+ * position - real, distinct, always-resolvable assets rather than a
+ * silent substitution.
+ */
+const GENERIC_FACTORY_TYPE_IDS = [
+  'bottler',
+  'candy',
+  'chocolate',
+  'coffee_house',
+  'cosmetics',
+  'feed_mill',
+  'ice_cream',
+  'jewellery',
+  'pizzeria',
+  'preserves',
+  'sauce',
+  'sawmill',
+  'snack',
+  'sugar_mill',
+  'tailor',
+  'toy_factory',
+  'winery',
+] as const;
+
+const FACTORY_WALL_CYCLE: ReadonlyArray<'wallBrick' | 'wallStone' | 'wallTimber' | 'wallWhite'> = [
+  'wallBrick',
+  'wallStone',
+  'wallTimber',
+  'wallWhite',
+];
+const FACTORY_ROOF_CYCLE: ReadonlyArray<'roofSlate' | 'roofBarn'> = ['roofSlate', 'roofBarn'];
+
+GENERIC_FACTORY_TYPE_IDS.forEach((id, i) => {
+  defineAsset(
+    `factory_${id}`,
+    factoryNode({
+      width: 1.7 + (i % 4) * 0.22,
+      depth: 1.5 + (i % 3) * 0.18,
+      height: 1.05 + (i % 5) * 0.13,
+      wall: FACTORY_WALL_CYCLE[i % FACTORY_WALL_CYCLE.length]!,
+      roofColor: FACTORY_ROOF_CYCLE[i % FACTORY_ROOF_CYCLE.length]!,
+      chimneyHeight: 0.55 + (i % 4) * 0.16,
+    }),
+  );
+});
 
 /** Community buildings — larger, distinctive silhouettes for landmarks. */
 
@@ -279,6 +382,32 @@ defineAsset(
     }),
     // Steps
     box({ width: 1.4, height: 0.15, depth: 0.5, color: 'stone', transform: { translate: [0, 0.075, 1.5] } }),
+  ]),
+);
+
+/** Farmers' Market - open stalls under a shared awning rather than a
+ * single walled building, so it reads distinctly from the enclosed
+ * community buildings around it. */
+defineAsset(
+  'community_farmers_market',
+  group([
+    box({ width: 2.6, height: 0.08, depth: 2.2, color: 'wood', transform: { translate: [0, 0.04, 0] } }),
+    ...[-0.9, 0.9].map((x) =>
+      [-0.7, 0.7].map((z) =>
+        cylinder({
+          radiusTop: 0.03,
+          radiusBottom: 0.03,
+          height: 1.0,
+          radialSegments: 6,
+          color: 'woodDark',
+          transform: { translate: [x, 0.5, z] },
+        }),
+      ),
+    ).flat(),
+    box({ width: 2.9, height: 0.06, depth: 2.5, color: 'accentWarm', transform: { translate: [0, 1.02, 0] } }),
+    ...[-1.15, -0.35, 0.45].map((x) =>
+      box({ width: 0.3, height: 0.3, depth: 0.3, color: 'cropPumpkin', transform: { translate: [x, 0.23, 0] } }),
+    ),
   ]),
 );
 
@@ -335,6 +464,22 @@ defineAsset(
     ),
     box({ width: 3.2, height: 0.15, depth: 2.6, color: 'stone', transform: { translate: [0, 0.075, 0] } }),
     box({ width: 2.8, height: 0.5, depth: 2.2, color: 'roofClay', transform: { translate: [0, 1.95, 0] } }),
+  ]),
+);
+
+/** The zoo's entrance gate - a low stone arch with a banner, distinct from
+ * the enclosed community buildings around it since visitors walk through
+ * rather than into it. */
+defineAsset(
+  'community_zoo_gate',
+  group([
+    ...[-1.1, 1.1].map((x) =>
+      box({ width: 0.3, height: 1.6, depth: 0.3, color: 'stoneDark', transform: { translate: [x, 0.8, 0] } }),
+    ),
+    box({ width: 2.5, height: 0.3, depth: 0.3, color: 'stoneDark', transform: { translate: [0, 1.75, 0] } }),
+    box({ width: 2.0, height: 0.5, depth: 0.04, color: 'accentWarm', transform: { translate: [0, 1.4, 0.17] } }),
+    cone({ radius: 0.15, height: 0.3, radialSegments: 6, color: 'roofClay', transform: { translate: [-1.1, 1.75 + 0.15, 0] } }),
+    cone({ radius: 0.15, height: 0.3, radialSegments: 6, color: 'roofClay', transform: { translate: [1.1, 1.75 + 0.15, 0] } }),
   ]),
 );
 
@@ -511,6 +656,28 @@ defineAsset(
       color: 'water',
       transform: { translate: [0, 0.03, 0] },
     }),
+  ),
+);
+
+defineAsset(
+  'zoo_enclosure_rock',
+  zooEnclosureNode(
+    group([
+      box({ width: 0.5, height: 0.4, depth: 0.4, color: 'stone', transform: { rotate: [0.1, 0.3, 0], translate: [-0.15, 0.2, 0.1] } }),
+      box({ width: 0.35, height: 0.55, depth: 0.35, color: 'stoneDark', transform: { rotate: [0, -0.2, 0.1], translate: [0.2, 0.28, -0.1] } }),
+      box({ width: 0.3, height: 0.3, depth: 0.3, color: 'stone', transform: { translate: [0, 0.15, 0.3] } }),
+    ]),
+  ),
+);
+
+defineAsset(
+  'zoo_enclosure_arctic',
+  zooEnclosureNode(
+    group([
+      box({ width: 0.9, height: 0.1, depth: 0.9, color: 'snow', transform: { translate: [0, 0.05, 0] } }),
+      cone({ radius: 0.28, height: 0.4, radialSegments: 8, color: 'snow', transform: { translate: [-0.2, 0.3, 0] } }),
+      cone({ radius: 0.2, height: 0.3, radialSegments: 8, color: 'snow', transform: { translate: [0.25, 0.25, 0.15] } }),
+    ]),
   ),
 );
 

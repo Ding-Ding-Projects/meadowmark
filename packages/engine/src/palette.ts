@@ -52,6 +52,20 @@ export type PaletteKey =
   | 'cropCorn'
   | 'cropBerry'
   | 'cropSeed'
+  | 'cropSugarcane'
+  | 'cropCotton'
+  | 'cropStrawberry'
+  | 'cropTomato'
+  | 'cropPotato'
+  | 'cropSoybean'
+  | 'cropRice'
+  | 'cropPumpkin'
+  | 'cropChilli'
+  | 'cropCoffeeBean'
+  | 'cropLavender'
+  | 'cropGrape'
+  | 'cropBlueberry'
+  | 'cropVanilla'
   | 'road'
   | 'roadLine'
   | 'sand'
@@ -117,6 +131,20 @@ export const defaultPalette: Palette = {
   cropCorn: 0xe8d24a,
   cropBerry: 0x8f3f6a,
   cropSeed: 0x5a4630,
+  cropSugarcane: 0xb7d66a,
+  cropCotton: 0xf4f4ef,
+  cropStrawberry: 0xd23c4c,
+  cropTomato: 0xd94430,
+  cropPotato: 0xc9a373,
+  cropSoybean: 0x9fc35a,
+  cropRice: 0xe6d8a0,
+  cropPumpkin: 0xe8842c,
+  cropChilli: 0xc4291f,
+  cropCoffeeBean: 0x5a3a28,
+  cropLavender: 0x8a6bb8,
+  cropGrape: 0x6a3f8f,
+  cropBlueberry: 0x3f5a9c,
+  cropVanilla: 0xe0c88a,
 
   road: 0x7d7871,
   roadLine: 0xe8e0d0,
