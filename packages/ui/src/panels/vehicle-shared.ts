@@ -7,7 +7,7 @@
  * rendering logic is not tripled.
  */
 
-import { h, formatDuration } from "../dom";
+import { h, formatDuration, preserveFocusedDescendant } from "../dom";
 import { button } from "../components/button";
 import { t } from "../i18n";
 import { DeliveryVehicleView, HostBridge } from "../contracts";
@@ -22,6 +22,7 @@ export function renderVehiclePanel(
   let tickHandle: number;
 
   function render(): void {
+    preserveFocusedDescendant(cargoRow, () => {
     cargoRow.textContent = "";
     for (const slot of view.cargo) {
       cargoRow.appendChild(
@@ -35,8 +36,11 @@ export function renderVehiclePanel(
         )
       );
     }
+    });
 
-    statusEl.textContent = statusText();
+    const nextStatus = statusText();
+    if (statusEl.textContent !== nextStatus) statusEl.textContent = nextStatus;
+    preserveFocusedDescendant(actionsEl, () => {
     actionsEl.textContent = "";
     if (view.state === "idle" || view.state === "loading") {
       actionsEl.appendChild(
@@ -56,6 +60,7 @@ export function renderVehiclePanel(
         })
       );
     }
+    });
   }
 
   function statusText(): string {

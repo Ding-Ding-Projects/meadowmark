@@ -3,7 +3,7 @@
  * growth-timer countdowns.
  */
 
-import { h, formatDuration } from "../dom";
+import { h, formatDuration, preserveFocusedDescendant } from "../dom";
 import { button } from "../components/button";
 import { select } from "../components/select";
 import { t } from "../i18n";
@@ -74,6 +74,7 @@ export function renderFieldsPanel(host: HTMLElement, view: FieldsView, bridge: H
   const grid = h("div.mm-grid", { role: "grid", "aria-label": t("panel.fields.gridLabel") });
 
   function renderGrid(): void {
+    preserveFocusedDescendant(grid, () => {
     grid.textContent = "";
     for (const plot of view.plots) {
       const stateClass =
@@ -94,6 +95,7 @@ export function renderFieldsPanel(host: HTMLElement, view: FieldsView, bridge: H
       }
       grid.appendChild(tile);
     }
+    });
   }
 
   function plotAriaLabel(plot: FieldsView["plots"][number]): string {

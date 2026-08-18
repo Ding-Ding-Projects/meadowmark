@@ -101,6 +101,7 @@ export function openSuperConfirm(opts: SuperConfirmOptions): void {
   });
 
   function playCompletionAnimation(): void {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     progressBar.animate(
       [{ boxShadow: "0 0 0 0 var(--mm-color-primary)" }, { boxShadow: "0 0 0 6px transparent" }],
       { duration: 400, easing: "ease-out" }
@@ -153,6 +154,13 @@ export function openSuperConfirm(opts: SuperConfirmOptions): void {
       ev.preventDefault();
       close();
       opts.onCancelled?.();
+    } else if (ev.key === "Tab") {
+      const focusable = [key1Btn, key2Btn, sliderInput, cancelBtn, confirmBtn].filter((element) => !element.disabled);
+      if (!focusable.length) return;
+      const first = focusable[0]!;
+      const last = focusable[focusable.length - 1]!;
+      if (ev.shiftKey && document.activeElement === first) { ev.preventDefault(); last.focus(); }
+      else if (!ev.shiftKey && document.activeElement === last) { ev.preventDefault(); first.focus(); }
     }
   }
 
