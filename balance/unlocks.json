@@ -67,6 +67,11 @@
       "id": "barley"
     },
     {
+      "level": 2,
+      "kind": "recipe",
+      "id": "recipe_feed_mill_barley_feed"
+    },
+    {
       "level": 3,
       "kind": "crop",
       "id": "corn"
@@ -97,6 +102,11 @@
       "id": "oats"
     },
     {
+      "level": 4,
+      "kind": "recipe",
+      "id": "recipe_mill_oat_flour"
+    },
+    {
       "level": 5,
       "kind": "animal",
       "id": "cow"
@@ -115,6 +125,11 @@
       "level": 5,
       "kind": "crop",
       "id": "peanut"
+    },
+    {
+      "level": 5,
+      "kind": "recipe",
+      "id": "recipe_mill_peanut_butter"
     },
     {
       "level": 6,
@@ -217,6 +232,11 @@
       "id": "house_tier_4"
     },
     {
+      "level": 13,
+      "kind": "recipe",
+      "id": "recipe_paper_mill_paper"
+    },
+    {
       "level": 14,
       "kind": "recipe",
       "id": "recipe_snack_popcorn"
@@ -267,6 +287,16 @@
       "id": "spinach"
     },
     {
+      "level": 18,
+      "kind": "recipe",
+      "id": "recipe_snack_pickles"
+    },
+    {
+      "level": 18,
+      "kind": "recipe",
+      "id": "recipe_paper_mill_book"
+    },
+    {
       "level": 19,
       "kind": "recipe",
       "id": "recipe_ice_cream_ice_cream"
@@ -275,6 +305,11 @@
       "level": 19,
       "kind": "building",
       "id": "house_tier_5"
+    },
+    {
+      "level": 19,
+      "kind": "recipe",
+      "id": "recipe_pottery_pottery_bowl"
     },
     {
       "level": 20,
@@ -287,6 +322,16 @@
       "id": "recipe_preserves_pickled_tomato"
     },
     {
+      "level": 20,
+      "kind": "recipe",
+      "id": "recipe_sauce_pepper_sauce"
+    },
+    {
+      "level": 20,
+      "kind": "recipe",
+      "id": "recipe_sauce_onion_relish"
+    },
+    {
       "level": 21,
       "kind": "animal",
       "id": "goat"
@@ -295,6 +340,11 @@
       "level": 21,
       "kind": "recipe",
       "id": "recipe_sauce_tomato_sauce"
+    },
+    {
+      "level": 21,
+      "kind": "recipe",
+      "id": "recipe_dairy_goat_cheese"
     },
     {
       "level": 22,
@@ -317,6 +367,16 @@
       "id": "apple"
     },
     {
+      "level": 22,
+      "kind": "recipe",
+      "id": "recipe_preserves_applesauce"
+    },
+    {
+      "level": 23,
+      "kind": "recipe",
+      "id": "recipe_creamery_whipped_cream"
+    },
+    {
       "level": 24,
       "kind": "crop",
       "id": "potato"
@@ -332,6 +392,11 @@
       "id": "school"
     },
     {
+      "level": 24,
+      "kind": "recipe",
+      "id": "recipe_pottery_painted_pottery"
+    },
+    {
       "level": 25,
       "kind": "recipe",
       "id": "recipe_candy_candy"
@@ -340,6 +405,16 @@
       "level": 25,
       "kind": "building",
       "id": "zoo_gate"
+    },
+    {
+      "level": 25,
+      "kind": "recipe",
+      "id": "recipe_candy_peanut_brittle"
+    },
+    {
+      "level": 25,
+      "kind": "recipe",
+      "id": "recipe_smokehouse_smoked_ham"
     },
     {
       "level": 26,
@@ -360,6 +435,11 @@
       "level": 26,
       "kind": "crop",
       "id": "broccoli"
+    },
+    {
+      "level": 26,
+      "kind": "recipe",
+      "id": "recipe_snack_broccoli_bites"
     },
     {
       "level": 27,
@@ -387,6 +467,31 @@
       "id": "restaurant"
     },
     {
+      "level": 29,
+      "kind": "recipe",
+      "id": "recipe_creamery_aged_cheddar"
+    },
+    {
+      "level": 29,
+      "kind": "recipe",
+      "id": "recipe_creamery_cream_tart"
+    },
+    {
+      "level": 29,
+      "kind": "recipe",
+      "id": "recipe_pasta_kitchen_pasta"
+    },
+    {
+      "level": 29,
+      "kind": "recipe",
+      "id": "recipe_pasta_kitchen_baked_ziti"
+    },
+    {
+      "level": 29,
+      "kind": "recipe",
+      "id": "recipe_pizzeria_lasagna"
+    },
+    {
       "level": 30,
       "kind": "recipe",
       "id": "recipe_bottler_alcohol"
@@ -407,9 +512,24 @@
       "id": "sunflower"
     },
     {
+      "level": 30,
+      "kind": "recipe",
+      "id": "recipe_mill_sunflower_oil"
+    },
+    {
       "level": 31,
       "kind": "building",
       "id": "cinema"
+    },
+    {
+      "level": 31,
+      "kind": "recipe",
+      "id": "recipe_furniture_cabinet"
+    },
+    {
+      "level": 31,
+      "kind": "recipe",
+      "id": "recipe_glassworks_glass_pane"
     },
     {
       "level": 32,
@@ -437,6 +557,11 @@
       "id": "hospital"
     },
     {
+      "level": 33,
+      "kind": "recipe",
+      "id": "recipe_toy_factory_plush_toy"
+    },
+    {
       "level": 34,
       "kind": "recipe",
       "id": "recipe_cosmetics_lavender_oil"
@@ -445,6 +570,16 @@
       "level": 34,
       "kind": "animal",
       "id": "duck"
+    },
+    {
+      "level": 34,
+      "kind": "recipe",
+      "id": "recipe_juice_bar_apple_juice"
+    },
+    {
+      "level": 34,
+      "kind": "recipe",
+      "id": "recipe_juice_bar_melon_juice"
     },
     {
       "level": 35,
@@ -467,9 +602,24 @@
       "id": "watermelon"
     },
     {
+      "level": 36,
+      "kind": "recipe",
+      "id": "recipe_glassworks_stained_glass"
+    },
+    {
+      "level": 36,
+      "kind": "recipe",
+      "id": "recipe_juice_bar_watermelon_juice"
+    },
+    {
       "level": 37,
       "kind": "recipe",
       "id": "recipe_candy_chocolate_candy"
+    },
+    {
+      "level": 37,
+      "kind": "recipe",
+      "id": "recipe_leatherworks_leather"
     },
     {
       "level": 38,
@@ -502,6 +652,31 @@
       "id": "pineapple"
     },
     {
+      "level": 40,
+      "kind": "recipe",
+      "id": "recipe_jewellery_tiara"
+    },
+    {
+      "level": 40,
+      "kind": "recipe",
+      "id": "recipe_leatherworks_leather_bag"
+    },
+    {
+      "level": 40,
+      "kind": "recipe",
+      "id": "recipe_leatherworks_leather_belt"
+    },
+    {
+      "level": 40,
+      "kind": "recipe",
+      "id": "recipe_furniture_leather_armchair"
+    },
+    {
+      "level": 40,
+      "kind": "recipe",
+      "id": "recipe_toy_factory_teddy_bear"
+    },
+    {
       "level": 41,
       "kind": "recipe",
       "id": "recipe_cosmetics_perfume"
@@ -512,6 +687,16 @@
       "id": "turkey"
     },
     {
+      "level": 41,
+      "kind": "recipe",
+      "id": "recipe_smokehouse_smoked_turkey"
+    },
+    {
+      "level": 41,
+      "kind": "recipe",
+      "id": "recipe_smokehouse_deli_platter"
+    },
+    {
       "level": 42,
       "kind": "building",
       "id": "sports_arena"
@@ -520,6 +705,26 @@
       "level": 42,
       "kind": "crop",
       "id": "banana"
+    },
+    {
+      "level": 42,
+      "kind": "recipe",
+      "id": "recipe_ice_cream_banana_split"
+    },
+    {
+      "level": 42,
+      "kind": "recipe",
+      "id": "recipe_juice_bar_tropical_smoothie"
+    },
+    {
+      "level": 43,
+      "kind": "recipe",
+      "id": "recipe_candle_maker_candle"
+    },
+    {
+      "level": 43,
+      "kind": "recipe",
+      "id": "recipe_candle_maker_scented_candle"
     },
     {
       "level": 44,
@@ -537,14 +742,44 @@
       "id": "airport"
     },
     {
+      "level": 46,
+      "kind": "recipe",
+      "id": "recipe_cheese_cave_aged_cheese_wheel"
+    },
+    {
+      "level": 46,
+      "kind": "recipe",
+      "id": "recipe_cheese_cave_honey_cheese_platter"
+    },
+    {
       "level": 47,
       "kind": "crop",
       "id": "mango"
     },
     {
+      "level": 47,
+      "kind": "recipe",
+      "id": "recipe_preserves_mango_jam"
+    },
+    {
+      "level": 47,
+      "kind": "recipe",
+      "id": "recipe_ice_cream_mango_sorbet"
+    },
+    {
       "level": 48,
       "kind": "animal",
       "id": "rabbit"
+    },
+    {
+      "level": 48,
+      "kind": "recipe",
+      "id": "recipe_textile_angora_yarn"
+    },
+    {
+      "level": 48,
+      "kind": "recipe",
+      "id": "recipe_tailor_angora_scarf"
     },
     {
       "level": 50,
@@ -557,9 +792,24 @@
       "id": "recipe_coffee_house_ground_coffee"
     },
     {
+      "level": 51,
+      "kind": "recipe",
+      "id": "recipe_coffee_house_cappuccino"
+    },
+    {
+      "level": 51,
+      "kind": "recipe",
+      "id": "recipe_coffee_roastery_roasted_beans"
+    },
+    {
       "level": 52,
       "kind": "recipe",
       "id": "recipe_coffee_house_latte"
+    },
+    {
+      "level": 52,
+      "kind": "recipe",
+      "id": "recipe_coffee_roastery_espresso_shot"
     },
     {
       "level": 53,
@@ -567,9 +817,29 @@
       "id": "orange"
     },
     {
+      "level": 53,
+      "kind": "recipe",
+      "id": "recipe_preserves_marmalade"
+    },
+    {
+      "level": 53,
+      "kind": "recipe",
+      "id": "recipe_juice_bar_citrus_blend"
+    },
+    {
       "level": 55,
       "kind": "animal",
       "id": "alpaca"
+    },
+    {
+      "level": 55,
+      "kind": "recipe",
+      "id": "recipe_textile_alpaca_yarn"
+    },
+    {
+      "level": 55,
+      "kind": "recipe",
+      "id": "recipe_tailor_alpaca_sweater"
     },
     {
       "level": 56,
@@ -580,6 +850,36 @@
       "level": 58,
       "kind": "crop",
       "id": "tea_leaf"
+    },
+    {
+      "level": 59,
+      "kind": "recipe",
+      "id": "recipe_tea_house_dried_tea"
+    },
+    {
+      "level": 59,
+      "kind": "recipe",
+      "id": "recipe_tea_house_iced_tea"
+    },
+    {
+      "level": 59,
+      "kind": "recipe",
+      "id": "recipe_cheese_cave_tea_cheese_pairing"
+    },
+    {
+      "level": 61,
+      "kind": "recipe",
+      "id": "recipe_brewery_malt"
+    },
+    {
+      "level": 61,
+      "kind": "recipe",
+      "id": "recipe_brewery_oat_malt"
+    },
+    {
+      "level": 61,
+      "kind": "recipe",
+      "id": "recipe_brewery_beer"
     },
     {
       "level": 62,
@@ -597,9 +897,39 @@
       "id": "horse"
     },
     {
+      "level": 63,
+      "kind": "recipe",
+      "id": "recipe_dairy_mare_cheese"
+    },
+    {
       "level": 66,
       "kind": "crop",
       "id": "ginger"
+    },
+    {
+      "level": 66,
+      "kind": "recipe",
+      "id": "recipe_candy_ginger_candy"
+    },
+    {
+      "level": 66,
+      "kind": "recipe",
+      "id": "recipe_cosmetics_ginger_oil"
+    },
+    {
+      "level": 66,
+      "kind": "recipe",
+      "id": "recipe_tea_house_ginger_tea"
+    },
+    {
+      "level": 69,
+      "kind": "recipe",
+      "id": "recipe_chocolatier_cocoa_nibs"
+    },
+    {
+      "level": 69,
+      "kind": "recipe",
+      "id": "recipe_chocolatier_dark_chocolate"
     },
     {
       "level": 70,
@@ -612,9 +942,39 @@
       "id": "quail"
     },
     {
+      "level": 71,
+      "kind": "recipe",
+      "id": "recipe_dairy_quail_custard"
+    },
+    {
       "level": 72,
       "kind": "crop",
       "id": "cacao_pod"
+    },
+    {
+      "level": 72,
+      "kind": "recipe",
+      "id": "recipe_winery_cider"
+    },
+    {
+      "level": 72,
+      "kind": "recipe",
+      "id": "recipe_chocolatier_chocolate_truffle"
+    },
+    {
+      "level": 72,
+      "kind": "recipe",
+      "id": "recipe_chocolatier_mango_chocolate_bar"
+    },
+    {
+      "level": 78,
+      "kind": "recipe",
+      "id": "recipe_distillery_brandy"
+    },
+    {
+      "level": 78,
+      "kind": "recipe",
+      "id": "recipe_distillery_applejack"
     },
     {
       "level": 80,
@@ -622,14 +982,54 @@
       "id": "vanilla"
     },
     {
+      "level": 80,
+      "kind": "recipe",
+      "id": "recipe_chocolatier_luxury_truffle_box"
+    },
+    {
       "level": 85,
       "kind": "crop",
       "id": "olive"
     },
     {
+      "level": 85,
+      "kind": "recipe",
+      "id": "recipe_distillery_aged_brandy_blend"
+    },
+    {
+      "level": 85,
+      "kind": "recipe",
+      "id": "recipe_soap_works_olive_oil"
+    },
+    {
+      "level": 85,
+      "kind": "recipe",
+      "id": "recipe_soap_works_soap"
+    },
+    {
+      "level": 90,
+      "kind": "recipe",
+      "id": "recipe_distillery_brandy_truffle"
+    },
+    {
       "level": 95,
       "kind": "crop",
       "id": "saffron"
+    },
+    {
+      "level": 95,
+      "kind": "recipe",
+      "id": "recipe_soap_works_luxury_soap"
+    },
+    {
+      "level": 95,
+      "kind": "recipe",
+      "id": "recipe_cosmetics_saffron_perfume"
+    },
+    {
+      "level": 98,
+      "kind": "recipe",
+      "id": "recipe_distillery_gourmet_gift_basket"
     }
   ]
 }

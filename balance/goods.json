@@ -847,6 +847,580 @@
       "unlockLevel": 71,
       "baseValue": 602,
       "displayName": "Quail Egg"
+    },
+    {
+      "id": "clay",
+      "category": "material",
+      "unlockLevel": 6,
+      "baseValue": 6,
+      "displayName": "Clay"
+    },
+    {
+      "id": "sand",
+      "category": "material",
+      "unlockLevel": 12,
+      "baseValue": 9,
+      "displayName": "Sand"
+    },
+    {
+      "id": "beeswax",
+      "category": "material",
+      "unlockLevel": 27,
+      "baseValue": 20,
+      "displayName": "Beeswax"
+    },
+    {
+      "id": "oat_flour",
+      "category": "crafted",
+      "unlockLevel": 4,
+      "baseValue": 13,
+      "displayName": "Oat Flour"
+    },
+    {
+      "id": "peanut_butter",
+      "category": "crafted",
+      "unlockLevel": 5,
+      "baseValue": 23,
+      "displayName": "Peanut Butter"
+    },
+    {
+      "id": "sunflower_oil",
+      "category": "crafted",
+      "unlockLevel": 30,
+      "baseValue": 159,
+      "displayName": "Sunflower Oil"
+    },
+    {
+      "id": "goat_cheese",
+      "category": "crafted",
+      "unlockLevel": 21,
+      "baseValue": 75,
+      "displayName": "Goat Cheese"
+    },
+    {
+      "id": "mare_cheese",
+      "category": "crafted",
+      "unlockLevel": 63,
+      "baseValue": 836,
+      "displayName": "Mare's Cheese"
+    },
+    {
+      "id": "quail_custard",
+      "category": "crafted",
+      "unlockLevel": 71,
+      "baseValue": 1340,
+      "displayName": "Quail Custard"
+    },
+    {
+      "id": "angora_yarn",
+      "category": "crafted",
+      "unlockLevel": 48,
+      "baseValue": 346,
+      "displayName": "Angora Yarn"
+    },
+    {
+      "id": "alpaca_yarn",
+      "category": "crafted",
+      "unlockLevel": 55,
+      "baseValue": 518,
+      "displayName": "Alpaca Yarn"
+    },
+    {
+      "id": "applesauce",
+      "category": "crafted",
+      "unlockLevel": 22,
+      "baseValue": 106,
+      "displayName": "Applesauce"
+    },
+    {
+      "id": "mango_jam",
+      "category": "crafted",
+      "unlockLevel": 47,
+      "baseValue": 227,
+      "displayName": "Mango Jam"
+    },
+    {
+      "id": "marmalade",
+      "category": "crafted",
+      "unlockLevel": 53,
+      "baseValue": 268,
+      "displayName": "Orange Marmalade"
+    },
+    {
+      "id": "pickles",
+      "category": "crafted",
+      "unlockLevel": 18,
+      "baseValue": 29,
+      "displayName": "Pickles"
+    },
+    {
+      "id": "broccoli_bites",
+      "category": "crafted",
+      "unlockLevel": 26,
+      "baseValue": 91,
+      "displayName": "Broccoli Bites"
+    },
+    {
+      "id": "pepper_sauce",
+      "category": "crafted",
+      "unlockLevel": 20,
+      "baseValue": 48,
+      "displayName": "Pepper Sauce"
+    },
+    {
+      "id": "onion_relish",
+      "category": "crafted",
+      "unlockLevel": 20,
+      "baseValue": 35,
+      "displayName": "Onion Relish"
+    },
+    {
+      "id": "banana_split",
+      "category": "crafted",
+      "unlockLevel": 42,
+      "baseValue": 204,
+      "displayName": "Banana Split"
+    },
+    {
+      "id": "mango_sorbet",
+      "category": "crafted",
+      "unlockLevel": 47,
+      "baseValue": 234,
+      "displayName": "Mango Sorbet"
+    },
+    {
+      "id": "peanut_brittle",
+      "category": "crafted",
+      "unlockLevel": 25,
+      "baseValue": 45,
+      "displayName": "Peanut Brittle"
+    },
+    {
+      "id": "ginger_candy",
+      "category": "crafted",
+      "unlockLevel": 66,
+      "baseValue": 359,
+      "displayName": "Ginger Candy"
+    },
+    {
+      "id": "alpaca_sweater",
+      "category": "crafted",
+      "unlockLevel": 55,
+      "baseValue": 1140,
+      "displayName": "Alpaca Sweater"
+    },
+    {
+      "id": "angora_scarf",
+      "category": "crafted",
+      "unlockLevel": 48,
+      "baseValue": 761,
+      "displayName": "Angora Scarf"
+    },
+    {
+      "id": "ginger_oil",
+      "category": "crafted",
+      "unlockLevel": 66,
+      "baseValue": 328,
+      "displayName": "Ginger Oil"
+    },
+    {
+      "id": "cabinet",
+      "category": "crafted",
+      "unlockLevel": 31,
+      "baseValue": 52,
+      "displayName": "Cabinet"
+    },
+    {
+      "id": "cappuccino",
+      "category": "crafted",
+      "unlockLevel": 51,
+      "baseValue": 263,
+      "displayName": "Cappuccino"
+    },
+    {
+      "id": "tiara",
+      "category": "crafted",
+      "unlockLevel": 40,
+      "baseValue": 253,
+      "displayName": "Tiara"
+    },
+    {
+      "id": "cider",
+      "category": "crafted",
+      "unlockLevel": 72,
+      "baseValue": 113,
+      "displayName": "Apple Cider"
+    },
+    {
+      "id": "plush_toy",
+      "category": "crafted",
+      "unlockLevel": 33,
+      "baseValue": 344,
+      "displayName": "Plush Toy"
+    },
+    {
+      "id": "paper",
+      "category": "crafted",
+      "unlockLevel": 13,
+      "baseValue": 7,
+      "displayName": "Paper"
+    },
+    {
+      "id": "book",
+      "category": "crafted",
+      "unlockLevel": 18,
+      "baseValue": 23,
+      "displayName": "Book"
+    },
+    {
+      "id": "pottery_bowl",
+      "category": "crafted",
+      "unlockLevel": 19,
+      "baseValue": 19,
+      "displayName": "Pottery Bowl"
+    },
+    {
+      "id": "painted_pottery",
+      "category": "crafted",
+      "unlockLevel": 24,
+      "baseValue": 44,
+      "displayName": "Painted Pottery"
+    },
+    {
+      "id": "whipped_cream",
+      "category": "crafted",
+      "unlockLevel": 23,
+      "baseValue": 100,
+      "displayName": "Whipped Cream"
+    },
+    {
+      "id": "aged_cheddar",
+      "category": "crafted",
+      "unlockLevel": 29,
+      "baseValue": 152,
+      "displayName": "Aged Cheddar"
+    },
+    {
+      "id": "cream_tart",
+      "category": "crafted",
+      "unlockLevel": 29,
+      "baseValue": 205,
+      "displayName": "Cream Tart"
+    },
+    {
+      "id": "smoked_ham",
+      "category": "crafted",
+      "unlockLevel": 25,
+      "baseValue": 65,
+      "displayName": "Smoked Ham"
+    },
+    {
+      "id": "smoked_turkey",
+      "category": "crafted",
+      "unlockLevel": 41,
+      "baseValue": 231,
+      "displayName": "Smoked Turkey"
+    },
+    {
+      "id": "deli_platter",
+      "category": "crafted",
+      "unlockLevel": 41,
+      "baseValue": 326,
+      "displayName": "Deli Platter"
+    },
+    {
+      "id": "pasta",
+      "category": "crafted",
+      "unlockLevel": 29,
+      "baseValue": 22,
+      "displayName": "Pasta"
+    },
+    {
+      "id": "baked_ziti",
+      "category": "crafted",
+      "unlockLevel": 29,
+      "baseValue": 261,
+      "displayName": "Baked Ziti"
+    },
+    {
+      "id": "lasagna",
+      "category": "crafted",
+      "unlockLevel": 29,
+      "baseValue": 100,
+      "displayName": "Lasagna"
+    },
+    {
+      "id": "glass_pane",
+      "category": "crafted",
+      "unlockLevel": 31,
+      "baseValue": 15,
+      "displayName": "Glass Pane"
+    },
+    {
+      "id": "stained_glass",
+      "category": "crafted",
+      "unlockLevel": 36,
+      "baseValue": 33,
+      "displayName": "Stained Glass"
+    },
+    {
+      "id": "apple_juice",
+      "category": "crafted",
+      "unlockLevel": 34,
+      "baseValue": 113,
+      "displayName": "Apple Juice"
+    },
+    {
+      "id": "melon_juice",
+      "category": "crafted",
+      "unlockLevel": 34,
+      "baseValue": 172,
+      "displayName": "Melon Juice"
+    },
+    {
+      "id": "watermelon_juice",
+      "category": "crafted",
+      "unlockLevel": 36,
+      "baseValue": 201,
+      "displayName": "Watermelon Juice"
+    },
+    {
+      "id": "tropical_smoothie",
+      "category": "crafted",
+      "unlockLevel": 42,
+      "baseValue": 294,
+      "displayName": "Tropical Smoothie"
+    },
+    {
+      "id": "citrus_blend",
+      "category": "crafted",
+      "unlockLevel": 53,
+      "baseValue": 442,
+      "displayName": "Citrus Blend"
+    },
+    {
+      "id": "leather",
+      "category": "crafted",
+      "unlockLevel": 37,
+      "baseValue": 109,
+      "displayName": "Leather"
+    },
+    {
+      "id": "leather_bag",
+      "category": "crafted",
+      "unlockLevel": 40,
+      "baseValue": 285,
+      "displayName": "Leather Bag"
+    },
+    {
+      "id": "leather_belt",
+      "category": "crafted",
+      "unlockLevel": 40,
+      "baseValue": 317,
+      "displayName": "Leather Belt"
+    },
+    {
+      "id": "candle",
+      "category": "crafted",
+      "unlockLevel": 43,
+      "baseValue": 63,
+      "displayName": "Candle"
+    },
+    {
+      "id": "scented_candle",
+      "category": "crafted",
+      "unlockLevel": 43,
+      "baseValue": 417,
+      "displayName": "Scented Candle"
+    },
+    {
+      "id": "aged_cheese_wheel",
+      "category": "crafted",
+      "unlockLevel": 46,
+      "baseValue": 224,
+      "displayName": "Aged Cheese Wheel"
+    },
+    {
+      "id": "honey_cheese_platter",
+      "category": "crafted",
+      "unlockLevel": 46,
+      "baseValue": 299,
+      "displayName": "Honey Cheese Platter"
+    },
+    {
+      "id": "roasted_beans",
+      "category": "crafted",
+      "unlockLevel": 51,
+      "baseValue": 324,
+      "displayName": "Roasted Beans"
+    },
+    {
+      "id": "espresso_shot",
+      "category": "crafted",
+      "unlockLevel": 52,
+      "baseValue": 713,
+      "displayName": "Espresso Shot"
+    },
+    {
+      "id": "dried_tea",
+      "category": "crafted",
+      "unlockLevel": 59,
+      "baseValue": 408,
+      "displayName": "Dried Tea"
+    },
+    {
+      "id": "iced_tea",
+      "category": "crafted",
+      "unlockLevel": 59,
+      "baseValue": 928,
+      "displayName": "Iced Tea"
+    },
+    {
+      "id": "ginger_tea",
+      "category": "crafted",
+      "unlockLevel": 66,
+      "baseValue": 1065,
+      "displayName": "Ginger Tea"
+    },
+    {
+      "id": "malt",
+      "category": "crafted",
+      "unlockLevel": 61,
+      "baseValue": 13,
+      "displayName": "Malt"
+    },
+    {
+      "id": "oat_malt",
+      "category": "crafted",
+      "unlockLevel": 61,
+      "baseValue": 19,
+      "displayName": "Oat Malt"
+    },
+    {
+      "id": "beer",
+      "category": "crafted",
+      "unlockLevel": 61,
+      "baseValue": 50,
+      "displayName": "Beer"
+    },
+    {
+      "id": "cocoa_nibs",
+      "category": "crafted",
+      "unlockLevel": 69,
+      "baseValue": 561,
+      "displayName": "Cocoa Nibs"
+    },
+    {
+      "id": "dark_chocolate",
+      "category": "crafted",
+      "unlockLevel": 69,
+      "baseValue": 1234,
+      "displayName": "Dark Chocolate"
+    },
+    {
+      "id": "chocolate_truffle",
+      "category": "crafted",
+      "unlockLevel": 72,
+      "baseValue": 1417,
+      "displayName": "Chocolate Truffle"
+    },
+    {
+      "id": "luxury_truffle_box",
+      "category": "crafted",
+      "unlockLevel": 80,
+      "baseValue": 3501,
+      "displayName": "Luxury Truffle Box"
+    },
+    {
+      "id": "mango_chocolate_bar",
+      "category": "crafted",
+      "unlockLevel": 72,
+      "baseValue": 1484,
+      "displayName": "Mango Chocolate Bar"
+    },
+    {
+      "id": "brandy",
+      "category": "crafted",
+      "unlockLevel": 78,
+      "baseValue": 605,
+      "displayName": "Brandy"
+    },
+    {
+      "id": "applejack",
+      "category": "crafted",
+      "unlockLevel": 78,
+      "baseValue": 151,
+      "displayName": "Applejack"
+    },
+    {
+      "id": "aged_brandy_blend",
+      "category": "crafted",
+      "unlockLevel": 85,
+      "baseValue": 832,
+      "displayName": "Aged Brandy Blend"
+    },
+    {
+      "id": "brandy_truffle",
+      "category": "crafted",
+      "unlockLevel": 90,
+      "baseValue": 2314,
+      "displayName": "Brandy Truffle"
+    },
+    {
+      "id": "gourmet_gift_basket",
+      "category": "crafted",
+      "unlockLevel": 98,
+      "baseValue": 3507,
+      "displayName": "Gourmet Gift Basket"
+    },
+    {
+      "id": "olive_oil",
+      "category": "crafted",
+      "unlockLevel": 85,
+      "baseValue": 768,
+      "displayName": "Olive Oil"
+    },
+    {
+      "id": "soap",
+      "category": "crafted",
+      "unlockLevel": 85,
+      "baseValue": 882,
+      "displayName": "Soap"
+    },
+    {
+      "id": "luxury_soap",
+      "category": "crafted",
+      "unlockLevel": 95,
+      "baseValue": 2314,
+      "displayName": "Luxury Soap"
+    },
+    {
+      "id": "saffron_perfume",
+      "category": "crafted",
+      "unlockLevel": 95,
+      "baseValue": 622,
+      "displayName": "Saffron Perfume"
+    },
+    {
+      "id": "leather_armchair",
+      "category": "crafted",
+      "unlockLevel": 40,
+      "baseValue": 253,
+      "displayName": "Leather Armchair"
+    },
+    {
+      "id": "teddy_bear",
+      "category": "crafted",
+      "unlockLevel": 40,
+      "baseValue": 270,
+      "displayName": "Teddy Bear"
+    },
+    {
+      "id": "tea_cheese_pairing",
+      "category": "crafted",
+      "unlockLevel": 59,
+      "baseValue": 959,
+      "displayName": "Tea & Cheese Pairing"
     }
   ]
 }
