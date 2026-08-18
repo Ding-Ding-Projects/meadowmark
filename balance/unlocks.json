@@ -1,0 +1,490 @@
+{
+  "schemaVersion": 1,
+  "unlocks": [
+    {
+      "level": 1,
+      "kind": "crop",
+      "id": "wheat"
+    },
+    {
+      "level": 1,
+      "kind": "animal",
+      "id": "chicken"
+    },
+    {
+      "level": 1,
+      "kind": "recipe",
+      "id": "recipe_feed_mill_animal_feed"
+    },
+    {
+      "level": 1,
+      "kind": "building",
+      "id": "house_tier_1"
+    },
+    {
+      "level": 1,
+      "kind": "building",
+      "id": "town_hall"
+    },
+    {
+      "level": 1,
+      "kind": "building",
+      "id": "farmers_market"
+    },
+    {
+      "level": 1,
+      "kind": "building",
+      "id": "flower_bed"
+    },
+    {
+      "level": 1,
+      "kind": "building",
+      "id": "hedge_row"
+    },
+    {
+      "level": 1,
+      "kind": "building",
+      "id": "fountain"
+    },
+    {
+      "level": 1,
+      "kind": "building",
+      "id": "statue"
+    },
+    {
+      "level": 1,
+      "kind": "building",
+      "id": "gazebo"
+    },
+    {
+      "level": 1,
+      "kind": "building",
+      "id": "topiary_garden"
+    },
+    {
+      "level": 3,
+      "kind": "crop",
+      "id": "corn"
+    },
+    {
+      "level": 3,
+      "kind": "recipe",
+      "id": "recipe_feed_mill_animal_feed"
+    },
+    {
+      "level": 3,
+      "kind": "recipe",
+      "id": "recipe_mill_flour"
+    },
+    {
+      "level": 4,
+      "kind": "recipe",
+      "id": "recipe_mill_cornmeal"
+    },
+    {
+      "level": 4,
+      "kind": "building",
+      "id": "house_tier_2"
+    },
+    {
+      "level": 5,
+      "kind": "animal",
+      "id": "cow"
+    },
+    {
+      "level": 5,
+      "kind": "recipe",
+      "id": "recipe_dairy_cream"
+    },
+    {
+      "level": 5,
+      "kind": "recipe",
+      "id": "recipe_bakery_bread"
+    },
+    {
+      "level": 6,
+      "kind": "crop",
+      "id": "carrot"
+    },
+    {
+      "level": 6,
+      "kind": "recipe",
+      "id": "recipe_bakery_dough"
+    },
+    {
+      "level": 7,
+      "kind": "recipe",
+      "id": "recipe_dairy_cheese"
+    },
+    {
+      "level": 7,
+      "kind": "recipe",
+      "id": "recipe_dairy_butter"
+    },
+    {
+      "level": 8,
+      "kind": "recipe",
+      "id": "recipe_bakery_cookie"
+    },
+    {
+      "level": 8,
+      "kind": "recipe",
+      "id": "recipe_sawmill_planks"
+    },
+    {
+      "level": 8,
+      "kind": "building",
+      "id": "house_tier_3"
+    },
+    {
+      "level": 8,
+      "kind": "building",
+      "id": "train_station"
+    },
+    {
+      "level": 9,
+      "kind": "crop",
+      "id": "sugarcane"
+    },
+    {
+      "level": 9,
+      "kind": "recipe",
+      "id": "recipe_sugar_mill_sugar"
+    },
+    {
+      "level": 10,
+      "kind": "animal",
+      "id": "sheep"
+    },
+    {
+      "level": 11,
+      "kind": "recipe",
+      "id": "recipe_sugar_mill_syrup"
+    },
+    {
+      "level": 12,
+      "kind": "crop",
+      "id": "cotton"
+    },
+    {
+      "level": 12,
+      "kind": "recipe",
+      "id": "recipe_textile_thread"
+    },
+    {
+      "level": 13,
+      "kind": "recipe",
+      "id": "recipe_bakery_cake"
+    },
+    {
+      "level": 13,
+      "kind": "building",
+      "id": "house_tier_4"
+    },
+    {
+      "level": 14,
+      "kind": "recipe",
+      "id": "recipe_snack_popcorn"
+    },
+    {
+      "level": 15,
+      "kind": "animal",
+      "id": "pig"
+    },
+    {
+      "level": 15,
+      "kind": "recipe",
+      "id": "recipe_textile_fabric"
+    },
+    {
+      "level": 16,
+      "kind": "crop",
+      "id": "strawberry"
+    },
+    {
+      "level": 16,
+      "kind": "recipe",
+      "id": "recipe_preserves_jam"
+    },
+    {
+      "level": 18,
+      "kind": "recipe",
+      "id": "recipe_bottler_bottled_milk"
+    },
+    {
+      "level": 18,
+      "kind": "building",
+      "id": "dock"
+    },
+    {
+      "level": 18,
+      "kind": "feature",
+      "id": "ship"
+    },
+    {
+      "level": 19,
+      "kind": "recipe",
+      "id": "recipe_ice_cream_ice_cream"
+    },
+    {
+      "level": 19,
+      "kind": "building",
+      "id": "house_tier_5"
+    },
+    {
+      "level": 20,
+      "kind": "crop",
+      "id": "tomato"
+    },
+    {
+      "level": 20,
+      "kind": "recipe",
+      "id": "recipe_preserves_pickled_tomato"
+    },
+    {
+      "level": 21,
+      "kind": "animal",
+      "id": "goat"
+    },
+    {
+      "level": 21,
+      "kind": "recipe",
+      "id": "recipe_sauce_tomato_sauce"
+    },
+    {
+      "level": 22,
+      "kind": "recipe",
+      "id": "recipe_pizzeria_pizza"
+    },
+    {
+      "level": 22,
+      "kind": "building",
+      "id": "mine_entrance"
+    },
+    {
+      "level": 22,
+      "kind": "feature",
+      "id": "mine"
+    },
+    {
+      "level": 24,
+      "kind": "crop",
+      "id": "potato"
+    },
+    {
+      "level": 24,
+      "kind": "recipe",
+      "id": "recipe_snack_chips"
+    },
+    {
+      "level": 24,
+      "kind": "building",
+      "id": "school"
+    },
+    {
+      "level": 25,
+      "kind": "recipe",
+      "id": "recipe_candy_candy"
+    },
+    {
+      "level": 25,
+      "kind": "building",
+      "id": "zoo_gate"
+    },
+    {
+      "level": 26,
+      "kind": "recipe",
+      "id": "recipe_ice_cream_sundae"
+    },
+    {
+      "level": 26,
+      "kind": "recipe",
+      "id": "recipe_tailor_shirt"
+    },
+    {
+      "level": 26,
+      "kind": "building",
+      "id": "fire_station"
+    },
+    {
+      "level": 27,
+      "kind": "animal",
+      "id": "bee"
+    },
+    {
+      "level": 27,
+      "kind": "building",
+      "id": "house_tier_6"
+    },
+    {
+      "level": 28,
+      "kind": "crop",
+      "id": "soybean"
+    },
+    {
+      "level": 28,
+      "kind": "recipe",
+      "id": "recipe_bottler_bottled_honey"
+    },
+    {
+      "level": 28,
+      "kind": "building",
+      "id": "restaurant"
+    },
+    {
+      "level": 30,
+      "kind": "recipe",
+      "id": "recipe_bottler_alcohol"
+    },
+    {
+      "level": 30,
+      "kind": "recipe",
+      "id": "recipe_furniture_chair"
+    },
+    {
+      "level": 30,
+      "kind": "building",
+      "id": "museum"
+    },
+    {
+      "level": 31,
+      "kind": "building",
+      "id": "cinema"
+    },
+    {
+      "level": 32,
+      "kind": "recipe",
+      "id": "recipe_toy_factory_toy"
+    },
+    {
+      "level": 33,
+      "kind": "crop",
+      "id": "rice"
+    },
+    {
+      "level": 33,
+      "kind": "recipe",
+      "id": "recipe_tailor_sweater"
+    },
+    {
+      "level": 33,
+      "kind": "building",
+      "id": "hospital"
+    },
+    {
+      "level": 34,
+      "kind": "recipe",
+      "id": "recipe_cosmetics_lavender_oil"
+    },
+    {
+      "level": 35,
+      "kind": "recipe",
+      "id": "recipe_toy_factory_painted_toy"
+    },
+    {
+      "level": 36,
+      "kind": "recipe",
+      "id": "recipe_chocolate_cocoa"
+    },
+    {
+      "level": 36,
+      "kind": "building",
+      "id": "house_tier_7"
+    },
+    {
+      "level": 37,
+      "kind": "recipe",
+      "id": "recipe_candy_chocolate_candy"
+    },
+    {
+      "level": 38,
+      "kind": "crop",
+      "id": "pumpkin"
+    },
+    {
+      "level": 38,
+      "kind": "recipe",
+      "id": "recipe_chocolate_chocolate_bar"
+    },
+    {
+      "level": 39,
+      "kind": "recipe",
+      "id": "recipe_furniture_sofa"
+    },
+    {
+      "level": 40,
+      "kind": "recipe",
+      "id": "recipe_jewellery_ring"
+    },
+    {
+      "level": 40,
+      "kind": "recipe",
+      "id": "recipe_jewellery_bracelet"
+    },
+    {
+      "level": 41,
+      "kind": "recipe",
+      "id": "recipe_cosmetics_perfume"
+    },
+    {
+      "level": 42,
+      "kind": "building",
+      "id": "sports_arena"
+    },
+    {
+      "level": 44,
+      "kind": "crop",
+      "id": "chilli"
+    },
+    {
+      "level": 45,
+      "kind": "recipe",
+      "id": "recipe_sauce_hot_sauce"
+    },
+    {
+      "level": 45,
+      "kind": "building",
+      "id": "airport"
+    },
+    {
+      "level": 50,
+      "kind": "crop",
+      "id": "coffee_bean"
+    },
+    {
+      "level": 50,
+      "kind": "recipe",
+      "id": "recipe_coffee_house_ground_coffee"
+    },
+    {
+      "level": 52,
+      "kind": "recipe",
+      "id": "recipe_coffee_house_latte"
+    },
+    {
+      "level": 56,
+      "kind": "crop",
+      "id": "lavender"
+    },
+    {
+      "level": 62,
+      "kind": "crop",
+      "id": "grape"
+    },
+    {
+      "level": 62,
+      "kind": "recipe",
+      "id": "recipe_winery_wine"
+    },
+    {
+      "level": 70,
+      "kind": "crop",
+      "id": "blueberry"
+    },
+    {
+      "level": 80,
+      "kind": "crop",
+      "id": "vanilla"
+    }
+  ]
+}

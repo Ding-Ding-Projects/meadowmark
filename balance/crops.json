@@ -1,0 +1,175 @@
+{
+  "schemaVersion": 1,
+  "crops": [
+    {
+      "id": "wheat",
+      "displayName": "Wheat",
+      "unlockLevel": 1,
+      "growTimeMs": 120000,
+      "seedCostCoins": 5,
+      "xpReward": 2,
+      "coinReward": 11,
+      "sortIndex": 0
+    },
+    {
+      "id": "corn",
+      "displayName": "Corn",
+      "unlockLevel": 3,
+      "growTimeMs": 300000,
+      "seedCostCoins": 16,
+      "xpReward": 2,
+      "coinReward": 33,
+      "sortIndex": 1
+    },
+    {
+      "id": "carrot",
+      "displayName": "Carrot",
+      "unlockLevel": 6,
+      "growTimeMs": 600000,
+      "seedCostCoins": 35,
+      "xpReward": 4,
+      "coinReward": 73,
+      "sortIndex": 2
+    },
+    {
+      "id": "sugarcane",
+      "displayName": "Sugarcane",
+      "unlockLevel": 9,
+      "growTimeMs": 1200000,
+      "seedCostCoins": 58,
+      "xpReward": 6,
+      "coinReward": 122,
+      "sortIndex": 3
+    },
+    {
+      "id": "cotton",
+      "displayName": "Cotton",
+      "unlockLevel": 12,
+      "growTimeMs": 2400000,
+      "seedCostCoins": 86,
+      "xpReward": 9,
+      "coinReward": 187,
+      "sortIndex": 4
+    },
+    {
+      "id": "strawberry",
+      "displayName": "Strawberry",
+      "unlockLevel": 16,
+      "growTimeMs": 3600000,
+      "seedCostCoins": 121,
+      "xpReward": 13,
+      "coinReward": 266,
+      "sortIndex": 5
+    },
+    {
+      "id": "tomato",
+      "displayName": "Tomato",
+      "unlockLevel": 20,
+      "growTimeMs": 5400000,
+      "seedCostCoins": 161,
+      "xpReward": 19,
+      "coinReward": 360,
+      "sortIndex": 6
+    },
+    {
+      "id": "potato",
+      "displayName": "Potato",
+      "unlockLevel": 24,
+      "growTimeMs": 7200000,
+      "seedCostCoins": 203,
+      "xpReward": 24,
+      "coinReward": 458,
+      "sortIndex": 7
+    },
+    {
+      "id": "soybean",
+      "displayName": "Soybean",
+      "unlockLevel": 28,
+      "growTimeMs": 10800000,
+      "seedCostCoins": 257,
+      "xpReward": 34,
+      "coinReward": 596,
+      "sortIndex": 8
+    },
+    {
+      "id": "rice",
+      "displayName": "Rice",
+      "unlockLevel": 33,
+      "growTimeMs": 14400000,
+      "seedCostCoins": 319,
+      "xpReward": 44,
+      "coinReward": 750,
+      "sortIndex": 9
+    },
+    {
+      "id": "pumpkin",
+      "displayName": "Pumpkin",
+      "unlockLevel": 38,
+      "growTimeMs": 21600000,
+      "seedCostCoins": 406,
+      "xpReward": 63,
+      "coinReward": 987,
+      "sortIndex": 10
+    },
+    {
+      "id": "chilli",
+      "displayName": "Chilli",
+      "unlockLevel": 44,
+      "growTimeMs": 28800000,
+      "seedCostCoins": 502,
+      "xpReward": 82,
+      "coinReward": 1242,
+      "sortIndex": 11
+    },
+    {
+      "id": "coffee_bean",
+      "displayName": "Coffee Bean",
+      "unlockLevel": 50,
+      "growTimeMs": 36000000,
+      "seedCostCoins": 600,
+      "xpReward": 101,
+      "coinReward": 1500,
+      "sortIndex": 12
+    },
+    {
+      "id": "lavender",
+      "displayName": "Lavender",
+      "unlockLevel": 56,
+      "growTimeMs": 43200000,
+      "seedCostCoins": 698,
+      "xpReward": 120,
+      "coinReward": 1758,
+      "sortIndex": 13
+    },
+    {
+      "id": "grape",
+      "displayName": "Grape",
+      "unlockLevel": 62,
+      "growTimeMs": 50400000,
+      "seedCostCoins": 797,
+      "xpReward": 139,
+      "coinReward": 2018,
+      "sortIndex": 14
+    },
+    {
+      "id": "blueberry",
+      "displayName": "Blueberry",
+      "unlockLevel": 70,
+      "growTimeMs": 57600000,
+      "seedCostCoins": 914,
+      "xpReward": 159,
+      "coinReward": 2313,
+      "sortIndex": 15
+    },
+    {
+      "id": "vanilla",
+      "displayName": "Vanilla",
+      "unlockLevel": 80,
+      "growTimeMs": 72000000,
+      "seedCostCoins": 1097,
+      "xpReward": 197,
+      "coinReward": 2804,
+      "sortIndex": 16
+    }
+  ]
+}

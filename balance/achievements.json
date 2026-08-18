@@ -1,0 +1,1325 @@
+{
+  "schemaVersion": 1,
+  "achievements": [
+    {
+      "achievementId": "ach_totalHarvests",
+      "displayName": "Green Thumb",
+      "counterKey": "totalHarvests",
+      "sortIndex": 0,
+      "tiers": [
+        {
+          "threshold": 10,
+          "rewardCoins": 100,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 40,
+          "rewardCoins": 180,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 160,
+          "rewardCoins": 324,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 640,
+          "rewardCoins": 583,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 2560,
+          "rewardCoins": 1050,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_totalGoodsProduced",
+      "displayName": "Production Line",
+      "counterKey": "totalGoodsProduced",
+      "sortIndex": 1,
+      "tiers": [
+        {
+          "threshold": 25,
+          "rewardCoins": 150,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 100,
+          "rewardCoins": 270,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 400,
+          "rewardCoins": 486,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 1600,
+          "rewardCoins": 875,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 6400,
+          "rewardCoins": 1575,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_ordersFulfilled",
+      "displayName": "Order Runner",
+      "counterKey": "ordersFulfilled",
+      "sortIndex": 2,
+      "tiers": [
+        {
+          "threshold": 5,
+          "rewardCoins": 120,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 18,
+          "rewardCoins": 216,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 61,
+          "rewardCoins": 389,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 214,
+          "rewardCoins": 700,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 750,
+          "rewardCoins": 1260,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_heliOrdersFulfilled",
+      "displayName": "Sky High",
+      "counterKey": "heliOrdersFulfilled",
+      "sortIndex": 3,
+      "tiers": [
+        {
+          "threshold": 5,
+          "rewardCoins": 100,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 18,
+          "rewardCoins": 180,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 61,
+          "rewardCoins": 324,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 214,
+          "rewardCoins": 583,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 750,
+          "rewardCoins": 1050,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_shipCratesFilled",
+      "displayName": "Dockhand",
+      "counterKey": "shipCratesFilled",
+      "sortIndex": 4,
+      "tiers": [
+        {
+          "threshold": 3,
+          "rewardCoins": 200,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 9,
+          "rewardCoins": 360,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 27,
+          "rewardCoins": 648,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 81,
+          "rewardCoins": 1166,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 243,
+          "rewardCoins": 2100,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_trainTripsCompleted",
+      "displayName": "All Aboard",
+      "counterKey": "trainTripsCompleted",
+      "sortIndex": 5,
+      "tiers": [
+        {
+          "threshold": 3,
+          "rewardCoins": 180,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 9,
+          "rewardCoins": 324,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 27,
+          "rewardCoins": 583,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 81,
+          "rewardCoins": 1050,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 243,
+          "rewardCoins": 1890,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_buildingsPlaced",
+      "displayName": "Master Builder",
+      "counterKey": "buildingsPlaced",
+      "sortIndex": 6,
+      "tiers": [
+        {
+          "threshold": 3,
+          "rewardCoins": 250,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 9,
+          "rewardCoins": 450,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 27,
+          "rewardCoins": 810,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 81,
+          "rewardCoins": 1458,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 243,
+          "rewardCoins": 2624,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_housesBuilt",
+      "displayName": "Neighborhood Watch",
+      "counterKey": "housesBuilt",
+      "sortIndex": 7,
+      "tiers": [
+        {
+          "threshold": 2,
+          "rewardCoins": 200,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 6,
+          "rewardCoins": 360,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 18,
+          "rewardCoins": 648,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 54,
+          "rewardCoins": 1166,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 162,
+          "rewardCoins": 2100,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_decorationsPlaced",
+      "displayName": "Curb Appeal",
+      "counterKey": "decorationsPlaced",
+      "sortIndex": 8,
+      "tiers": [
+        {
+          "threshold": 3,
+          "rewardCoins": 150,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 9,
+          "rewardCoins": 270,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 27,
+          "rewardCoins": 486,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 81,
+          "rewardCoins": 875,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 243,
+          "rewardCoins": 1575,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_plotsUnlocked",
+      "displayName": "Land Baron",
+      "counterKey": "plotsUnlocked",
+      "sortIndex": 9,
+      "tiers": [
+        {
+          "threshold": 3,
+          "rewardCoins": 200,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 8,
+          "rewardCoins": 360,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 20,
+          "rewardCoins": 648,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 53,
+          "rewardCoins": 1166,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 137,
+          "rewardCoins": 2100,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_animalsFed",
+      "displayName": "Animal Whisperer",
+      "counterKey": "animalsFed",
+      "sortIndex": 10,
+      "tiers": [
+        {
+          "threshold": 10,
+          "rewardCoins": 100,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 40,
+          "rewardCoins": 180,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 160,
+          "rewardCoins": 324,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 640,
+          "rewardCoins": 583,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 2560,
+          "rewardCoins": 1050,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_animalsHatched",
+      "displayName": "Zookeeper",
+      "counterKey": "animalsHatched",
+      "sortIndex": 11,
+      "tiers": [
+        {
+          "threshold": 1,
+          "rewardCoins": 300,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 3,
+          "rewardCoins": 540,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 6,
+          "rewardCoins": 972,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 16,
+          "rewardCoins": 1750,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 39,
+          "rewardCoins": 3149,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_tilesDug",
+      "displayName": "Rock Hound",
+      "counterKey": "tilesDug",
+      "sortIndex": 12,
+      "tiers": [
+        {
+          "threshold": 20,
+          "rewardCoins": 120,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 70,
+          "rewardCoins": 216,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 245,
+          "rewardCoins": 389,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 858,
+          "rewardCoins": 700,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 3001,
+          "rewardCoins": 1260,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_artifactsCompleted",
+      "displayName": "Archaeologist",
+      "counterKey": "artifactsCompleted",
+      "sortIndex": 13,
+      "tiers": [
+        {
+          "threshold": 1,
+          "rewardCoins": 500,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 2,
+          "rewardCoins": 900,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 5,
+          "rewardCoins": 1620,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 11,
+          "rewardCoins": 2916,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 23,
+          "rewardCoins": 5249,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_barsSmelted",
+      "displayName": "Foundryman",
+      "counterKey": "barsSmelted",
+      "sortIndex": 14,
+      "tiers": [
+        {
+          "threshold": 5,
+          "rewardCoins": 180,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 15,
+          "rewardCoins": 324,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 45,
+          "rewardCoins": 583,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 135,
+          "rewardCoins": 1050,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 405,
+          "rewardCoins": 1890,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_population",
+      "displayName": "Growing Town",
+      "counterKey": "population",
+      "sortIndex": 15,
+      "tiers": [
+        {
+          "threshold": 50,
+          "rewardCoins": 300,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 150,
+          "rewardCoins": 540,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 450,
+          "rewardCoins": 972,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 1350,
+          "rewardCoins": 1750,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 4050,
+          "rewardCoins": 3149,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_dailyStreak",
+      "displayName": "Creature of Habit",
+      "counterKey": "dailyStreak",
+      "sortIndex": 16,
+      "tiers": [
+        {
+          "threshold": 3,
+          "rewardCoins": 150,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 6,
+          "rewardCoins": 270,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 12,
+          "rewardCoins": 486,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 24,
+          "rewardCoins": 875,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 48,
+          "rewardCoins": 1575,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_regattaChestsClaimed",
+      "displayName": "Regatta Champion",
+      "counterKey": "regattaChestsClaimed",
+      "sortIndex": 17,
+      "tiers": [
+        {
+          "threshold": 1,
+          "rewardCoins": 250,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 2,
+          "rewardCoins": 450,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 4,
+          "rewardCoins": 810,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 8,
+          "rewardCoins": 1458,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 16,
+          "rewardCoins": 2624,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_villagerRequestsFulfilled",
+      "displayName": "Good Neighbor",
+      "counterKey": "villagerRequestsFulfilled",
+      "sortIndex": 18,
+      "tiers": [
+        {
+          "threshold": 5,
+          "rewardCoins": 120,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 15,
+          "rewardCoins": 216,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 45,
+          "rewardCoins": 389,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 135,
+          "rewardCoins": 700,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 405,
+          "rewardCoins": 1260,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_boostersUsed",
+      "displayName": "Power Player",
+      "counterKey": "boostersUsed",
+      "sortIndex": 19,
+      "tiers": [
+        {
+          "threshold": 3,
+          "rewardCoins": 90,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 9,
+          "rewardCoins": 162,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 27,
+          "rewardCoins": 292,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 81,
+          "rewardCoins": 525,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 243,
+          "rewardCoins": 945,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_coinsEarnedTotal",
+      "displayName": "Coin Collector",
+      "counterKey": "coinsEarnedTotal",
+      "sortIndex": 20,
+      "tiers": [
+        {
+          "threshold": 5000,
+          "rewardCoins": 200,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 20000,
+          "rewardCoins": 360,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 80000,
+          "rewardCoins": 648,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 320000,
+          "rewardCoins": 1166,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 1280000,
+          "rewardCoins": 2100,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_cashEarnedTotal",
+      "displayName": "Rainy Day Fund",
+      "counterKey": "cashEarnedTotal",
+      "sortIndex": 21,
+      "tiers": [
+        {
+          "threshold": 5,
+          "rewardCoins": 100,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 15,
+          "rewardCoins": 180,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 45,
+          "rewardCoins": 324,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 135,
+          "rewardCoins": 583,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 405,
+          "rewardCoins": 1050,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_expansionsUnlocked",
+      "displayName": "Frontier Spirit",
+      "counterKey": "expansionsUnlocked",
+      "sortIndex": 22,
+      "tiers": [
+        {
+          "threshold": 1,
+          "rewardCoins": 400,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 2,
+          "rewardCoins": 720,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 6,
+          "rewardCoins": 1296,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 14,
+          "rewardCoins": 2333,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 33,
+          "rewardCoins": 4199,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_recipesUnlocked",
+      "displayName": "Master Chef",
+      "counterKey": "recipesUnlocked",
+      "sortIndex": 23,
+      "tiers": [
+        {
+          "threshold": 3,
+          "rewardCoins": 200,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 8,
+          "rewardCoins": 360,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 20,
+          "rewardCoins": 648,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 53,
+          "rewardCoins": 1166,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 137,
+          "rewardCoins": 2100,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_wheatHarvested",
+      "displayName": "Wheat Farmer",
+      "counterKey": "wheatHarvested",
+      "sortIndex": 24,
+      "tiers": [
+        {
+          "threshold": 20,
+          "rewardCoins": 60,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 80,
+          "rewardCoins": 108,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 320,
+          "rewardCoins": 194,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 1280,
+          "rewardCoins": 350,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 5120,
+          "rewardCoins": 630,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_cornHarvested",
+      "displayName": "Corn Farmer",
+      "counterKey": "cornHarvested",
+      "sortIndex": 25,
+      "tiers": [
+        {
+          "threshold": 20,
+          "rewardCoins": 70,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 80,
+          "rewardCoins": 126,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 320,
+          "rewardCoins": 227,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 1280,
+          "rewardCoins": 408,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 5120,
+          "rewardCoins": 735,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_carrotHarvested",
+      "displayName": "Carrot Farmer",
+      "counterKey": "carrotHarvested",
+      "sortIndex": 26,
+      "tiers": [
+        {
+          "threshold": 20,
+          "rewardCoins": 80,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 80,
+          "rewardCoins": 144,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 320,
+          "rewardCoins": 259,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 1280,
+          "rewardCoins": 467,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 5120,
+          "rewardCoins": 840,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_eggsCollected",
+      "displayName": "Chicken Coop Pro",
+      "counterKey": "eggsCollected",
+      "sortIndex": 27,
+      "tiers": [
+        {
+          "threshold": 15,
+          "rewardCoins": 80,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 60,
+          "rewardCoins": 144,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 240,
+          "rewardCoins": 259,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 960,
+          "rewardCoins": 467,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 3840,
+          "rewardCoins": 840,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_milkCollected",
+      "displayName": "Dairy Farmer",
+      "counterKey": "milkCollected",
+      "sortIndex": 28,
+      "tiers": [
+        {
+          "threshold": 15,
+          "rewardCoins": 90,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 60,
+          "rewardCoins": 162,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 240,
+          "rewardCoins": 292,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 960,
+          "rewardCoins": 525,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 3840,
+          "rewardCoins": 945,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_woolCollected",
+      "displayName": "Shear Delight",
+      "counterKey": "woolCollected",
+      "sortIndex": 29,
+      "tiers": [
+        {
+          "threshold": 15,
+          "rewardCoins": 100,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 60,
+          "rewardCoins": 180,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 240,
+          "rewardCoins": 324,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 960,
+          "rewardCoins": 583,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 3840,
+          "rewardCoins": 1050,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_cakesBaked",
+      "displayName": "Cake Boss",
+      "counterKey": "cakesBaked",
+      "sortIndex": 30,
+      "tiers": [
+        {
+          "threshold": 3,
+          "rewardCoins": 150,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 9,
+          "rewardCoins": 270,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 27,
+          "rewardCoins": 486,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 81,
+          "rewardCoins": 875,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 243,
+          "rewardCoins": 1575,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_pizzasMade",
+      "displayName": "Pizzaiolo",
+      "counterKey": "pizzasMade",
+      "sortIndex": 31,
+      "tiers": [
+        {
+          "threshold": 3,
+          "rewardCoins": 150,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 9,
+          "rewardCoins": 270,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 27,
+          "rewardCoins": 486,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 81,
+          "rewardCoins": 875,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 243,
+          "rewardCoins": 1575,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_perfumeBottled",
+      "displayName": "Perfumer",
+      "counterKey": "perfumeBottled",
+      "sortIndex": 32,
+      "tiers": [
+        {
+          "threshold": 2,
+          "rewardCoins": 200,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 5,
+          "rewardCoins": 360,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 14,
+          "rewardCoins": 648,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 35,
+          "rewardCoins": 1166,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 91,
+          "rewardCoins": 2100,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_sofasBuilt",
+      "displayName": "Interior Designer",
+      "counterKey": "sofasBuilt",
+      "sortIndex": 33,
+      "tiers": [
+        {
+          "threshold": 2,
+          "rewardCoins": 220,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 5,
+          "rewardCoins": 396,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 14,
+          "rewardCoins": 713,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 35,
+          "rewardCoins": 1283,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 91,
+          "rewardCoins": 2309,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_wineBottled",
+      "displayName": "Vintner",
+      "counterKey": "wineBottled",
+      "sortIndex": 34,
+      "tiers": [
+        {
+          "threshold": 2,
+          "rewardCoins": 260,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 5,
+          "rewardCoins": 468,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 14,
+          "rewardCoins": 842,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 35,
+          "rewardCoins": 1516,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 91,
+          "rewardCoins": 2729,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_gemsFound",
+      "displayName": "Gem Hunter",
+      "counterKey": "gemsFound",
+      "sortIndex": 35,
+      "tiers": [
+        {
+          "threshold": 5,
+          "rewardCoins": 130,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 15,
+          "rewardCoins": 234,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 45,
+          "rewardCoins": 421,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 135,
+          "rewardCoins": 758,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 405,
+          "rewardCoins": 1365,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_toolsFound",
+      "displayName": "Toolbox",
+      "counterKey": "toolsFound",
+      "sortIndex": 36,
+      "tiers": [
+        {
+          "threshold": 5,
+          "rewardCoins": 100,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 15,
+          "rewardCoins": 180,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 45,
+          "rewardCoins": 324,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 135,
+          "rewardCoins": 583,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 405,
+          "rewardCoins": 1050,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_zooVisitorsServed",
+      "displayName": "Wildlife Guide",
+      "counterKey": "zooVisitorsServed",
+      "sortIndex": 37,
+      "tiers": [
+        {
+          "threshold": 10,
+          "rewardCoins": 140,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 35,
+          "rewardCoins": 252,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 123,
+          "rewardCoins": 454,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 429,
+          "rewardCoins": 816,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 1501,
+          "rewardCoins": 1470,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_barnUpgrades",
+      "displayName": "Storage Solutions",
+      "counterKey": "barnUpgrades",
+      "sortIndex": 38,
+      "tiers": [
+        {
+          "threshold": 1,
+          "rewardCoins": 300,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 2,
+          "rewardCoins": 540,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 5,
+          "rewardCoins": 972,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 11,
+          "rewardCoins": 1750,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 23,
+          "rewardCoins": 3149,
+          "rewardCash": 5
+        }
+      ]
+    },
+    {
+      "achievementId": "ach_factoryQueueUpgrades",
+      "displayName": "Assembly Line",
+      "counterKey": "factoryQueueUpgrades",
+      "sortIndex": 39,
+      "tiers": [
+        {
+          "threshold": 1,
+          "rewardCoins": 280,
+          "rewardCash": 1
+        },
+        {
+          "threshold": 2,
+          "rewardCoins": 504,
+          "rewardCash": 2
+        },
+        {
+          "threshold": 5,
+          "rewardCoins": 907,
+          "rewardCash": 3
+        },
+        {
+          "threshold": 11,
+          "rewardCoins": 1633,
+          "rewardCash": 4
+        },
+        {
+          "threshold": 23,
+          "rewardCoins": 2939,
+          "rewardCash": 5
+        }
+      ]
+    }
+  ]
+}
