@@ -1,0 +1,142 @@
+<!-- @dsCard group="Colour" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meadowmark — Colour</title>
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/preview.css">
+</head>
+<body class="mm-ds-preview">
+<div class="mm-ds-toolbar">
+  <strong>Meadowmark · Colour</strong>
+  <button type="button" class="mm-btn outlined" onclick="document.documentElement.setAttribute('data-theme','light')">Light</button>
+  <button type="button" class="mm-btn outlined" onclick="document.documentElement.setAttribute('data-theme','dark')">Dark</button>
+  <button type="button" class="mm-btn outlined" onclick="document.documentElement.removeAttribute('data-theme')">System</button>
+</div>
+
+<section class="mm-ds-section">
+  <h2>Why this exists</h2>
+  <p class="hint" style="max-width:70ch">
+    The live site's <code>--mm-bg</code> and <code>--mm-surface</code> were identical, so a card never
+    separated from the page behind it. This is a real M3 tonal system: five 0–100 tonal ramps
+    (harvest green primary, harvest gold secondary, sky blue tertiary, plus neutral and
+    neutral-variant for surfaces), with the standard M3 role assignments pulled from them — never
+    hand-picked to look plausible. See <code>design/tools/generate-tonal-palettes.py</code> and
+    <code>design/tools/build-tokens.py</code> for exactly how each hex value below was derived, and
+    that script's collision report for proof no two distinct roles accidentally share a value.
+  </p>
+</section>
+
+<section class="mm-ds-section">
+  <h2>Reference ramps (tone 0 → 100)</h2>
+  <p class="hint">Primary — harvest green</p>
+  <div class="mm-ds-swatchrow" id="ramp-primary"></div>
+  <p class="hint">Secondary — harvest gold</p>
+  <div class="mm-ds-swatchrow" id="ramp-secondary"></div>
+  <p class="hint">Tertiary — sky blue</p>
+  <div class="mm-ds-swatchrow" id="ramp-tertiary"></div>
+  <p class="hint">Error</p>
+  <div class="mm-ds-swatchrow" id="ramp-error"></div>
+  <p class="hint">Neutral — soil-tinted surfaces</p>
+  <div class="mm-ds-swatchrow" id="ramp-neutral"></div>
+  <p class="hint">Neutral-variant — outlines</p>
+  <div class="mm-ds-swatchrow" id="ramp-neutral-variant"></div>
+</section>
+
+<section class="mm-ds-section">
+  <h2>Roles — light</h2>
+  <div class="mm-ds-roles" id="roles-light"></div>
+</section>
+
+<section class="mm-ds-section">
+  <h2>Roles — dark</h2>
+  <div class="mm-ds-dark">
+    <div class="mm-ds-roles" id="roles-dark"></div>
+  </div>
+</section>
+
+<section class="mm-ds-section">
+  <h2>The specific fix, shown live</h2>
+  <p class="hint">Toggle Light/Dark above. Page background (left) and card surface (right) — same
+    element type, different tone, at every level.</p>
+  <div style="display:flex;gap:16px;flex-wrap:wrap">
+    <div style="flex:1;min-width:200px;padding:20px;border-radius:12px;background:var(--mm-bg);border:1px dashed var(--mm-outline)">
+      <strong>--mm-bg</strong><br><span class="mm-ds-specimen meta" style="border:none">page background</span>
+    </div>
+    <div class="mm-card" style="flex:1;min-width:200px">
+      <strong>.mm-card</strong><br><span class="hint">surface-container-low, elevation-1</span>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Ramp tones must match design/tools/generate-tonal-palettes.py exactly.
+  const KEY_STOPS = [0,10,20,30,40,50,60,70,80,90,95,99,100];
+  const NEUTRAL_STOPS = [0,4,6,10,12,17,20,22,24,30,40,50,60,70,80,87,90,92,94,95,96,98,99,100];
+  const PALETTES = {
+    primary: [132,0.36], secondary: [42,0.66], tertiary: [203,0.46],
+    error: [6,0.70], neutral: [100,0.07], "neutral-variant": [100,0.13],
+  };
+  function hlsToHex(h,l,s){
+    if (l<=0) return "#000000";
+    if (l>=1) return "#ffffff";
+    function hue2rgb(p,q,t){ if(t<0)t+=1; if(t>1)t-=1; if(t<1/6)return p+(q-p)*6*t; if(t<1/2)return q; if(t<2/3)return p+(q-p)*(2/3-t)*6; return p; }
+    const q = l<0.5 ? l*(1+s) : l+s-l*s;
+    const p = 2*l-q;
+    const r = hue2rgb(p,q,h/360+1/3), g = hue2rgb(p,q,h/360), b = hue2rgb(p,q,h/360-1/3);
+    const toHex = v => Math.round(v*255).toString(16).padStart(2,"0");
+    return "#"+toHex(r)+toHex(g)+toHex(b);
+  }
+  function renderRamp(name){
+    const [hue,sat] = PALETTES[name];
+    const stops = name.startsWith("neutral") ? NEUTRAL_STOPS : KEY_STOPS;
+    const el = document.getElementById("ramp-"+name);
+    stops.forEach(t => {
+      const hex = hlsToHex(hue, t/100, sat);
+      const sw = document.createElement("div");
+      sw.className = "mm-ds-swatch";
+      sw.style.background = hex;
+      sw.style.color = t > 55 ? "#000" : "#fff";
+      sw.textContent = t;
+      sw.title = hex;
+      el.appendChild(sw);
+    });
+  }
+  Object.keys(PALETTES).forEach(renderRamp);
+
+  const ROLES = ["primary","on-primary","primary-container","on-primary-container",
+    "secondary","on-secondary","secondary-container","on-secondary-container",
+    "tertiary","on-tertiary","tertiary-container","on-tertiary-container",
+    "error","on-error","error-container","on-error-container",
+    "surface","on-surface","surface-dim","surface-bright",
+    "surface-container-lowest","surface-container-low","surface-container","surface-container-high","surface-container-highest",
+    "surface-variant","on-surface-variant","outline","outline-variant",
+    "inverse-surface","inverse-on-surface","inverse-primary",
+    "accent","on-accent","scrim","shadow"];
+  function renderRoles(hostId, theme){
+    const probe = document.createElement("div");
+    if (theme === "dark") probe.setAttribute("data-theme","dark");
+    document.body.appendChild(probe);
+    const host = document.getElementById(hostId);
+    ROLES.forEach(role => {
+      const val = getComputedStyle(theme === "dark" ? probe : document.documentElement).getPropertyValue("--mm-"+role).trim() || getComputedStyle(document.documentElement).getPropertyValue("--mm-"+role).trim();
+      const card = document.createElement("div");
+      card.className = "mm-ds-role";
+      card.style.background = val;
+      card.style.color = "#00000099";
+      card.innerHTML = `<div class="name">--mm-${role}</div><div class="hex">${val}</div>`;
+      host.appendChild(card);
+    });
+    probe.remove();
+  }
+  // Light roles read straight off :root. Dark roles are read from a
+  // temporary [data-theme="dark"] element so both can render side by
+  // side without the toolbar toggle needing to be touched.
+  renderRoles("roles-light", "light");
+  renderRoles("roles-dark", "dark");
+</script>
+</body>
+</html>

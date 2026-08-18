@@ -1,0 +1,48 @@
+<!-- @dsCard group="Elevation" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meadowmark — Elevation</title>
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/preview.css">
+</head>
+<body class="mm-ds-preview">
+<div class="mm-ds-toolbar">
+  <strong>Meadowmark · Elevation</strong>
+  <button type="button" class="mm-btn outlined" onclick="document.documentElement.setAttribute('data-theme','light')">Light</button>
+  <button type="button" class="mm-btn outlined" onclick="document.documentElement.setAttribute('data-theme','dark')">Dark</button>
+</div>
+<p class="hint" style="max-width:70ch">
+  The live site shipped <code>box-shadow: none</code> on every card. M3 without elevation reads
+  as a wireframe. These are the real levels 0–5, each a distinct umbra+penumbra shadow pair, PLUS
+  a distinct surface tone per level (the <code>surface-container-*</code> steps) — because a
+  shadow alone is nearly invisible on a dark background, and M3 handles that with tone, not just
+  shadow opacity.
+</p>
+<div class="mm-ds-elev-row">
+  <div><div class="mm-ds-elev-card" style="box-shadow:var(--mm-elevation-0);background:var(--mm-surface-container-lowest)">Level 0</div></div>
+  <div><div class="mm-ds-elev-card" style="box-shadow:var(--mm-elevation-1);background:var(--mm-surface-container-low)">Level 1</div></div>
+  <div><div class="mm-ds-elev-card" style="box-shadow:var(--mm-elevation-2);background:var(--mm-surface-container)">Level 2</div></div>
+  <div><div class="mm-ds-elev-card" style="box-shadow:var(--mm-elevation-3);background:var(--mm-surface-container-high)">Level 3</div></div>
+  <div><div class="mm-ds-elev-card" style="box-shadow:var(--mm-elevation-4);background:var(--mm-surface-container-highest)">Level 4</div></div>
+  <div><div class="mm-ds-elev-card" style="box-shadow:var(--mm-elevation-5);background:var(--mm-surface-bright)">Level 5</div></div>
+</div>
+<section class="mm-ds-section">
+  <h2>Where each level is used on the site</h2>
+  <table class="mm-table">
+    <thead><tr><th>Level</th><th>Used by</th></tr></thead>
+    <tbody>
+      <tr><td>0</td><td>Flat elements: outlined buttons, dividers</td></tr>
+      <tr><td>1</td><td>.mm-card at rest, .mm-btn (filled) at rest</td></tr>
+      <tr><td>2</td><td>Top app bar, .mm-btn hover, toasts</td></tr>
+      <tr><td>3</td><td>Hero section, popovers/overlays, command palette</td></tr>
+      <tr><td>4</td><td>Mobile tab drawer (open)</td></tr>
+      <tr><td>5</td><td>Reserved — nothing on the landing page needs to sit above a dialog</td></tr>
+    </tbody>
+  </table>
+</section>
+</body>
+</html>

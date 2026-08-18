@@ -1,0 +1,60 @@
+<!-- @dsCard group="Components" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meadowmark — Navigation</title>
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/preview.css">
+</head>
+<body class="mm-ds-preview">
+<div class="mm-ds-toolbar"><strong>Meadowmark · Navigation</strong></div>
+
+<section class="mm-ds-section">
+  <h2>Top app bar</h2>
+  <header class="mm-topbar" style="position:static;border-radius:12px;overflow:hidden">
+    <a class="brand" href="#">🌾 <span>Meadowmark</span></a>
+    <div class="spacer"></div>
+    <div class="mm-topbar-controls">
+      <button type="button" class="mm-btn icon" aria-label="Notifications">🔔</button>
+      <button type="button" class="mm-btn icon" aria-label="Toggle theme">🌓</button>
+      <button type="button" class="mm-btn icon" aria-label="Command palette">⌘</button>
+    </div>
+  </header>
+</section>
+
+<section class="mm-ds-section">
+  <h2>Navigation rail (left-docked tab strip, real markup)</h2>
+  <div style="display:flex;height:340px;border-radius:12px;overflow:hidden;border:1px solid var(--mm-outline-variant)">
+    <nav class="mm-tabstrip" style="width:240px" aria-label="Site navigation">
+      <div class="mm-tabstrip-search mm-search"><input type="search" placeholder="Search…"></div>
+      <ul class="mm-tab-list">
+        <li><a class="mm-tab" href="#" aria-selected="true" role="tab">Home</a></li>
+        <li><a class="mm-tab" href="#" aria-selected="false" role="tab">Fields &amp; crops</a></li>
+        <li><a class="mm-tab" href="#" aria-selected="false" role="tab">Factories</a></li>
+        <li><a class="mm-tab" href="#" aria-selected="false" role="tab">Order board</a></li>
+        <li><a class="mm-tab" href="#" aria-selected="false" role="tab">Changelog</a></li>
+      </ul>
+    </nav>
+    <div class="mm-main" style="flex:1">
+      <p class="hint">Real markup — a &lt;nav&gt; landmark, role="tablist"/"tab", aria-selected, the
+        pin button, the accent rail on the selected item. This is what site/partials/header.html
+        now renders (nav.js still owns the JS that fills it).</p>
+    </div>
+  </div>
+</section>
+
+<section class="mm-ds-section">
+  <h2>Tabs (horizontal, top-docked)</h2>
+  <div class="mm-tabstrip" style="flex-direction:row;overflow-x:auto;border-radius:12px;border:1px solid var(--mm-outline-variant)">
+    <ul class="mm-tab-list" style="flex-direction:row">
+      <li><a class="mm-tab" href="#" aria-selected="true" role="tab">Overview</a></li>
+      <li><a class="mm-tab" href="#" aria-selected="false" role="tab">Requirements</a></li>
+      <li><a class="mm-tab" href="#" aria-selected="false" role="tab">Download</a></li>
+    </ul>
+  </div>
+</section>
+</body>
+</html>

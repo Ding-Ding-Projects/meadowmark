@@ -1,0 +1,42 @@
+<!-- @dsCard group="Components" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meadowmark — Cards</title>
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/preview.css">
+<style>
+  .mm-card.filled { background: var(--mm-surface-container-highest); box-shadow: none; border: none; }
+  .mm-card.outlined { background: var(--mm-surface); box-shadow: none; border: 1px solid var(--mm-outline-variant); }
+</style>
+</head>
+<body class="mm-ds-preview">
+<div class="mm-ds-toolbar"><strong>Meadowmark · Cards</strong></div>
+<div class="mm-ds-grid">
+  <div class="mm-card">
+    <h3>Elevated</h3>
+    <p class="hint">surface-container-low + elevation-1. The default card everywhere on the site.</p>
+  </div>
+  <div class="mm-card filled">
+    <h3>Filled</h3>
+    <p class="hint">surface-container-highest, no shadow, no border — used for nested content within an already-elevated surface.</p>
+  </div>
+  <div class="mm-card outlined">
+    <h3>Outlined</h3>
+    <p class="hint">surface + outline-variant border, no shadow — the low-emphasis variant.</p>
+  </div>
+</div>
+<section class="mm-ds-section" style="margin-top:32px">
+  <h2>Hero, for comparison</h2>
+  <p class="hint">Not a card at all — its own gradient surface, so it never computes to the same background a plain card does.</p>
+  <section class="mm-hero">
+    <span class="mm-badge">Windows · unsigned · free forever</span>
+    <h1>Meadowmark</h1>
+    <p style="max-width:60ch;margin:0 auto">A real 3D town-and-farm building game for Windows.</p>
+  </section>
+</section>
+</body>
+</html>

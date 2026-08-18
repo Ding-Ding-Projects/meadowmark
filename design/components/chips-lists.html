@@ -1,0 +1,62 @@
+<!-- @dsCard group="Components" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meadowmark — Chips &amp; lists</title>
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/components.css">
+<link rel="stylesheet" href="../css/preview.css">
+<style>
+  .mm-chip {
+    display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px;
+    border-radius: var(--mm-radius-full); border: 1px solid var(--mm-outline);
+    background: var(--mm-surface); color: var(--mm-on-surface-variant); font-size: .85rem; cursor: pointer;
+  }
+  .mm-chip.selected { background: var(--mm-secondary-container); color: var(--mm-on-secondary-container); border-color: transparent; }
+  .mm-list { list-style: none; margin: 0; padding: 0; border: 1px solid var(--mm-outline-variant); border-radius: 12px; overflow: hidden; }
+  .mm-list li { display: flex; gap: 12px; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--mm-outline-variant); background: var(--mm-surface-container-low); }
+  .mm-list li:last-child { border-bottom: none; }
+  .mm-list .icon { width: 32px; text-align: center; }
+</style>
+</head>
+<body class="mm-ds-preview">
+<div class="mm-ds-toolbar"><strong>Meadowmark · Chips &amp; lists</strong></div>
+
+<section class="mm-ds-section">
+  <h2>Chips</h2>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <button class="mm-chip">Fields</button>
+    <button class="mm-chip selected">Factories</button>
+    <button class="mm-chip">Town</button>
+    <button class="mm-chip">Village</button>
+  </div>
+</section>
+
+<section class="mm-ds-section">
+  <h2>Lists</h2>
+  <ul class="mm-list">
+    <li><span class="icon">🌾</span><span>Fields &amp; crops</span></li>
+    <li><span class="icon">🐔</span><span>Animals</span></li>
+    <li><span class="icon">🏭</span><span>Factories &amp; production chains</span></li>
+    <li><span class="icon">📋</span><span>Order board</span></li>
+  </ul>
+</section>
+
+<section class="mm-ds-section">
+  <h2>Segmented buttons</h2>
+  <div style="display:inline-flex;border-radius:var(--mm-radius-full);overflow:hidden;border:1px solid var(--mm-outline)">
+    <button class="mm-btn" style="border-radius:0;box-shadow:none;background:var(--mm-secondary-container);color:var(--mm-on-secondary-container)">EN</button>
+    <button class="mm-btn outlined" style="border-radius:0;border:none;border-left:1px solid var(--mm-outline)">粵</button>
+    <button class="mm-btn outlined" style="border-radius:0;border:none;border-left:1px solid var(--mm-outline)">EN / 粵</button>
+  </div>
+</section>
+
+<section class="mm-ds-section">
+  <h2>Divider</h2>
+  <hr style="border:none;border-top:1px solid var(--mm-outline-variant)">
+</section>
+</body>
+</html>

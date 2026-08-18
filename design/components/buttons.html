@@ -1,0 +1,76 @@
+<!-- @dsCard group="Components" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meadowmark — Buttons</title>
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/components.css">
+<link rel="stylesheet" href="../css/preview.css">
+<style>
+  .mm-btn.filled-tonal { background: var(--mm-secondary-container); color: var(--mm-on-secondary-container); box-shadow: none; }
+  .mm-btn.text { background: none; color: var(--mm-primary); box-shadow: none; padding: 10px 12px; }
+  .mm-fab {
+    width: 56px; height: 56px; border-radius: var(--mm-radius-lg); border: none;
+    background: var(--mm-primary-container); color: var(--mm-on-primary-container);
+    box-shadow: var(--mm-elevation-3); font-size: 1.4rem; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .mm-fab.small { width: 40px; height: 40px; border-radius: var(--mm-radius-md); font-size: 1.1rem; }
+  .mm-fab.extended { width: auto; padding: 0 20px; border-radius: var(--mm-radius-lg); gap: 8px; font-weight: 600; }
+</style>
+</head>
+<body class="mm-ds-preview">
+<div class="mm-ds-toolbar"><strong>Meadowmark · Buttons</strong></div>
+
+<section class="mm-ds-section">
+  <h2>Filled</h2>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+    <button class="mm-btn">Download</button>
+    <button class="mm-btn" disabled>Download</button>
+  </div>
+</section>
+
+<section class="mm-ds-section">
+  <h2>Tonal</h2>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+    <button class="mm-btn filled-tonal">Read the documentation</button>
+    <button class="mm-btn tonal">Reset to defaults</button>
+  </div>
+</section>
+
+<section class="mm-ds-section">
+  <h2>Outlined</h2>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+    <button class="mm-btn outlined">View on GitHub</button>
+  </div>
+</section>
+
+<section class="mm-ds-section">
+  <h2>Text</h2>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+    <button class="mm-btn text">Skip to content</button>
+  </div>
+</section>
+
+<section class="mm-ds-section">
+  <h2>Icon</h2>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+    <button class="mm-btn icon" aria-label="Toggle theme">🌓</button>
+    <button class="mm-btn icon" aria-label="Notifications">🔔</button>
+    <button class="mm-btn icon" aria-label="Command palette">⌘</button>
+  </div>
+</section>
+
+<section class="mm-ds-section">
+  <h2>FAB</h2>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+    <button class="mm-fab small" aria-label="Add">➕</button>
+    <button class="mm-fab" aria-label="Add">➕</button>
+    <button class="mm-fab extended">➕ New save</button>
+  </div>
+</section>
+</body>
+</html>
