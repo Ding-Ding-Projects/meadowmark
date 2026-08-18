@@ -1,0 +1,271 @@
+/*
+ * The bottom navigation dock: a floating row of chunky, saturated icon
+ * badges that stands in for the old text-row sidebar. This file owns the
+ * dock's own look and the fixed positioning of the shell built in
+ * index.ts (the ".mm-navdock-shell" / ".mm-navdock-panel-slot" classes
+ * below) — it deliberately does NOT reuse ".mm-primary-panel-host" or
+ * ".mm-primary-nav-host" from packages/ui/src/universal/universal.css,
+ * whose fixed-inset rules assume the old left-column sidebar layout and
+ * would fight this one.
+ *
+ * Badge colours are a warm, saturated set distinct from the desaturated
+ * M3 role palette in tokens.css — Township-style builders read as toys,
+ * not documents, and a toy needs real colour. Defined on bare :root per
+ * the theming contract; nothing here needs a dark-mode override because
+ * a saturated badge stays legible on both a cream and a charcoal dock
+ * surface, but the dock's own frame colours (wood surface, outline) are
+ * still redefined for dark so the frame itself isn't a flat grey box at
+ * night.
+ */
+
+:root {
+  --mm-nav-badge-grass: #4f9a3d;
+  --mm-nav-badge-gold: #e0a415;
+  --mm-nav-badge-berry: #d1445a;
+  --mm-nav-badge-sky: #2f92d6;
+  --mm-nav-badge-wood: #9a6a3c;
+  --mm-nav-badge-ocean: #1f7a8c;
+  --mm-nav-badge-brick: #c1552f;
+  --mm-nav-badge-jungle: #3f8f5f;
+  --mm-nav-badge-coal: #4a4238;
+  --mm-nav-badge-marble: #7c7ca8;
+  --mm-nav-badge-clay: #b06a3a;
+  --mm-nav-badge-plum: #8a4fae;
+  --mm-nav-badge-slate: #556075;
+
+  --mm-navdock-surface: #f3e3c4;
+  --mm-navdock-surface-accent: #eed5a5;
+  --mm-navdock-border: #6b4a28;
+  --mm-navdock-shadow: rgba(56, 32, 8, 0.35);
+  --mm-navdock-item-shadow-color: rgba(0, 0, 0, 0.34);
+  --mm-navdock-item-highlight: rgba(255, 255, 255, 0.55);
+  --mm-navdock-label-color: var(--mm-color-on-surface);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --mm-navdock-surface: #3a2c1c;
+    --mm-navdock-surface-accent: #46351f;
+    --mm-navdock-border: #8a6134;
+    --mm-navdock-shadow: rgba(0, 0, 0, 0.55);
+    --mm-navdock-item-shadow-color: rgba(0, 0, 0, 0.55);
+    --mm-navdock-item-highlight: rgba(255, 255, 255, 0.22);
+  }
+}
+
+:root[data-theme="dark"] {
+  --mm-navdock-surface: #3a2c1c;
+  --mm-navdock-surface-accent: #46351f;
+  --mm-navdock-border: #8a6134;
+  --mm-navdock-shadow: rgba(0, 0, 0, 0.55);
+  --mm-navdock-item-shadow-color: rgba(0, 0, 0, 0.55);
+  --mm-navdock-item-highlight: rgba(255, 255, 255, 0.22);
+}
+
+/* ---- Shell: the fixed overlay that used to hold a side-by-side rail +
+   panel; now a single column with the panel floating above the dock. ---- */
+
+.mm-navdock-shell {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  z-index: var(--mm-z-panel);
+  pointer-events: none;
+}
+
+.mm-navdock-panel-slot {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* The panel card itself re-enables pointer events; the slot around it
+   stays click-through so the 3D world remains visible and interactive
+   in the space around a floating panel. */
+.mm-navdock-panel-slot > * {
+  pointer-events: auto;
+  max-width: min(760px, calc(100vw - 32px));
+  max-height: 100%;
+  width: 100%;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.mm-navdock-dock-slot {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: center;
+  padding: 0 12px 14px;
+  pointer-events: none;
+}
+
+.mm-navdock-dock-slot > * {
+  pointer-events: auto;
+}
+
+/* ---- The dock itself ---- */
+
+.mm-navdock-wrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  max-width: min(96vw, 980px);
+}
+
+.mm-navdock {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  padding: 10px 16px 12px;
+  border-radius: var(--mm-shape-extra-large);
+  border: 4px solid var(--mm-navdock-border);
+  background: linear-gradient(180deg, var(--mm-navdock-surface-accent), var(--mm-navdock-surface));
+  box-shadow:
+    0 10px 0 var(--mm-navdock-shadow),
+    0 18px 28px -8px var(--mm-navdock-shadow);
+  overflow-x: auto;
+  overflow-y: visible;
+  overscroll-behavior: contain;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+.mm-navdock::-webkit-scrollbar { display: none; }
+
+.mm-navdock__item {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: clamp(64px, 8vw, 84px);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  border-radius: var(--mm-shape-large);
+}
+
+.mm-navdock__badge {
+  --mm-navdock-badge-color: var(--mm-nav-badge-slate);
+  display: grid;
+  place-items: center;
+  width: clamp(56px, 7vw, 76px);
+  height: clamp(56px, 7vw, 76px);
+  min-height: var(--mm-touch-target-min);
+  min-width: var(--mm-touch-target-min);
+  font-size: clamp(26px, 3.4vw, 36px);
+  line-height: 1;
+  border-radius: 28%;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--mm-navdock-badge-color) 100%, white 22%), var(--mm-navdock-badge-color));
+  border: 3px solid color-mix(in srgb, var(--mm-navdock-badge-color) 55%, black 30%);
+  box-shadow:
+    inset 0 2px 0 var(--mm-navdock-item-highlight),
+    0 5px 0 color-mix(in srgb, var(--mm-navdock-badge-color) 55%, black 35%),
+    0 8px 12px -2px rgba(0, 0, 0, 0.3);
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.mm-navdock__label {
+  font: 800 12px/1.15 var(--mm-font-family);
+  letter-spacing: 0.01em;
+  color: var(--mm-navdock-label-color);
+  text-align: center;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mm-navdock__item:hover .mm-navdock__badge {
+  transform: translateY(-2px);
+}
+
+.mm-navdock__item:active .mm-navdock__badge {
+  transform: translateY(3px);
+  box-shadow:
+    inset 0 2px 0 var(--mm-navdock-item-highlight),
+    0 2px 0 color-mix(in srgb, var(--mm-navdock-badge-color) 55%, black 35%),
+    0 3px 6px -2px rgba(0, 0, 0, 0.3);
+}
+
+.mm-navdock__item--active .mm-navdock__badge {
+  transform: translateY(-4px);
+  box-shadow:
+    inset 0 2px 0 var(--mm-navdock-item-highlight),
+    0 3px 0 color-mix(in srgb, var(--mm-navdock-badge-color) 55%, black 35%),
+    0 0 0 3px color-mix(in srgb, var(--mm-navdock-badge-color) 60%, white 10%),
+    0 10px 16px -4px rgba(0, 0, 0, 0.35);
+}
+
+.mm-navdock__item--active .mm-navdock__label {
+  color: color-mix(in srgb, var(--mm-navdock-label-color) 100%, var(--mm-color-primary) 0%);
+  font-weight: 800;
+}
+
+.mm-navdock__item:focus-visible {
+  outline: 3px solid var(--mm-color-primary);
+  outline-offset: 3px;
+  border-radius: var(--mm-shape-medium);
+}
+
+/* ---- Scroll affordances ---- */
+
+.mm-navdock__scrollbtn {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  min-width: var(--mm-touch-target-min);
+  min-height: var(--mm-touch-target-min);
+  border-radius: var(--mm-shape-full);
+  border: 3px solid var(--mm-navdock-border);
+  background: var(--mm-navdock-surface-accent);
+  color: var(--mm-navdock-label-color);
+  font: 800 20px/1 var(--mm-font-family);
+  cursor: pointer;
+  box-shadow: 0 4px 0 var(--mm-navdock-shadow);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 120ms ease, transform 120ms ease;
+}
+
+.mm-navdock__scrollbtn--visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.mm-navdock__scrollbtn:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 var(--mm-navdock-shadow);
+}
+
+.mm-navdock__scrollbtn:focus-visible {
+  outline: 3px solid var(--mm-color-primary);
+  outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  .mm-navdock-panel-slot { padding: 8px; }
+  .mm-navdock { gap: 6px; padding: 8px 10px 10px; }
+  .mm-navdock__item { width: 60px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mm-navdock,
+  .mm-navdock__badge,
+  .mm-navdock__scrollbtn {
+    scroll-behavior: auto;
+    transition-duration: 0.001ms !important;
+  }
+}

@@ -18,6 +18,7 @@ import "./panels/panels.css";
 import "./universal/universal.css";
 import "./effects/effects.css";
 import "./onboarding/onboarding.css";
+import "./nav/nav.css";
 
 import "./i18n/common";
 import "./i18n/hud";
@@ -32,6 +33,7 @@ import "./i18n/history";
 import "./i18n/exports";
 import "./i18n/logo";
 import "./i18n/onboarding";
+import "./nav/i18n";
 
 import { mountHud } from "./hud";
 import { renderFieldsPanel } from "./panels/fields";
@@ -51,7 +53,7 @@ import { renderVillagePanel } from "./panels/village";
 import { openOfflineSummaryDialog } from "./panels/offline-summary";
 import { mountSettings } from "./settings";
 import { mountOnboarding } from "./onboarding";
-import { tabs } from "./components/tabs";
+import { createNavDock } from "./nav/dock";
 import { installCommandPaletteHotkey, registerPaletteSource } from "./palette/command-palette";
 import { settingsStore } from "./settings/store";
 import { setTheme, setDensityScale } from "./tokens";
@@ -100,19 +102,14 @@ export function mountUi(root: HTMLElement, opts: MountUiOptions): MountedUi {
 
   disposers.push(mountHud(root, opts.state$));
 
-  const panelHost = h("div.mm-primary-panel-host", { id: "mm-primary-panel", role: "tabpanel", tabindex: "0" });
-  root.appendChild(panelHost);
+  const panelHost = h("div.mm-navdock-panel", { id: "mm-primary-panel", role: "tabpanel", tabindex: "0" });
   disposers.push(() => panelHost.remove());
-  const dock = s.tabDock;
-  const isVerticalDock = dock === "left" || dock === "right";
 
-  // (panelHost declared above with its tabpanel role; layout is applied by CSS)
-
-  // Forward-declared: assigned once navTabsHandle is created below.
+  // Forward-declared: assigned once navDockHandle is created below.
   // Referenced only from event handlers that fire after mount (never
   // during mountPanel's own initial synchronous call), so it is always
   // set by the time anything actually reads it.
-  let navTabsHandle: ReturnType<typeof tabs> | undefined;
+  let navDockHandle: ReturnType<typeof createNavDock> | undefined;
 
   let currentDisposer: (() => void) | null = null;
   function mountPanel(id: string): void {
@@ -124,7 +121,7 @@ export function mountUi(root: HTMLElement, opts: MountUiOptions): MountedUi {
         currentDisposer = renderFieldsPanel(panelHost, state.fields, state.resources.coins, opts.host);
         break;
       case "factories":
-        currentDisposer = renderFactoriesPanel(panelHost, state.factories, state.barn, opts.host, () => navTabsHandle?.setActive("barn"));
+        currentDisposer = renderFactoriesPanel(panelHost, state.factories, state.barn, opts.host, () => navDockHandle?.setActive("barn"));
         break;
       case "barn":
         currentDisposer = renderBarnPanel(panelHost, state.barn, opts.host);
@@ -190,54 +187,38 @@ export function mountUi(root: HTMLElement, opts: MountUiOptions): MountedUi {
     { id: "control-centre", label: "Control centre · 控制中心" },
   ];
 
-  // Each nav "tab" mounts the corresponding panel into panelHost rather than
-  // holding all panels simultaneously in the DOM — keeps the surface light.
-  navTabsHandle = tabs({
+  // Each dock item mounts the corresponding panel into panelHost rather
+  // than holding all panels simultaneously in the DOM — keeps the surface
+  // light. The dock always docks to the bottom edge: there is no sidebar
+  // any more, in any orientation — see nav/dock.ts and nav/nav.css for
+  // why, and the settings surface's own "tab strip position" control
+  // (packages/ui/src/settings) now governs only the OTHER tab strips in
+  // the app (its own settings tabs, etc.), never the primary navigation.
+  navDockHandle = createNavDock({
     ariaLabel: t("nav.regionLabel"),
-    dock: s.tabDock,
+    panelId: "mm-primary-panel",
     activeId: "fields",
     onActivate: mountPanel,
-    tabs: tabDefs.map((d) => ({ id: d.id, label: d.label, controlsId: "mm-primary-panel" })),
+    items: tabDefs.map((d) => ({ id: d.id, label: d.label })),
   });
-  const navHost = h("div.mm-primary-nav-host");
-  navHost.appendChild(navTabsHandle.root);
 
-  const panelSlot = h("div", {
-    style: {
-      flex: "1 1 auto",
-      minWidth: "0",
-      minHeight: "0",
-      display: "flex",
-      justifyContent: isVerticalDock ? "flex-start" : "center",
-      padding: "12px",
-      overflow: "hidden",
-    },
-  });
+  // A single fixed-position shell replaces the old side-by-side nav-rail
+  // layout: the panel floats centred in the space above the world, and
+  // the dock floats centred just above the bottom edge with a gap, so the
+  // 3D world stays visible around and behind both of them. See nav.css
+  // for ".mm-navdock-shell" / ".mm-navdock-panel-slot" / ".mm-navdock-dock-slot".
+  const panelSlot = h("div.mm-navdock-panel-slot");
   panelSlot.appendChild(panelHost);
 
-  // A single flex shell lays the nav rail and the active panel out
-  // side-by-side (row/row-reverse for a left/right dock) or stacked
-  // (column/column-reverse for top/bottom), so the two can never overlap
-  // regardless of viewport width or how long the nav labels run in
-  // bilingual mode — two independently `position: fixed` boxes (the
-  // previous approach) had no way to know about each other's size, and
-  // reliably overlapped once the window narrowed or labels grew.
-  const shell = h("div", {
-    style: {
-      position: "fixed",
-      left: "0",
-      right: "0",
-      bottom: "0",
-      display: "flex",
-      flexDirection: dock === "left" ? "row" : dock === "right" ? "row-reverse" : dock === "top" ? "column" : "column-reverse",
-      zIndex: "var(--mm-z-panel)",
-      pointerEvents: "auto",
-    },
-  });
-  shell.appendChild(navHost);
+  const dockSlot = h("div.mm-navdock-dock-slot");
+  dockSlot.appendChild(navDockHandle.root);
+
+  const shell = h("div.mm-navdock-shell");
   shell.appendChild(panelSlot);
+  shell.appendChild(dockSlot);
   root.appendChild(shell);
   disposers.push(() => shell.remove());
+  disposers.push(() => navDockHandle?.destroy());
 
   // The shell must start below the HUD status bar, never under it — the
   // HUD wraps onto extra rows at narrow widths, in bilingual mode, and at
@@ -263,7 +244,7 @@ export function mountUi(root: HTMLElement, opts: MountUiOptions): MountedUi {
   // Never blocks anything above — mountOnboarding is a no-op past the first
   // launch and appends its own card asynchronously-free (no await, nothing
   // waits on it) if it does have something to show.
-  disposers.push(mountOnboarding({ onStartFirstAction: () => navTabsHandle.setActive("fields") }));
+  disposers.push(mountOnboarding({ onStartFirstAction: () => navDockHandle!.setActive("fields") }));
 
   const removeHotkey = installCommandPaletteHotkey();
   disposers.push(removeHotkey);
@@ -273,7 +254,7 @@ export function mountUi(root: HTMLElement, opts: MountUiOptions): MountedUi {
       kind: "destination" as const,
       id: `nav-${d.id}`,
       label: d.label,
-      teleport: () => navTabsHandle?.setActive(d.id),
+      teleport: () => navDockHandle?.setActive(d.id),
     }))
   );
 
