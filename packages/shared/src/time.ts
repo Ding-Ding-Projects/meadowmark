@@ -26,6 +26,74 @@ export function isReady(readyAt: number | null, now: number): boolean {
   return readyAt !== null && now >= readyAt;
 }
 
+/**
+ * The maximum span of elapsed wall-clock time any subsystem will ever
+ * catch up on in one go, shared by offline.ts's resume clamp and every
+ * boundary-crossing loop below (mine regeneration, ship window rerolls,
+ * village request top-ups, daily rollovers). A save opened after a year
+ * away simulates 30 days of catch-up, not a year - the rest of the
+ * absence is deliberately not modeled. Defined here (not in offline.ts)
+ * so every subsystem that needs it can import it without offline.ts
+ * having to import back from them.
+ */
+export const MAX_OFFLINE_MS = 30 * DAY_MS;
+
+/**
+ * Returns the epoch ms of the local midnight strictly after `fromMs` -
+ * i.e. the next local calendar-day boundary. Used to advance a stored
+ * "last processed day" cursor one real day at a time (see
+ * boundariesElapsed's doc comment for why "one big jump" and "many small
+ * steps" must both go through the same day-by-day loop to stay
+ * deterministic).
+ */
+export function nextLocalDayBoundary(fromMs: number): number {
+  const d = new Date(fromMs);
+  d.setHours(24, 0, 0, 0);
+  return d.getTime();
+}
+
+export interface BoundaryCatchUp {
+  /** How many fixed-length boundaries to actually process this call. */
+  boundariesToProcess: number;
+  /** How many boundaries were skipped because the catch-up cap was hit. */
+  forfeited: number;
+}
+
+/**
+ * Computes how many FIXED-length boundaries (every `intervalMs`) lie
+ * strictly between `cursor` (the epoch ms of the last boundary this
+ * subsystem actually processed) and `now`, capped at `maxBoundaries` so a
+ * save restored after a year - or a system clock jumped far forward -
+ * can never spin through hundreds of catch-up iterations or hang the app.
+ *
+ * This is the piece that makes tick(24h) once and tick(1min) applied 1440
+ * times produce identical results: both call patterns are required to
+ * process exactly the same boundaries, in the same order, each consuming
+ * RNG draws the same way, rather than one "jumping straight to now" and
+ * skipping the intermediate crossings entirely. Callers loop
+ * `boundariesToProcess` times, advancing their own cursor by `intervalMs`
+ * (or by whatever their specific boundary function returns, for
+ * calendar-day cases - see nextLocalDayBoundary) each iteration, and if
+ * `forfeited > 0`, jump their cursor straight to the most recent boundary
+ * at-or-before `now` afterward so the forfeited middle boundaries are
+ * never replayed on a later call.
+ *
+ * Handles a clock that moves BACKWARD (user changed the system time, a
+ * DST fallback, a save restored from "the future") by returning zero
+ * boundaries to process - this never loops negative and never asks the
+ * caller to rewind its cursor.
+ */
+export function boundariesElapsed(cursor: number, now: number, intervalMs: number, maxBoundaries: number): BoundaryCatchUp {
+  if (now <= cursor || intervalMs <= 0) {
+    return { boundariesToProcess: 0, forfeited: 0 };
+  }
+  const totalBoundaries = Math.floor((now - cursor) / intervalMs);
+  if (totalBoundaries <= maxBoundaries) {
+    return { boundariesToProcess: totalBoundaries, forfeited: 0 };
+  }
+  return { boundariesToProcess: maxBoundaries, forfeited: totalBoundaries - maxBoundaries };
+}
+
 /** Local calendar date (YYYY-MM-DD) for a given epoch ms, in the machine's local timezone. Used to seed dailies/regatta deterministically per day. */
 export function localDateKey(epochMs: number): string {
   const d = new Date(epochMs);

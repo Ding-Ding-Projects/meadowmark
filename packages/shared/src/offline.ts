@@ -30,7 +30,7 @@ import { maybeUnlockZoo } from "./zoo";
 import { maybeUnlockMine, tickMine } from "./mine";
 import { type DailyTaskTemplate, tickDailies } from "./dailies";
 import { type RegattaTaskTemplate, tickVillage } from "./village";
-import { DAY_MS } from "./time";
+import { MAX_OFFLINE_MS } from "./time";
 
 /**
  * Content catalogs needed by the subsystems whose refills/rolls depend on
@@ -102,7 +102,7 @@ export function tick(state: GameState, elapsedMs: number, now: number, config: T
     events.push(...r.events);
   }
   if (config.shippableGoods) {
-    const r = tickShip(next, rng, config.shippableGoods, now);
+    const r = tickShip(next, config.shippableGoods, now);
     next = r.state;
     events.push(...r.events);
   }
@@ -113,9 +113,9 @@ export function tick(state: GameState, elapsedMs: number, now: number, config: T
   }
 
   next = maybeUnlockZoo(next);
-  next = maybeUnlockMine(next, rng);
+  next = maybeUnlockMine(next, now);
   {
-    const r = tickMine(next, rng, now);
+    const r = tickMine(next, now);
     next = r.state;
     events.push(...r.events);
   }
@@ -128,7 +128,6 @@ export function tick(state: GameState, elapsedMs: number, now: number, config: T
   if (config.regattaTaskTemplates && config.villageGoodPool) {
     const r = tickVillage(
       next,
-      rng,
       config.villageGoodPool,
       config.regattaTaskTemplates,
       config.regattaScoreBarCap ?? 100,
@@ -142,8 +141,6 @@ export function tick(state: GameState, elapsedMs: number, now: number, config: T
 
   return { state: next, events };
 }
-
-export const MAX_OFFLINE_MS = 30 * DAY_MS;
 
 export interface OfflineSummary {
   elapsedMs: number;

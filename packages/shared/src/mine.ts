@@ -9,14 +9,17 @@
 
 import type { GameEvent, GameState, MineState, MineTile, MineTileContent } from "./types";
 import type { RngState } from "./rng";
-import { nextFloat, pick } from "./rng";
-import { localDateKey, HOUR_MS, isReady } from "./time";
+import { nextFloat, pick, scopedRng } from "./rng";
+import { DAY_MS, HOUR_MS, MAX_OFFLINE_MS, isReady, nextLocalDayBoundary } from "./time";
 
 export const MINE_UNLOCK_LEVEL = 22;
 export const MINE_GRID_WIDTH = 8;
 export const MINE_GRID_HEIGHT = 8;
 export const ARTIFACT_FRAGMENTS_REQUIRED = 6;
 export const FOUNDRY_SMELT_TIME_MS = 2 * HOUR_MS;
+
+/** Regeneration is daily, so the catch-up cap is just the offline clamp expressed in days (30). */
+export const MINE_MAX_CATCHUP_BOUNDARIES = Math.floor(MAX_OFFLINE_MS / DAY_MS);
 
 export const ORE_IDS = ["copper", "iron", "silver", "gold", "platinum"] as const;
 export const GEM_IDS = ["quartz", "amethyst", "ruby", "sapphire", "diamond"] as const;
@@ -62,7 +65,7 @@ export function createInitialMine(): MineState {
     gridWidth: MINE_GRID_WIDTH,
     gridHeight: MINE_GRID_HEIGHT,
     tiles: [],
-    lastRegeneratedDate: null,
+    lastRegenAt: null,
     oreBars: {},
     artifactFragments: {},
     completedArtifacts: [],
@@ -70,11 +73,19 @@ export function createInitialMine(): MineState {
   };
 }
 
-export function maybeUnlockMine(state: GameState, rng: RngState): GameState {
+/**
+ * `now` is the instant the mine actually unlocks (not a stale prior
+ * timestamp), since the initial grid generated here counts as this
+ * moment's regeneration - tickMine()'s catch-up loop starts counting
+ * forward from exactly this cursor. Uses a self-seeded RNG scoped to
+ * `now` rather than the shared world RNG - see rng.ts's scopedRng() for
+ * why every boundary-triggered mine regeneration needs this.
+ */
+export function maybeUnlockMine(state: GameState, now: number): GameState {
   if (state.mine.unlocked || state.economy.level < MINE_UNLOCK_LEVEL) return state;
   return {
     ...state,
-    mine: { ...state.mine, unlocked: true, tiles: generateMineGrid(rng), lastRegeneratedDate: localDateKey(state.lastTickAt) },
+    mine: { ...state.mine, unlocked: true, tiles: generateMineGrid(scopedRng("mine", now)), lastRegenAt: now },
   };
 }
 
@@ -229,33 +240,73 @@ export function collectSmelt(state: GameState, index: number, now: number): { st
 }
 
 /**
- * Regenerates the mine once per local calendar day (never mid-day), refilling every tile.
+ * Regenerates the mine once per local calendar day actually crossed since
+ * `lastRegenAt`, refilling every tile each time - never mid-day, and
+ * never collapsing a multi-day gap into a single regeneration.
  *
- * KNOWN CHUNK-INVARIANCE GAP: this checks only whether the CURRENT boundary
- * (today vs lastRegeneratedDate) has been crossed, not how many day
- * boundaries were crossed since the last call. A single tick(30 days)
- * regenerates the mine exactly once (for the final day); 30 * tick(1 day)
- * covering the same span regenerates it once per day. Both leave
- * lastRegeneratedDate correctly set to "today", but they consume different
- * numbers of draws from the shared world RNG (generateMineGrid uses `rng`,
- * not a date-seeded local RNG), so the resulting tile content - and every
- * RNG-dependent roll anywhere else afterward - diverges between the two
- * call patterns. tick(24h) == 1440x tick(1min) does NOT hold across a
- * multi-day gap for this subsystem. See ship.ts's window roll and
- * village.ts's villager-request top-up for the same root cause; fixing it
- * properly means looping "once per boundary actually crossed" rather than
- * "once per call", which needs its own dedicated change and tests.
+ * This is the boundary-crossing catch-up loop: it walks day by day from
+ * the stored cursor toward `now`, generating each day's grid from a fresh
+ * RNG scoped to that exact boundary's timestamp (scopedRng(), NOT the
+ * shared world RNG - see rng.ts for why: this loop's own iteration count
+ * varies with how much time elapsed, and it shares tick() with other
+ * boundary loops such as ship.ts's window reroll and village.ts's
+ * request top-up, so drawing from one linear stream would make a day's
+ * content depend on how many draws THOSE subsystems happened to consume
+ * first, which itself depends on how the elapsed time was chunked into
+ * tick() calls). With a self-seeded RNG per day, tick(30 days) once and
+ * tick(1 day) applied 30 times regenerate the exact same 30 days of
+ * content in the exact same order, full stop - no cross-subsystem
+ * interleaving to go wrong.
+ *
+ * The loop is capped at MINE_MAX_CATCHUP_BOUNDARIES (30, matching the
+ * 30-day offline clamp): a save opened after a year regenerates at most
+ * 30 times, and the remaining days are deliberately forfeited - the
+ * cursor jumps straight to `now` afterward so a later call never tries to
+ * replay them. A clock that moves backward (or hasn't crossed a boundary
+ * yet) simply does nothing; the cursor is never rewound.
  */
-export function tickMine(state: GameState, rng: RngState, now: number): { state: GameState; events: GameEvent[] } {
+export function tickMine(state: GameState, now: number): { state: GameState; events: GameEvent[] } {
   if (!state.mine.unlocked) return { state, events: [] };
-  const today = localDateKey(now);
-  if (state.mine.lastRegeneratedDate === today) return { state, events: [] };
+
+  const cursor0 = state.mine.lastRegenAt;
+  if (cursor0 === null) {
+    // Defensive only: maybeUnlockMine() always sets lastRegenAt the
+    // instant it unlocks the mine, so an unlocked mine should never have
+    // a null cursor. If it somehow does, treat "right now" as the
+    // starting point rather than crashing or silently regenerating.
+    return { state: { ...state, mine: { ...state.mine, lastRegenAt: now } }, events: [] };
+  }
+  if (now <= cursor0) {
+    return { state, events: [] };
+  }
+
+  const events: GameEvent[] = [];
+  let tiles = state.mine.tiles;
+  let cursor = cursor0;
+  let processed = 0;
+
+  while (processed < MINE_MAX_CATCHUP_BOUNDARIES) {
+    const boundary = nextLocalDayBoundary(cursor);
+    if (boundary > now) break;
+    tiles = generateMineGrid(scopedRng("mine", boundary));
+    events.push({ type: "mineRegenerated", at: boundary });
+    cursor = boundary;
+    processed += 1;
+  }
+
+  if (nextLocalDayBoundary(cursor) <= now) {
+    // Cap hit with more days still pending: forfeit them deliberately
+    // (documented, matches MAX_OFFLINE_MS elsewhere) rather than looping
+    // further. Regenerate once more anchored at `now` so the player
+    // returns to a fresh mine, and jump the cursor to `now` so the
+    // forfeited days are never replayed on a later call.
+    tiles = generateMineGrid(scopedRng("mine", now));
+    events.push({ type: "mineRegenerated", at: now });
+    cursor = now;
+  }
 
   return {
-    state: {
-      ...state,
-      mine: { ...state.mine, tiles: generateMineGrid(rng), lastRegeneratedDate: today },
-    },
-    events: [{ type: "mineRegenerated", at: now }],
+    state: { ...state, mine: { ...state.mine, tiles, lastRegenAt: cursor } },
+    events,
   };
 }

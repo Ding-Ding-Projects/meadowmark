@@ -345,8 +345,15 @@ export interface MineState {
   gridWidth: number;
   gridHeight: number;
   tiles: MineTile[];
-  /** Local date key (see time.ts localDateKey) the mine was last regenerated on. */
-  lastRegeneratedDate: string | null;
+  /**
+   * Epoch ms of the last local-calendar-day boundary this mine actually
+   * processed a regeneration for. Null only before the mine is unlocked.
+   * Drives tickMine()'s catch-up loop (see mine.ts) rather than a "did we
+   * regenerate today" flag, so a multi-day offline gap regenerates once
+   * per day actually crossed - deterministically, regardless of how the
+   * elapsed time was chunked into tick() calls.
+   */
+  lastRegenAt: number | null;
   oreBars: ResourceBag;
   artifactFragments: Record<string, number>;
   completedArtifacts: string[];
@@ -413,6 +420,14 @@ export interface DailiesState {
   chestClaimed: boolean;
   streak: number;
   lastCompletedDateKey: string | null;
+  /**
+   * Epoch ms of the local-calendar-day boundary that produced the current
+   * `dateKey`/`tasks`. Drives tickDailies()'s day-by-day catch-up loop
+   * (see dailies.ts) so the streak resets on every unclaimed day actually
+   * crossed during an offline gap, not just once regardless of how many
+   * days passed.
+   */
+  lastBoundaryAt: number;
 }
 
 // ---------------------------------------------------------------------------
@@ -461,6 +476,14 @@ export interface VillageState {
    * machine. Surfaced verbatim by the UI wherever the village is shown.
    */
   localOnlyNotice: string;
+  /**
+   * Epoch ms of the last fixed VILLAGER_REQUEST_EXPIRY_MS-interval
+   * boundary this village actually processed an expire-and-top-up round
+   * for. Drives tickVillage()'s catch-up loop (see village.ts) so
+   * requests refresh in deterministic batches per boundary genuinely
+   * crossed, rather than cascading roll-expire-roll once per tick() call.
+   */
+  lastTopUpAt: number;
 }
 
 // ---------------------------------------------------------------------------
