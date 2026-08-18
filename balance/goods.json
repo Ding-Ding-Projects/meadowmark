@@ -644,6 +644,167 @@
       "unlockLevel": 35,
       "baseValue": 242,
       "displayName": "Painted Toy"
+    },
+    {
+      "id": "barley",
+      "category": "crop",
+      "unlockLevel": 2,
+      "baseValue": 4,
+      "displayName": "Barley"
+    },
+    {
+      "id": "oats",
+      "category": "crop",
+      "unlockLevel": 4,
+      "baseValue": 6,
+      "displayName": "Oats"
+    },
+    {
+      "id": "peanut",
+      "category": "crop",
+      "unlockLevel": 5,
+      "baseValue": 7,
+      "displayName": "Peanut"
+    },
+    {
+      "id": "cucumber",
+      "category": "crop",
+      "unlockLevel": 7,
+      "baseValue": 9,
+      "displayName": "Cucumber"
+    },
+    {
+      "id": "lettuce",
+      "category": "crop",
+      "unlockLevel": 8,
+      "baseValue": 10,
+      "displayName": "Lettuce"
+    },
+    {
+      "id": "cabbage",
+      "category": "crop",
+      "unlockLevel": 10,
+      "baseValue": 14,
+      "displayName": "Cabbage"
+    },
+    {
+      "id": "onion",
+      "category": "crop",
+      "unlockLevel": 11,
+      "baseValue": 16,
+      "displayName": "Onion"
+    },
+    {
+      "id": "pepper",
+      "category": "crop",
+      "unlockLevel": 14,
+      "baseValue": 22,
+      "displayName": "Pepper"
+    },
+    {
+      "id": "spinach",
+      "category": "crop",
+      "unlockLevel": 18,
+      "baseValue": 29,
+      "displayName": "Spinach"
+    },
+    {
+      "id": "apple",
+      "category": "crop",
+      "unlockLevel": 22,
+      "baseValue": 35,
+      "displayName": "Apple"
+    },
+    {
+      "id": "broccoli",
+      "category": "crop",
+      "unlockLevel": 26,
+      "baseValue": 42,
+      "displayName": "Broccoli"
+    },
+    {
+      "id": "sunflower",
+      "category": "crop",
+      "unlockLevel": 30,
+      "baseValue": 49,
+      "displayName": "Sunflower"
+    },
+    {
+      "id": "melon",
+      "category": "crop",
+      "unlockLevel": 32,
+      "baseValue": 53,
+      "displayName": "Melon"
+    },
+    {
+      "id": "watermelon",
+      "category": "crop",
+      "unlockLevel": 36,
+      "baseValue": 62,
+      "displayName": "Watermelon"
+    },
+    {
+      "id": "pineapple",
+      "category": "crop",
+      "unlockLevel": 40,
+      "baseValue": 72,
+      "displayName": "Pineapple"
+    },
+    {
+      "id": "banana",
+      "category": "crop",
+      "unlockLevel": 42,
+      "baseValue": 77,
+      "displayName": "Banana"
+    },
+    {
+      "id": "mango",
+      "category": "crop",
+      "unlockLevel": 47,
+      "baseValue": 91,
+      "displayName": "Mango"
+    },
+    {
+      "id": "orange",
+      "category": "crop",
+      "unlockLevel": 53,
+      "baseValue": 110,
+      "displayName": "Orange"
+    },
+    {
+      "id": "tea_leaf",
+      "category": "crop",
+      "unlockLevel": 58,
+      "baseValue": 126,
+      "displayName": "Tea Leaf"
+    },
+    {
+      "id": "ginger",
+      "category": "crop",
+      "unlockLevel": 66,
+      "baseValue": 152,
+      "displayName": "Ginger"
+    },
+    {
+      "id": "cacao_pod",
+      "category": "crop",
+      "unlockLevel": 72,
+      "baseValue": 173,
+      "displayName": "Cacao Pod"
+    },
+    {
+      "id": "olive",
+      "category": "crop",
+      "unlockLevel": 85,
+      "baseValue": 237,
+      "displayName": "Olive"
+    },
+    {
+      "id": "saffron",
+      "category": "crop",
+      "unlockLevel": 95,
+      "baseValue": 302,
+      "displayName": "Saffron"
     }
   ]
 }

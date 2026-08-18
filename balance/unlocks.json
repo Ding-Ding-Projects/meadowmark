@@ -62,6 +62,11 @@
       "id": "topiary_garden"
     },
     {
+      "level": 2,
+      "kind": "crop",
+      "id": "barley"
+    },
+    {
       "level": 3,
       "kind": "crop",
       "id": "corn"
@@ -87,6 +92,11 @@
       "id": "house_tier_2"
     },
     {
+      "level": 4,
+      "kind": "crop",
+      "id": "oats"
+    },
+    {
       "level": 5,
       "kind": "animal",
       "id": "cow"
@@ -100,6 +110,11 @@
       "level": 5,
       "kind": "recipe",
       "id": "recipe_bakery_bread"
+    },
+    {
+      "level": 5,
+      "kind": "crop",
+      "id": "peanut"
     },
     {
       "level": 6,
@@ -122,6 +137,11 @@
       "id": "recipe_dairy_butter"
     },
     {
+      "level": 7,
+      "kind": "crop",
+      "id": "cucumber"
+    },
+    {
       "level": 8,
       "kind": "recipe",
       "id": "recipe_bakery_cookie"
@@ -142,6 +162,11 @@
       "id": "train_station"
     },
     {
+      "level": 8,
+      "kind": "crop",
+      "id": "lettuce"
+    },
+    {
       "level": 9,
       "kind": "crop",
       "id": "sugarcane"
@@ -157,9 +182,19 @@
       "id": "sheep"
     },
     {
+      "level": 10,
+      "kind": "crop",
+      "id": "cabbage"
+    },
+    {
       "level": 11,
       "kind": "recipe",
       "id": "recipe_sugar_mill_syrup"
+    },
+    {
+      "level": 11,
+      "kind": "crop",
+      "id": "onion"
     },
     {
       "level": 12,
@@ -185,6 +220,11 @@
       "level": 14,
       "kind": "recipe",
       "id": "recipe_snack_popcorn"
+    },
+    {
+      "level": 14,
+      "kind": "crop",
+      "id": "pepper"
     },
     {
       "level": 15,
@@ -220,6 +260,11 @@
       "level": 18,
       "kind": "feature",
       "id": "ship"
+    },
+    {
+      "level": 18,
+      "kind": "crop",
+      "id": "spinach"
     },
     {
       "level": 19,
@@ -267,6 +312,11 @@
       "id": "mine"
     },
     {
+      "level": 22,
+      "kind": "crop",
+      "id": "apple"
+    },
+    {
       "level": 24,
       "kind": "crop",
       "id": "potato"
@@ -305,6 +355,11 @@
       "level": 26,
       "kind": "building",
       "id": "fire_station"
+    },
+    {
+      "level": 26,
+      "kind": "crop",
+      "id": "broccoli"
     },
     {
       "level": 27,
@@ -347,6 +402,11 @@
       "id": "museum"
     },
     {
+      "level": 30,
+      "kind": "crop",
+      "id": "sunflower"
+    },
+    {
       "level": 31,
       "kind": "building",
       "id": "cinema"
@@ -355,6 +415,11 @@
       "level": 32,
       "kind": "recipe",
       "id": "recipe_toy_factory_toy"
+    },
+    {
+      "level": 32,
+      "kind": "crop",
+      "id": "melon"
     },
     {
       "level": 33,
@@ -392,6 +457,11 @@
       "id": "house_tier_7"
     },
     {
+      "level": 36,
+      "kind": "crop",
+      "id": "watermelon"
+    },
+    {
       "level": 37,
       "kind": "recipe",
       "id": "recipe_candy_chocolate_candy"
@@ -422,6 +492,11 @@
       "id": "recipe_jewellery_bracelet"
     },
     {
+      "level": 40,
+      "kind": "crop",
+      "id": "pineapple"
+    },
+    {
       "level": 41,
       "kind": "recipe",
       "id": "recipe_cosmetics_perfume"
@@ -430,6 +505,11 @@
       "level": 42,
       "kind": "building",
       "id": "sports_arena"
+    },
+    {
+      "level": 42,
+      "kind": "crop",
+      "id": "banana"
     },
     {
       "level": 44,
@@ -447,6 +527,11 @@
       "id": "airport"
     },
     {
+      "level": 47,
+      "kind": "crop",
+      "id": "mango"
+    },
+    {
       "level": 50,
       "kind": "crop",
       "id": "coffee_bean"
@@ -462,9 +547,19 @@
       "id": "recipe_coffee_house_latte"
     },
     {
+      "level": 53,
+      "kind": "crop",
+      "id": "orange"
+    },
+    {
       "level": 56,
       "kind": "crop",
       "id": "lavender"
+    },
+    {
+      "level": 58,
+      "kind": "crop",
+      "id": "tea_leaf"
     },
     {
       "level": 62,
@@ -477,14 +572,34 @@
       "id": "recipe_winery_wine"
     },
     {
+      "level": 66,
+      "kind": "crop",
+      "id": "ginger"
+    },
+    {
       "level": 70,
       "kind": "crop",
       "id": "blueberry"
     },
     {
+      "level": 72,
+      "kind": "crop",
+      "id": "cacao_pod"
+    },
+    {
       "level": 80,
       "kind": "crop",
       "id": "vanilla"
+    },
+    {
+      "level": 85,
+      "kind": "crop",
+      "id": "olive"
+    },
+    {
+      "level": 95,
+      "kind": "crop",
+      "id": "saffron"
     }
   ]
 }
