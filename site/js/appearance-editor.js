@@ -171,14 +171,66 @@
     }, { wide: true });
   }
 
-  function ensureEditableId(el) {
+  // A deterministic (not random) id, built from the element's position in
+  // the DOM relative to a stable root plus the current page path. Random
+  // ids would reset on every page load and silently forget every
+  // auto-tagged element's saved appearance — this is what makes an
+  // auto-tagged paragraph's customisation actually survive a reload.
+  function domPathId(el, root) {
+    const parts = [];
+    let node = el;
+    while (node && node !== root && node.parentElement) {
+      const parent = node.parentElement;
+      const sameTag = Array.from(parent.children).filter((c) => c.tagName === node.tagName);
+      parts.unshift(node.tagName.toLowerCase() + sameTag.indexOf(node));
+      node = parent;
+    }
+    return parts.join(">");
+  }
+
+  function ensureEditableId(el, root) {
     if (!el.getAttribute("data-editable")) {
-      el.setAttribute("data-editable", "auto-" + Math.random().toString(36).slice(2, 9));
+      el.setAttribute("data-editable", "auto:" + location.pathname + "::" + domPathId(el, root || document.body));
     }
   }
 
+  // Elements that carry visible text or their own background, in every
+  // content region of every page — not just a hand-picked sample. This is
+  // what "Edit appearance…" is scoped to. It deliberately EXCLUDES three
+  // classes of element, named here so the gap is a documented decision
+  // rather than a silent one (see also the matching note in
+  // settings.js's Appearance panel caption):
+  //   1. Site chrome (the top bar, the tab strip, the footer's own nav
+  //      links) — these are navigation controls, not content, and users
+  //      already retool them from Settings > Tabs / the tab strip itself.
+  //   2. Anything inside a transient overlay (menus, the command palette,
+  //      toasts, the appearance editor's own popover) — editing a menu
+  //      item's appearance while the menu that opened the editor is still
+  //      open is not a coherent action.
+  //   3. Form controls (button/input/select/textarea/a) — these have
+  //      their own Settings-driven styling contract; free-form appearance
+  //      edits on a control risk making it illegible or inoperable.
+  const AUTO_EDITABLE_SELECTOR = [
+    "p", "li", "h1", "h2", "h3", "h4", "h5", "h6",
+    "td", "th", "blockquote", "dt", "dd", "summary", "caption",
+    ".mm-card", ".mm-hero", "article", "table.mm-table",
+  ].join(", ");
+  const AUTO_EDITABLE_ROOTS = "#main, #mm-footer-host";
+  const AUTO_EDITABLE_EXCLUDE = ".mm-overlay, .mm-menu, .mm-palette, .mm-toast-region, .mm-tabstrip, .mm-topbar, nav";
+
+  function autoTagEditableElements() {
+    document.querySelectorAll(AUTO_EDITABLE_ROOTS).forEach((root) => {
+      root.querySelectorAll(AUTO_EDITABLE_SELECTOR).forEach((el) => {
+        if (el.closest(AUTO_EDITABLE_EXCLUDE)) return;
+        ensureEditableId(el, root);
+      });
+    });
+  }
+
   function installContextMenus() {
-    document.querySelectorAll("[data-editable]").forEach(ensureEditableId);
+    autoTagEditableElements();
+    document.querySelectorAll("[data-editable]").forEach((el) => ensureEditableId(el, document.body));
+    applyAll();
     document.addEventListener("contextmenu", (e) => {
       const el = e.target.closest("[data-editable]");
       if (!el) return;

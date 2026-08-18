@@ -215,6 +215,16 @@
     const appearancePanel = document.createElement("div");
     appearancePanel.hidden = true;
     registerPanel("appearance", appearancePanel);
+
+    const perElementNote = document.createElement("p");
+    perElementNote.className = "hint";
+    perElementNote.innerHTML =
+      '<span class="i18n-en"><strong>Right-click any paragraph, heading, list item, table cell or card — on this page, a docs article, or anywhere else — for "Edit appearance…".</strong> ' +
+      'It is intentionally scoped to content: site chrome (the top bar, tab strip, footer navigation links) keeps its own styling here in Settings instead; anything inside a temporary menu, toast or the appearance editor\'s own popover is excluded because editing it while it is open would not make sense; and form controls (buttons, links, inputs) keep the styling this page already controls, so a stray edit cannot make a control illegible or inoperable.</span>' +
+      '<span class="i18n-yue" lang="yue"><strong>右擊任何段落、標題、清單項目、表格儲存格或卡片——喺呢一頁、文件文章，定係其他地方都得——就會見到「編輯外觀…」。</strong> ' +
+      '呢個功能刻意淨係涵蓋內容部分：網站介面（頂部列、分頁列、頁尾導覽連結）嘅樣式仍然喺呢個設定頁度控制；任何暫時性選單、通知或者外觀編輯器自己個彈出視窗入面嘅嘢都唔包括在內，因為喺個選單開緊嗰陣編輯佢冇意思；表單控制項（按鈕、連結、輸入框）就繼續用呢頁已經控制緊嘅樣式，咁樣就唔會有人亂改到令個控制項睇唔清或者用唔到。</span>';
+    appearancePanel.appendChild(perElementNote);
+
     const accentCtl = explainRow(appearancePanel, {
       id: "accent", title: "Accent colour", titleYue: "主色",
       explainEn: "Overrides the primary colour used across buttons and highlights, via the infinite colour picker.",
