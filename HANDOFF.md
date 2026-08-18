@@ -8,6 +8,45 @@ This is a handoff-only closeout, not a release pass. It did not build an install
 publish or verify a new release after integration. It did preserve a real
 published-package first-paint capture for the existing `v0.1.0-22` baseline.
 
+## Read this first: it looks like a game now, and the camera points at nothing
+
+Updated 2026-08-18 against `main` at `d812972`, after the interface restyle and the
+graphics-variety work. Measured, not remembered.
+
+**The interface is no longer a documentation site.** The left sidebar of text rows is
+gone, replaced by a floating dock of colour-coded icon squircles. Panels are floating
+cards with saturated title banners and chunky buttons with a physical bottom edge.
+Currency readouts are capsules with icon badges overhanging their left end. Verified by
+launching the built app on a hidden desktop and capturing it.
+
+**The asset registry went from 170 to 328 generated meshes**: distinct building
+silhouettes per type, 43 props (carts, windmills, market stalls, barrels, wells), 66
+plants across a dozen species, villager and animal variants, all twelve zoo species,
+and effect meshes for smoke, sparkles, ripples and dust.
+
+**But the last capture shows the camera framing empty grass.** The farm, the field beds
+and every one of those 328 meshes are off-screen. The world lane pulled the camera back
+to fix an over-close framing and it now points at bare ground; a few stray markers and
+red fence rails are the only geometry visible. **This is the most important open
+defect** - cosmetic in cause, total in effect. A player opening this build sees a green
+field and a nice interface, and none of their town.
+
+**Three fixes worth knowing, all root causes rather than symptoms:**
+
+- The world looked dark because three.js r155+ uses physically-based light units, so the
+  same intensity numbers render far dimmer. Proved by sampling rendered pixels: ground
+  luminance 37% to 51-53%.
+- The dock rendered one colour because `Object.assign(el.style, {"--custom-prop": x})` is
+  a silent no-op - `CSSStyleDeclaration` has no setter for custom properties. Fixed in the
+  shared `h()` helper with `setProperty`.
+- `effects.ts` registered nothing because no module imported it, so `defineAsset` never
+  ran. Fourth instance this session of the same wired-at-one-end shape.
+
+**Also open:** the "Welcome back" offline dialog stacks a new copy every second until
+acknowledged. Found while capturing, not yet fixed.
+
+---
+
 ## Read this first
 
 The latest published baseline is `v0.1.0-22`, targeting `dd2a44f`. The six
