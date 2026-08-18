@@ -127,3 +127,34 @@ export function formatCompactNumber(n: number): string {
 export function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
 }
+
+/** Reads the OS-level reduced-motion preference. Every animated affordance in
+ * this package must check this (or rely on tokens.css's global motion-duration
+ * override) before playing a non-essential transform/opacity animation. */
+export function prefersReducedMotion(): boolean {
+  return typeof window !== "undefined" && typeof window.matchMedia === "function"
+    ? window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    : false;
+}
+
+/**
+ * Tweens a number from `from` to `to` over `durationMs`, calling `apply` on
+ * every animation frame with the interpolated value (eased, decelerating).
+ * Jumps straight to the final value with no animation when the value has not
+ * changed or the user prefers reduced motion — this is a readability aid,
+ * never a fact, so it must never delay the real number reaching the screen.
+ */
+export function animateValue(from: number, to: number, durationMs: number, apply: (value: number) => void): void {
+  if (from === to || prefersReducedMotion() || typeof requestAnimationFrame !== "function") {
+    apply(to);
+    return;
+  }
+  const start = performance.now();
+  function frame(now: number): void {
+    const progress = clamp((now - start) / durationMs, 0, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    apply(from + (to - from) * eased);
+    if (progress < 1) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}

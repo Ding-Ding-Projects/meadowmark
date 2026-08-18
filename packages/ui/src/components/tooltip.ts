@@ -1,13 +1,20 @@
 import { h } from "../dom";
 
-/** Attaches a keyboard- and hover-accessible tooltip to `target`. */
-export function attachTooltip(target: HTMLElement, text: string): void {
+/** Attaches a keyboard- and hover-accessible tooltip to `target`. `text` may
+ * be a getter so the tooltip always shows the live value (e.g. a HUD stat
+ * whose label text updates every tick) rather than whatever it was at
+ * attach time. */
+export function attachTooltip(target: HTMLElement, text: string | (() => string)): void {
   let tipEl: HTMLDivElement | null = null;
   const id = `mm-tooltip-${Math.random().toString(36).slice(2)}`;
 
+  function resolveText(): string {
+    return typeof text === "function" ? text() : text;
+  }
+
   function show(): void {
     if (tipEl) return;
-    tipEl = h("div.mm-tooltip", { role: "tooltip", id }, text);
+    tipEl = h("div.mm-tooltip", { role: "tooltip", id }, resolveText());
     document.body.appendChild(tipEl);
     const rect = target.getBoundingClientRect();
     const tipRect = tipEl.getBoundingClientRect();
