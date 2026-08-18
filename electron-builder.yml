@@ -38,6 +38,11 @@ forceCodeSigning: false
 
 win:
   # Do not re-enable. See the no-signing policy above.
+  # Keep resource editing available while explicitly disabling every Windows
+  # executable signing path. This is separate from signAndEditExecutable:
+  # electron-builder's schema documents both switches and signExecutable also
+  # covers installer/auxiliary artifacts that use the standard signing path.
+  signExecutable: false
   signAndEditExecutable: false
   target:
     - target: squirrel
