@@ -1,0 +1,54 @@
+<!-- @dsCard group="Components" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meadowmark — Dialogs &amp; snackbars</title>
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/preview.css">
+</head>
+<body class="mm-ds-preview">
+<div class="mm-ds-toolbar"><strong>Meadowmark · Dialogs &amp; snackbars</strong></div>
+
+<section class="mm-ds-section">
+  <h2>Dialog / anchored overlay</h2>
+  <div class="mm-overlay" style="position:static;display:inline-block">
+    <strong>Reset appearance to defaults?</strong>
+    <p class="hint">This clears every colour, font and layout override stored for this site.</p>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+      <button class="mm-btn outlined">Cancel</button>
+      <button class="mm-btn">Reset</button>
+    </div>
+  </div>
+</section>
+
+<section class="mm-ds-section">
+  <h2>Snackbar / toast</h2>
+  <div class="mm-toast" style="max-width:360px">
+    <span>Theme set to dark / 主題設咗做 dark</span>
+    <button class="dismiss" aria-label="Dismiss">✕</button>
+  </div>
+  <div class="mm-toast error" style="max-width:360px;margin-top:8px">
+    <span>Navigation failed to load locally.</span>
+    <button class="dismiss" aria-label="Dismiss">✕</button>
+  </div>
+</section>
+
+<section class="mm-ds-section">
+  <h2>Progress</h2>
+  <div style="max-width:320px">
+    <div style="height:4px;border-radius:999px;background:var(--mm-surface-container-highest);overflow:hidden">
+      <div style="height:100%;width:62%;background:var(--mm-primary)"></div>
+    </div>
+  </div>
+</section>
+
+<section class="mm-ds-section">
+  <h2>Badges</h2>
+  <span class="mm-badge">Windows · unsigned · free forever</span>
+  <span class="mm-badge" style="margin-left:8px">v0.1.0</span>
+</section>
+</body>
+</html>

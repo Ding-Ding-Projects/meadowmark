@@ -1,0 +1,70 @@
+<!-- @dsCard group="Motion" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meadowmark — Motion &amp; state layers</title>
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/preview.css">
+<style>
+  .mm-ds-motion-track.run .mm-ds-motion-box { transform: translateX(calc(100% + 200px)); }
+</style>
+</head>
+<body class="mm-ds-preview">
+<div class="mm-ds-toolbar">
+  <strong>Meadowmark · Motion &amp; state layers</strong>
+  <button type="button" class="mm-btn" onclick="runAll()">Play all</button>
+</div>
+<p class="hint" style="max-width:70ch">
+  <code>prefers-reduced-motion: reduce</code> collapses every duration to near-zero — try it in
+  your OS accessibility settings and reload; base.css already handles this globally.
+</p>
+
+<section class="mm-ds-section">
+  <h2>Durations</h2>
+  <div id="durations"></div>
+</section>
+
+<section class="mm-ds-section">
+  <h2>Easing curves</h2>
+  <div id="easings"></div>
+</section>
+
+<section class="mm-ds-section">
+  <h2>State-layer opacities</h2>
+  <div class="mm-ds-grid">
+    <div style="padding:20px;border-radius:12px;background:color-mix(in srgb, var(--mm-on-surface) calc(var(--mm-state-hover) * 100%), var(--mm-surface-container))">hover — 8%</div>
+    <div style="padding:20px;border-radius:12px;background:color-mix(in srgb, var(--mm-on-surface) calc(var(--mm-state-focus) * 100%), var(--mm-surface-container))">focus — 10%</div>
+    <div style="padding:20px;border-radius:12px;background:color-mix(in srgb, var(--mm-on-surface) calc(var(--mm-state-pressed) * 100%), var(--mm-surface-container))">pressed — 12%</div>
+    <div style="padding:20px;border-radius:12px;background:color-mix(in srgb, var(--mm-on-surface) calc(var(--mm-state-dragged) * 100%), var(--mm-surface-container))">dragged — 16%</div>
+  </div>
+</section>
+
+<script>
+  const durations = ["short-1","short-2","short-3","short-4","medium-1","medium-2","medium-3","medium-4","long-1","long-2","long-3","long-4"];
+  const easings = ["standard","standard-decel","standard-accel","emphasized","emphasized-decel","emphasized-accel"];
+  const dHost = document.getElementById("durations");
+  durations.forEach(d => {
+    const row = document.createElement("div");
+    row.className = "mm-ds-motion-track";
+    row.innerHTML = `<span class="hint" style="width:100px;display:inline-block">${d}</span><div class="mm-ds-motion-box" style="transition:transform var(--mm-dur-${d}) var(--mm-ease-standard)"></div>`;
+    dHost.appendChild(row);
+  });
+  const eHost = document.getElementById("easings");
+  easings.forEach(e => {
+    const row = document.createElement("div");
+    row.className = "mm-ds-motion-track";
+    row.innerHTML = `<span class="hint" style="width:130px;display:inline-block">${e}</span><div class="mm-ds-motion-box" style="background:var(--mm-tertiary);transition:transform var(--mm-dur-long-2) var(--mm-ease-${e})"></div>`;
+    eHost.appendChild(row);
+  });
+  function runAll(){
+    document.querySelectorAll(".mm-ds-motion-track").forEach(t => t.classList.remove("run"));
+    void document.body.offsetWidth;
+    document.querySelectorAll(".mm-ds-motion-track").forEach(t => t.classList.add("run"));
+    setTimeout(() => document.querySelectorAll(".mm-ds-motion-track").forEach(t => t.classList.remove("run")), 900);
+  }
+</script>
+</body>
+</html>

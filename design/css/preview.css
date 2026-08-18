@@ -1,0 +1,33 @@
+/* Meadowmark design system — shared preview-page chrome. Not part of the
+   site's own stylesheets; used only by the standalone design/ preview
+   files so each one can be opened on its own and inspected. */
+body.mm-ds-preview {
+  margin: 0;
+  padding: var(--mm-space-6);
+  background: var(--mm-bg);
+  color: var(--mm-on-bg);
+  font-family: var(--mm-font-family);
+}
+.mm-ds-toolbar {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; gap: var(--mm-space-2); align-items: center;
+  padding: var(--mm-space-3); margin: calc(var(--mm-space-6) * -1) calc(var(--mm-space-6) * -1) var(--mm-space-5);
+  background: var(--mm-surface-container); border-bottom: 1px solid var(--mm-outline-variant);
+}
+.mm-ds-toolbar strong { margin-right: auto; }
+.mm-ds-section { margin-bottom: var(--mm-space-8); }
+.mm-ds-section > h2 { border-bottom: 1px solid var(--mm-outline-variant); padding-bottom: var(--mm-space-2); }
+.mm-ds-swatchrow { display: grid; grid-template-columns: repeat(13, minmax(56px, 1fr)); gap: 2px; margin-bottom: var(--mm-space-2); }
+.mm-ds-swatch { border-radius: var(--mm-radius-xs); aspect-ratio: 1; display: flex; align-items: flex-end; justify-content: center; padding: 4px; font-size: .62rem; font-family: ui-monospace, Consolas, monospace; }
+.mm-ds-roles { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--mm-space-3); }
+.mm-ds-role { border-radius: var(--mm-radius-md); padding: var(--mm-space-3); border: 1px solid var(--mm-outline-variant); }
+.mm-ds-role .name { font-size: .78rem; font-weight: 600; }
+.mm-ds-role .hex { font-family: ui-monospace, Consolas, monospace; font-size: .72rem; opacity: .85; }
+.mm-ds-specimen { border-bottom: 1px solid var(--mm-outline-variant); padding: var(--mm-space-3) 0; }
+.mm-ds-specimen .meta { font-size: .78rem; color: var(--mm-on-surface-variant); font-family: ui-monospace, Consolas, monospace; margin-top: 4px; }
+.mm-ds-elev-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--mm-space-5); padding: var(--mm-space-5); }
+.mm-ds-elev-card { height: 110px; border-radius: var(--mm-radius-lg); background: var(--mm-surface-container-low); display: flex; align-items: center; justify-content: center; font-weight: 600; }
+.mm-ds-motion-box { width: 64px; height: 64px; border-radius: var(--mm-radius-md); background: var(--mm-primary); }
+.mm-ds-motion-track { display: flex; align-items: center; height: 80px; }
+.mm-ds-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--mm-space-4); }
+.mm-ds-dark { background: #0f100e; padding: var(--mm-space-5); border-radius: var(--mm-radius-lg); }

@@ -1,0 +1,47 @@
+<!-- @dsCard group="Components" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meadowmark — Text fields, switches, sliders</title>
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/components.css">
+<link rel="stylesheet" href="../css/preview.css">
+</head>
+<body class="mm-ds-preview">
+<div class="mm-ds-toolbar"><strong>Meadowmark · Text fields, switches, sliders</strong></div>
+
+<section class="mm-ds-section">
+  <h2>Text field</h2>
+  <div class="field" style="max-width:320px">
+    <label for="ex-text">Display name</label>
+    <input id="ex-text" type="text" placeholder="Farmer's name" value="">
+    <span class="hint">Stored only in this browser.</span>
+  </div>
+</section>
+
+<section class="mm-ds-section">
+  <h2>Switch</h2>
+  <button type="button" class="mm-switch" role="switch" aria-checked="true"><span class="knob"></span></button>
+  <button type="button" class="mm-switch" role="switch" aria-checked="false" style="margin-left:12px"><span class="knob"></span></button>
+</section>
+
+<section class="mm-ds-section">
+  <h2>Slider</h2>
+  <input type="range" class="mm-range" min="0" max="100" value="65">
+</section>
+
+<section class="mm-ds-section">
+  <h2>Progress (indeterminate)</h2>
+  <div style="height:4px;border-radius:999px;background:var(--mm-surface-container-highest);overflow:hidden;max-width:320px">
+    <div style="height:100%;width:35%;background:var(--mm-primary);animation:mm-indet 1.4s ease-in-out infinite"></div>
+  </div>
+</section>
+
+<style>
+@keyframes mm-indet { 0% { margin-left: -35%; } 100% { margin-left: 100%; } }
+</style>
+</body>
+</html>
