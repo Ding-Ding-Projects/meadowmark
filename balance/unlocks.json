@@ -62,6 +62,16 @@
       "id": "topiary_garden"
     },
     {
+      "level": 1,
+      "kind": "building",
+      "id": "pond"
+    },
+    {
+      "level": 1,
+      "kind": "building",
+      "id": "lantern_row"
+    },
+    {
       "level": 2,
       "kind": "crop",
       "id": "barley"
@@ -132,6 +142,11 @@
       "id": "recipe_mill_peanut_butter"
     },
     {
+      "level": 5,
+      "kind": "building",
+      "id": "garden_path"
+    },
+    {
       "level": 6,
       "kind": "crop",
       "id": "carrot"
@@ -192,6 +207,11 @@
       "id": "recipe_sugar_mill_sugar"
     },
     {
+      "level": 9,
+      "kind": "building",
+      "id": "rose_arch"
+    },
+    {
       "level": 10,
       "kind": "animal",
       "id": "sheep"
@@ -210,6 +230,11 @@
       "level": 11,
       "kind": "crop",
       "id": "onion"
+    },
+    {
+      "level": 11,
+      "kind": "building",
+      "id": "windmill"
     },
     {
       "level": 12,
@@ -247,6 +272,11 @@
       "id": "pepper"
     },
     {
+      "level": 14,
+      "kind": "building",
+      "id": "wishing_well"
+    },
+    {
       "level": 15,
       "kind": "animal",
       "id": "pig"
@@ -265,6 +295,11 @@
       "level": 16,
       "kind": "recipe",
       "id": "recipe_preserves_jam"
+    },
+    {
+      "level": 17,
+      "kind": "building",
+      "id": "greenhouse"
     },
     {
       "level": 18,
@@ -295,6 +330,11 @@
       "level": 18,
       "kind": "recipe",
       "id": "recipe_paper_mill_book"
+    },
+    {
+      "level": 18,
+      "kind": "building",
+      "id": "sundial_deco"
     },
     {
       "level": 19,
@@ -377,6 +417,11 @@
       "id": "recipe_creamery_whipped_cream"
     },
     {
+      "level": 23,
+      "kind": "building",
+      "id": "picnic_area"
+    },
+    {
       "level": 24,
       "kind": "crop",
       "id": "potato"
@@ -452,6 +497,11 @@
       "id": "house_tier_6"
     },
     {
+      "level": 27,
+      "kind": "building",
+      "id": "scarecrow_display"
+    },
+    {
       "level": 28,
       "kind": "crop",
       "id": "soybean"
@@ -492,6 +542,11 @@
       "id": "recipe_pizzeria_lasagna"
     },
     {
+      "level": 29,
+      "kind": "building",
+      "id": "library"
+    },
+    {
       "level": 30,
       "kind": "recipe",
       "id": "recipe_bottler_alcohol"
@@ -530,6 +585,11 @@
       "level": 31,
       "kind": "recipe",
       "id": "recipe_glassworks_glass_pane"
+    },
+    {
+      "level": 31,
+      "kind": "building",
+      "id": "corn_maze"
     },
     {
       "level": 32,
@@ -612,6 +672,11 @@
       "id": "recipe_juice_bar_watermelon_juice"
     },
     {
+      "level": 36,
+      "kind": "building",
+      "id": "cherry_blossom_grove"
+    },
+    {
       "level": 37,
       "kind": "recipe",
       "id": "recipe_candy_chocolate_candy"
@@ -630,6 +695,11 @@
       "level": 38,
       "kind": "recipe",
       "id": "recipe_chocolate_chocolate_bar"
+    },
+    {
+      "level": 38,
+      "kind": "building",
+      "id": "bank"
     },
     {
       "level": 39,
@@ -697,6 +767,11 @@
       "id": "recipe_smokehouse_deli_platter"
     },
     {
+      "level": 41,
+      "kind": "building",
+      "id": "bamboo_grove"
+    },
+    {
       "level": 42,
       "kind": "building",
       "id": "sports_arena"
@@ -752,6 +827,11 @@
       "id": "recipe_cheese_cave_honey_cheese_platter"
     },
     {
+      "level": 46,
+      "kind": "building",
+      "id": "koi_pond"
+    },
+    {
       "level": 47,
       "kind": "crop",
       "id": "mango"
@@ -782,6 +862,16 @@
       "id": "recipe_tailor_angora_scarf"
     },
     {
+      "level": 48,
+      "kind": "building",
+      "id": "house_tier_8"
+    },
+    {
+      "level": 48,
+      "kind": "building",
+      "id": "lighthouse"
+    },
+    {
       "level": 50,
       "kind": "crop",
       "id": "coffee_bean"
@@ -802,6 +892,11 @@
       "id": "recipe_coffee_roastery_roasted_beans"
     },
     {
+      "level": 51,
+      "kind": "building",
+      "id": "botanical_dome"
+    },
+    {
       "level": 52,
       "kind": "recipe",
       "id": "recipe_coffee_house_latte"
@@ -810,6 +905,11 @@
       "level": 52,
       "kind": "recipe",
       "id": "recipe_coffee_roastery_espresso_shot"
+    },
+    {
+      "level": 52,
+      "kind": "building",
+      "id": "aquarium"
     },
     {
       "level": 53,
@@ -847,9 +947,24 @@
       "id": "lavender"
     },
     {
+      "level": 56,
+      "kind": "building",
+      "id": "art_gallery"
+    },
+    {
       "level": 58,
       "kind": "crop",
       "id": "tea_leaf"
+    },
+    {
+      "level": 58,
+      "kind": "building",
+      "id": "house_tier_9"
+    },
+    {
+      "level": 58,
+      "kind": "building",
+      "id": "carousel"
     },
     {
       "level": 59,
@@ -865,6 +980,11 @@
       "level": 59,
       "kind": "recipe",
       "id": "recipe_cheese_cave_tea_cheese_pairing"
+    },
+    {
+      "level": 60,
+      "kind": "building",
+      "id": "amphitheater"
     },
     {
       "level": 61,
@@ -902,6 +1022,11 @@
       "id": "recipe_dairy_mare_cheese"
     },
     {
+      "level": 65,
+      "kind": "building",
+      "id": "ferris_wheel_mini"
+    },
+    {
       "level": 66,
       "kind": "crop",
       "id": "ginger"
@@ -920,6 +1045,16 @@
       "level": 66,
       "kind": "recipe",
       "id": "recipe_tea_house_ginger_tea"
+    },
+    {
+      "level": 66,
+      "kind": "building",
+      "id": "observatory"
+    },
+    {
+      "level": 68,
+      "kind": "building",
+      "id": "house_tier_10"
     },
     {
       "level": 69,
@@ -947,6 +1082,11 @@
       "id": "recipe_dairy_quail_custard"
     },
     {
+      "level": 71,
+      "kind": "building",
+      "id": "ice_sculpture"
+    },
+    {
       "level": 72,
       "kind": "crop",
       "id": "cacao_pod"
@@ -967,6 +1107,11 @@
       "id": "recipe_chocolatier_mango_chocolate_bar"
     },
     {
+      "level": 72,
+      "kind": "building",
+      "id": "spa_resort"
+    },
+    {
       "level": 78,
       "kind": "recipe",
       "id": "recipe_distillery_brandy"
@@ -977,6 +1122,11 @@
       "id": "recipe_distillery_applejack"
     },
     {
+      "level": 78,
+      "kind": "building",
+      "id": "house_tier_11"
+    },
+    {
       "level": 80,
       "kind": "crop",
       "id": "vanilla"
@@ -985,6 +1135,11 @@
       "level": 80,
       "kind": "recipe",
       "id": "recipe_chocolatier_luxury_truffle_box"
+    },
+    {
+      "level": 82,
+      "kind": "building",
+      "id": "golden_fountain"
     },
     {
       "level": 85,
@@ -1010,6 +1165,16 @@
       "level": 90,
       "kind": "recipe",
       "id": "recipe_distillery_brandy_truffle"
+    },
+    {
+      "level": 90,
+      "kind": "building",
+      "id": "house_tier_12"
+    },
+    {
+      "level": 92,
+      "kind": "building",
+      "id": "harvest_arch"
     },
     {
       "level": 95,
