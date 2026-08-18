@@ -14,6 +14,7 @@ import './assets/nature.js';
 import './assets/flora.js';
 import './assets/props.js';
 import './assets/characters.js';
+import './assets/effects.js';
 
 export {
   build,
