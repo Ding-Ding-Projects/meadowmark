@@ -31,6 +31,12 @@ All notable changes to Meadowmark are documented in this file.
   load/set/reset operations, and the settings UI hydrates and saves overlapping
   appearance/general values through that bridge while preserving the browser
   localStorage fallback.
+- Local version history wiring: the Electron main process now records a
+  snapshot into an isolated git-backed history repository after every game
+  save and every settings write, exposed through preload as
+  `window.meadowmark.history`, with a new "History" tab in Settings that
+  lists, searches, labels, restores, and exports recorded revisions. See
+  `docs/features/history.md`.
 
 ### Fixed
 

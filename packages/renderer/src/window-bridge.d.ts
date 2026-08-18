@@ -31,6 +31,16 @@ declare global {
         resetAllToDefaults(): Promise<unknown>;
       };
       appInfo(): Promise<{ name: string; version: string; platform: string; isDev: boolean }>;
+      history: {
+        init(): Promise<{ available: boolean; reason?: string; gitVersion?: string }>;
+        listRevisions(options?: { recordPath?: string; limit?: number }): Promise<unknown[]>;
+        listRecords(): Promise<unknown[]>;
+        diffRevisions(fromHash: string, toHash: string, recordPath?: string): Promise<unknown>;
+        restoreRevision(hash: string, recordPath: string): Promise<{ content: string; commit: unknown }>;
+        labelRevision(hash: string, label: string): Promise<void>;
+        prune(policy: { keepLatest?: number; keepSince?: Date; neverPruneLabeled?: boolean }): Promise<unknown>;
+        exportHistory(options?: { redactPaths?: string[]; format?: 'json' | 'text' }): Promise<string>;
+      };
     };
   }
 }
