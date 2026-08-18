@@ -565,11 +565,11 @@ function reservedTileSet(
 
 /**
  * Every mesh-dsl asset name this section references but does not itself
- * register. These are the other lanes' work: 'cart', 'barrel', 'crate' and
- * 'market_stall' are roadside/market/factory props (assets/props.ts or a
- * new file in that spirit); 'duck' is ambient pond wildlife
- * (assets/characters.ts); 'sparkle_ready' is a small hovering glyph over
- * anything with product waiting to be collected, and 'chimney_smoke' is a
+ * register. These are the other lanes' work: 'prop_cart_hand', 'prop_barrel_a', 'prop_crate_a' and
+ * 'prop_market_stall_a' are roadside/market/factory props (assets/props.ts or a
+ * new file in that spirit); 'critter_duck' is ambient pond wildlife
+ * (assets/characters.ts); 'effect_growth_pop' is a small hovering glyph over
+ * anything with product waiting to be collected, and 'effect_smoke_puff' is a
  * puff hovering over a factory that is actively producing right now
  * (both presumably assets/props.ts "effects").
  *
@@ -580,13 +580,13 @@ function reservedTileSet(
  * version of that error this pre-empts.
  */
 const EXPECTED_LIFE_ASSET_NAMES: readonly DecorationKind[] = [
-  'cart',
-  'barrel',
-  'crate',
-  'market_stall',
-  'duck',
-  'sparkle_ready',
-  'chimney_smoke',
+  'prop_cart_hand',
+  'prop_barrel_a',
+  'prop_crate_a',
+  'prop_market_stall_a',
+  'critter_duck',
+  'effect_growth_pop',
+  'effect_smoke_puff',
 ];
 
 let lifeAssetsValidated = false;
@@ -689,8 +689,8 @@ function buildVillageLife(
     };
     const rng = createRng(seedFromString(`life-market:${building.id}`));
     const stallCount = nextInt(rng, 2, 3);
-    for (let i = 0; i < stallCount; i++) place('market_stall', marketCenter, 3, rng);
-    place('cart', marketCenter, 3, rng);
+    for (let i = 0; i < stallCount; i++) place('prop_market_stall_a', marketCenter, 3, rng);
+    place('prop_cart_hand', marketCenter, 3, rng);
   }
 
   // Factories: a couple of barrels or crates parked outside every one,
@@ -700,7 +700,7 @@ function buildVillageLife(
     const rng = createRng(seedFromString(`life-factory:${factory.id}`));
     const propCount = nextInt(rng, 1, 3);
     for (let i = 0; i < propCount; i++) {
-      const kind = pickWeighted<DecorationKind>(rng, ['barrel', 'crate'], [3, 2]);
+      const kind = pickWeighted<DecorationKind>(rng, ['prop_barrel_a', 'prop_crate_a'], [3, 2]);
       place(kind, origin, 2, rng);
     }
   }
@@ -711,7 +711,7 @@ function buildVillageLife(
   for (const roadTile of roadPositions) {
     const rng = createRng(seedFromString(`life-road:${roadTile.x},${roadTile.y}`));
     if (!chance(rng, 0.06)) continue;
-    place('cart', roadTile, 1, rng);
+    place('prop_cart_hand', roadTile, 1, rng);
   }
 
   // Ducks paddling the pond - a handful, seeded off the pond's own tiles
@@ -730,7 +730,7 @@ function buildVillageLife(
       occupied.add(key);
       decorations.push({
         id: `life-${idCounter++}`,
-        kind: 'duck',
+        kind: 'critter_duck',
         position: tile,
         rotation: nextInt(rng, 0, 3) as 0 | 1 | 2 | 3,
       });
@@ -757,7 +757,7 @@ function buildReadySparkles(
 
   for (const plot of cropPlots) {
     if (plot.growthStage !== 'ready') continue;
-    sparkles.push({ id: `sparkle-crop-${plot.id}`, kind: 'sparkle_ready', position: plot.position, rotation: 0 });
+    sparkles.push({ id: `sparkle-crop-${plot.id}`, kind: 'effect_growth_pop', position: plot.position, rotation: 0 });
   }
 
   for (const factory of factories) {
@@ -768,13 +768,13 @@ function buildReadySparkles(
     const hasReadyOutput = factory.queue.some((slot) => slot.paused || slot.readyAt <= now);
     if (!hasReadyOutput) continue;
     const position = factory.position ?? { x: FACTORY_ORIGIN.x, y: FACTORY_ORIGIN.y };
-    sparkles.push({ id: `sparkle-factory-${factory.id}`, kind: 'sparkle_ready', position, rotation: 0 });
+    sparkles.push({ id: `sparkle-factory-${factory.id}`, kind: 'effect_growth_pop', position, rotation: 0 });
   }
 
   for (const shed of animalSheds) {
     for (const unit of shed.animals) {
       if (!animalUnitReady(unit, now)) continue;
-      sparkles.push({ id: `sparkle-animal-${unit.id}`, kind: 'sparkle_ready', position: shed.position, rotation: 0 });
+      sparkles.push({ id: `sparkle-animal-${unit.id}`, kind: 'effect_growth_pop', position: shed.position, rotation: 0 });
     }
   }
 
@@ -794,7 +794,7 @@ function buildChimneySmoke(factories: readonly FactoryInstance[], now: number): 
     const isProducing = factory.queue.some((slot) => !slot.paused && slot.startedAt <= now && now < slot.readyAt);
     if (!isProducing) continue;
     const position = factory.position ?? { x: FACTORY_ORIGIN.x, y: FACTORY_ORIGIN.y };
-    smoke.push({ id: `smoke-${factory.id}`, kind: 'chimney_smoke', position, rotation: 0 });
+    smoke.push({ id: `smoke-${factory.id}`, kind: 'effect_smoke_puff', position, rotation: 0 });
   }
   return smoke;
 }

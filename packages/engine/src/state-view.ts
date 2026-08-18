@@ -117,13 +117,13 @@ export type DecorationKind =
   // validated as an actually-registered mesh-dsl asset the first time
   // state-to-engine.ts runs — see `assertLifeAssetsRegistered()` there
   // for the full list and why every one of these exists.
-  | 'cart'
-  | 'barrel'
-  | 'crate'
-  | 'market_stall'
-  | 'duck'
-  | 'sparkle_ready'
-  | 'chimney_smoke';
+  | 'prop_cart_hand'
+  | 'prop_barrel_a'
+  | 'prop_crate_a'
+  | 'prop_market_stall_a'
+  | 'critter_duck'
+  | 'effect_growth_pop'
+  | 'effect_smoke_puff';
 
 export interface DecorationView {
   id: string;
