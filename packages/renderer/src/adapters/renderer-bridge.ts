@@ -2,19 +2,17 @@
  * Wraps @meadowmark/engine's RendererHandle as the RendererBridge interface
  * @meadowmark/ui's town panel expects (see ui/src/contracts.ts).
  *
- * GAP: RendererHandle.placement (packages/engine/src/renderer.ts) exposes
- * begin/moveTo/rotate/drop/cancel, but moveTo() needs a hovered ground-tile
- * coordinate, and RendererHandle exposes no camera or raycaster accessor
- * for computing one from outside the engine package - its own pointer
- * handling only raycasts against already-placed pickable objects (see
- * renderer.ts's onClick), never against the ground plane for a
- * not-yet-placed ghost. So this bridge can begin/cancel placement and can
- * drop on click, but the placement ghost will not visually track the
- * cursor as it moves - moveTo() is never called. Fixing this properly
- * means @meadowmark/engine either exposing enough to raycast the ground
- * plane from outside, or driving placement.moveTo itself from its
- * existing pointer machinery and emitting a hover event. Reported here
- * rather than faked with a guessed tile coordinate.
+ * Placement itself (ghost tracking the cursor, grid snap, valid/invalid
+ * tint, R to rotate, arrow keys, Enter, drop pop animation) is owned end to
+ * end by @meadowmark/engine now - see packages/engine/src/renderer.ts and
+ * placement.ts. This bridge only forwards begin/cancel, turns a mouse click
+ * into a drop (the one placement input the engine cannot originate itself,
+ * since it has no reason to assume every click on its canvas means "drop"),
+ * and turns the engine's `placementDrop` event into the `onPlaced` callback
+ * the town panel gave it. It also tracks its own `placing`/`onCancelled`
+ * bookkeeping so `enterPlacementMode`'s `onCancel` fires correctly even
+ * when Escape cancels placement at the engine level, where this bridge
+ * cannot see it happen except by listening for the same key itself.
  *
  * GAP: focusCameraOnEntity/focusCameraOnTile have no real implementation
  * to call into - RendererHandle's camera controls are relative
@@ -37,28 +35,41 @@ export interface DisposableRendererBridge extends RendererBridge {
 
 export function createRendererBridge(canvas: HTMLCanvasElement, renderer: RendererHandle): DisposableRendererBridge {
   let onPlacedCallback: ((x: number, y: number, rotation: 0 | 90 | 180 | 270) => void) | null = null;
+  let onCancelCallback: (() => void) | null = null;
   let placing = false;
+
+  function endPlacement(): void {
+    placing = false;
+    onPlacedCallback = null;
+    onCancelCallback = null;
+  }
 
   const unsubscribeDrop = renderer.on((event) => {
     if (event.type !== 'placementDrop' || !onPlacedCallback) return;
     const rotationDeg = ((event.footprint.rotation * 90) % 360) as 0 | 90 | 180 | 270;
-    onPlacedCallback(event.footprint.origin.x, event.footprint.origin.y, rotationDeg);
-    placing = false;
-    onPlacedCallback = null;
+    const onPlaced = onPlacedCallback;
+    endPlacement();
+    onPlaced(event.footprint.origin.x, event.footprint.origin.y, rotationDeg);
   });
 
   function onCanvasClick(): void {
+    // The engine's own click listener uses this same event to raycast
+    // against already-placed pickables; that raycast is harmless here
+    // since nothing is subscribed to the resulting 'pick' event while a
+    // placement drop is what the click is actually for.
     if (placing) renderer.placement.drop();
   }
   canvas.addEventListener('click', onCanvasClick);
 
   function onKeyDown(e: KeyboardEvent): void {
-    if (!placing) return;
-    if (e.code === 'Escape') {
-      renderer.placement.cancel();
-      placing = false;
-      onPlacedCallback = null;
-    }
+    if (!placing || e.code !== 'Escape') return;
+    // The engine already cancels its own ghost on Escape; this listener
+    // exists so the bridge's own placing/callback bookkeeping - and the
+    // caller's onCancel - stay in sync with that, since the engine has no
+    // event to report a cancellation through.
+    const onCancel = onCancelCallback;
+    endPlacement();
+    onCancel?.();
   }
   window.addEventListener('keydown', onKeyDown);
 
@@ -73,11 +84,11 @@ export function createRendererBridge(canvas: HTMLCanvasElement, renderer: Render
       renderer.placement.begin(assetName, catalog.footprint.width, catalog.footprint.height);
       placing = true;
       onPlacedCallback = onPlaced;
+      onCancelCallback = onCancel;
     },
     exitPlacementMode() {
       renderer.placement.cancel();
-      placing = false;
-      onPlacedCallback = null;
+      endPlacement();
     },
     focusCameraOnEntity(_entityId: EntityId) {
       // no-op - see file header GAP note.

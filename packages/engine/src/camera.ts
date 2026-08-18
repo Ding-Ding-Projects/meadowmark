@@ -37,6 +37,14 @@ export interface CameraController {
   panBy: (dx: number, dz: number) => void;
   zoomBy: (delta: number) => void;
   rotateBy: (deltaYaw: number, deltaPitch: number) => void;
+  /**
+   * Toggle whether WASD/arrow/QE/RF/zoom keys drive the camera. Disabled
+   * while building placement owns the keyboard, so a plain arrow key
+   * during placement moves the placement ghost instead of also panning
+   * the camera underneath it, and `R` rotates the ghost instead of also
+   * tilting the camera up. Mouse drag/wheel camera control is unaffected.
+   */
+  setKeyboardEnabled: (enabled: boolean) => void;
 }
 
 export interface CreateCameraOptions {
@@ -83,6 +91,7 @@ export function createCameraController(opts: CreateCameraOptions): CameraControl
 
   const el = opts.domElement;
   const pressed = new Set<string>();
+  let keyboardEnabled = true;
   let dragging = false;
   let dragButton = 0;
   let lastX = 0;
@@ -179,6 +188,7 @@ export function createCameraController(opts: CreateCameraOptions): CameraControl
   window.addEventListener('keyup', onKeyUp);
 
   function applyKeyboard(dt: number): void {
+    if (!keyboardEnabled) return;
     const panSpeed = targetDistance * 1.4 * dt;
     const rotateSpeed = 1.6 * dt;
     const zoomSpeed = (limits.maxDistance - limits.minDistance) * 0.6 * dt;
@@ -223,6 +233,14 @@ export function createCameraController(opts: CreateCameraOptions): CameraControl
     reducedMotion = reduced;
   }
 
+  function setKeyboardEnabled(enabled: boolean): void {
+    keyboardEnabled = enabled;
+    // Drop whatever was held so a key released while disabled (e.g. the
+    // player was holding "W" when placement mode grabbed the keyboard)
+    // does not leave a phantom pan direction stuck on when re-enabled.
+    if (!enabled) pressed.clear();
+  }
+
   function dispose(): void {
     el.removeEventListener('pointerdown', onPointerDown);
     window.removeEventListener('pointermove', onPointerMove);
@@ -236,5 +254,5 @@ export function createCameraController(opts: CreateCameraOptions): CameraControl
   clampAll();
   update(0);
 
-  return { camera, update, dispose, snapToCorner, setReducedMotion, panBy, zoomBy, rotateBy };
+  return { camera, update, dispose, snapToCorner, setReducedMotion, panBy, zoomBy, rotateBy, setKeyboardEnabled };
 }
