@@ -27,11 +27,11 @@ function formatKey(key: string): string {
 
 function formatTomlString(value: string): string {
   const escaped = value
-    .replace(/\/g, '\\')
+    .replace(/\\/g, '\\\\')
     .replace(/"/g, '\\"')
-    .replace(/\n/g, '\n')
-    .replace(/\t/g, '\t')
-    .replace(/\r/g, '\r');
+    .replace(/\n/g, '\\n')
+    .replace(/\t/g, '\\t')
+    .replace(/\r/g, '\\r');
   return `"${escaped}"`;
 }
 

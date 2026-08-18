@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!--
+      Strict offline app: no CDN, no remote fonts, no external requests of
+      any kind. Everything is bundled by Vite at build time.
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'none';"
+    />
+    <title>Meadowmark</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #111318;
+      }
+      #mm-canvas {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+        touch-action: none;
+      }
+      #mm-ui-root {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+      }
+      #mm-ui-root > * {
+        pointer-events: auto;
+      }
+
+      /*
+        Frameless-window custom title bar. The Electron main process
+        creates the BrowserWindow with `frame: false`; the OS default
+        title bar must never appear, so this bar (and its own window
+        control buttons, wired in main.ts) is the only title bar the app
+        ever shows.
+      */
+      #mm-titlebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #1a1d24;
+        color: #e4e6eb;
+        font-family: system-ui, sans-serif;
+        font-size: 12px;
+        -webkit-app-region: drag;
+        z-index: 10000;
+        user-select: none;
+      }
+      #mm-titlebar-title {
+        padding-left: 12px;
+        opacity: 0.85;
+      }
+      #mm-titlebar-controls {
+        display: flex;
+        -webkit-app-region: no-drag;
+      }
+      #mm-titlebar-controls button {
+        width: 46px;
+        height: 32px;
+        border: none;
+        background: transparent;
+        color: inherit;
+        font: inherit;
+        cursor: pointer;
+      }
+      #mm-titlebar-controls button:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+      #mm-titlebar-close:hover {
+        background: #c42b1c;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="mm-titlebar">
+      <div id="mm-titlebar-title">Meadowmark</div>
+      <div id="mm-titlebar-controls">
+        <button id="mm-titlebar-minimize" type="button" aria-label="Minimize window" title="Minimize">&#x2013;</button>
+        <button id="mm-titlebar-maximize" type="button" aria-label="Maximize or restore window" title="Maximize / Restore">&#x25A1;</button>
+        <button id="mm-titlebar-close" type="button" aria-label="Close window" title="Close">&#x2715;</button>
+      </div>
+    </div>
+    <canvas id="mm-canvas"></canvas>
+    <div id="mm-ui-root"></div>
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>

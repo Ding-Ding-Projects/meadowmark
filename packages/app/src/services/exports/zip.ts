@@ -42,11 +42,11 @@ export function crc32(data: Buffer): number {
  * directory.
  */
 export function normalizeArchivePath(inputPath: string): string {
-  const normalized = inputPath.replace(/\/g, '/').replace(/^\/+/, '');
+  const normalized = inputPath.replace(/\\/g, '/').replace(/^\/+/, '');
   if (normalized.length === 0) {
     throw new Error('Archive entry path must not be empty.');
   }
-  if (/^[A-Za-z]:/.test(inputPath) || inputPath.startsWith('/') || inputPath.startsWith('\')) {
+  if (/^[A-Za-z]:/.test(inputPath) || inputPath.startsWith('/') || inputPath.startsWith('\\')) {
     throw new Error(`Archive entry path must be relative, got: ${inputPath}`);
   }
   const segments = normalized.split('/');

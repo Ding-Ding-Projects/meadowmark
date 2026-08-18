@@ -1,0 +1,21 @@
+{
+  "name": "@meadowmark/renderer",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Meadowmark's renderer-process entry point: boots the simulation, the 3D engine and the DOM interface, and wires them together every tick.",
+  "type": "module",
+  "main": "src/main.ts",
+  "scripts": {
+    "build": "vite build --config ../../vite.config.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@meadowmark/engine": "*",
+    "@meadowmark/shared": "*",
+    "@meadowmark/ui": "*"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2",
+    "vite": "^7.1.0"
+  }
+}

@@ -20,10 +20,10 @@ const LOOKS_LIKE_NUMBER = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$/;
 
 function quoteYamlString(value: string): string {
   const escaped = value
-    .replace(/\/g, '\\')
+    .replace(/\\/g, '\\\\')
     .replace(/"/g, '\\"')
-    .replace(/\n/g, '\n')
-    .replace(/\t/g, '\t');
+    .replace(/\n/g, '\\n')
+    .replace(/\t/g, '\\t');
   return `"${escaped}"`;
 }
 
