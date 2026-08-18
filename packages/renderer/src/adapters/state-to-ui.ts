@@ -123,9 +123,11 @@ function mapFactories(state: GameState): FactoriesView {
 
     return {
       id: f.id,
-      // GAP: FactoryInstance in @meadowmark/shared has no world position and
-      // is never placed as a town building - there is no real buildingId to
-      // report. The factoryTypeId is reused here as a stand-in.
+      // NOTE: FactoryInstance now carries a real world `position` (schema
+      // v2 - see @meadowmark/shared's factories.ts), but it is still not
+      // placed as a @meadowmark/shared TownState building, so there is no
+      // PlacedBuilding id to report here. The factoryTypeId is reused as
+      // a stand-in for this UI-only field.
       buildingId: f.factoryTypeId,
       nameKey: factoryTypesById.get(f.factoryTypeId)?.displayName ?? f.factoryTypeId,
       slotCount: f.queueSlots,

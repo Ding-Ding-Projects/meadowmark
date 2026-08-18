@@ -4,13 +4,17 @@
  *
  * The two packages were built in parallel against no shared contract, so
  * several fields the engine wants simply don't exist yet in the
- * simulation (world position for factories/animals, terrain, weather,
- * roads). Every such gap is called out below with a comment and an
- * honest, documented default rather than a silent cast. See the final
- * report for the full list.
+ * simulation (roads; a dedicated factory/shed 3D asset per type). Every
+ * such remaining gap is called out below with a comment and an honest,
+ * documented fallback rather than a silent cast.
+ *
+ * factories/sheds/field plots now carry a real `position` in
+ * @meadowmark/shared's GameState (schema v2 - see save.ts's migration),
+ * and terrain/weather are real saved state too, so none of those are
+ * placeholder-computed here anymore.
  */
 
-import type { GameState, PlacedBuilding } from '@meadowmark/shared';
+import type { FactoryInstance, GameState, PlacedBuilding } from '@meadowmark/shared';
 import { growthStages } from '@meadowmark/engine';
 import type {
   AnimalKind,
@@ -86,6 +90,50 @@ const DECORATION_KIND_BY_TYPE: Record<string, DecorationKind> = {
   topiary_garden: 'bush',
 };
 
+/**
+ * factoryTypeId (balance/factories.json, 22 entries) -> engine asset name.
+ * The engine ships only 5 distinct factory silhouettes
+ * (factory_bakery/mill/dairy/textile/workshop - see
+ * packages/engine/src/assets/buildings.ts), so most factory types share
+ * the closest-looking model. This is a real content gap between the two
+ * lanes, not a mapping bug - every entry not listed here falls back to
+ * 'factory_workshop', the smallest/most generic silhouette.
+ */
+const FACTORY_ASSET_BY_TYPE: Record<string, string> = {
+  bakery: 'factory_bakery',
+  mill: 'factory_mill',
+  feed_mill: 'factory_mill',
+  sugar_mill: 'factory_mill',
+  dairy: 'factory_dairy',
+  bottler: 'factory_dairy',
+  ice_cream: 'factory_dairy',
+  winery: 'factory_dairy',
+  sauce: 'factory_dairy',
+  preserves: 'factory_dairy',
+  textile: 'factory_textile',
+  tailor: 'factory_textile',
+  // GAP: no bakery-adjacent "cafe"/confectionery model; the bakery
+  // silhouette (oven + chimney) is the closest visual match.
+  coffee_house: 'factory_bakery',
+  chocolate: 'factory_bakery',
+  candy: 'factory_bakery',
+  snack: 'factory_bakery',
+  pizzeria: 'factory_bakery',
+};
+
+function factoryAssetFor(factoryTypeId: string): string {
+  return FACTORY_ASSET_BY_TYPE[factoryTypeId] ?? 'factory_workshop';
+}
+
+function mapFactories(factories: readonly FactoryInstance[]): PlacedBuildingView[] {
+  return factories.map((f) => ({
+    id: f.id,
+    assetName: factoryAssetFor(f.factoryTypeId),
+    position: f.position,
+    rotation: 0,
+  }));
+}
+
 function rotationToStep(rotation: 0 | 90 | 180 | 270): 0 | 1 | 2 | 3 {
   return ((rotation / 90) % 4) as 0 | 1 | 2 | 3;
 }
@@ -149,24 +197,6 @@ function cropKindFor(cropId: string): CropKind {
   return CROP_KIND_BY_ID[cropId] ?? 'berry';
 }
 
-/**
- * GAP: Plot in @meadowmark/shared has no world position at all - only a
- * stable numeric `index`. Field placement/layout was never assigned to
- * either lane. This lays plots out in a fixed 8-wide grid starting at a
- * hard-coded farm origin so the game is at least visually coherent; a real
- * layout (chosen by whichever lane owns the town grid) should replace
- * this.
- */
-const FIELD_ORIGIN = { x: 2, y: 2 };
-const FIELD_GRID_WIDTH = 8;
-
-function plotPosition(index: number): { x: number; y: number } {
-  return {
-    x: FIELD_ORIGIN.x + (index % FIELD_GRID_WIDTH),
-    y: FIELD_ORIGIN.y + Math.floor(index / FIELD_GRID_WIDTH),
-  };
-}
-
 function growthStageFor(plantedAt: number | null, readyAt: number | null, now: number): GrowthStage {
   if (plantedAt === null || readyAt === null) return 'seed';
   if (now >= readyAt) return 'ready';
@@ -187,7 +217,7 @@ function mapCropPlots(state: GameState, now: number): CropPlotView[] {
     const crop = cropsById.get(plot.cropId);
     views.push({
       id: plot.id,
-      position: plotPosition(plot.index),
+      position: plot.position,
       cropKind: cropKindFor(plot.cropId),
       growthStage: growthStageFor(plot.plantedAt, plot.readyAt ?? (crop ? plot.plantedAt : null), now),
     });
@@ -201,7 +231,7 @@ function mapFieldPlotBeds(state: GameState): DecorationView[] {
     .map((plot) => ({
       id: `field-bed-${plot.id}`,
       kind: 'field_plot_empty',
-      position: plotPosition(plot.index),
+      position: plot.position,
       rotation: 0,
     }));
 }
@@ -213,12 +243,11 @@ function mapFieldPlotBeds(state: GameState): DecorationView[] {
 /**
  * The engine's AnimalKind covers chicken/cow/sheep/pig/goat/bee, matching
  * balance/animals.json's 6 species ids directly - this part is a clean
- * 1:1 mapping. What is NOT clean: AnimalShed/AnimalUnit in
- * @meadowmark/shared carry no world position (no shed placement at all -
- * sheds are pure logical inventory, not town-grid entities), so there is
- * nowhere real to put them. This lays sheds out in a fixed row south of
- * the fields and spreads each shed's units along a short arc, purely so
- * something renders; it is not derived from any real placement data.
+ * 1:1 mapping. AnimalShed now carries a real world `position` (see
+ * animals.ts's defaultShedPosition/save.ts's schema v2 migration); this
+ * spreads each shed's individual units in a short arc around that real
+ * position, since AnimalUnit itself is pure logical inventory with no
+ * per-unit placement of its own.
  */
 const ANIMAL_KINDS: readonly AnimalKind[] = ['chicken', 'cow', 'sheep', 'pig', 'goat', 'bee'];
 
@@ -226,25 +255,22 @@ function animalKindFor(animalTypeId: string): AnimalKind {
   return (ANIMAL_KINDS as readonly string[]).includes(animalTypeId) ? (animalTypeId as AnimalKind) : 'chicken';
 }
 
-const SHED_ORIGIN = { x: 2, y: 14 };
-
 function mapAnimals(state: GameState): AnimalView[] {
   const views: AnimalView[] = [];
-  state.animals.sheds.forEach((shed, shedIndex) => {
-    const shedOrigin = { x: SHED_ORIGIN.x + shedIndex * 4, y: SHED_ORIGIN.y };
+  for (const shed of state.animals.sheds) {
     shed.animals.forEach((unit, unitIndex) => {
       const angle = (unitIndex / Math.max(1, shed.animals.length)) * Math.PI * 2;
       views.push({
         id: unit.id,
         kind: animalKindFor(shed.animalTypeId),
         position: {
-          x: shedOrigin.x + Math.round(Math.cos(angle)),
-          y: shedOrigin.y + Math.round(Math.sin(angle)),
+          x: shed.position.x + Math.round(Math.cos(angle)),
+          y: shed.position.y + Math.round(Math.sin(angle)),
         },
         heading: angle,
       });
     });
-  });
+  }
   return views;
 }
 
@@ -253,36 +279,33 @@ function mapAnimals(state: GameState): AnimalView[] {
 // ---------------------------------------------------------------------------
 
 /**
- * GAP: @meadowmark/shared has no terrain/tile data and no weather system
- * at all (GameState has nothing named "weather"). Weather is always
- * 'clear', and timeOfDay is derived from the real wall-clock hour
- * (fractional) purely for a day/night visual, not from any simulated
- * in-game clock.
- *
- * Terrain defaults to grass everywhere on the town grid except every
- * unlocked field plot's own tile, which is marked 'soil' so the field
- * area reads as a farm from the very first frame - previously this was
- * grass everywhere unconditionally, and renderer.ts's syncWorld() didn't
- * even read GameStateView.tiles at all, so a freshly-unlocked, nothing-
- * planted-yet field rendered as literally nothing: no crop meshes (see
- * mapCropPlots below, which only emits a view for plots that have a crop
- * planted) and no terrain marking either. Both gaps are now closed;
- * marking the tile here is what makes an *unplanted* plot visible at all.
+ * @meadowmark/shared's GameState.terrain (schema v2) is now the real,
+ * saved source of ground cover - grass everywhere except every unlocked
+ * field plot's own tile, which is marked 'soil' at creation/migration
+ * time (see terrain.ts/fields.ts) so the field area reads as a farm from
+ * the very first frame. Tiles are stored flat/row-major there
+ * (index = y * gridWidth + x, same convention as MineTile), so this just
+ * unpacks that into the engine's per-tile TileView list.
  */
-function buildTiles(gridWidth: number, gridHeight: number, soilTiles: ReadonlySet<string>): TileView[] {
-  const tiles: TileView[] = [];
-  for (let y = 0; y < gridHeight; y++) {
-    for (let x = 0; x < gridWidth; x++) {
-      tiles.push({ position: { x, y }, terrain: soilTiles.has(`${x},${y}`) ? 'soil' : 'grass' });
-    }
-  }
-  return tiles;
+function buildTiles(state: GameState): TileView[] {
+  const { gridWidth, tiles } = state.terrain;
+  return tiles.map((tile) => ({
+    position: { x: tile.index % gridWidth, y: Math.floor(tile.index / gridWidth) },
+    terrain: tile.kind,
+  }));
 }
 
-function buildWeather(now: number): WeatherView {
+/**
+ * state.weather.kind (schema v2) is now the real, saved weather - see
+ * weather.ts's tickWeather for how it rerolls over time. timeOfDay stays
+ * derived from the real wall-clock hour (fractional), purely for the
+ * day/night visual; nothing in the simulation tracks an in-game clock
+ * separate from real time.
+ */
+function buildWeather(state: GameState, now: number): WeatherView {
   const date = new Date(now);
   const timeOfDay = date.getHours() + date.getMinutes() / 60;
-  return { kind: 'clear', timeOfDay };
+  return { kind: state.weather.kind, timeOfDay };
 }
 
 // ---------------------------------------------------------------------------
@@ -324,20 +347,15 @@ export function stateToEngineView(state: GameState, now: number): GameStateView 
     rotation: 0,
   }));
 
-  const soilTiles = new Set(
-    state.fields.plots.filter((p) => p.unlocked).map((p) => {
-      const pos = plotPosition(p.index);
-      return `${pos.x},${pos.y}`;
-    }),
-  );
+  const factoryBuildings = mapFactories(state.factories.factories);
 
   return {
-    tiles: buildTiles(state.town.gridWidth, state.town.gridHeight, soilTiles),
-    buildings: [...buildings, ...zooBuildings],
+    tiles: buildTiles(state),
+    buildings: [...buildings, ...zooBuildings, ...factoryBuildings],
     cropPlots: mapCropPlots(state, now),
     animals: mapAnimals(state),
     roads,
     decorations: [...decorations, ...mapFieldPlotBeds(state)],
-    weather: buildWeather(now),
+    weather: buildWeather(state, now),
   };
 }

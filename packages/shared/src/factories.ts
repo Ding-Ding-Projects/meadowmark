@@ -13,6 +13,7 @@ import type {
   FactoryTypeId,
   GameEvent,
   GameState,
+  GridPosition,
   ResourceBag,
 } from "./types.js";
 import { addGood, addXp, barnFreeSpace, hasAll, removeAll } from "./economy.js";
@@ -20,6 +21,25 @@ import { isReady } from "./time.js";
 
 export const FACTORY_BASE_QUEUE_SLOTS = 2;
 export const FACTORY_MAX_QUEUE_SLOTS = 6;
+
+/**
+ * Default world-grid layout for factories: a grid of 3x3-spaced plots east
+ * of the fields, wrapping every FACTORY_GRID_WIDTH factories. This is the
+ * fallback used when a factory is placed without an explicit position
+ * (and by save.ts's v1->v2 migration for a factory that predates the
+ * `position` field) - a real "build a factory here" placement flow should
+ * pass its own chosen position to createFactory() instead.
+ */
+export const FACTORY_ORIGIN: GridPosition = { x: 24, y: 2 };
+export const FACTORY_GRID_WIDTH = 6;
+export const FACTORY_GRID_SPACING = 3;
+
+export function defaultFactoryPosition(factoryIndex: number): GridPosition {
+  return {
+    x: FACTORY_ORIGIN.x + (factoryIndex % FACTORY_GRID_WIDTH) * FACTORY_GRID_SPACING,
+    y: FACTORY_ORIGIN.y + Math.floor(factoryIndex / FACTORY_GRID_WIDTH) * FACTORY_GRID_SPACING,
+  };
+}
 
 export interface RecipeCatalogEntry {
   recipeId: string;
@@ -33,8 +53,8 @@ export interface RecipeCatalogEntry {
   coinReward: number;
 }
 
-export function createFactory(id: string, factoryTypeId: FactoryTypeId): FactoryInstance {
-  return { id, factoryTypeId, level: 1, queueSlots: FACTORY_BASE_QUEUE_SLOTS, queue: [] };
+export function createFactory(id: string, factoryTypeId: FactoryTypeId, position: GridPosition): FactoryInstance {
+  return { id, factoryTypeId, position, level: 1, queueSlots: FACTORY_BASE_QUEUE_SLOTS, queue: [] };
 }
 
 /** Starts a production job in the next free queue slot for the given factory, if inputs are available and there is room in the queue. */

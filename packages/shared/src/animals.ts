@@ -4,7 +4,7 @@
  * for more slots.
  */
 
-import type { AnimalsState, AnimalTypeId, AnimalUnit, GameEvent, GameState, ResourceBag } from "./types.js";
+import type { AnimalsState, AnimalTypeId, AnimalUnit, GameEvent, GameState, GridPosition, ResourceBag } from "./types.js";
 import { addGood, addXp, barnFreeSpace, removeGood } from "./economy.js";
 import { isReady } from "./time.js";
 
@@ -20,8 +20,23 @@ export interface AnimalCatalogEntry {
 export const SHED_BASE_SLOTS = 3;
 export const SHED_MAX_SLOTS = 12;
 
-export function createShed(id: string, animalTypeId: AnimalTypeId): AnimalsState["sheds"][number] {
-  return { id, animalTypeId, slots: SHED_BASE_SLOTS, animals: [] };
+/**
+ * Default world-grid layout for sheds: a row south of the fields, one
+ * shed every SHED_SPACING_X tiles. This is the fallback used when a shed
+ * is placed without an explicit position (and by save.ts's v1->v2
+ * migration for a shed that predates the `position` field) - a real
+ * "build a shed here" placement flow should pass its own chosen position
+ * to createShed() instead.
+ */
+export const SHED_ORIGIN: GridPosition = { x: 2, y: 14 };
+export const SHED_SPACING_X = 4;
+
+export function defaultShedPosition(shedIndex: number): GridPosition {
+  return { x: SHED_ORIGIN.x + shedIndex * SHED_SPACING_X, y: SHED_ORIGIN.y };
+}
+
+export function createShed(id: string, animalTypeId: AnimalTypeId, position: GridPosition): AnimalsState["sheds"][number] {
+  return { id, animalTypeId, position, slots: SHED_BASE_SLOTS, animals: [] };
 }
 
 export function addAnimalUnit(state: GameState, shedId: string, unitId: string): GameState {
