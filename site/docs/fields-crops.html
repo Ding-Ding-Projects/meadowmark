@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fields & crops — Meadowmark</title>
+<meta name="description" content="Six starting plots, seventeen crops from a two-minute wheat harvest to a twenty-hour vanilla harvest.">
+<link rel="canonical" href="https://ding-ding-projects.github.io/meadowmark/docs/fields-crops.html">
+<meta property="og:title" content="Fields & crops — Meadowmark">
+<meta property="og:description" content="Six starting plots, seventeen crops from a two-minute wheat harvest to a twenty-hour vanilla harvest.">
+<meta property="og:url" content="https://ding-ding-projects.github.io/meadowmark/docs/fields-crops.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Meadowmark">
+<meta property="og:image" content="https://ding-ding-projects.github.io/meadowmark/og-image.svg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Meadowmark wordmark over a low-poly farm and town skyline">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#3a6b3f">
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/components.css">
+</head>
+<body>
+<div class="mm-shell" data-dock="left">
+  <div id="mm-header-host"></div>
+  <main class="mm-main" id="main">
+    <div class="mm-breadcrumbs"><a href="index.html">Documentation</a> / Fields & crops</div>
+    <article class="mm-article">
+      <h1>🌾 <span class="i18n-en">Fields & crops</span><span class="i18n-yue" lang="yue"> 田地同作物</span></h1>
+
+      <h2><span class="i18n-en">What it does</span><span class="i18n-yue" lang="yue"> 做乜嘢</span></h2>
+      <p><span class="i18n-en">Six plots to start, buyable with coins on an escalating curve up to sixty. Seventeen crops unlock by level, from Wheat at level 1 (2 minutes to grow) through Vanilla at level 80 (20 hours). Plant-all and harvest-all are single actions.</span>
+      <span class="i18n-yue" lang="yue">初始有六塊田，用金幣以遞增曲線買，最多買到六十塊。十七種作物按等級解鎖，由 1 級嘅小麥（種兩分鐘）到 80 級嘅雲呢拿（種二十個鐘）。全種同全收都係一個動作搞掂。</span></p>
+
+      <h2><span class="i18n-en">How it works</span><span class="i18n-yue" lang="yue"> 點運作</span></h2>
+      <p><span class="i18n-en">Crops grow on wall-clock timers — nothing withers, and nothing is lost by being away. Rushing a crop's remaining timer costs cash under the standard rush-cost formula, or a village helper can shave time for free on a cooldown. Grown crops feed directly into factory recipes (wheat into the Mill and Bakery, sugarcane into the Sugar Mill, and so on), so a field plan is really a supply-chain decision.</span>
+      <span class="i18n-yue" lang="yue">作物跟真實時鐘生長——唔會枯萎，唔喺線都唔會蝕。想快啲收成可以用標準趕時間公式俾 Cash，或者用村莊助手免費慳時間（有冷卻）。收成嘅作物會直接餵去工廠配方（小麥去麵粉廠同麵包店，蔗糖去糖廠，如此類推），所以點樣種田其實係一個供應鏈決定。</span></p>
+
+      <h2><span class="i18n-en">Failure modes</span><span class="i18n-yue" lang="yue"> 失敗情況</span></h2>
+      <p><span class="i18n-en">Plant-all and harvest-all report honest partial results when the barn fills partway through a sweep, rather than silently succeeding or silently failing the whole batch — the interface states exactly how many plots were affected.</span>
+      <span class="i18n-yue" lang="yue">如果全收途中倉滿咗，全種同全收會誠實話你部分成功，唔會靜雞雞當全部搞掂或者全部失敗——介面會清楚講幾多塊田受影響。</span></p>
+
+      <h2><span class="i18n-en">What is not yet implemented</span><span class="i18n-yue" lang="yue"> 仲未整好嘅部分</span></h2>
+      <p><span class="i18n-en">No public build of Meadowmark has shipped yet (see the <a href="../changelog.html">changelog</a>). The crop table, grow times and plot-purchase curve are balance data validated by a standalone checker (see the Architecture section of the project's design plan) that proves no recipe is unreachable and no unlock is orphaned before anything ships.</span>
+      <span class="i18n-yue" lang="yue">Meadowmark 暫時未有公開發佈（睇<a href="../changelog.html">更新日誌</a>）。作物表、生長時間同買田曲線都係平衡數據，會用獨立嘅驗證工具（睇項目設計計劃嘅「架構」部分）喺出街之前確認冇解唔到嘅配方，亦冇孤兒解鎖。</span></p>
+
+      <div class="mm-related">
+        <h2><span class="i18n-en">Related reading</span><span class="i18n-yue" lang="yue"> 相關文章</span></h2>
+        <ul>
+          <li><a href="animals.html"><span class="i18n-en">Animals</span><span class="i18n-yue" lang="yue"> 動物</span></a></li>
+          <li><a href="factories.html"><span class="i18n-en">Factories & production chains</span><span class="i18n-yue" lang="yue"> 工廠同生產鏈</span></a></li>
+          <li><a href="progression.html"><span class="i18n-en">Currencies & progression</span><span class="i18n-yue" lang="yue"> 貨幣同進度</span></a></li>
+        </ul>
+      </div>
+    </article>
+  </main>
+</div>
+<div id="mm-footer-host"></div>
+<script src="../js/overlay.js"></script>
+<script src="../js/color-picker.js"></script>
+<script src="../js/strings.js"></script>
+<script src="../js/theme.js"></script>
+<script src="../js/i18n.js"></script>
+<script src="../js/export.js"></script>
+<script src="../js/regex-builder.js"></script>
+<script src="../js/tabs.js"></script>
+<script src="../js/command-palette.js"></script>
+<script src="../js/notifications.js"></script>
+<script src="../js/appearance-editor.js"></script>
+<script src="../js/app.js"></script>
+<script>MMApp.init({ rootPrefix: "../", currentHref: "/docs/fields-crops.html" });</script>
+</body>
+</html>

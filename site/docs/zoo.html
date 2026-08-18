@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zoo — Meadowmark</title>
+<meta name="description" content="From level 25. Four habitats, animal cards, and a real layout decision.">
+<link rel="canonical" href="https://ding-ding-projects.github.io/meadowmark/docs/zoo.html">
+<meta property="og:title" content="Zoo — Meadowmark">
+<meta property="og:description" content="From level 25. Four habitats, animal cards, and a real layout decision.">
+<meta property="og:url" content="https://ding-ding-projects.github.io/meadowmark/docs/zoo.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Meadowmark">
+<meta property="og:image" content="https://ding-ding-projects.github.io/meadowmark/og-image.svg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Meadowmark wordmark over a low-poly farm and town skyline">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#3a6b3f">
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/components.css">
+</head>
+<body>
+<div class="mm-shell" data-dock="left">
+  <div id="mm-header-host"></div>
+  <main class="mm-main" id="main">
+    <div class="mm-breadcrumbs"><a href="index.html">Documentation</a> / Zoo</div>
+    <article class="mm-article">
+      <h1>🦁 <span class="i18n-en">Zoo</span><span class="i18n-yue" lang="yue"> 動物園</span></h1>
+
+      <h2><span class="i18n-en">What it does</span><span class="i18n-yue" lang="yue"> 做乜嘢</span></h2>
+      <p><span class="i18n-en">Unlocking from level 25. Enclosures by habitat: grass, water, rock and arctic. Animal cards drop from ship chests, the mine and orders, and collecting a full card set for a species hatches it.</span>
+      <span class="i18n-yue" lang="yue">25 級解鎖。圍欄按棲息地分：草地、水、岩石、極地。動物卡由船寶箱、礦場同訂單掉落，儲齊一種物種嘅全套卡就會孵化出嚟。</span></p>
+
+      <h2><span class="i18n-en">How it works</span><span class="i18n-yue" lang="yue"> 點運作</span></h2>
+      <p><span class="i18n-en">Animals draw visitors, visitors pay coins and zoo currency, and matching a species to its habitat or grouping families pays bonuses — so enclosure layout is a real decision with a real payoff, rather than a shelf to place collected animals on.</span>
+      <span class="i18n-yue" lang="yue">動物會吸引遊客，遊客俾金幣同動物園貨幣，物種夾啱棲息地或者將同一家族擺埋一齊都有獎勵——所以圍欄擺位係一個真係有回報嘅決定，唔係淨係擺低收集到嘅動物嘅架子。</span></p>
+
+      <h2><span class="i18n-en">Failure modes</span><span class="i18n-yue" lang="yue"> 失敗情況</span></h2>
+      <p><span class="i18n-en">A species missing cards from its set simply cannot hatch yet — there is no partial-hatch state, and the interface should say exactly which cards are still needed rather than a vague 'incomplete'.</span>
+      <span class="i18n-yue" lang="yue">缺卡嘅物種就係未孵化到——冇部分孵化呢種狀態，介面應該清楚講仲差邊幾張卡，而唔係含糊咁講「未完成」。</span></p>
+
+      <h2><span class="i18n-en">What is not yet implemented</span><span class="i18n-yue" lang="yue"> 仲未整好嘅部分</span></h2>
+      <p><span class="i18n-en">No public build of Meadowmark has shipped yet (see the <a href="../changelog.html">changelog</a>). The species list, habitat bonuses and card-drop tables are balance data; the enclosure layout scoring (habitat match, family grouping) is part of the same validated dataset.</span>
+      <span class="i18n-yue" lang="yue">Meadowmark 暫時未有公開發佈（睇<a href="../changelog.html">更新日誌</a>）。物種清單、棲息地獎勵同抽卡掉落表都係平衡數據；圍欄擺位計分（棲息地夾唔夾、家族有冇擺埋一齊）都係同一套已驗證數據嘅一部分。</span></p>
+
+      <div class="mm-related">
+        <h2><span class="i18n-en">Related reading</span><span class="i18n-yue" lang="yue"> 相關文章</span></h2>
+        <ul>
+          <li><a href="town.html"><span class="i18n-en">The town</span><span class="i18n-yue" lang="yue"> 小鎮</span></a></li>
+          <li><a href="mine.html"><span class="i18n-en">Mine</span><span class="i18n-yue" lang="yue"> 礦場</span></a></li>
+          <li><a href="museum.html"><span class="i18n-en">Museum</span><span class="i18n-yue" lang="yue"> 博物館</span></a></li>
+        </ul>
+      </div>
+    </article>
+  </main>
+</div>
+<div id="mm-footer-host"></div>
+<script src="../js/overlay.js"></script>
+<script src="../js/color-picker.js"></script>
+<script src="../js/strings.js"></script>
+<script src="../js/theme.js"></script>
+<script src="../js/i18n.js"></script>
+<script src="../js/export.js"></script>
+<script src="../js/regex-builder.js"></script>
+<script src="../js/tabs.js"></script>
+<script src="../js/command-palette.js"></script>
+<script src="../js/notifications.js"></script>
+<script src="../js/appearance-editor.js"></script>
+<script src="../js/app.js"></script>
+<script>MMApp.init({ rootPrefix: "../", currentHref: "/docs/zoo.html" });</script>
+</body>
+</html>

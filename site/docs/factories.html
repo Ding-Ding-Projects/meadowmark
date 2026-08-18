@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Factories & production chains — Meadowmark</title>
+<meta name="description" content="About twenty-two factories, chains up to three tiers deep, production that continues while the app is closed.">
+<link rel="canonical" href="https://ding-ding-projects.github.io/meadowmark/docs/factories.html">
+<meta property="og:title" content="Factories & production chains — Meadowmark">
+<meta property="og:description" content="About twenty-two factories, chains up to three tiers deep, production that continues while the app is closed.">
+<meta property="og:url" content="https://ding-ding-projects.github.io/meadowmark/docs/factories.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Meadowmark">
+<meta property="og:image" content="https://ding-ding-projects.github.io/meadowmark/og-image.svg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Meadowmark wordmark over a low-poly farm and town skyline">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#3a6b3f">
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/components.css">
+</head>
+<body>
+<div class="mm-shell" data-dock="left">
+  <div id="mm-header-host"></div>
+  <main class="mm-main" id="main">
+    <div class="mm-breadcrumbs"><a href="index.html">Documentation</a> / Factories & production chains</div>
+    <article class="mm-article">
+      <h1>🏭 <span class="i18n-en">Factories & production chains</span><span class="i18n-yue" lang="yue"> 工廠同生產鏈</span></h1>
+
+      <h2><span class="i18n-en">What it does</span><span class="i18n-yue" lang="yue"> 做乜嘢</span></h2>
+      <p><span class="i18n-en">About twenty-two factories — Bakery, Feed Mill, Mill, Dairy, Sugar Mill, Textile, Preserves, Snack, Bottler, Pizzeria, Ice Cream, Candy, Sauce, Tailor, Sawmill, Cosmetics, Furniture, Coffee House, Jewellery, Chocolate, Winery and Toy Factory — each with a production queue starting at two slots and upgradeable to six, unlocking by level.</span>
+      <span class="i18n-yue" lang="yue">大約二十二間工廠——麵包店、飼料廠、麵粉廠、乳品廠、糖廠、紡織廠、醃製廠、小食廠、裝瓶廠、薄餅店、雪糕店、糖果店、醬料廠、裁縫店、鋸木廠、化妝品廠、傢俬廠、咖啡店、珠寶店、朱古力廠、酒莊、玩具廠——每間都有由兩個位開始、可以升到六個位嘅生產隊列，按等級解鎖。</span></p>
+
+      <h2><span class="i18n-en">How it works</span><span class="i18n-yue" lang="yue"> 點運作</span></h2>
+      <p><span class="i18n-en">Chains run up to three tiers deep. Cake is flour (from wheat) plus cream (from milk) plus sugar (from sugarcane) plus an egg. Pizza is dough plus cheese plus tomato. Perfume is lavender essence plus alcohol plus a glass bottle from the mine foundry — a chain that reaches all the way down into the mine system. Production continues while the application is closed, using the same offline-resume tick that resolves crops and animals.</span>
+      <span class="i18n-yue" lang="yue">生產鏈最深有三層。蛋糕係麵粉（嚟自小麥）加忌廉（嚟自奶）加糖（嚟自蔗糖）加蛋。薄餅係麵糰加芝士加蕃茄。香水係薰衣草精華加酒精加玻璃樽，而玻璃樽嚟自礦場嘅鑄造廠——條鏈一直伸到礦場系統。生產喺個 app 關咗都會繼續，用同一套解決作物同動物嘅離線推進 tick。</span></p>
+
+      <h2><span class="i18n-en">Failure modes</span><span class="i18n-yue" lang="yue"> 失敗情況</span></h2>
+      <p><span class="i18n-en">A full barn pauses a queue and the interface says so plainly, rather than silently discarding finished output — this is the single most player-visible failure mode in the whole economy, and it is treated as a completion blocker rather than polish.</span>
+      <span class="i18n-yue" lang="yue">倉滿咗會暫停隊列，介面會清楚講明，唔會靜雞雞扔咗做好嘅嘢——呢個係成個經濟系統入面玩家最容易見到嘅失敗情況，會當做完成度嘅硬指標，而唔係錦上添花。</span></p>
+
+      <h2><span class="i18n-en">What is not yet implemented</span><span class="i18n-yue" lang="yue"> 仲未整好嘅部分</span></h2>
+      <p><span class="i18n-en">No public build of Meadowmark has shipped yet (see the <a href="../changelog.html">changelog</a>). The full recipe graph (which good needs which inputs, from which factory) is balance data with a validator proving every chain terminates and nothing is orphaned, ahead of any interface work to display it.</span>
+      <span class="i18n-yue" lang="yue">Meadowmark 暫時未有公開發佈（睇<a href="../changelog.html">更新日誌</a>）。完整嘅配方圖（邊種貨要邊啲材料、喺邊間工廠整）係平衡數據，會用驗證工具確認每條鏈都有終點、冇孤兒項目，呢步喺任何顯示介面之前完成。</span></p>
+
+      <div class="mm-related">
+        <h2><span class="i18n-en">Related reading</span><span class="i18n-yue" lang="yue"> 相關文章</span></h2>
+        <ul>
+          <li><a href="fields-crops.html"><span class="i18n-en">Fields & crops</span><span class="i18n-yue" lang="yue"> 田地同作物</span></a></li>
+          <li><a href="animals.html"><span class="i18n-en">Animals</span><span class="i18n-yue" lang="yue"> 動物</span></a></li>
+          <li><a href="order-board.html"><span class="i18n-en">Order board</span><span class="i18n-yue" lang="yue"> 訂單板</span></a></li>
+          <li><a href="mine.html"><span class="i18n-en">Mine</span><span class="i18n-yue" lang="yue"> 礦場</span></a></li>
+        </ul>
+      </div>
+    </article>
+  </main>
+</div>
+<div id="mm-footer-host"></div>
+<script src="../js/overlay.js"></script>
+<script src="../js/color-picker.js"></script>
+<script src="../js/strings.js"></script>
+<script src="../js/theme.js"></script>
+<script src="../js/i18n.js"></script>
+<script src="../js/export.js"></script>
+<script src="../js/regex-builder.js"></script>
+<script src="../js/tabs.js"></script>
+<script src="../js/command-palette.js"></script>
+<script src="../js/notifications.js"></script>
+<script src="../js/appearance-editor.js"></script>
+<script src="../js/app.js"></script>
+<script>MMApp.init({ rootPrefix: "../", currentHref: "/docs/factories.html" });</script>
+</body>
+</html>

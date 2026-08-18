@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Train — Meadowmark</title>
+<meta name="description" content="Three wagons trading goods for building materials, the only route to town buildings and barn upgrades.">
+<link rel="canonical" href="https://ding-ding-projects.github.io/meadowmark/docs/train.html">
+<meta property="og:title" content="Train — Meadowmark">
+<meta property="og:description" content="Three wagons trading goods for building materials, the only route to town buildings and barn upgrades.">
+<meta property="og:url" content="https://ding-ding-projects.github.io/meadowmark/docs/train.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Meadowmark">
+<meta property="og:image" content="https://ding-ding-projects.github.io/meadowmark/og-image.svg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Meadowmark wordmark over a low-poly farm and town skyline">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#3a6b3f">
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/components.css">
+</head>
+<body>
+<div class="mm-shell" data-dock="left">
+  <div id="mm-header-host"></div>
+  <main class="mm-main" id="main">
+    <div class="mm-breadcrumbs"><a href="index.html">Documentation</a> / Train</div>
+    <article class="mm-article">
+      <h1>🚂 <span class="i18n-en">Train</span><span class="i18n-yue" lang="yue"> 火車</span></h1>
+
+      <h2><span class="i18n-en">What it does</span><span class="i18n-yue" lang="yue"> 做乜嘢</span></h2>
+      <p><span class="i18n-en">Three outbound wagons wanting goods, returning building materials — planks, bricks, nails, glass, slabs, paint, screws — on a twenty-to-sixty-minute round trip.</span>
+      <span class="i18n-yue" lang="yue">三個出發車卡要貨，用 20 到 60 分鐘一個來回，換返建築材料——木板、磚頭、釘、玻璃、石板、油漆、螺絲。</span></p>
+
+      <h2><span class="i18n-en">How it works</span><span class="i18n-yue" lang="yue"> 點運作</span></h2>
+      <p><span class="i18n-en">Materials are the only route to town buildings and barn upgrades, which is the deliberate mechanism that stops coins alone from buying the whole city — a player with plenty of coins but no train activity still cannot expand freely.</span>
+      <span class="i18n-yue" lang="yue">材料係起小鎮建築同升級倉庫嘅唯一途徑，呢個係刻意嘅機制，令淨係有金幣都買唔晒成個城市——就算個玩家有好多金幣但冇乘搭過火車，都唔可以隨便擴建。</span></p>
+
+      <h2><span class="i18n-en">Failure modes</span><span class="i18n-yue" lang="yue"> 失敗情況</span></h2>
+      <p><span class="i18n-en">A wagon that cannot be filled (because the requested good is not yet produced) simply waits — it does not block the other two wagons, and it does not expire.</span>
+      <span class="i18n-yue" lang="yue">如果一個車卡填唔到（要求嘅貨仲未整到），佢會就咁等——唔會阻住其他兩個車卡，亦都唔會過期。</span></p>
+
+      <h2><span class="i18n-en">What is not yet implemented</span><span class="i18n-yue" lang="yue"> 仲未整好嘅部分</span></h2>
+      <p><span class="i18n-en">No public build of Meadowmark has shipped yet (see the <a href="../changelog.html">changelog</a>). The material-drop table per wagon trip, and its coupling to the town-building material costs, is balance data checked for reachability before it ships.</span>
+      <span class="i18n-yue" lang="yue">Meadowmark 暫時未有公開發佈（睇<a href="../changelog.html">更新日誌</a>）。每次車程嘅材料掉落表，同佢同小鎮建築材料成本嘅關係，都係平衡數據，出街之前會做可達性檢查。</span></p>
+
+      <div class="mm-related">
+        <h2><span class="i18n-en">Related reading</span><span class="i18n-yue" lang="yue"> 相關文章</span></h2>
+        <ul>
+          <li><a href="order-board.html"><span class="i18n-en">Order board</span><span class="i18n-yue" lang="yue"> 訂單板</span></a></li>
+          <li><a href="town.html"><span class="i18n-en">The town</span><span class="i18n-yue" lang="yue"> 小鎮</span></a></li>
+          <li><a href="expansions.html"><span class="i18n-en">Expansions</span><span class="i18n-yue" lang="yue"> 擴地</span></a></li>
+        </ul>
+      </div>
+    </article>
+  </main>
+</div>
+<div id="mm-footer-host"></div>
+<script src="../js/overlay.js"></script>
+<script src="../js/color-picker.js"></script>
+<script src="../js/strings.js"></script>
+<script src="../js/theme.js"></script>
+<script src="../js/i18n.js"></script>
+<script src="../js/export.js"></script>
+<script src="../js/regex-builder.js"></script>
+<script src="../js/tabs.js"></script>
+<script src="../js/command-palette.js"></script>
+<script src="../js/notifications.js"></script>
+<script src="../js/appearance-editor.js"></script>
+<script src="../js/app.js"></script>
+<script>MMApp.init({ rootPrefix: "../", currentHref: "/docs/train.html" });</script>
+</body>
+</html>

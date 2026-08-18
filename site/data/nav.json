@@ -1,0 +1,31 @@
+[
+  { "id": "home", "en": "Home", "yue": "主頁", "href": "/", "group": "core" },
+  { "id": "docs-index", "en": "Documentation index", "yue": "文件目錄", "href": "/docs/", "group": "core" },
+  { "id": "changelog", "en": "Changelog", "yue": "更新日誌", "href": "/changelog.html", "group": "core" },
+  { "id": "settings", "en": "Settings", "yue": "設定", "href": "/settings.html", "group": "core" },
+
+  { "id": "progression", "en": "Currencies & progression", "yue": "貨幣同進度", "href": "/docs/progression.html", "group": "foundations" },
+  { "id": "saves-offline", "en": "Saves & coming back", "yue": "存檔同返嚟", "href": "/docs/saves-offline.html", "group": "foundations" },
+  { "id": "camera-rendering", "en": "Camera & the 3D world", "yue": "鏡頭同 3D 世界", "href": "/docs/camera-rendering.html", "group": "foundations" },
+
+  { "id": "fields-crops", "en": "Fields & crops", "yue": "田地同作物", "href": "/docs/fields-crops.html", "group": "farm" },
+  { "id": "animals", "en": "Animals", "yue": "動物", "href": "/docs/animals.html", "group": "farm" },
+
+  { "id": "factories", "en": "Factories & production chains", "yue": "工廠同生產鏈", "href": "/docs/factories.html", "group": "production" },
+
+  { "id": "order-board", "en": "Order board", "yue": "訂單板", "href": "/docs/order-board.html", "group": "consumers" },
+  { "id": "train", "en": "Train", "yue": "火車", "href": "/docs/train.html", "group": "consumers" },
+  { "id": "helicopter", "en": "Helicopter", "yue": "直升機", "href": "/docs/helicopter.html", "group": "consumers" },
+  { "id": "ship", "en": "Ship", "yue": "船", "href": "/docs/ship.html", "group": "consumers" },
+
+  { "id": "town", "en": "The town", "yue": "小鎮", "href": "/docs/town.html", "group": "town" },
+  { "id": "expansions", "en": "Expansions", "yue": "擴地", "href": "/docs/expansions.html", "group": "town" },
+  { "id": "zoo", "en": "Zoo", "yue": "動物園", "href": "/docs/zoo.html", "group": "town" },
+  { "id": "mine", "en": "Mine", "yue": "礦場", "href": "/docs/mine.html", "group": "town" },
+  { "id": "museum", "en": "Museum", "yue": "博物館", "href": "/docs/museum.html", "group": "town" },
+
+  { "id": "boosters", "en": "Boosters", "yue": "加速道具", "href": "/docs/boosters.html", "group": "meta" },
+  { "id": "achievements", "en": "Achievements", "yue": "成就", "href": "/docs/achievements.html", "group": "meta" },
+  { "id": "dailies", "en": "Daily tasks", "yue": "每日任務", "href": "/docs/dailies.html", "group": "meta" },
+  { "id": "village", "en": "The village (local co-op)", "yue": "村莊（本機合作模式）", "href": "/docs/village.html", "group": "meta" }
+]

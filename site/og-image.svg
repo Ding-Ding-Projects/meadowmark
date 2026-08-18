@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#cdeccb"/>
+      <stop offset="100%" stop-color="#f7fbf1"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#sky)"/>
+  <rect x="0" y="470" width="1200" height="160" fill="#3a6b3f"/>
+  <rect x="0" y="440" width="1200" height="40" fill="#4d8a53"/>
+  <!-- simple low-poly town silhouette -->
+  <polygon points="80,470 80,380 140,340 200,380 200,470" fill="#8a6d1f"/>
+  <polygon points="80,380 140,330 200,380" fill="#c99a3a"/>
+  <rect x="260" y="400" width="90" height="70" fill="#3d6373"/>
+  <polygon points="255,400 305,360 355,400" fill="#5b93a8"/>
+  <rect x="400" y="420" width="70" height="50" fill="#8a6d1f"/>
+  <polygon points="395,420 435,390 475,420" fill="#c99a3a"/>
+  <rect x="950" y="410" width="100" height="60" fill="#3a6b3f"/>
+  <polygon points="945,410 1000,370 1055,410" fill="#5aa15f"/>
+  <rect x="1080" y="430" width="60" height="40" fill="#8a6d1f"/>
+  <polygon points="1075,430 1110,400 1145,430" fill="#c99a3a"/>
+  <!-- crop rows -->
+  <g fill="#5aa15f">
+    <rect x="540" y="440" width="24" height="24"/>
+    <rect x="574" y="440" width="24" height="24"/>
+    <rect x="608" y="440" width="24" height="24"/>
+    <rect x="642" y="440" width="24" height="24"/>
+    <rect x="540" y="474" width="24" height="24"/>
+    <rect x="574" y="474" width="24" height="24"/>
+    <rect x="608" y="474" width="24" height="24"/>
+    <rect x="642" y="474" width="24" height="24"/>
+  </g>
+  <text x="600" y="180" text-anchor="middle" font-family="Georgia, 'Segoe UI', serif" font-size="88" font-weight="700" fill="#191d17">Meadowmark</text>
+  <text x="600" y="240" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="30" fill="#3a6b3f">A 3D town-and-farm building game for Windows</text>
+  <text x="600" y="280" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="24" fill="#42493f">Nothing here is ever for sale</text>
+</svg>

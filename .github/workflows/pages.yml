@@ -1,0 +1,48 @@
+name: Publish the site to GitHub Pages
+
+# Deploys the static site in site/ to GitHub Pages. There is no build
+# step: it is hand-written HTML/CSS/JS with everything bundled locally,
+# so this workflow only has to hand the folder to Pages and publish it.
+#
+# This workflow deliberately runs no tests and no linting, matching the
+# rest of the project's release workflow — that is a standing decision,
+# not an oversight.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "site/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload the site/ folder as the Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

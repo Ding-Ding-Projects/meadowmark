@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Currencies & progression — Meadowmark</title>
+<meta name="description" content="Coins, cash, experience, population, energy and barn space, and how the level curve pays out.">
+<link rel="canonical" href="https://ding-ding-projects.github.io/meadowmark/docs/progression.html">
+<meta property="og:title" content="Currencies & progression — Meadowmark">
+<meta property="og:description" content="Coins, cash, experience, population, energy and barn space, and how the level curve pays out.">
+<meta property="og:url" content="https://ding-ding-projects.github.io/meadowmark/docs/progression.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Meadowmark">
+<meta property="og:image" content="https://ding-ding-projects.github.io/meadowmark/og-image.svg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Meadowmark wordmark over a low-poly farm and town skyline">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#3a6b3f">
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/components.css">
+</head>
+<body>
+<div class="mm-shell" data-dock="left">
+  <div id="mm-header-host"></div>
+  <main class="mm-main" id="main">
+    <div class="mm-breadcrumbs"><a href="index.html">Documentation</a> / Currencies &amp; progression</div>
+    <article class="mm-article">
+      <h1>💰 <span class="i18n-en">Currencies &amp; progression</span><span class="i18n-yue" lang="yue"> 貨幣同進度</span></h1>
+
+      <h2><span class="i18n-en">What it does</span><span class="i18n-yue" lang="yue"> 做乜嘢</span></h2>
+      <p><span class="i18n-en">Five values track everything the player can spend and earn: Coins, Cash, Experience, Population and Energy, plus Barn space as a shared cap on stored goods. Coins come from orders, the train, the ship, the helicopter, selling goods and town charm, and are spent on seeds, buildings, plots, expansions and barn upgrades. Cash is earned only — from levelling up, the daily-task chest, achievements, ship chests, museum exhibits and selling gems — and is spent on rushing timers, extra queue slots, rerolling orders and zoo decorations. Experience comes from every harvest, production, order, delivery and build, and drives the level curve. Population comes from houses and gates community buildings and factory count. Energy regenerates at +1 every two minutes up to a cap of 100, and is spent one per mine tile.</span>
+      <span class="i18n-yue" lang="yue">五個數值追蹤玩家可以用同賺嘅嘢：金幣、Cash、經驗、人口同能量，仲有倉容量做儲存上限。金幣嚟自訂單、火車、船、直升機、賣貨同小鎮人氣，用嚟買種子、建築、田地、擴地同倉庫升級。Cash 淨係靠賺——升級、每日任務寶箱、成就、船寶箱、博物館展品、賣寶石——用嚟加速時間、加隊列位、重擲訂單同動物園裝飾。經驗嚟自每次收成、生產、訂單、送貨同起建築，推動等級曲線。人口嚟自屋，解鎖社區建築同工廠數量。能量每兩分鐘 +1，上限 100，喺礦場每格用一點。</span></p>
+
+      <h2><span class="i18n-en">How it works</span><span class="i18n-yue" lang="yue"> 點運作</span></h2>
+      <p><span class="i18n-en">The level curve is <code>xpToNext(L) = round(60 · L^1.55)</code> — 60 experience at level 1, about 2,100 at level 10, 12,000 at level 30, 28,000 at level 50, and it continues past level 100. Every level pays coins and 2 cash, and usually unlocks something new (a crop, a factory, a building, a system). Rushing any timer costs <code>max(1, ceil(remainingMinutes / 5))</code> cash — a five-minute wait costs 1 cash, a twenty-five-minute wait costs 5. A small pool of village helpers also shaves time off timers for free, on a cooldown, as part of the local village system.</span>
+      <span class="i18n-yue" lang="yue">等級曲線係 <code>xpToNext(L) = round(60 · L^1.55)</code>——1 級要 60 經驗，10 級大約 2,100，30 級 12,000，50 級 28,000，過咗 100 級都繼續計。每次升級都俾金幣同 2 個 Cash，仲通常會解鎖新嘢（作物、工廠、建築、系統）。趕時間要 <code>max(1, ceil(剩餘分鐘 / 5))</code> 個 Cash——等五分鐘要 1 Cash，等廿五分鐘要 5 個。村莊系統入面嘅細撮村民助手，喺冷卻時間過後可以免費幫你慳返啲時間。</span></p>
+
+      <h2><span class="i18n-en">Failure modes</span><span class="i18n-yue" lang="yue"> 失敗情況</span></h2>
+      <p><span class="i18n-en">A full barn does not silently discard progress: production and harvesting report honest partial results, and the interface says plainly when a queue is paused because storage is full. Currency values are simulated as ordinary numbers with no floating-point display rounding surprises expected below very large totals; the balance validator is expected to catch an unreachable unlock or a recipe with no route to it before it ships, rather than the player discovering a dead end in play.</span>
+      <span class="i18n-yue" lang="yue">倉滿咗唔會靜雞雞蝕晒你啲嘢：生產同收成會誠實話你部分成功，介面亦會清楚話你知隊列因為倉滿而暫停咗。貨幣數值用普通數字模擬，喺總數未去到好巨大之前，唔會有浮點數顯示嘅奇怪四捨五入問題；平衡驗證工具應該會喺出街之前捕捉到解唔到嘅解鎖或者去唔到嘅配方，而唔係俾玩家喺玩緊嗰陣先發現行唔通。</span></p>
+
+      <h2><span class="i18n-en">What is not yet implemented</span><span class="i18n-yue" lang="yue"> 仲未整好嘅部分</span></h2>
+      <p><span class="i18n-en">No public build of Meadowmark has shipped yet (see the <a href="../changelog.html">changelog</a>). The simulation package (<code>packages/shared</code>) is where currencies, the level curve and the rush-cost formula are implemented, and it is checked against long-horizon <code>tick</code> runs rather than eyeballed; the interface that surfaces these numbers to the player is a separate, later concern from getting the arithmetic right.</span>
+      <span class="i18n-yue" lang="yue">Meadowmark 暫時未有公開發佈（睇<a href="../changelog.html">更新日誌</a>）。貨幣、等級曲線同趕時間費用公式全部喺模擬套件（<code>packages/shared</code>）入面實作，用長時段嘅 <code>tick</code> 測試去驗證，而唔係靠肉眼睇。至於介面點樣將呢啲數字顯示畀玩家睇，就係之後、獨立嘅一步。</span></p>
+
+      <div class="mm-related">
+        <h2><span class="i18n-en">Related reading</span><span class="i18n-yue" lang="yue"> 相關文章</span></h2>
+        <ul>
+          <li><a href="saves-offline.html"><span class="i18n-en">Saves &amp; coming back</span><span class="i18n-yue" lang="yue"> 存檔同返嚟</span></a></li>
+          <li><a href="fields-crops.html"><span class="i18n-en">Fields &amp; crops</span><span class="i18n-yue" lang="yue"> 田地同作物</span></a></li>
+          <li><a href="boosters.html"><span class="i18n-en">Boosters</span><span class="i18n-yue" lang="yue"> 加速道具</span></a></li>
+          <li><a href="village.html"><span class="i18n-en">The village</span><span class="i18n-yue" lang="yue"> 村莊</span></a></li>
+        </ul>
+      </div>
+    </article>
+  </main>
+</div>
+<div id="mm-footer-host"></div>
+<script src="../js/overlay.js"></script>
+<script src="../js/color-picker.js"></script>
+<script src="../js/strings.js"></script>
+<script src="../js/theme.js"></script>
+<script src="../js/i18n.js"></script>
+<script src="../js/export.js"></script>
+<script src="../js/regex-builder.js"></script>
+<script src="../js/tabs.js"></script>
+<script src="../js/command-palette.js"></script>
+<script src="../js/notifications.js"></script>
+<script src="../js/appearance-editor.js"></script>
+<script src="../js/app.js"></script>
+<script>MMApp.init({ rootPrefix: "../", currentHref: "/docs/progression.html" });</script>
+</body>
+</html>
