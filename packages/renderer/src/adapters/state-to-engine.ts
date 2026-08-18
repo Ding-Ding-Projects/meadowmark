@@ -455,6 +455,18 @@ function buildScenery(state: GameState, reserved: ReadonlySet<string>, pond: Rea
 
   // A fence ring bordering the field block so the farm reads as a
   // deliberately enclosed plot rather than blending into open scenery.
+  //
+  // `fence_rail` is modelled as a box whose LONG axis runs along local X
+  // (see assets/nature.ts) and rotationY = (PI/2) * decoration.rotation.
+  // The top/bottom run below walks along X with Y fixed, so each rail's
+  // long axis must stay parallel to X too — rotation 0, unrotated. The
+  // left/right run walks along Y with X fixed, so each rail needs its long
+  // axis turned to run along Z instead — rotation 1 (a quarter turn). These
+  // two were previously swapped, which pointed every rail perpendicular to
+  // the fence line it was meant to trace, so the "fence" rendered as loose
+  // sticks scattered at right angles rather than a continuous rail line.
+  // (`fence_post` is a plain cylinder, so its rotation is cosmetically
+  // irrelevant either way.)
   const fenceMinX = FIELD_ORIGIN.x - 1;
   const fenceMaxX = FIELD_ORIGIN.x + FIELD_GRID_WIDTH;
   const fenceMinY = FIELD_ORIGIN.y - 1;
@@ -468,7 +480,7 @@ function buildScenery(state: GameState, reserved: ReadonlySet<string>, pond: Rea
         id: `scenery-${idCounter++}`,
         kind: isCorner ? 'fence_post' : 'fence_rail',
         position: { x, y },
-        rotation: 1,
+        rotation: 0,
       });
     }
   }
@@ -476,7 +488,7 @@ function buildScenery(state: GameState, reserved: ReadonlySet<string>, pond: Rea
     for (const x of [fenceMinX, fenceMaxX]) {
       const key = `${x},${y}`;
       if (reserved.has(key) || pond.has(key) || x < 0 || y < 0) continue;
-      decorations.push({ id: `scenery-${idCounter++}`, kind: 'fence_rail', position: { x, y }, rotation: 0 });
+      decorations.push({ id: `scenery-${idCounter++}`, kind: 'fence_rail', position: { x, y }, rotation: 1 });
     }
   }
 

@@ -203,10 +203,12 @@ export function mountUi(root: HTMLElement, opts: MountUiOptions): MountedUi {
   });
 
   // A single fixed-position shell replaces the old side-by-side nav-rail
-  // layout: the panel floats centred in the space above the world, and
-  // the dock floats centred just above the bottom edge with a gap, so the
-  // 3D world stays visible around and behind both of them. See nav.css
-  // for ".mm-navdock-shell" / ".mm-navdock-panel-slot" / ".mm-navdock-dock-slot".
+  // layout: the panel floats anchored toward the upper-right of the space
+  // above the world (never dead centre — that would sit it right over
+  // where the player is looking), and the dock floats centred just above
+  // the bottom edge with a gap, so the 3D world stays clearly visible
+  // around and behind both of them. See nav.css for ".mm-navdock-shell" /
+  // ".mm-navdock-panel-slot" / ".mm-navdock-dock-slot".
   const panelSlot = h("div.mm-navdock-panel-slot");
   panelSlot.appendChild(panelHost);
 

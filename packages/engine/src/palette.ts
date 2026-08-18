@@ -100,7 +100,10 @@ export const defaultPalette: Palette = {
 
   soil: 0x6e4826,
   soilDry: 0x9a743f,
-  grass: 0x5fb349,
+  // Bright, sunny mid-green — Township-style grass, not forest-floor
+  // shade. Kept with a clear value gap from `soil` above so tilled and
+  // untilled ground read as distinctly different materials at a glance.
+  grass: 0x74c752,
   grassDry: 0xb0a94a,
 
   water: 0x3fb0d9,

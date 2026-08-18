@@ -74,11 +74,14 @@ export function createCameraController(opts: CreateCameraOptions): CameraControl
   const camera = new THREE.PerspectiveCamera(opts.fovDegrees ?? 20, opts.aspect, 0.5, 300);
 
   const target = new THREE.Vector3(0, 0, 0);
-  // Sit closer to the ground than a pure "average of the clamps" framing
-  // would, and pitched down less steeply, so buildings read with real
-  // height and the town has depth instead of looking like a flat map
-  // viewed from directly overhead.
-  let distance = THREE.MathUtils.lerp(limits.minDistance, limits.maxDistance, 0.22);
+  // Pitched down less steeply than a top-down map view, so buildings read
+  // with real height and the town has depth instead of looking flat — but
+  // NOT so close that a new player's own field is cropped down to a
+  // couple of beds the moment the game loads. 0.46 of the clamp range
+  // keeps the closer, lower-pitch feel while giving a new player their
+  // whole field row plus a generous margin of surrounding land; players
+  // can still zoom in freely with the wheel or the keyboard zoom keys.
+  let distance = THREE.MathUtils.lerp(limits.minDistance, limits.maxDistance, 0.46);
   let yaw = Math.PI * 0.25;
   let pitch = THREE.MathUtils.degToRad(34);
 

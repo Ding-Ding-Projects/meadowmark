@@ -32,7 +32,22 @@ export function applyAttrs(el: HTMLElement, attrs: ElAttrs): void {
   for (const [key, value] of Object.entries(attrs)) {
     if (value === undefined || value === false) continue;
     if (key === "style" && typeof value === "object") {
-      Object.assign(el.style, value);
+      // `Object.assign(el.style, value)` only works for the standard,
+      // pre-declared CSSStyleDeclaration properties (e.g. `color`) — those
+      // have real setters. A CSS custom property name like
+      // "--mm-navdock-badge-color" has no such setter, so assigning it as
+      // a plain property is a silent no-op: it never reaches the actual
+      // style declaration, and every caller passing a custom property
+      // this way (the nav dock's per-destination badge colour, notably)
+      // was left permanently on its CSS fallback value instead. Route
+      // custom properties through `setProperty`, which is the only API
+      // that actually sets them, and leave standard properties on the
+      // fast assignment path.
+      for (const [prop, propValue] of Object.entries(value)) {
+        if (propValue === undefined) continue;
+        if (prop.startsWith("--")) el.style.setProperty(prop, String(propValue));
+        else (el.style as unknown as Record<string, string>)[prop] = String(propValue);
+      }
     } else if (key.startsWith("on") && typeof value === "function") {
       el.addEventListener(key.slice(2).toLowerCase(), value as EventListener);
     } else if (key === "class" || key === "className") {
