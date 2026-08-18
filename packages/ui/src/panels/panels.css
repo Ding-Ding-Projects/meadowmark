@@ -57,6 +57,12 @@
 }
 .mm-grid-tile--ready { background: var(--mm-color-primary-container); border-color: var(--mm-color-primary); }
 .mm-grid-tile--paused { background: var(--mm-color-warning-container); border-color: var(--mm-color-warning); }
+.mm-grid-tile--empty {
+  background: transparent;
+  border-style: dashed;
+  border-color: var(--mm-color-outline);
+  color: var(--mm-color-on-surface-variant);
+}
 
 .mm-queue-row { display: flex; gap: var(--mm-space-2); align-items: center; flex-wrap: wrap; }
 .mm-queue-slot {

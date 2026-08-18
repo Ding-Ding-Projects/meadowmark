@@ -18,13 +18,23 @@ import { VillagerWanderSystem } from './villagers.js';
 import { OccupancyGrid, footprintTiles, TILE_SIZE } from './grid.js';
 import { requireAsset } from './mesh-dsl.js';
 import { QualityController, type QualitySettings, type SpeedLevel } from './quality.js';
-import type { GameStateView, TileCoord, RoadShape } from './state-view.js';
+import type { GameStateView, TileCoord, RoadShape, TileView } from './state-view.js';
 
 const ROAD_ASSET_BY_SHAPE: Record<RoadShape, string> = {
   straight: 'road_straight',
   corner: 'road_corner',
   junction: 'road_junction',
   end: 'road_end',
+};
+
+// 'grass' needs no overlay - it's the ground plane's own colour (see
+// scene.ts's groundMat). Every other terrain kind gets a thin instanced
+// tile so it reads as visually distinct without subdividing the ground.
+const TERRAIN_ASSET_BY_KIND: Partial<Record<TileView['terrain'], string>> = {
+  soil: 'tile_soil',
+  water: 'tile_water',
+  sand: 'tile_sand',
+  stone: 'tile_stone',
 };
 
 export type RendererEvent =
@@ -148,6 +158,24 @@ export function createRenderer(canvas: HTMLCanvasElement, opts: CreateRendererOp
 
   function syncWorld(state: GameStateView): void {
     occupancy.reset();
+
+    // Terrain overlays: GameStateView.tiles[] used to be read by nothing at
+    // all (a documented contract field the renderer silently dropped), so
+    // every tile - including tilled/soil field plots - rendered as plain
+    // grass with no visual distinction whatsoever. This is what makes a
+    // freshly-planted field look, and photograph, exactly like an empty
+    // world.
+    const terrainByAsset = new Map<string, { position: THREE.Vector3Like }[]>();
+    for (const tile of state.tiles) {
+      const assetName = TERRAIN_ASSET_BY_KIND[tile.terrain];
+      if (!assetName) continue; // 'grass' - nothing to overlay
+      const list = terrainByAsset.get(assetName) ?? [];
+      list.push({ position: { x: tile.position.x * TILE_SIZE, y: 0, z: tile.position.y * TILE_SIZE } });
+      terrainByAsset.set(assetName, list);
+    }
+    for (const assetName of Object.values(TERRAIN_ASSET_BY_KIND)) {
+      instances.setInstances(assetName, terrainByAsset.get(assetName) ?? []);
+    }
 
     const buildingsByAsset = new Map<string, { position: THREE.Vector3Like; rotationY: number }[]>();
     const buildingPickTargets: PickTarget[] = [];

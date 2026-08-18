@@ -89,9 +89,32 @@ function nearestLevel(levels: Partial<Record<FunnyLevel, string>>, target: Funny
   return "";
 }
 
+/**
+ * Best-effort human-readable fallback for a key that was never registered.
+ *
+ * This is a last resort, not a substitute for real copy: callers that pass
+ * genuine content ids (a crop id, a building type id) as a key belong in
+ * `registerCopy` with a real namespaced key and real translations. But a
+ * missing key must never leak an i18n internal like "⟨missing:wheat_seed⟩"
+ * into a picker a player is looking at — that is worse than a slightly
+ * blunt guess at the real word, so we take the last path segment of the
+ * key, turn snake_case/kebab-case into separate words, and title-case it.
+ * "Wheat" stays "Wheat"; "bake_bread" becomes "Bake Bread".
+ */
+function humanizeMissingKey(key: string): string {
+  const lastSegment = key.split(/[.:/]/).pop() ?? key;
+  const words = lastSegment.split(/[_-]+/).filter((w) => w.length > 0);
+  if (words.length === 0) return key;
+  return words.map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+}
+
 function resolveOne(key: string, lang: "en" | "yue", level: FunnyLevel, vars?: Record<string, string | number>): string {
   const entry = registry.get(key);
-  if (!entry) return `⟨missing:${key}⟩`;
+  if (!entry) {
+    // eslint-disable-next-line no-console
+    console.warn(`[i18n] missing copy key: "${key}" — falling back to a humanized guess. Register real copy for it.`);
+    return humanizeMissingKey(key);
+  }
   let text = nearestLevel(entry[lang], level);
   if (vars) {
     for (const [k, v] of Object.entries(vars)) {

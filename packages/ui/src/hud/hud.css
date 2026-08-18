@@ -1,6 +1,9 @@
 .mm-hud {
   position: fixed;
-  top: var(--mm-space-3);
+  /* Offset below the frameless window's custom title bar (z-index 10000,
+     see packages/renderer/index.html) - without this the title bar
+     renders over the top ~20px of every HUD chip. */
+  top: calc(var(--mm-titlebar-height) + var(--mm-space-2));
   left: var(--mm-space-3);
   right: var(--mm-space-3);
   z-index: var(--mm-z-hud);
