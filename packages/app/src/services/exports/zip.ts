@@ -27,10 +27,22 @@ function buildCrcTable(): Uint32Array {
 
 const CRC_TABLE = buildCrcTable();
 
+function crcTableAt(index: number): number {
+  const value = CRC_TABLE[index];
+  if (value === undefined) {
+    // (crc ^ byte) & 0xff is always in [0, 255] and CRC_TABLE has exactly
+    // 256 entries, so this is unreachable in practice; the check exists so
+    // an out-of-range index fails loudly instead of poisoning the CRC with
+    // NaN.
+    throw new Error(`CRC-32 table index ${index} out of range.`);
+  }
+  return value;
+}
+
 export function crc32(data: Buffer): number {
   let crc = 0xffffffff;
-  for (let i = 0; i < data.length; i++) {
-    crc = CRC_TABLE[(crc ^ data[i]) & 0xff] ^ (crc >>> 8);
+  for (const byte of data) {
+    crc = crcTableAt((crc ^ byte) & 0xff) ^ (crc >>> 8);
   }
   return (crc ^ 0xffffffff) >>> 0;
 }

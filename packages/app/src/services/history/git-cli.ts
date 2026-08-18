@@ -41,7 +41,7 @@ export class GitCommandError extends Error {
 export class GitUnavailableError extends Error {
   constructor(
     message: string,
-    public readonly cause?: unknown,
+    public override readonly cause?: unknown,
   ) {
     super(message);
     this.name = 'GitUnavailableError';

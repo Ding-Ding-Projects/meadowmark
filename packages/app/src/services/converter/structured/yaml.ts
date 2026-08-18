@@ -51,7 +51,7 @@ export function parseYaml(text: string, budget: ResourceBudget): StructuredValue
     let i = 0;
 
     function skipWs(): void {
-      while (i < s.length && /\s/.test(s[i])) i += 1;
+      while (i < s.length && /\s/.test(s.charAt(i))) i += 1;
     }
 
     function parseValue(topLevel: boolean): StructuredValue {
@@ -438,7 +438,7 @@ function stripYamlComment(line: string): string {
     const c = line[i];
     if (c === "'" && !inDouble) inSingle = !inSingle;
     else if (c === '"' && !inSingle) inDouble = !inDouble;
-    else if (c === '#' && !inSingle && !inDouble && (i === 0 || /\s/.test(line[i - 1]))) {
+    else if (c === '#' && !inSingle && !inDouble && (i === 0 || /\s/.test(line.charAt(i - 1)))) {
       return line.slice(0, i).replace(/\s+$/, '');
     }
   }
@@ -532,6 +532,13 @@ function scalarToYaml(v: StructuredValue): string {
       throw new UnsupportedConstructError('YAML cannot represent NaN or Infinity.');
     }
     return String(v);
+  }
+  if (typeof v !== 'string') {
+    // scalarToYaml is only ever called by writeYamlNode on values that have
+    // already failed the Array.isArray / isPlainObject checks, so a
+    // non-string arriving here means a caller broke that contract. Fail
+    // loudly rather than stringifying an array/object into a bogus scalar.
+    throw new UnsupportedConstructError('Internal error: scalarToYaml received a non-scalar value.');
   }
   return quoteYamlString(v);
 }

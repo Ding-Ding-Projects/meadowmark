@@ -60,7 +60,7 @@ export function parseXml(text: string, budget: ResourceBudget): StructuredValue 
 
   function skipWsAndMisc(): void {
     for (;;) {
-      while (i < text.length && /\s/.test(text[i])) i += 1;
+      while (i < text.length && /\s/.test(text.charAt(i))) i += 1;
       if (text.startsWith('<!--', i)) {
         const end = text.indexOf('-->', i);
         if (end === -1) throw new MalformedInputError('Unterminated XML comment.');
@@ -89,13 +89,13 @@ export function parseXml(text: string, budget: ResourceBudget): StructuredValue 
     }
     i += 1;
     const tagStart = i;
-    while (i < text.length && NAME_CHARS.test(text[i])) i += 1;
+    while (i < text.length && NAME_CHARS.test(text.charAt(i))) i += 1;
     const tag = text.slice(tagStart, i);
     if (tag === '') throw new MalformedInputError('Empty XML element name.');
 
     const attrs: Record<string, string> = {};
     for (;;) {
-      while (i < text.length && /\s/.test(text[i])) i += 1;
+      while (i < text.length && /\s/.test(text.charAt(i))) i += 1;
       if (text.startsWith('/>', i)) {
         i += 2;
         return { kind: 'element', tag, attrs, children: [] };
@@ -105,13 +105,13 @@ export function parseXml(text: string, budget: ResourceBudget): StructuredValue 
         break;
       }
       const nameStart = i;
-      while (i < text.length && text[i] !== '=' && !/\s/.test(text[i]) && text[i] !== '>' && text[i] !== '/') i += 1;
+      while (i < text.length && text.charAt(i) !== '=' && !/\s/.test(text.charAt(i)) && text.charAt(i) !== '>' && text.charAt(i) !== '/') i += 1;
       const attrName = text.slice(nameStart, i);
       if (attrName === '') throw new MalformedInputError(`Malformed attribute near position ${i} in <${tag}>.`);
-      while (i < text.length && /\s/.test(text[i])) i += 1;
+      while (i < text.length && /\s/.test(text.charAt(i))) i += 1;
       if (text[i] !== '=') throw new MalformedInputError(`Expected "=" after attribute "${attrName}" in <${tag}>.`);
       i += 1;
-      while (i < text.length && /\s/.test(text[i])) i += 1;
+      while (i < text.length && /\s/.test(text.charAt(i))) i += 1;
       const quote = text[i];
       if (quote !== '"' && quote !== "'") {
         throw new MalformedInputError(`Attribute value for "${attrName}" in <${tag}> must be quoted.`);
@@ -133,9 +133,9 @@ export function parseXml(text: string, budget: ResourceBudget): StructuredValue 
         if (text.startsWith('</', i)) {
           i += 2;
           const closeStart = i;
-          while (i < text.length && NAME_CHARS.test(text[i])) i += 1;
+          while (i < text.length && NAME_CHARS.test(text.charAt(i))) i += 1;
           const closeTag = text.slice(closeStart, i);
-          while (i < text.length && /\s/.test(text[i])) i += 1;
+          while (i < text.length && /\s/.test(text.charAt(i))) i += 1;
           if (text[i] !== '>') throw new MalformedInputError(`Malformed closing tag for <${tag}>.`);
           i += 1;
           if (closeTag !== tag) {

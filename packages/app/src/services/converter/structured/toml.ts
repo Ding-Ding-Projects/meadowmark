@@ -117,7 +117,7 @@ function mergeContinuations(lines: string[]): string[] {
   let pending: string | null = null;
   let depth = 0;
   for (const rawLine of lines) {
-    const line = pending === null ? rawLine : `${pending} ${rawLine}`;
+    const line: string = pending === null ? rawLine : `${pending} ${rawLine}`;
     depth = bracketDepth(line);
     if (depth > 0) {
       pending = line;
@@ -282,7 +282,7 @@ function parseTomlValue(s: string, budget: ResourceBudget): StructuredValue {
   const src = trimmed;
 
   function skipWs(): void {
-    while (i < src.length && /[ \t]/.test(src[i])) i += 1;
+    while (i < src.length && /[ \t]/.test(src.charAt(i))) i += 1;
   }
 
   function parseValue(): StructuredValue {
