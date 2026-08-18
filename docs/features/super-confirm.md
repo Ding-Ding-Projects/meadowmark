@@ -45,3 +45,18 @@ hold one key only (still disabled); hold both, slide to 100 (Confirm
 enables); slide back below 100 (Confirm disables again); confirm Escape and
 the emergency-exit button both cancel and return focus to the originating
 control at every stage.
+
+Evidence status: this is a prescribed manual procedure; the gate has no
+recorded packaged interaction or capture at `6e7760b`.
+
+## Security considerations
+
+This is a confirmation barrier, not authorization. The privileged operation
+must still validate target identity, current state, and permissions immediately
+before acting. The gate must never receive or reveal stored credentials.
+
+## Suggested articles
+
+- [Town](./town.md)
+- [Notifications](./notifications.md)
+- [Authenticator, toy locks, and local history](./platform-services/auth-locks-history.md)

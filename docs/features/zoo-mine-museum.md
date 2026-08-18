@@ -35,3 +35,19 @@ None; entirely state-driven.
 Manual: mock each view's states (empty, assigned, and ready enclosure; each
 mine tile state; complete and incomplete exhibit) and confirm rendering and
 dispatches.
+
+Evidence status: this is a prescribed manual procedure; no packaged zoo, mine,
+or museum interaction/capture is recorded at `6e7760b`, and museum donation has
+no UI action.
+
+## Security considerations
+
+Energy, readiness, rewards, enclosure assignment, and collection completion are
+simulation-authoritative. The UI must not grant resources from a stale state or
+invent an unavailable museum donation action.
+
+## Suggested articles
+
+- [Town](./town.md)
+- [Barn](./barn.md)
+- [UI, engine, and shared integration](./integration-contract.md)

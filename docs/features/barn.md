@@ -23,3 +23,18 @@ None; entirely driven by the barn view.
 Manual: mock stock with a few goods, confirm the capacity bar fraction,
 confirm Sell dispatches the sell action with the full stocked amount, confirm
 Upgrade is disabled with a reason once the upgrade cost is null.
+
+Evidence status: this is a prescribed manual procedure; no packaged barn
+interaction or capture is recorded at `6e7760b`.
+
+## Security considerations
+
+Sell and upgrade requests are intents. The simulation remains authoritative for
+stock, capacity, prices, and affordability; the UI must not mutate balances
+directly or trust stale displayed values.
+
+## Suggested articles
+
+- [Factories](./factories.md)
+- [Orders](./orders.md)
+- [UI, engine, and shared integration](./integration-contract.md)

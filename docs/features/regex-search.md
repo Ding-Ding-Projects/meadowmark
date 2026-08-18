@@ -45,3 +45,20 @@ panel search, a dropdown filter, a context menu filter) and confirm each
 keeps independent pattern/flags state; test an intentionally catastrophic
 pattern against a long sample and confirm the UI reports a truncated result
 rather than freezing.
+
+Evidence status: this is a prescribed manual procedure; no packaged builder,
+multi-field independence, or adversarial-pattern interaction is recorded at
+`6e7760b`.
+
+## Security considerations
+
+Patterns and sample text are local data. Bound their size and evaluation time,
+handle zero-width matches, and do not persist or transmit them without an
+explicit product need. Invalid patterns must disable actions rather than fall
+back to a different predicate.
+
+## Suggested articles
+
+- [Command palette](./command-palette.md)
+- [Overlays and context menus](./overlays-and-menus.md)
+- [File conversion and export](./platform-services/file-conversion-exports.md)
