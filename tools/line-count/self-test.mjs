@@ -12,6 +12,8 @@ assert.equal(categorize('packages/renderer/src/main.ts'), 'Renderer source');
 assert.equal(categorize('packages/renderer/index.html'), 'Styles / markup');
 assert.equal(categorize('packages/ui/src/components/components.css'), 'Styles / markup');
 assert.equal(categorize('packages/ui/test/widget.test.ts'), 'Tests');
+assert.equal(categorize('tools/line-count/self-test.mjs'), 'Tests');
+assert.equal(categorize('tools/inventory/negative-regression.mjs'), 'Tests');
 assert.equal(categorize('site/data/changelog.json'), 'Generated');
 assert.equal(categorize('mystery/file.xyz'), 'Other project text');
 assert.equal(exclusionReason('package-lock.json'), 'Lockfile');

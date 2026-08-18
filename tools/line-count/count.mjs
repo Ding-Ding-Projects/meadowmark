@@ -57,7 +57,8 @@ export function categorize(path) {
   const ext = extname(path).toLowerCase();
   const basename = path.split('/').at(-1);
   const testPath = /(^|\/)(__tests__|tests?|specs?|fixtures)(\/|$)/i.test(path) ||
-    /\.(test|spec)\.[^.]+$/i.test(basename);
+    /\.(test|spec)\.[^.]+$/i.test(basename) ||
+    /^(?:self-test|negative-regression)\.(?:js|mjs|cjs|ts)$/i.test(basename);
   const generated = GENERATED_FILES.has(path) || /(^|\/)(generated|generated-assets)(\/|$)/i.test(path);
 
   if (testPath) return 'Tests';
