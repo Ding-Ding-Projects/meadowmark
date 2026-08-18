@@ -37,7 +37,14 @@ function rollTileContent(rng: RngState): MineTileContent {
     roll -= entry.weight;
     if (roll <= 0) return entry.make();
   }
-  return bag[bag.length - 1].make();
+  const last = bag[bag.length - 1];
+  if (last === undefined) {
+    // Cannot actually happen: bag is the fixed 5-entry literal above, never
+    // empty. The check exists so a future edit that did make it empty
+    // fails loudly here instead of producing `undefined.make()`.
+    throw new Error("rollTileContent: internal error - content bag is empty");
+  }
+  return last.make();
 }
 
 export function generateMineGrid(rng: RngState): MineTile[] {
@@ -115,6 +122,11 @@ export interface DigResult {
 export function digTile(state: GameState, tileIndex: number): DigResult {
   if (tileIndex < 0 || tileIndex >= state.mine.tiles.length) return { state, dug: false, events: [], reason: "outOfBounds" };
   const tile = state.mine.tiles[tileIndex];
+  if (tile === undefined) {
+    // Cannot actually happen: the bounds check immediately above already
+    // guarantees tileIndex is within [0, state.mine.tiles.length - 1].
+    return { state, dug: false, events: [], reason: "outOfBounds" };
+  }
   if (tile.dug) return { state, dug: false, events: [], reason: "alreadyDug" };
   if (state.economy.energy < 1) return { state, dug: false, events: [], reason: "insufficientEnergy" };
 
@@ -216,7 +228,24 @@ export function collectSmelt(state: GameState, index: number, now: number): { st
   };
 }
 
-/** Regenerates the mine once per local calendar day (never mid-day), refilling every tile. */
+/**
+ * Regenerates the mine once per local calendar day (never mid-day), refilling every tile.
+ *
+ * KNOWN CHUNK-INVARIANCE GAP: this checks only whether the CURRENT boundary
+ * (today vs lastRegeneratedDate) has been crossed, not how many day
+ * boundaries were crossed since the last call. A single tick(30 days)
+ * regenerates the mine exactly once (for the final day); 30 * tick(1 day)
+ * covering the same span regenerates it once per day. Both leave
+ * lastRegeneratedDate correctly set to "today", but they consume different
+ * numbers of draws from the shared world RNG (generateMineGrid uses `rng`,
+ * not a date-seeded local RNG), so the resulting tile content - and every
+ * RNG-dependent roll anywhere else afterward - diverges between the two
+ * call patterns. tick(24h) == 1440x tick(1min) does NOT hold across a
+ * multi-day gap for this subsystem. See ship.ts's window roll and
+ * village.ts's villager-request top-up for the same root cause; fixing it
+ * properly means looping "once per boundary actually crossed" rather than
+ * "once per call", which needs its own dedicated change and tests.
+ */
 export function tickMine(state: GameState, rng: RngState, now: number): { state: GameState; events: GameEvent[] } {
   if (!state.mine.unlocked) return { state, events: [] };
   const today = localDateKey(now);

@@ -31,7 +31,13 @@ export function createEmptyHelicopter(): HelicopterState {
 export function generateHeliOrder(rng: RngState, availableGoods: HeliOrderableGood[], playerLevel: number): HelicopterOrder["requirements"] {
   const eligible = availableGoods.filter((g) => g.unlockLevel <= playerLevel);
   if (eligible.length === 0) throw new Error("generateHeliOrder: no orderable goods at this level");
-  const good = eligible[nextInt(rng, 0, eligible.length - 1)];
+  const goodIndex = nextInt(rng, 0, eligible.length - 1);
+  const good = eligible[goodIndex];
+  if (good === undefined) {
+    // Cannot actually happen: goodIndex is bounded to [0, eligible.length - 1]
+    // by construction, and eligible was just checked non-empty above.
+    throw new Error(`generateHeliOrder: internal error - index ${goodIndex} out of bounds for eligible goods`);
+  }
   const requirements: OrderRequirement[] = [{ goodId: good.goodId, quantity: nextInt(rng, 1, 4) }];
   return requirements;
 }

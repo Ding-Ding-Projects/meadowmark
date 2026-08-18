@@ -47,8 +47,14 @@ export function evaluateAchievements(
     const current = progress[entry.achievementId] ?? { achievementId: entry.achievementId, tier: 0, progress: 0 };
     let tier = current.tier;
 
-    while (tier < entry.tiers.length && counterValue >= entry.tiers[tier].threshold) {
+    // Read tiers[tier] once per iteration and let its own presence be the
+    // loop condition - undefined means "no more tiers defined" (equivalent
+    // to the old `tier < entry.tiers.length` check), so this is provably
+    // safe rather than an assertion, and stops the compiler from having to
+    // trust that two separate expressions agree about the same bound.
+    while (true) {
       const reward = entry.tiers[tier];
+      if (reward === undefined || counterValue < reward.threshold) break;
       coins += reward.rewardCoins;
       cash += reward.rewardCash;
       tier += 1;

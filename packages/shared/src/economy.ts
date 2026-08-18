@@ -109,7 +109,12 @@ export function removeGood(inventory: Record<string, number>, goodId: string, qu
 /** True if the inventory holds at least `quantity` of every entry in the bag. */
 export function hasAll(inventory: Record<string, number>, bag: Record<string, number>): boolean {
   for (const goodId in bag) {
-    if ((inventory[goodId] ?? 0) < bag[goodId]) return false;
+    // bag[goodId] is always present since goodId came from iterating bag's
+    // own keys - the ?? 0 is defensive against noUncheckedIndexedAccess's
+    // static widening, not a real "missing entry" case, and 0 is the
+    // correct fallback semantics either way (require nothing of it).
+    const required = bag[goodId] ?? 0;
+    if ((inventory[goodId] ?? 0) < required) return false;
   }
   return true;
 }
@@ -118,7 +123,7 @@ export function hasAll(inventory: Record<string, number>, bag: Record<string, nu
 export function removeAll(inventory: Record<string, number>, bag: Record<string, number>): Record<string, number> {
   let next = inventory;
   for (const goodId in bag) {
-    next = removeGood(next, goodId, bag[goodId]);
+    next = removeGood(next, goodId, bag[goodId] ?? 0);
   }
   return next;
 }

@@ -41,7 +41,14 @@ export function rollWagonRequests(
   const pool = [...eligible];
   for (let i = 0; i < count && pool.length > 0; i++) {
     const idx = nextInt(rng, 0, pool.length - 1);
-    chosen.push(pool[idx]);
+    const picked = pool[idx];
+    if (picked === undefined) {
+      // Cannot actually happen: idx is bounded to [0, pool.length - 1] by
+      // construction. Skip rather than throw so a broken invariant
+      // degrades to fewer wagon requests instead of crashing the tick.
+      continue;
+    }
+    chosen.push(picked);
     pool.splice(idx, 1);
   }
   return chosen.map((g) => ({ goodId: g.goodId, quantityNeeded: nextInt(rng, 3, 12), quantityLoaded: 0 }));
@@ -114,7 +121,11 @@ export function collectWagon(
 
   let inventory = state.inventory;
   for (const goodId in wagon.rewardMaterials) {
-    inventory = { ...inventory, [goodId]: (inventory[goodId] ?? 0) + wagon.rewardMaterials[goodId] };
+    // rewardMaterials[goodId] always exists here since goodId came from its
+    // own keys; the ?? 0 satisfies noUncheckedIndexedAccess's static
+    // widening rather than covering a real missing-entry case.
+    const amount = wagon.rewardMaterials[goodId] ?? 0;
+    inventory = { ...inventory, [goodId]: (inventory[goodId] ?? 0) + amount };
   }
 
   const freshRequests = rollWagonRequests(rng, availableGoods, state.economy.level);

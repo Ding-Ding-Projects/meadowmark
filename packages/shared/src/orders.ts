@@ -47,7 +47,14 @@ export function generateOrder(
   const pool = [...eligible];
   for (let i = 0; i < requirementCount && pool.length > 0; i++) {
     const idx = nextInt(rng, 0, pool.length - 1);
-    chosen.push(pool[idx]);
+    const picked = pool[idx];
+    if (picked === undefined) {
+      // Cannot actually happen: idx is bounded to [0, pool.length - 1] by
+      // construction. Skip rather than throw so a broken invariant
+      // degrades to an order with fewer requirements instead of crashing.
+      continue;
+    }
+    chosen.push(picked);
     pool.splice(idx, 1);
   }
 
