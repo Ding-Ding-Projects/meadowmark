@@ -17,6 +17,7 @@ import { createPlacementController, type PlacementController } from './placement
 import { VillagerWanderSystem } from './villagers.js';
 import { OccupancyGrid, footprintTiles, TILE_SIZE } from './grid.js';
 import { requireAsset } from './mesh-dsl.js';
+import { ensureFieldPlotAssetRegistered, ensureTerrainAssetsRegistered } from './assets/nature.js';
 import { QualityController, type QualitySettings, type SpeedLevel } from './quality.js';
 import type { GameStateView, TileCoord, RoadShape } from './state-view.js';
 
@@ -67,6 +68,9 @@ export interface RendererHandle {
 }
 
 export function createRenderer(canvas: HTMLCanvasElement, opts: CreateRendererOptions = {}): RendererHandle {
+  ensureTerrainAssetsRegistered();
+  ensureFieldPlotAssetRegistered();
+
   const worldSize = opts.worldSize ?? 96;
   const sceneBundle: SceneBundle = createScene({
     canvas,
@@ -149,6 +153,15 @@ export function createRenderer(canvas: HTMLCanvasElement, opts: CreateRendererOp
   function syncWorld(state: GameStateView): void {
     occupancy.reset();
 
+    const terrainByAsset = new Map<string, { position: THREE.Vector3Like }[]>();
+    for (const tile of state.tiles) {
+      const assetName = `terrain_${tile.terrain}`;
+      const list = terrainByAsset.get(assetName) ?? [];
+      list.push({ position: { x: tile.position.x * TILE_SIZE, y: 0, z: tile.position.y * TILE_SIZE } });
+      terrainByAsset.set(assetName, list);
+    }
+    for (const [assetName, list] of terrainByAsset) instances.setInstances(assetName, list);
+
     const buildingsByAsset = new Map<string, { position: THREE.Vector3Like; rotationY: number }[]>();
     const buildingPickTargets: PickTarget[] = [];
     for (const b of state.buildings) {
@@ -216,6 +229,7 @@ export function createRenderer(canvas: HTMLCanvasElement, opts: CreateRendererOp
     villagerSystem.setRoadTiles(roadTiles);
 
     sceneBundle.setDayNightEnabled(state.weather.timeOfDay >= 0);
+    sceneBundle.setTimeOfDay(state.weather.timeOfDay >= 0 ? state.weather.timeOfDay : null);
   }
 
   function setState(state: GameStateView): void {

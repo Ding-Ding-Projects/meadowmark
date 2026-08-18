@@ -9,15 +9,39 @@ import { select } from "../components/select";
 import { t } from "../i18n";
 import { FieldsView, HostBridge } from "../contracts";
 
+const CROP_ICONS: Record<string, string> = {
+  wheat: "🌾",
+  corn: "🌽",
+  carrot: "🥕",
+  strawberry: "🍓",
+  tomato: "🍅",
+  potato: "🥔",
+  grape: "🍇",
+  blueberry: "🫐",
+  pumpkin: "🎃",
+};
+
 function plotIcon(plot: FieldsView["plots"][number], crops: FieldsView["availableCrops"]): string {
   // Narrow via a local binding rather than repeated `plot.state.kind` checks
   // — narrowing chained property accesses across statements is unreliable,
   // and this keeps the discriminated-union narrowing unambiguous.
   const state = plot.state;
-  if (state.kind === "empty") return "▫️";
+  if (state.kind === "empty") return "▧";
   if (state.kind === "withered") return "🥀";
   const crop = crops.find((c) => c.id === state.cropId);
-  return crop?.iconId ?? "🌱";
+  return CROP_ICONS[state.cropId] ?? (crop ? "🌱" : "▧");
+}
+
+function cropLabel(cropId: string, crops: FieldsView["availableCrops"]): string {
+  const crop = crops.find((c) => c.id === cropId);
+  return crop ? t(crop.nameKey) : cropId;
+}
+
+function plotLabel(plot: FieldsView["plots"][number], crops: FieldsView["availableCrops"]): string {
+  const state = plot.state;
+  if (state.kind === "empty") return t("panel.fields.plotEmptyShort");
+  if (state.kind === "withered") return t("panel.fields.plotWitheredShort");
+  return cropLabel(state.cropId, crops);
 }
 
 export function renderFieldsPanel(host: HTMLElement, view: FieldsView, bridge: HostBridge): () => void {
@@ -62,7 +86,8 @@ export function renderFieldsPanel(host: HTMLElement, view: FieldsView, bridge: H
           "aria-label": plotAriaLabel(plot),
           onclick: () => onPlotClick(plot),
         },
-        h("span.mm-grid-tile__icon", { "aria-hidden": "true" }, plotIcon(plot, view.availableCrops))
+        h("span.mm-grid-tile__icon", { "aria-hidden": "true" }, plotIcon(plot, view.availableCrops)),
+        h("span.mm-grid-tile__label", {}, plotLabel(plot, view.availableCrops))
       );
       if (plot.state.kind === "growing") {
         tile.appendChild(h("span.mm-grid-tile__timer", {}, formatDuration(plot.state.readyAt - Date.now())));

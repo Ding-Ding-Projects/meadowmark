@@ -3,31 +3,31 @@
 Written 2026-08-18 against `main` at `c0822d3`. Every figure here was measured, not
 remembered. Where something is unverified, it says so.
 
-## Read this first: the app does not look like a game
+## Read this first: the app now draws a basic world, but it is still not a finished game
 
-**The built application, launched and captured, does not read as a game or even as a
-working app. It reads as a static picture of one.** That is the single most important
-fact in this document and it is not softened anywhere below.
+**The built application, launched and captured, now renders terrain tiles and visible
+field-bed plots in the WebGL world after the welcome modal is dismissed.** That fixes
+the earlier "flat green plane" first-paint failure. It still should not be described
+as a playable game: the world is sparse, many systems are unwired, and most gameplay
+surfaces beyond first paint remain unverified.
 
 What a capture of the running build actually shows:
 
-- **The 3D world never renders.** The centre of the window — where the entire town,
-  every building, every crop and the free-orbit camera are supposed to be — is a flat
-  green fill with a loading spinner parked in the middle of it. Nothing three.js
-  produces has ever been seen on screen. The engine package compiles, generates its
-  meshes and exports a renderer; none of that has been proven to draw a single frame.
-- **The chrome does not read as functional.** The left navigation rail renders its
-  labels in a dark green on a dark green background, close to illegible. Nothing about
-  it suggests it can be clicked.
-- **Placeholders leak through.** The crop picker renders the literal string
-  `(missing:Wheat)`. Field plots render a small purple square rather than a crop, an
-  empty state, or anything a player could interpret.
-- **The HUD is clipped** along the top edge by the custom title bar.
+- **The 3D world renders baseline terrain and field beds.** The engine now consumes
+  `state.tiles` and instantiates terrain meshes, and the renderer adapter adds
+  field-bed meshes for every unlocked plot.
+- **The navigation rail is legible enough to read and click.** Its selected and idle
+  states now use Material surface/container roles with visible selected contrast.
+- **The crop picker no longer leaks an internal missing-key marker.** A missing `Wheat`
+  key falls back to the readable label `Wheat`.
+- **Field plots render readable empty-state labels** in the DOM and visible beds in the
+  3D world.
+- **The HUD is offset below the custom title bar** rather than clipped by it.
 
-Put together, a person opening this build sees a green rectangle with some faint text
-down one side and a panel floating on the right. It is a screenshot of an interface
-rather than an interface. **Do not describe this as a playable game.** It boots, it
-holds real state, and it renders DOM — that is all that is established.
+Put together, a person opening this build sees a real but sparse terrain grid with
+empty field plots, readable chrome, HUD stats, and the fields panel. **Do not describe
+this as a playable game yet.** It boots, holds real state, renders DOM, and renders
+baseline WebGL world geometry — that is what is established.
 
 ## What actually exists
 
@@ -37,7 +37,7 @@ packages, plus a published documentation and landing site.
 | Package | State | Notes |
 |---|---|---|
 | `packages/shared` | Compiles, runs | The whole game simulation, headless and deterministic. The most trustworthy thing in the repo. |
-| `packages/engine` | Compiles | three.js scene, generated meshes, orbit camera. **Never proven to render.** |
+| `packages/engine` | Compiles, renders baseline world | three.js scene, generated meshes, terrain tiles, field-bed meshes, orbit camera. |
 | `packages/ui` | Compiles, renders | Material 3 DOM layer, HUD and 14 panels. Visibly renders in the built app. |
 | `packages/app` | Compiles, runs | Electron main, preload bridge, ten local subsystems. |
 | `packages/renderer` | Compiles, boots | The entry point and the three adapters joining the above. |
@@ -54,6 +54,7 @@ Site: <https://ding-ding-projects.github.io/meadowmark/> — live, HTTP 200.
 | Offline progress is chunk-invariant | `node packages/shared/dist/determinism-check.js` — one 30-day tick equals 43,200 one-minute ticks, byte-identical. The comparator was watched failing first. |
 | Balance data is coherent | Validator: no orphan unlocks, no chain cycles, no unreachable goods |
 | The app boots and the bridge works | Launched on an off-screen desktop, window captured, real state on screen |
+| The baseline 3D world renders | Built app launched on an off-screen desktop; welcome modal dismissed; captured WebGL surface shows terrain tiles and field-bed plots |
 | Preload is sandbox-clean | `node tools/guards/no-fs-in-preload.mjs` — emitted bundle requires only `electron` |
 | No bare `fs.rename` | `node tools/guards/no-bare-rename.mjs` |
 | Installer packages and is unsigned | Local package; `Get-AuthenticodeSignature` reports `NotSigned`, no signer |
@@ -62,7 +63,9 @@ Site: <https://ding-ding-projects.github.io/meadowmark/> — live, HTTP 200.
 ## What is NOT verified
 
 - **That the game is playable.** Nothing has been played. No action has been clicked.
-- **That the 3D renders at all.** See the top of this document.
+- **That rich placed-world content is complete.** Baseline terrain and field beds render;
+  factories, roads, animal sheds, museum content, and many placement-driven objects are
+  still limited by the adapter gaps below.
 - **That the installer produces a working install.** It has never been installed and
   launched. Only the development build has been launched.
 - **Any performance claim.** No frame budget, draw-call or instance count has been
@@ -94,7 +97,9 @@ checked, and several have.
 - Earlier verified in detail: `v0.1.0-9`, targeting `5520efe`, carrying
   `Meadowmark-Setup-0.1.0.exe` (135,820,288 bytes), `meadowmark-0.1.0-full.nupkg`
   (135,106,135 bytes) and `RELEASES` (81 bytes).
-- **Every release so far installs an application that does not render its game.**
+- Releases before this fix installed an application whose first-paint world rendered as
+  a flat green plane. Rebuild and release from this fix before claiming a published
+  installer contains the terrain/field-bed repair.
 - Installers are permanently unsigned. Windows shows an unknown-publisher warning.
   Code signing is prohibited for this project and must never be added.
 
@@ -110,17 +115,8 @@ surface** — so no row was promoted to `done`. They are libraries with no calle
 
 Highest first.
 
-1. **The 3D world does not render.** Suspected cause: the engine's `requireAsset()`
-   throws by design on an unknown mesh name, and balance defines 17 crops and 7 house
-   tiers while the engine ships 4 and 4. A miss would throw during scene construction
-   and leave the spinner up permanently. Unconfirmed.
-2. **`(missing:Wheat)` leaks an i18n internal into the interface**, and the
-   missing-key fallback prints the key wrapper rather than a readable name.
-3. **Navigation rail contrast** is close to illegible.
-4. **HUD clipped** by the custom title bar.
-5. **Field plots render a placeholder square.**
-6. Ten service subsystems are **unwired**.
-7. **Adapter gaps, all marked `GAP:` in `packages/renderer/src/adapters/`:** the
+1. Ten service subsystems are **unwired**.
+2. **Adapter gaps, all marked `GAP:` in `packages/renderer/src/adapters/`:** the
    simulation carries no world position for factories, animal sheds or plots, so the
    renderer uses hard-coded layouts; no terrain or weather system exists; no museum
    system or zoo species catalog exists anywhere; `TrainState` has three wagons but the
@@ -128,11 +124,11 @@ Highest first.
    factory-collect, animal-collect, plot-unlock or building-select member; the
    simulation has no way to cancel a queued factory job or demolish a placed building,
    so both are no-ops; `placeBuilding()` ignores the requested rotation.
-8. **Placement ghost cannot follow the cursor** — the engine exposes no camera or
+3. **Placement ghost cannot follow the cursor** — the engine exposes no camera or
    raycaster accessor to compute a hovered ground tile.
-9. Documented UI follow-ups: museum donate control, settings search index is
+4. Documented UI follow-ups: museum donate control, settings search index is
    hand-maintained rather than derived, toast corner has no persisted setting.
-10. Site: long-form docs prose does not vary with the funny level; horizontal tab
+5. Site: long-form docs prose does not vary with the funny level; horizontal tab
     docking uses native scroll rather than an overflow popover.
 
 ## Things that bit us, so they do not bite again
@@ -157,10 +153,10 @@ Highest first.
 
 ## Next owner: start here
 
-1. Find out why the 3D does not draw. Launch the build, read the renderer console.
-   Everything else is cosmetic next to this.
-2. Fix the i18n fallback so no user ever sees `(missing:X)`.
-3. Fix rail contrast and HUD clipping.
-4. Then wire one service subsystem end to end — IPC, preload, UI — and promote exactly
+1. Rebuild and ship a release from the terrain/field-bed fix before claiming the
+   published installer contains it.
+2. Drive one actual player action from the built app (for example, plant and harvest a
+   crop) and capture the world/panel state after the interaction.
+3. Then wire one service subsystem end to end — IPC, preload, UI — and promote exactly
    one inventory row to `done`, so the pattern exists for the other nine.
-5. Only then consider whether anything here is worth calling a playable release.
+4. Only then consider whether anything here is worth calling a playable release.

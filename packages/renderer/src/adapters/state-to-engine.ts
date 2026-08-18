@@ -195,6 +195,17 @@ function mapCropPlots(state: GameState, now: number): CropPlotView[] {
   return views;
 }
 
+function mapFieldPlotBeds(state: GameState): DecorationView[] {
+  return state.fields.plots
+    .filter((plot) => plot.unlocked)
+    .map((plot) => ({
+      id: `field-bed-${plot.id}`,
+      kind: 'field_plot_empty',
+      position: plotPosition(plot.index),
+      rotation: 0,
+    }));
+}
+
 // ---------------------------------------------------------------------------
 // Animals: animals.sheds[].animals[] -> engine animals[]
 // ---------------------------------------------------------------------------
@@ -309,7 +320,7 @@ export function stateToEngineView(state: GameState, now: number): GameStateView 
     cropPlots: mapCropPlots(state, now),
     animals: mapAnimals(state),
     roads,
-    decorations,
+    decorations: [...decorations, ...mapFieldPlotBeds(state)],
     weather: buildWeather(now),
   };
 }

@@ -20,6 +20,8 @@ export interface SceneBundle {
   /** Advance the day/night cycle; call once per frame with the elapsed clock. */
   update: (nowMs: number) => void;
   setDayNightEnabled: (enabled: boolean) => void;
+  /** Set a simulation-owned hour in the 0..24 range, when one is available. */
+  setTimeOfDay: (timeOfDay: number | null) => void;
 }
 
 export interface CreateSceneOptions {
@@ -74,6 +76,12 @@ export function createScene(opts: CreateSceneOptions): SceneBundle {
   scene.add(ground);
 
   let dayNightEnabled = opts.dayNight?.enabled ?? true;
+  let fixedTimeOfDay: number | null = null;
+
+  function angleForHour(hour: number): number {
+    const normalizedHour = THREE.MathUtils.euclideanModulo(hour, 24);
+    return ((normalizedHour - 6) / 24) * Math.PI * 2;
+  }
 
   function applySun(angle: number): void {
     const radius = opts.worldSize * 0.8;
@@ -84,14 +92,14 @@ export function createScene(opts: CreateSceneOptions): SceneBundle {
 
     // Soft day/night colour + intensity blend; never fully dark so the
     // diorama stays readable at night.
-    const dayness = THREE.MathUtils.clamp((Math.sin(angle) + 0.15) / 1.15, 0, 1);
-    sunLight.intensity = THREE.MathUtils.lerp(0.15, 1.4, dayness);
-    hemiLight.intensity = THREE.MathUtils.lerp(0.35, 0.9, dayness);
+    const dayness = THREE.MathUtils.clamp((Math.sin(angle) + 0.2) / 1.2, 0, 1);
+    sunLight.intensity = THREE.MathUtils.lerp(0.45, 1.4, dayness);
+    hemiLight.intensity = THREE.MathUtils.lerp(0.7, 0.95, dayness);
     const dayColor = new THREE.Color(0xfff3d6);
     const nightColor = new THREE.Color(0x8fa3d6);
     sunLight.color.copy(nightColor).lerp(dayColor, dayness);
     const skyDay = new THREE.Color(0xbfe3ea);
-    const skyNight = new THREE.Color(0x1b2440);
+    const skyNight = new THREE.Color(0x53637d);
     const sky = skyNight.clone().lerp(skyDay, dayness);
     (scene.background as THREE.Color).copy(sky);
     if (scene.fog) (scene.fog as THREE.Fog).color.copy(sky);
@@ -101,6 +109,10 @@ export function createScene(opts: CreateSceneOptions): SceneBundle {
 
   function update(nowMs: number): void {
     if (!dayNightEnabled) return;
+    if (fixedTimeOfDay !== null) {
+      applySun(angleForHour(fixedTimeOfDay));
+      return;
+    }
     // A full day/night cycle every 10 real-world minutes by default; this is
     // deliberately not tied to the *actual* wall clock time of day, since a
     // player who opens the game at 2am should still see a lively town.
@@ -112,6 +124,12 @@ export function createScene(opts: CreateSceneOptions): SceneBundle {
   function setDayNightEnabled(enabled: boolean): void {
     dayNightEnabled = enabled;
     if (!enabled) applySun(FIXED_SUN_ANGLE);
+    else if (fixedTimeOfDay !== null) applySun(angleForHour(fixedTimeOfDay));
+  }
+
+  function setTimeOfDay(timeOfDay: number | null): void {
+    fixedTimeOfDay = timeOfDay === null || !Number.isFinite(timeOfDay) ? null : timeOfDay;
+    if (dayNightEnabled && fixedTimeOfDay !== null) applySun(angleForHour(fixedTimeOfDay));
   }
 
   function dispose(): void {
@@ -120,5 +138,5 @@ export function createScene(opts: CreateSceneOptions): SceneBundle {
     renderer.dispose();
   }
 
-  return { scene, renderer, hemiLight, sunLight, ground, dispose, update, setDayNightEnabled };
+  return { scene, renderer, hemiLight, sunLight, ground, dispose, update, setDayNightEnabled, setTimeOfDay };
 }
