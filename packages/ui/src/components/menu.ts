@@ -1,6 +1,7 @@
 import { h } from "../dom";
 import { openOverlay } from "../overlays";
 import { t } from "../i18n";
+import { searchField, type RegexFieldState } from "../search/regex-builder";
 
 export interface MenuItemDef {
   id: string;
@@ -17,6 +18,8 @@ export interface OpenMenuOptions {
   placement?: "bottom-start" | "bottom-end" | "top-start" | "top-end";
   /** Every menu — dropdown or context menu — carries its own filter field, no exceptions. */
   filterAriaLabel?: string;
+  role?: "menu" | "listbox";
+  onClose?: () => void;
 }
 
 /**
@@ -27,25 +30,27 @@ export interface OpenMenuOptions {
 export function openMenu(opts: OpenMenuOptions): void {
   openOverlay({
     anchor: opts.anchor,
+    onClose: opts.onClose,
     surfaceClass: "mm-menu",
     placement: opts.placement ?? "bottom-start",
     build: (close) => {
-      const root = h("div", { role: "menu" });
-      const filterInput = h("input.mm-text-field__input", {
-        type: "text",
-        placeholder: t("common.search.placeholder"),
-        "aria-label": opts.filterAriaLabel ?? t("common.search.placeholder"),
-      }) as HTMLInputElement;
+      const role = opts.role ?? "menu";
+      const closeMenu = (): void => { close(); };
+      const root = h("div", { role });
 
       const listEl = h("div");
       let activeIndex = -1;
       let visibleItems: { def: MenuItemDef; el: HTMLDivElement }[] = [];
 
-      function renderItems(filterText: string): void {
+      function matches(label: string, state: RegexFieldState): boolean {
+        if (state.mode === "text") return label.toLowerCase().includes(state.query.trim().toLowerCase());
+        try { return new RegExp(state.pattern, state.flags).test(label); } catch { return false; }
+      }
+
+      function renderItems(state: RegexFieldState): void {
         listEl.textContent = "";
         visibleItems = [];
-        const needle = filterText.trim().toLowerCase();
-        const matched = needle ? opts.items.filter((i) => i.label.toLowerCase().includes(needle)) : opts.items;
+        const matched = opts.items.filter((item) => matches(item.label, state));
         if (matched.length === 0) {
           listEl.appendChild(h("div", { style: { padding: "8px 16px", color: "var(--mm-color-on-surface-variant)" } }, t("common.state.noMatches")));
           return;
@@ -54,13 +59,13 @@ export function openMenu(opts: OpenMenuOptions): void {
           const el = h(
             "div.mm-menu__item",
             {
-              role: "menuitem",
+              role: role === "menu" ? "menuitem" : "option",
               "aria-disabled": def.disabled ? "true" : undefined,
               title: def.disabled && def.disabledReason ? def.disabledReason : undefined,
               onclick: () => {
                 if (def.disabled) return;
                 def.onSelect?.();
-                close();
+                closeMenu();
               },
             },
             h("span", {}, def.label),
@@ -78,7 +83,8 @@ export function openMenu(opts: OpenMenuOptions): void {
         activeIndex = index;
       }
 
-      filterInput.addEventListener("input", () => renderItems(filterInput.value));
+      const search = searchField({ ariaLabel: opts.filterAriaLabel ?? t("common.search.placeholder"), onChange: renderItems });
+      const filterInput = search.el.querySelector("input") as HTMLInputElement;
       filterInput.addEventListener("keydown", (ev) => {
         if (ev.key === "ArrowDown") {
           ev.preventDefault();
@@ -91,13 +97,13 @@ export function openMenu(opts: OpenMenuOptions): void {
           const item = visibleItems[activeIndex];
           if (item && !item.def.disabled) {
             item.def.onSelect?.();
-            close();
+            closeMenu();
           }
         }
       });
 
-      renderItems("");
-      root.appendChild(h("div.mm-menu__filter", {}, filterInput));
+      renderItems(search.state.getSnapshot());
+      root.appendChild(h("div.mm-menu__filter", {}, search.el));
       root.appendChild(listEl);
       return root;
     },

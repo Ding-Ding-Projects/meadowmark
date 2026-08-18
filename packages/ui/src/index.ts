@@ -15,6 +15,7 @@ import "./tokens.css";
 import "./components/components.css";
 import "./hud/hud.css";
 import "./panels/panels.css";
+import "./universal/universal.css";
 
 import "./i18n/common";
 import "./i18n/hud";
@@ -49,6 +50,7 @@ import { settingsStore } from "./settings/store";
 import { setTheme, setDensityScale } from "./tokens";
 import { t } from "./i18n";
 import { h } from "./dom";
+import { mountUniversalCenter } from "./universal/center";
 
 import { GameStateView, HostBridge, ReadonlyStore, RendererBridge } from "./contracts";
 
@@ -89,9 +91,7 @@ export function mountUi(root: HTMLElement, opts: MountUiOptions): MountedUi {
 
   disposers.push(mountHud(root, opts.state$));
 
-  const panelHost = h("div", {
-    style: { position: "fixed", right: "12px", top: "72px", bottom: "12px", width: "min(420px, 92vw)", zIndex: "var(--mm-z-panel)" },
-  });
+  const panelHost = h("div.mm-primary-panel-host", { id: "mm-primary-panel", role: "tabpanel", tabindex: "0" });
   root.appendChild(panelHost);
   disposers.push(() => panelHost.remove());
 
@@ -146,6 +146,9 @@ export function mountUi(root: HTMLElement, opts: MountUiOptions): MountedUi {
       case "settings":
         currentDisposer = mountSettings(panelHost);
         break;
+      case "control-centre":
+        currentDisposer = mountUniversalCenter(panelHost);
+        break;
     }
   }
 
@@ -165,6 +168,7 @@ export function mountUi(root: HTMLElement, opts: MountUiOptions): MountedUi {
     { id: "dailies", label: t("panel.dailies.title") },
     { id: "village", label: t("panel.village.title") },
     { id: "settings", label: t("settings.title") },
+    { id: "control-centre", label: "Control centre · 控制中心" },
   ];
 
   // Each nav "tab" mounts the corresponding panel into panelHost rather than
@@ -174,11 +178,9 @@ export function mountUi(root: HTMLElement, opts: MountUiOptions): MountedUi {
     dock: s.tabDock,
     activeId: "fields",
     onActivate: mountPanel,
-    tabs: tabDefs.map((d) => ({ id: d.id, label: d.label, panel: h("div") })),
+    tabs: tabDefs.map((d) => ({ id: d.id, label: d.label, controlsId: "mm-primary-panel" })),
   });
-  const navHost = h("div", {
-    style: { position: "fixed", left: "0", top: "32px", bottom: "0", zIndex: "var(--mm-z-panel)", pointerEvents: "auto" },
-  });
+  const navHost = h("div.mm-primary-nav-host");
   navHost.appendChild(navTabsHandle.root);
   root.appendChild(navHost);
   disposers.push(() => navHost.remove());
