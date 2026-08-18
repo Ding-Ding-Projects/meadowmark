@@ -175,25 +175,107 @@ export interface OrdersView {
 }
 
 // ---------------------------------------------------------------------------
-// Delivery vehicles (train / helicopter / ship)
+// Train — 3 independent wagons, each requesting its own goods
 // ---------------------------------------------------------------------------
 
-export interface CargoSlot {
-  index: number;
-  goodId: GoodId | null;
-  amount: number;
-  requestedGoodId: GoodId | null;
-  requestedAmount: number;
+export interface TrainWagonRequestView {
+  goodId: GoodId;
+  quantityNeeded: number;
+  quantityLoaded: number;
+  /** How much of this good the player currently holds in the barn — real inventory, not a guess. */
+  available: number;
 }
 
-export interface DeliveryVehicleView {
+/**
+ * A wagon only ever needs one of these three states from the UI's point of
+ * view: "loading" covers everything before departure (whether or not it is
+ * actually full yet — the caller checks each request's own quantities for
+ * that), "departed" is mid-trip, "arrived" is ready to collect.
+ */
+export type TrainWagonState = "loading" | "departed" | "arrived";
+
+export interface TrainWagonView {
   id: EntityId;
-  kind: "train" | "helicopter" | "ship";
-  state: "idle" | "loading" | "departed" | "returning" | "arrived";
-  cargo: CargoSlot[];
-  departsAt: Timestamp | null;
+  /** 0, 1, or 2 — which of the train's three wagons this is. */
+  index: number;
+  requests: TrainWagonRequestView[];
+  state: TrainWagonState;
+  departedAt: Timestamp | null;
   returnsAt: Timestamp | null;
-  chestReward: { coins: number; xp: number; cash: Money; goods: { goodId: GoodId; amount: number }[] } | null;
+  /** The materials this wagon is bringing back. Empty until it has departed and rolled its reward — never a guessed reward before that. */
+  rewardMaterials: { goodId: GoodId; amount: number }[];
+}
+
+export interface TrainView {
+  wagons: TrainWagonView[];
+}
+
+// ---------------------------------------------------------------------------
+// Helicopter — 2 fast orders, a reputation bar, and a reputation chest
+// ---------------------------------------------------------------------------
+
+export type HelicopterOrderState = "available" | "refilling";
+
+export interface HelicopterOrderView {
+  id: EntityId;
+  /** 0 or 1 — which of the helicopter's two order slots this is. */
+  index: number;
+  state: HelicopterOrderState;
+  requirements: OrderRequirement[];
+  rewardCoins: number;
+  rewardReputationStars: number;
+  /** Only meaningful while state is "refilling". */
+  refillAt: Timestamp | null;
+  canFulfill: boolean;
+}
+
+export interface HelicopterChestRewardView {
+  cash: Money;
+  boosterKind: string;
+  boosterQuantity: number;
+  expansionPermits: number;
+}
+
+export interface HelicopterView {
+  orders: HelicopterOrderView[];
+  reputationBar: number;
+  reputationBarCap: number;
+  chestReady: boolean;
+  /** Rolled the instant the bar fills; null before then, and null on a save from before this reward existed — an honest unknown rather than a placeholder number. */
+  chestReward: HelicopterChestRewardView | null;
+}
+
+// ---------------------------------------------------------------------------
+// Ship — 6 crates on a rolling 24h delivery window, plus an all-six chest
+// ---------------------------------------------------------------------------
+
+export interface ShipCrateView {
+  id: EntityId;
+  /** 0-5 — which of the ship's six crates this is. A crate disappears from the list once collected, so fewer than six may be visible mid-window. */
+  index: number;
+  goodId: GoodId;
+  quantityNeeded: number;
+  quantityLoaded: number;
+  /** How much of this good the player currently holds in the barn — real inventory, not a guess. */
+  available: number;
+  rewardCoins: number;
+  rewardXp: number;
+  canCollect: boolean;
+}
+
+export interface ShipChestRewardView {
+  cash: Money;
+  expansionPermits: number;
+}
+
+export interface ShipView {
+  unlocked: boolean;
+  crates: ShipCrateView[];
+  windowStartedAt: Timestamp | null;
+  windowEndsAt: Timestamp | null;
+  chestReady: boolean;
+  /** Rolled the instant the sixth crate is collected; null before then, and null on a save from before this reward existed — an honest unknown rather than a placeholder number. */
+  chestReward: ShipChestRewardView | null;
 }
 
 // ---------------------------------------------------------------------------
@@ -361,9 +443,9 @@ export interface GameStateView {
   factories: FactoriesView;
   barn: BarnView;
   orders: OrdersView;
-  train: DeliveryVehicleView;
-  helicopter: DeliveryVehicleView;
-  ship: DeliveryVehicleView;
+  train: TrainView;
+  helicopter: HelicopterView;
+  ship: ShipView;
   town: TownView;
   zoo: ZooView;
   mine: MineView;
@@ -415,9 +497,14 @@ export type GameAction =
   | { type: "barn/upgrade" }
   | { type: "order/fill"; orderIndex: number }
   | { type: "order/reroll"; orderIndex: number }
-  | { type: "vehicle/load"; vehicle: "train" | "helicopter" | "ship"; slotIndex: number; goodId: GoodId; amount: number }
-  | { type: "vehicle/dispatch"; vehicle: "train" | "helicopter" | "ship" }
-  | { type: "vehicle/collect"; vehicle: "train" | "helicopter" | "ship" }
+  | { type: "train/load"; wagonIndex: number; goodId: GoodId; amount: number }
+  | { type: "train/dispatch"; wagonIndex: number }
+  | { type: "train/collect"; wagonIndex: number }
+  | { type: "helicopter/fulfill"; orderIndex: number }
+  | { type: "helicopter/openChest" }
+  | { type: "ship/load"; crateIndex: number; goodId: GoodId; amount: number }
+  | { type: "ship/collect"; crateIndex: number }
+  | { type: "ship/openChest" }
   | { type: "town/place"; buildingId: BuildingId; x: number; y: number; rotation: 0 | 90 | 180 | 270 }
   | { type: "town/demolish"; instanceId: EntityId }
   | { type: "zoo/assign"; enclosureId: EntityId; animalId: AnimalId }

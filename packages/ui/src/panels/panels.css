@@ -96,17 +96,18 @@
 .mm-order-req-row { display: flex; align-items: center; gap: var(--mm-space-2); font-size: var(--mm-type-body-medium-size); }
 .mm-order-req-row--missing { color: var(--mm-color-error); }
 
-.mm-cargo-row { display: flex; gap: var(--mm-space-2); flex-wrap: wrap; }
-.mm-cargo-slot {
-  flex: 1 1 90px;
-  border: 1px solid var(--mm-color-outline-variant);
-  border-radius: var(--mm-shape-medium);
-  padding: var(--mm-space-2);
-  min-height: 72px;
+/* Delivery vehicles: train wagons, helicopter orders, ship crates. Each
+   vehicle's items — 3 wagons, 2 orders, up to 6 crates — render as their own
+   cards in this list rather than being collapsed into one "the vehicle". */
+.mm-vehicle-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--mm-space-3); }
+.mm-vehicle-card { display: flex; flex-direction: column; gap: var(--mm-space-2); padding: var(--mm-space-3); }
+.mm-vehicle-chest {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  gap: var(--mm-space-2);
+  padding: var(--mm-space-3);
+  background: var(--mm-color-tertiary-container);
+  color: var(--mm-color-on-tertiary-container);
 }
 
 .mm-village-notice {
