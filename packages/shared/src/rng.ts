@@ -111,3 +111,36 @@ export function seedFromString(input: string): number {
   }
   return h >>> 0;
 }
+
+/**
+ * Derives a fresh, independent RngState scoped to `scope` and a specific
+ * deterministic instant (typically a boundary timestamp), rather than
+ * drawing from the save's shared, continuously-mutating world RNG.
+ *
+ * This exists specifically for tick()'s boundary-crossing catch-up loops
+ * (mine.ts's regeneration, ship.ts's window rerolls, village.ts's request
+ * top-ups). Those loops process a variable NUMBER of boundaries per
+ * tick() call depending on how much time elapsed, and several of them run
+ * inside the same tick() call - which means if they all drew from one
+ * shared linear RNG stream, the ORDER those draws interleave in would
+ * depend on how the elapsed time happened to be chunked into tick()
+ * calls: a single big jump processes all of subsystem A's boundaries back
+ * to back and then all of subsystem B's, while many small ticks
+ * interleave A's and B's draws in true chronological order. A linear RNG
+ * is purely a function of how many draws preceded a given one, so a
+ * different interleave order produces different actual values even when
+ * every subsystem draws the exact same NUMBER of times - silently
+ * breaking tick(24h) == 1440x tick(1min) despite each subsystem's own
+ * boundary-counting being individually correct.
+ *
+ * Scoping each subsystem's catch-up draws to their own boundary instant
+ * removes the shared stream entirely: a subsystem's output depends only
+ * on "which boundary is this", never on what any other subsystem (or a
+ * different chunking of the same elapsed time) happened to draw first.
+ * This is the same pattern dailies.ts (seeded by date string) and
+ * village.ts's regatta (seeded by week string) already use for exactly
+ * this reason - this helper just generalizes it to an epoch timestamp.
+ */
+export function scopedRng(scope: string, boundaryAt: number): RngState {
+  return createRng(seedFromString(`${scope}:${boundaryAt}`));
+}

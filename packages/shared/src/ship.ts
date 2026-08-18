@@ -6,13 +6,16 @@
 
 import type { GameEvent, GameState, GoodId, ShipCrate, ShipState } from "./types";
 import type { RngState } from "./rng";
-import { nextInt } from "./rng";
+import { nextInt, scopedRng } from "./rng";
 import { addXp, removeGood } from "./economy";
-import { DAY_MS, isReady } from "./time";
+import { DAY_MS, MAX_OFFLINE_MS } from "./time";
 
 export const SHIP_UNLOCK_LEVEL = 18;
 export const SHIP_CRATE_COUNT = 6;
 export const SHIP_WINDOW_MS = DAY_MS;
+
+/** Windows are fixed 24h intervals, so the catch-up cap is just the offline clamp expressed in windows (30). */
+export const SHIP_MAX_CATCHUP_BOUNDARIES = Math.floor(MAX_OFFLINE_MS / SHIP_WINDOW_MS);
 
 export interface ShippableGood {
   goodId: GoodId;
@@ -142,30 +145,56 @@ export function openShipChest(state: GameState, reward: ShipChestReward): GameSt
 }
 
 /**
- * Rolls a fresh window if the current one has expired or never started (and the dock is unlocked).
+ * Rolls a fresh window for every 24h boundary actually crossed since the
+ * last one, up to SHIP_MAX_CATCHUP_BOUNDARIES (and rolls the very first
+ * window, anchored at `now`, the moment the dock unlocks).
  *
- * KNOWN CHUNK-INVARIANCE GAP: same root cause as mine.ts's tickMine. This
- * only checks whether the CURRENT 24h window has expired, not how many
- * windows elapsed since the last call. A single tick() spanning several
- * days rolls one window (dated from the final `now`); the equivalent
- * sequence of smaller ticks rolls one window per elapsed day, each
- * consuming its own draws from the shared world RNG. The two produce
- * different `windowEndsAt` values and different crate contents for the
- * same wall-clock elapsed time - tick(24h) == 1440x tick(1min) does not
- * hold here across a multi-window gap.
+ * `ship.windowEndsAt` doubles as the boundary cursor here - no separate
+ * field needed. Each window is rolled from a fresh RNG scoped to its own
+ * boundary timestamp (scopedRng(), NOT the shared world RNG - see rng.ts
+ * for why: this loop's iteration count varies with elapsed time, and it
+ * shares tick() with mine.ts's regeneration and village.ts's request
+ * top-up, so drawing from one linear stream would make a window's
+ * content depend on how many draws those OTHER subsystems happened to
+ * consume first - which itself depends on how the elapsed time was
+ * chunked into tick() calls). With scoped RNGs, tick(30 days) once and
+ * tick(1 day) applied 30 times roll the exact same 30 windows in the
+ * exact same order, full stop.
+ *
+ * If the elapsed span would cross more windows than the cap allows (a
+ * save opened after a year, or a forward clock jump), the remaining
+ * windows are deliberately forfeited - one final window is rolled
+ * anchored at `now` instead, and the player simply sees "today's" window
+ * rather than a year of replayed history.
  */
 export function tickShip(
   state: GameState,
-  rng: RngState,
   availableGoods: ShippableGood[],
   now: number,
 ): { state: GameState; events: GameEvent[] } {
   let next = maybeUnlockShip(state);
   if (!next.ship.unlocked) return { state: next, events: [] };
 
-  if (next.ship.windowEndsAt === null || isReady(next.ship.windowEndsAt, now)) {
-    const rolled = rollShipWindow(rng, availableGoods, next.economy.level, now);
-    next = { ...next, ship: rolled };
+  if (next.ship.windowEndsAt === null) {
+    // First window since unlocking - nothing to catch up on yet.
+    next = { ...next, ship: rollShipWindow(scopedRng("ship", now), availableGoods, next.economy.level, now) };
+    return { state: next, events: [] };
   }
-  return { state: next, events: [] };
+
+  let ship = next.ship;
+  let processed = 0;
+  while (processed < SHIP_MAX_CATCHUP_BOUNDARIES && ship.windowEndsAt !== null && ship.windowEndsAt <= now) {
+    const boundary = ship.windowEndsAt;
+    ship = rollShipWindow(scopedRng("ship", boundary), availableGoods, next.economy.level, boundary);
+    processed += 1;
+  }
+
+  if (ship.windowEndsAt !== null && ship.windowEndsAt <= now) {
+    // Cap hit with more windows still pending: forfeit them (documented,
+    // matches MAX_OFFLINE_MS) and roll one final window anchored at `now`
+    // so the cursor doesn't trail forever.
+    ship = rollShipWindow(scopedRng("ship", now), availableGoods, next.economy.level, now);
+  }
+
+  return { state: { ...next, ship }, events: [] };
 }

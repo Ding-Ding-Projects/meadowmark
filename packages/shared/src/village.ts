@@ -9,8 +9,8 @@
 
 import type { GameEvent, GameState, RegattaState, RegattaTask, Villager, VillageState, VillagerRequest } from "./types";
 import type { RngState } from "./rng";
-import { createRng, nextInt, pick, seedFromString } from "./rng";
-import { HOUR_MS, localWeekKey, isReady } from "./time";
+import { createRng, nextInt, pick, scopedRng, seedFromString } from "./rng";
+import { HOUR_MS, MAX_OFFLINE_MS, boundariesElapsed, localWeekKey, isReady } from "./time";
 
 export const LOCAL_ONLY_NOTICE =
   "This village is entirely local. The villagers here are offline characters built into the game, not other players - " +
@@ -55,10 +55,14 @@ export function createInitialVillage(now: number, templates: RegattaTaskTemplate
     requests: [],
     regatta: rollRegatta(localWeekKey(now), templates, scoreBarCap),
     localOnlyNotice: LOCAL_ONLY_NOTICE,
+    lastTopUpAt: now,
   };
 }
 
 export const VILLAGER_REQUEST_EXPIRY_MS = 6 * HOUR_MS;
+
+/** Top-ups happen at most once per VILLAGER_REQUEST_EXPIRY_MS boundary, so the catch-up cap is the offline clamp expressed in that interval. */
+export const VILLAGE_TOPUP_MAX_CATCHUP_BOUNDARIES = Math.floor(MAX_OFFLINE_MS / VILLAGER_REQUEST_EXPIRY_MS);
 
 export function rollVillagerRequest(
   rng: RngState,
@@ -84,47 +88,92 @@ export function rollVillagerRequest(
 }
 
 /**
- * Removes expired requests and rolls a fresh one if fewer than 3 are currently open.
+ * Expires anything due by `atTime` and tops back up to 3 open requests,
+ * rolling from a fresh RNG scoped to `atTime` (scopedRng(), NOT the
+ * shared world RNG - see rng.ts for why: this boundary loop shares
+ * tick() with mine.ts's regeneration and ship.ts's window reroll, and a
+ * shared linear stream would make a round's content depend on how many
+ * draws THOSE subsystems happened to consume first, which depends on how
+ * the elapsed time was chunked into tick() calls). This is only ever
+ * called at a specific boundary instant (see tickVillage below) - never
+ * with a moving "now" mid-loop - so the same sequence of boundaries
+ * always produces the same sequence of rolls.
+ */
+function expireAndTopUp(
+  requests: VillagerRequest[],
+  atTime: number,
+  villagers: Villager[],
+  goodPool: { goodId: string; unlockLevel: number; baseValue: number }[],
+  playerLevel: number,
+): VillagerRequest[] {
+  const rng = scopedRng("village", atTime);
+  let next = requests.filter((r) => !isReady(r.expiresAt, atTime));
+  const maxOpenRequests = 3;
+  while (next.length < maxOpenRequests) {
+    const request = rollVillagerRequest(rng, villagers, goodPool, playerLevel, atTime);
+    if (!request) break;
+    next = [...next, request];
+  }
+  return next;
+}
+
+/**
+ * Tops up to 3 open villager requests, at most once per
+ * VILLAGER_REQUEST_EXPIRY_MS (6h) boundary actually crossed since the
+ * last call - the boundary-crossing catch-up loop, same shape as
+ * mine.ts's tickMine and ship.ts's tickShip. Fulfilled requests are
+ * dropped every call regardless of boundaries, since "fulfilled" is a
+ * player-set flag rather than time-based and removing them can never
+ * diverge based on chunking.
  *
- * KNOWN CHUNK-INVARIANCE GAP (the worst instance of this pattern in the
- * package): unlike mine.ts/ship.ts, this top-up loop isn't even gated by a
- * calendar boundary - it maintains "3 open requests" on every call where a
- * slot is empty. Each newly-rolled request gets its own 6h expiry from
- * `now`, so across a long elapsed span, fine-grained ticking cascades:
- * roll -> expire -> roll -> expire, once per ~6h actually elapsed, while a
- * single coarse tick() covering the same span only ever tops up once (to
- * exactly 3), using far fewer draws from the shared world RNG. This means
- * tick(24h) once and 1440x tick(1min) end this call with a different
- * number of RNG draws consumed - not just different village requests, but
- * a different RNG stream position for every subsequent roll in the game,
- * in that tick and every one after it. This is the clearest violation of
- * the "tick(24h) == 1440x tick(1min)" invariant in this package and needs
- * a real fix (loop "once per 6h boundary actually crossed", the same
- * treatment mine.ts/ship.ts need), not a quick patch here.
+ * Each processed boundary calls expireAndTopUp() exactly once, anchored
+ * at that boundary's own timestamp (not `now`), so the newly-rolled
+ * requests in a batch all expire together at the NEXT boundary - which is
+ * exactly when the next iteration (or the next tick() call, once enough
+ * real time has passed) processes them. That alignment is what makes
+ * tick(24h) once and 1440x tick(1min) draw identical RNG values in
+ * identical order: both call expireAndTopUp() the same number of times,
+ * for the same boundary timestamps, regardless of how the elapsed time
+ * was chunked into tick() calls.
  *
- * Related, smaller effect: dailies.ts's streak counter can diverge too -
- * if the chest was claimed right before an offline span crossing more
- * than one calendar day, chunked ticking correctly increments the streak
- * once and then resets it to 0 on the next (unclaimed) day, while a
- * single coarse jump increments it once and never resets it. See
- * dailies.ts's tickDailies for the exact mechanism.
+ * Capped at VILLAGE_TOPUP_MAX_CATCHUP_BOUNDARIES (matching the 30-day
+ * offline clamp): a save opened after a year processes at most that many
+ * top-up rounds, then forfeits the rest and does one final round anchored
+ * at `now`, jumping the cursor forward so they're never replayed. A clock
+ * that moves backward (or hasn't crossed a boundary yet) does nothing;
+ * the cursor is never rewound.
  */
 export function tickVillage(
   state: GameState,
-  rng: RngState,
   goodPool: { goodId: string; unlockLevel: number; baseValue: number }[],
   templates: RegattaTaskTemplate[],
   scoreBarCap: number,
   now: number,
 ): { state: GameState; events: GameEvent[] } {
-  let requests = state.village.requests.filter((r) => !r.fulfilled && !isReady(r.expiresAt, now));
+  // Fulfilled requests can be dropped immediately regardless of chunking -
+  // "fulfilled" is set only by a player action, not derived from `now`.
+  let requests = state.village.requests.filter((r) => !r.fulfilled);
 
-  const maxOpenRequests = 3;
-  while (requests.length < maxOpenRequests) {
-    const request = rollVillagerRequest(rng, state.village.villagers, goodPool, state.economy.level, now);
-    if (!request) break;
-    requests = [...requests, request];
+  const cursor0 = state.village.lastTopUpAt;
+  let cursor = cursor0;
+  if (now > cursor0) {
+    const { boundariesToProcess, forfeited } = boundariesElapsed(
+      cursor0,
+      now,
+      VILLAGER_REQUEST_EXPIRY_MS,
+      VILLAGE_TOPUP_MAX_CATCHUP_BOUNDARIES,
+    );
+    for (let i = 0; i < boundariesToProcess; i++) {
+      cursor += VILLAGER_REQUEST_EXPIRY_MS;
+      requests = expireAndTopUp(requests, cursor, state.village.villagers, goodPool, state.economy.level);
+    }
+    if (forfeited > 0) {
+      requests = expireAndTopUp(requests, now, state.village.villagers, goodPool, state.economy.level);
+      cursor = now;
+    }
   }
+  // else: clock moved backward or no boundary has elapsed yet - never
+  // rewind the cursor, just leave requests as they are.
 
   const currentWeek = localWeekKey(now);
   let regatta = state.village.regatta;
@@ -132,7 +181,10 @@ export function tickVillage(
     regatta = rollRegatta(currentWeek, templates, scoreBarCap);
   }
 
-  return { state: { ...state, village: { ...state.village, requests, regatta } }, events: [] };
+  return {
+    state: { ...state, village: { ...state.village, requests, regatta, lastTopUpAt: cursor } },
+    events: [],
+  };
 }
 
 export function fulfillVillagerRequest(

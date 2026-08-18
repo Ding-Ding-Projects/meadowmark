@@ -7,9 +7,12 @@
 
 import type { DailiesState, DailyTask, GameEvent, GameState } from "./types";
 import { createRng, nextInt, seedFromString } from "./rng";
-import { localDateKey } from "./time";
+import { DAY_MS, MAX_OFFLINE_MS, localDateKey, nextLocalDayBoundary } from "./time";
 
 export const DAILY_TASK_COUNT = 5;
+
+/** Rollover is daily, so the catch-up cap is just the offline clamp expressed in days (30). */
+export const DAILY_MAX_CATCHUP_BOUNDARIES = Math.floor(MAX_OFFLINE_MS / DAY_MS);
 
 export interface DailyTaskTemplate {
   targetKind: string;
@@ -73,54 +76,86 @@ export function createInitialDailies(now: number, templates: DailyTaskTemplate[]
     chestClaimed: false,
     streak: 0,
     lastCompletedDateKey: null,
+    lastBoundaryAt: now,
   };
 }
 
 /**
- * Rolls over to a fresh set of tasks when the local date has changed, tracking whether yesterday's streak survives (all 5 tasks must have been completed and claimed) or resets.
+ * Rolls over to a fresh set of tasks for every local-calendar-day boundary
+ * actually crossed since `lastBoundaryAt`, evaluating and updating the
+ * streak once per day - never collapsing a multi-day gap into a single
+ * transition.
  *
- * Task CONTENT is safe from chunk-size effects: generateDailyTasks() seeds
- * its own local RNG from the date string alone, so "today"'s tasks are the
- * same regardless of how many tick() calls it took to get there, and it
- * never touches the shared world RNG.
+ * Task CONTENT was already safe from chunk-size effects before this fix:
+ * generateDailyTasks() seeds its own local RNG from the date string alone,
+ * so "today"'s tasks are the same regardless of how many tick() calls it
+ * took to get there, and it never touches the shared world RNG.
  *
- * KNOWN CHUNK-INVARIANCE GAP in the STREAK, though: this only compares
- * `state.dailies.dateKey` (the last day we actually rolled over) against
- * `today`, i.e. one boundary check per call, not once per day actually
- * elapsed. Concretely: if the chest was claimed right before an offline
- * span that crosses more than one calendar day, N * tick(1 day) rolls
- * over once per day - day0->day1 sees chestClaimed=true and increments
- * the streak, then day1->day2 (chestClaimed now false, offline) resets it
- * straight back to 0 - ending at streak=0. A single tick() covering the
- * same span jumps day0 straight to the final day, sees chestClaimed=true
- * from day0, and increments once with no intervening reset - ending at
- * streak=oldStreak+1. Same wall-clock elapsed time, different streak.
- * This is a real player-visible bug, not just an RNG-stream curiosity;
- * fixing it means looping "once per calendar day actually crossed" here
- * too. See village.ts's tickVillage for the RNG-stream-divergence variant
- * of the same root cause.
+ * The STREAK needed the fix, though, and this is the one place in the
+ * package where the correct behaviour was already what fine-grained
+ * ticking produced - N * tick(1 day) rolls over once per day, so an
+ * offline span with no player action correctly resets the streak to 0 on
+ * the first day nobody was there to claim the chest. Iterating day by day
+ * here (rather than jumping `dateKey` straight to today in one step)
+ * makes a single big tick() reach that same correct answer, matching the
+ * chunked behaviour rather than the other way round.
+ *
+ * Capped at DAILY_MAX_CATCHUP_BOUNDARIES (30, matching the offline
+ * clamp): a save opened after a year evaluates the streak through at most
+ * 30 days, then forfeits the rest and jumps straight to today - the
+ * streak has already reached 0 well before the cap in any realistic
+ * offline-without-claiming scenario, so the forfeited days cannot change
+ * the outcome. A clock that moves backward (or hasn't crossed a day
+ * boundary yet) does nothing; the cursor is never rewound.
  */
 export function tickDailies(
   state: GameState,
   templates: DailyTaskTemplate[],
   now: number,
 ): { state: GameState; events: GameEvent[] } {
-  const today = localDateKey(now);
-  if (state.dailies.dateKey === today) return { state, events: [] };
+  const cursor0 = state.dailies.lastBoundaryAt;
+  if (now <= cursor0) return { state, events: [] };
 
-  const yesterdayCompleted = state.dailies.chestClaimed;
-  const streak = yesterdayCompleted ? state.dailies.streak + 1 : 0;
+  let dateKey = state.dailies.dateKey;
+  let tasks = state.dailies.tasks;
+  let chestClaimed = state.dailies.chestClaimed;
+  let streak = state.dailies.streak;
+  let lastCompletedDateKey = state.dailies.lastCompletedDateKey;
+  let cursor = cursor0;
+  let processed = 0;
+
+  const rollOverOneDay = (boundary: number) => {
+    const yesterdayCompleted = chestClaimed;
+    streak = yesterdayCompleted ? streak + 1 : 0;
+    lastCompletedDateKey = yesterdayCompleted ? dateKey : lastCompletedDateKey;
+    dateKey = localDateKey(boundary);
+    tasks = generateDailyTasks(dateKey, templates);
+    chestClaimed = false;
+  };
+
+  while (processed < DAILY_MAX_CATCHUP_BOUNDARIES) {
+    const boundary = nextLocalDayBoundary(cursor);
+    if (boundary > now) break;
+    rollOverOneDay(boundary);
+    cursor = boundary;
+    processed += 1;
+  }
+
+  if (nextLocalDayBoundary(cursor) <= now) {
+    // Cap hit with more days still pending: forfeit them deliberately
+    // (documented, matches MAX_OFFLINE_MS elsewhere). By this point the
+    // streak has already been evaluated (and almost certainly reset to 0,
+    // since nothing offline can re-claim the chest) at least
+    // DAILY_MAX_CATCHUP_BOUNDARIES times, so one more rollover to "today"
+    // is enough - no further days need individual evaluation.
+    rollOverOneDay(now);
+    cursor = now;
+  }
 
   return {
     state: {
       ...state,
-      dailies: {
-        dateKey: today,
-        tasks: generateDailyTasks(today, templates),
-        chestClaimed: false,
-        streak,
-        lastCompletedDateKey: yesterdayCompleted ? state.dailies.dateKey : state.dailies.lastCompletedDateKey,
-      },
+      dailies: { dateKey, tasks, chestClaimed, streak, lastCompletedDateKey, lastBoundaryAt: cursor },
     },
     events: [],
   };
