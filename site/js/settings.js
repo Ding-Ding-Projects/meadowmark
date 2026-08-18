@@ -9,7 +9,7 @@
     const row = document.createElement("div");
     row.className = "mm-setting-row";
     row.dataset.settingId = opts.id;
-    row.dataset.searchText = (opts.title + " " + opts.explainEn).toLowerCase();
+    row.dataset.searchText = (opts.title + " " + opts.titleYue + " " + opts.explainEn + " " + opts.explainYue).toLowerCase();
 
     const meta = document.createElement("div");
     meta.className = "mm-setting-meta";
@@ -309,7 +309,8 @@
     search.addEventListener("input", () => {
       const matcher = MMRegexBuilder.attach(search, {});
       document.querySelectorAll(".mm-setting-row").forEach((row) => {
-        row.style.display = matcher.matches(row.dataset.searchText || "") ? "" : "none";
+        const values = Array.from(row.querySelectorAll("input,select,textarea")).map((control) => control.value).join(" ");
+        row.style.display = matcher.matches((row.dataset.searchText || "") + " " + row.textContent + " " + values) ? "" : "none";
       });
     });
 

@@ -256,12 +256,13 @@
           group.forEach((e) => {
             const li = document.createElement("li");
             li.style.marginBottom = "10px";
-            const commitUrl = "https://github.com/Ding-Ding-Projects/meadowmark/commit/" + e.commit;
-            li.innerHTML =
-              '<span class="mm-badge">' + e.category + "</span> " +
-              '<span class="hint">' + e.date + "</span> " +
-              '<a href="' + commitUrl + '" class="hint">' + e.commit.slice(0, 7) + "</a><br>" +
-              '<span class="i18n-en">' + e.en + '</span><span class="i18n-yue" lang="yue">' + e.yue + "</span>";
+            const commitUrl = "https://github.com/Ding-Ding-Projects/meadowmark/commit/" + encodeURIComponent(e.commit);
+            const badge = document.createElement("span"); badge.className = "mm-badge"; badge.textContent = e.category;
+            const date = document.createElement("span"); date.className = "hint"; date.textContent = " " + e.date + " ";
+            const link = document.createElement("a"); link.href = commitUrl; link.className = "hint"; link.textContent = e.commit.slice(0, 7);
+            const english = document.createElement("span"); english.className = "i18n-en"; english.textContent = e.en;
+            const cantonese = document.createElement("span"); cantonese.className = "i18n-yue"; cantonese.lang = "yue"; cantonese.textContent = e.yue;
+            li.append(badge, date, link, document.createElement("br"), english, cantonese);
             ul.appendChild(li);
           });
           listHost.appendChild(ul);

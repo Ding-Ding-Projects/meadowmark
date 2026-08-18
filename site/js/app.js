@@ -9,6 +9,38 @@
     return fetch(path).then((r) => { if (!r.ok) throw new Error("partial " + path + " failed"); return r.text(); });
   }
 
+  function applyLocalBrand() {
+    const displayName = (localStorage.getItem("mm-display-name") || "Meadowmark").slice(0, 64);
+    let storedLogo = null;
+    try {
+      const candidate = JSON.parse(localStorage.getItem("mm-logo-v1"));
+      if (candidate && candidate.version === 1 && typeof candidate.png === "string" && candidate.png.length <= 512000 && /^data:image\/png;base64,[A-Za-z0-9+/=]+$/.test(candidate.png)) storedLogo = candidate.png;
+    } catch (_) { storedLogo = null; }
+    document.querySelectorAll(".mm-topbar .brand").forEach((brand) => {
+      let label = brand.querySelector(".mm-site-brand-label");
+      if (!label) {
+        brand.textContent = "";
+        label = document.createElement("span");
+        label.className = "mm-site-brand-label";
+        brand.appendChild(label);
+      }
+      label.textContent = displayName;
+      let mark = brand.querySelector(".mm-site-brand-mark");
+      if (!mark) {
+        mark = storedLogo ? document.createElement("img") : document.createElement("span");
+        mark.className = "mm-site-brand-mark";
+        brand.insertBefore(mark, label);
+      }
+      if (storedLogo && mark.tagName !== "IMG") {
+        const image = document.createElement("img"); image.className = mark.className; mark.replaceWith(image); mark = image;
+      } else if (!storedLogo && mark.tagName === "IMG") {
+        const fallback = document.createElement("span"); fallback.className = mark.className; mark.replaceWith(fallback); mark = fallback;
+      }
+      if (storedLogo) { mark.src = storedLogo; mark.alt = ""; }
+      else { mark.textContent = "🌾"; mark.setAttribute("aria-hidden", "true"); }
+    });
+  }
+
   function init(opts) {
     opts = opts || {};
     const rootPrefix = opts.rootPrefix || "";
@@ -20,8 +52,10 @@
     const headerReady = fetchPartial(rootPrefix + "partials/header.html").then((html) => {
       headerHost.innerHTML = html.replaceAll("__ROOT__", rootPrefix);
       wireHeader();
+      applyLocalBrand();
     }).catch(() => {
       headerHost.innerHTML = '<div class="mm-topbar"><a class="brand" href="' + rootPrefix + 'index.html">Meadowmark</a></div><div class="mm-tabpanel" id="mm-tabpanel"></div>';
+      applyLocalBrand();
     });
 
     const footerReady = fetchPartial(rootPrefix + "partials/footer.html").then((html) => {
@@ -82,5 +116,5 @@
     return headerReady;
   }
 
-  global.MMApp = { init };
+  global.MMApp = { init, applyLocalBrand };
 })(window);

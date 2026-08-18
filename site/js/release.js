@@ -15,17 +15,18 @@
     fetch((rootPrefix || "") + "data/release.json")
       .then((r) => r.json())
       .then((release) => {
-        if (release && release.published && release.assetUrl) {
+        const baseline = release && release.currentBaseline;
+        if (baseline && baseline.published && baseline.installer && baseline.installer.assetUrl) {
           statusEl.removeAttribute("data-str");
           statusEl.innerHTML =
-            '<span class="i18n-en">Latest release: ' + release.tag + '</span>' +
-            '<span class="i18n-yue" lang="yue"> 最新版本：' + release.tag + '</span>';
+            '<span class="i18n-en">Latest verified download: ' + baseline.tag + ' (historical baseline). The next release is still pending.</span>' +
+            '<span class="i18n-yue" lang="yue"> 最新已驗證下載：' + baseline.tag + '（歷史基準）。下一個版本仲未出。</span>';
           btnEl.removeAttribute("data-str");
-          btnEl.href = release.assetUrl;
+          btnEl.href = baseline.installer.assetUrl;
           btnEl.setAttribute("aria-disabled", "false");
-          btnEl.innerHTML = '<span class="i18n-en">Download ' + release.tag + '</span><span class="i18n-yue" lang="yue"> 下載 ' + release.tag + '</span>';
+          btnEl.innerHTML = '<span class="i18n-en">Download ' + baseline.tag + '</span><span class="i18n-yue" lang="yue"> 下載 ' + baseline.tag + '</span>';
         } else {
-          // Stays on the honest "not yet published" state already in the HTML.
+          // Stays on the honest unavailable state already in the HTML.
           document.dispatchEvent(new CustomEvent("mm:lang-changed"));
         }
       })
