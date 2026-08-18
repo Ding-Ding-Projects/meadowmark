@@ -1,0 +1,322 @@
+/*
+ * Meadowmark Material Design 3 token set.
+ *
+ * All colour, type, shape, elevation, motion and spacing values used anywhere
+ * in packages/ui MUST come from these custom properties. Never hard-code a
+ * colour, radius, duration or font size in component CSS.
+ *
+ * The full light palette is defined here on bare :root first. Dark overrides
+ * only redefine the roles that change — never define a role only inside a
+ * media query or [data-theme] block, or the theme that was never seen first
+ * renders with nothing.
+ */
+
+:root {
+  color-scheme: light dark;
+
+  /* ---- Seed / brand ---- */
+  --mm-seed-hue: 122; /* meadow green */
+
+  /* ---- M3 colour roles: LIGHT (default, defined on bare :root) ---- */
+  --mm-color-primary: #3b6a3f;
+  --mm-color-on-primary: #ffffff;
+  --mm-color-primary-container: #bcf0bb;
+  --mm-color-on-primary-container: #002106;
+
+  --mm-color-secondary: #53634f;
+  --mm-color-on-secondary: #ffffff;
+  --mm-color-secondary-container: #d6e8cd;
+  --mm-color-on-secondary-container: #121f0f;
+
+  --mm-color-tertiary: #38656a;
+  --mm-color-on-tertiary: #ffffff;
+  --mm-color-tertiary-container: #bcebf0;
+  --mm-color-on-tertiary-container: #002022;
+
+  --mm-color-error: #ba1a1a;
+  --mm-color-on-error: #ffffff;
+  --mm-color-error-container: #ffdad6;
+  --mm-color-on-error-container: #410002;
+
+  --mm-color-warning: #7a5900;
+  --mm-color-on-warning: #ffffff;
+  --mm-color-warning-container: #ffdea6;
+  --mm-color-on-warning-container: #271900;
+
+  --mm-color-success: #2e6a3e;
+  --mm-color-on-success: #ffffff;
+  --mm-color-success-container: #b3f1bc;
+  --mm-color-on-success-container: #002107;
+
+  --mm-color-background: #fbfdf6;
+  --mm-color-on-background: #1a1c18;
+
+  --mm-color-surface: #fbfdf6;
+  --mm-color-on-surface: #1a1c18;
+  --mm-color-surface-variant: #dfe4d7;
+  --mm-color-on-surface-variant: #43483e;
+
+  --mm-color-surface-dim: #dadcd5;
+  --mm-color-surface-bright: #fbfdf6;
+  --mm-color-surface-container-lowest: #ffffff;
+  --mm-color-surface-container-low: #f4f6ef;
+  --mm-color-surface-container: #eef0e9;
+  --mm-color-surface-container-high: #e8ebe3;
+  --mm-color-surface-container-highest: #e2e5dd;
+
+  --mm-color-outline: #73796d;
+  --mm-color-outline-variant: #c3c8ba;
+
+  --mm-color-inverse-surface: #2f312c;
+  --mm-color-inverse-on-surface: #f1f1ea;
+  --mm-color-inverse-primary: #a1d39f;
+
+  --mm-color-shadow: #000000;
+  --mm-color-scrim: #000000;
+
+  /* State layer opacities (M3 spec) */
+  --mm-state-hover-opacity: 0.08;
+  --mm-state-focus-opacity: 0.12;
+  --mm-state-pressed-opacity: 0.12;
+  --mm-state-dragged-opacity: 0.16;
+  --mm-state-disabled-content-opacity: 0.38;
+  --mm-state-disabled-container-opacity: 0.12;
+
+  /* ---- Type scale (M3) ---- */
+  --mm-font-family: "Meadowmark UI", "Segoe UI", "Noto Sans", "Noto Sans HK", system-ui, sans-serif;
+  --mm-font-family-mono: "Cascadia Mono", "Consolas", monospace;
+
+  --mm-type-display-large-size: 57px;   --mm-type-display-large-line: 64px;   --mm-type-display-large-weight: 400;
+  --mm-type-display-medium-size: 45px;  --mm-type-display-medium-line: 52px;  --mm-type-display-medium-weight: 400;
+  --mm-type-display-small-size: 36px;   --mm-type-display-small-line: 44px;   --mm-type-display-small-weight: 400;
+
+  --mm-type-headline-large-size: 32px;  --mm-type-headline-large-line: 40px;  --mm-type-headline-large-weight: 400;
+  --mm-type-headline-medium-size: 28px; --mm-type-headline-medium-line: 36px; --mm-type-headline-medium-weight: 400;
+  --mm-type-headline-small-size: 24px;  --mm-type-headline-small-line: 32px;  --mm-type-headline-small-weight: 400;
+
+  --mm-type-title-large-size: 22px;   --mm-type-title-large-line: 28px;   --mm-type-title-large-weight: 500;
+  --mm-type-title-medium-size: 16px;  --mm-type-title-medium-line: 24px;  --mm-type-title-medium-weight: 500;
+  --mm-type-title-small-size: 14px;   --mm-type-title-small-line: 20px;   --mm-type-title-small-weight: 500;
+
+  --mm-type-label-large-size: 14px;  --mm-type-label-large-line: 20px;  --mm-type-label-large-weight: 500;
+  --mm-type-label-medium-size: 12px; --mm-type-label-medium-line: 16px; --mm-type-label-medium-weight: 500;
+  --mm-type-label-small-size: 11px;  --mm-type-label-small-line: 16px;  --mm-type-label-small-weight: 500;
+
+  --mm-type-body-large-size: 16px;  --mm-type-body-large-line: 24px;  --mm-type-body-large-weight: 400;
+  --mm-type-body-medium-size: 14px; --mm-type-body-medium-line: 20px; --mm-type-body-medium-weight: 400;
+  --mm-type-body-small-size: 12px;  --mm-type-body-small-line: 16px;  --mm-type-body-small-weight: 400;
+
+  /* ---- Shape scale ---- */
+  --mm-shape-none: 0px;
+  --mm-shape-extra-small: 4px;
+  --mm-shape-small: 8px;
+  --mm-shape-medium: 12px;
+  --mm-shape-large: 16px;
+  --mm-shape-extra-large: 28px;
+  --mm-shape-full: 999px;
+
+  /* ---- Elevation (box-shadow recipes, colour-aware) ---- */
+  --mm-elevation-0: none;
+  --mm-elevation-1: 0 1px 2px 0 rgba(0,0,0,0.30), 0 1px 3px 1px rgba(0,0,0,0.15);
+  --mm-elevation-2: 0 1px 2px 0 rgba(0,0,0,0.30), 0 2px 6px 2px rgba(0,0,0,0.15);
+  --mm-elevation-3: 0 1px 3px 0 rgba(0,0,0,0.30), 0 4px 8px 3px rgba(0,0,0,0.15);
+  --mm-elevation-4: 0 2px 3px 0 rgba(0,0,0,0.30), 0 6px 10px 4px rgba(0,0,0,0.15);
+  --mm-elevation-5: 0 4px 4px 0 rgba(0,0,0,0.30), 0 8px 12px 6px rgba(0,0,0,0.15);
+
+  /* ---- Motion ---- */
+  --mm-motion-duration-short1: 50ms;
+  --mm-motion-duration-short2: 100ms;
+  --mm-motion-duration-short3: 150ms;
+  --mm-motion-duration-short4: 200ms;
+  --mm-motion-duration-medium1: 250ms;
+  --mm-motion-duration-medium2: 300ms;
+  --mm-motion-duration-medium3: 350ms;
+  --mm-motion-duration-medium4: 400ms;
+  --mm-motion-duration-long1: 450ms;
+  --mm-motion-duration-long2: 500ms;
+  --mm-motion-duration-long3: 550ms;
+  --mm-motion-duration-long4: 600ms;
+
+  --mm-motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --mm-motion-easing-standard-accelerate: cubic-bezier(0.3, 0, 1, 1);
+  --mm-motion-easing-standard-decelerate: cubic-bezier(0, 0, 0, 1);
+  --mm-motion-easing-emphasized: cubic-bezier(0.2, 0, 0, 1);
+
+  /* ---- Spacing (4px baseline grid) ---- */
+  --mm-space-0: 0px;
+  --mm-space-1: 4px;
+  --mm-space-2: 8px;
+  --mm-space-3: 12px;
+  --mm-space-4: 16px;
+  --mm-space-5: 20px;
+  --mm-space-6: 24px;
+  --mm-space-8: 32px;
+  --mm-space-10: 40px;
+  --mm-space-12: 48px;
+  --mm-space-16: 64px;
+
+  /* ---- Touch targets ---- */
+  --mm-touch-target-min: 44px;
+
+  /* ---- Density scaling multiplier, adjusted at runtime by settings ---- */
+  --mm-density-scale: 1;
+
+  /* ---- Z-index layers ---- */
+  --mm-z-hud: 100;
+  --mm-z-panel: 200;
+  --mm-z-overlay: 300;
+  --mm-z-modal-scrim: 400;
+  --mm-z-modal: 410;
+  --mm-z-toast: 500;
+  --mm-z-palette: 600;
+  --mm-z-tooltip: 700;
+}
+
+/* ---- M3 colour roles: DARK ----
+   Applies when the OS/browser prefers dark AND no explicit light choice was
+   made, OR when the app's theme setting explicitly selects dark. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --mm-color-primary: #a1d39f;
+    --mm-color-on-primary: #073911;
+    --mm-color-primary-container: #22522a;
+    --mm-color-on-primary-container: #bcf0bb;
+
+    --mm-color-secondary: #bacbb2;
+    --mm-color-on-secondary: #263422;
+    --mm-color-secondary-container: #3c4a37;
+    --mm-color-on-secondary-container: #d6e8cd;
+
+    --mm-color-tertiary: #a0ced3;
+    --mm-color-on-tertiary: #00363a;
+    --mm-color-tertiary-container: #1e4d51;
+    --mm-color-on-tertiary-container: #bcebf0;
+
+    --mm-color-error: #ffb4ab;
+    --mm-color-on-error: #690005;
+    --mm-color-error-container: #93000a;
+    --mm-color-on-error-container: #ffdad6;
+
+    --mm-color-warning: #ffcb70;
+    --mm-color-on-warning: #402d00;
+    --mm-color-warning-container: #5c4200;
+    --mm-color-on-warning-container: #ffdea6;
+
+    --mm-color-success: #97d5a1;
+    --mm-color-on-success: #003910;
+    --mm-color-success-container: #14521f;
+    --mm-color-on-success-container: #b3f1bc;
+
+    --mm-color-background: #12140f;
+    --mm-color-on-background: #e2e3db;
+
+    --mm-color-surface: #12140f;
+    --mm-color-on-surface: #e2e3db;
+    --mm-color-surface-variant: #43483e;
+    --mm-color-on-surface-variant: #c3c8ba;
+
+    --mm-color-surface-dim: #12140f;
+    --mm-color-surface-bright: #383a34;
+    --mm-color-surface-container-lowest: #0c0f0a;
+    --mm-color-surface-container-low: #1a1c18;
+    --mm-color-surface-container: #1e201b;
+    --mm-color-surface-container-high: #282b25;
+    --mm-color-surface-container-highest: #333630;
+
+    --mm-color-outline: #8d9387;
+    --mm-color-outline-variant: #43483e;
+
+    --mm-color-inverse-surface: #e2e3db;
+    --mm-color-inverse-on-surface: #2f312c;
+    --mm-color-inverse-primary: #3b6a3f;
+
+    --mm-elevation-1: 0 1px 2px 0 rgba(0,0,0,0.60), 0 1px 3px 1px rgba(0,0,0,0.40);
+    --mm-elevation-2: 0 1px 2px 0 rgba(0,0,0,0.60), 0 2px 6px 2px rgba(0,0,0,0.40);
+    --mm-elevation-3: 0 1px 3px 0 rgba(0,0,0,0.60), 0 4px 8px 3px rgba(0,0,0,0.40);
+    --mm-elevation-4: 0 2px 3px 0 rgba(0,0,0,0.60), 0 6px 10px 4px rgba(0,0,0,0.40);
+    --mm-elevation-5: 0 4px 4px 0 rgba(0,0,0,0.60), 0 8px 12px 6px rgba(0,0,0,0.40);
+  }
+}
+
+/* Explicit dark theme choice wins in both directions regardless of OS setting. */
+:root[data-theme="dark"] {
+  --mm-color-primary: #a1d39f;
+  --mm-color-on-primary: #073911;
+  --mm-color-primary-container: #22522a;
+  --mm-color-on-primary-container: #bcf0bb;
+
+  --mm-color-secondary: #bacbb2;
+  --mm-color-on-secondary: #263422;
+  --mm-color-secondary-container: #3c4a37;
+  --mm-color-on-secondary-container: #d6e8cd;
+
+  --mm-color-tertiary: #a0ced3;
+  --mm-color-on-tertiary: #00363a;
+  --mm-color-tertiary-container: #1e4d51;
+  --mm-color-on-tertiary-container: #bcebf0;
+
+  --mm-color-error: #ffb4ab;
+  --mm-color-on-error: #690005;
+  --mm-color-error-container: #93000a;
+  --mm-color-on-error-container: #ffdad6;
+
+  --mm-color-warning: #ffcb70;
+  --mm-color-on-warning: #402d00;
+  --mm-color-warning-container: #5c4200;
+  --mm-color-on-warning-container: #ffdea6;
+
+  --mm-color-success: #97d5a1;
+  --mm-color-on-success: #003910;
+  --mm-color-success-container: #14521f;
+  --mm-color-on-success-container: #b3f1bc;
+
+  --mm-color-background: #12140f;
+  --mm-color-on-background: #e2e3db;
+
+  --mm-color-surface: #12140f;
+  --mm-color-on-surface: #e2e3db;
+  --mm-color-surface-variant: #43483e;
+  --mm-color-on-surface-variant: #c3c8ba;
+
+  --mm-color-surface-dim: #12140f;
+  --mm-color-surface-bright: #383a34;
+  --mm-color-surface-container-lowest: #0c0f0a;
+  --mm-color-surface-container-low: #1a1c18;
+  --mm-color-surface-container: #1e201b;
+  --mm-color-surface-container-high: #282b25;
+  --mm-color-surface-container-highest: #333630;
+
+  --mm-color-outline: #8d9387;
+  --mm-color-outline-variant: #43483e;
+
+  --mm-color-inverse-surface: #e2e3db;
+  --mm-color-inverse-on-surface: #2f312c;
+  --mm-color-inverse-primary: #3b6a3f;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --mm-motion-duration-short1: 1ms;
+    --mm-motion-duration-short2: 1ms;
+    --mm-motion-duration-short3: 1ms;
+    --mm-motion-duration-short4: 1ms;
+    --mm-motion-duration-medium1: 1ms;
+    --mm-motion-duration-medium2: 1ms;
+    --mm-motion-duration-medium3: 1ms;
+    --mm-motion-duration-medium4: 1ms;
+    --mm-motion-duration-long1: 1ms;
+    --mm-motion-duration-long2: 1ms;
+    --mm-motion-duration-long3: 1ms;
+    --mm-motion-duration-long4: 1ms;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body.mm-root {
+  font-family: var(--mm-font-family);
+  color: var(--mm-color-on-surface);
+  background: transparent;
+}
