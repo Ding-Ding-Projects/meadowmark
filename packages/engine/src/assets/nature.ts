@@ -176,6 +176,20 @@ defineAsset(
   box({ width: 1.0, height: 0.04, depth: 1.0, color: 'water', transform: { translate: [0, -0.02, 0] } }),
 );
 
+/**
+ * Non-grass terrain overlays — thin tiles laid just above the ground plane
+ * so a field, path, beach, or rocky patch reads as visually distinct from
+ * the grass everywhere else, without the ground mesh itself needing to be
+ * subdivided. `renderer.ts`'s syncWorld() instances one of these per
+ * `GameStateView.tiles[]` entry whose terrain isn't 'grass' - the common
+ * case (plain grass) needs no overlay since the ground plane is already
+ * that colour.
+ */
+defineAsset('tile_soil', box({ width: 1.0, height: 0.03, depth: 1.0, color: 'soil', transform: { translate: [0, 0.015, 0] } }));
+defineAsset('tile_water', box({ width: 1.0, height: 0.04, depth: 1.0, color: 'water', transform: { translate: [0, -0.02, 0] } }));
+defineAsset('tile_sand', box({ width: 1.0, height: 0.02, depth: 1.0, color: 'sand', transform: { translate: [0, 0.01, 0] } }));
+defineAsset('tile_stone', box({ width: 1.0, height: 0.02, depth: 1.0, color: 'stoneDark', transform: { translate: [0, 0.01, 0] } }));
+
 /** Fences and hedges, sized to a 1-unit tile edge so they tile cleanly. */
 defineAsset(
   'fence_post',
