@@ -104,8 +104,23 @@ export function openCommandPalette(): void {
     );
   }
 
+  // Roving row focus: Arrow Up/Down move between result rows (from the
+  // search input, and from row to row); Enter or Tab steps INTO a rich
+  // setting row's live embedded control; Escape while focus is inside that
+  // control returns focus to the row rather than closing the whole palette.
+  // A pointer-only path here would make every setting result unreachable by
+  // exactly the person who opened the palette with a keyboard shortcut.
+  let rowEls: HTMLElement[] = [];
+
+  function focusRowAt(index: number): void {
+    if (rowEls.length === 0) return;
+    const clamped = Math.max(0, Math.min(index, rowEls.length - 1));
+    rowEls[clamped]?.focus();
+  }
+
   function renderResults(query: string): void {
     resultsList.textContent = "";
+    rowEls = [];
     const needle = query.trim().toLowerCase();
     const results = allResults().filter((r) => !needle || r.label.toLowerCase().includes(needle));
     if (results.length === 0) {
@@ -115,9 +130,40 @@ export function openCommandPalette(): void {
     for (const result of results.slice(0, 100)) {
       const row = h("div.mm-list-item", { role: "option", tabindex: "0" });
       row.appendChild(h("div.mm-list-item__body", {}, h("div.mm-list-item__title", {}, result.label)));
+
+      row.addEventListener("keydown", (ev) => {
+        if (ev.key === "ArrowDown") {
+          ev.preventDefault();
+          focusRowAt(rowEls.indexOf(row) + 1);
+        } else if (ev.key === "ArrowUp") {
+          ev.preventDefault();
+          focusRowAt(rowEls.indexOf(row) - 1);
+        }
+      });
+
       if (result.kind === "setting") {
         const control = result.renderControl();
         row.appendChild(h("div.mm-list-item__trailing", {}, control));
+        row.addEventListener("keydown", (ev) => {
+          if (ev.key === "Enter") {
+            // Deliberate key to step into the row's live control. Tab
+            // already reaches it via ordinary DOM focus order, since the
+            // control sits inside this row.
+            ev.preventDefault();
+            const focusable = control.matches('button, input, select, textarea, [tabindex]')
+              ? control
+              : control.querySelector<HTMLElement>('button, input, select, textarea, [tabindex]:not([tabindex="-1"])');
+            focusable?.focus();
+          }
+        });
+        control.addEventListener("keydown", (ev) => {
+          if (ev.key === "Escape") {
+            // Leave the embedded control without closing the palette.
+            ev.preventDefault();
+            ev.stopPropagation();
+            row.focus();
+          }
+        });
       } else {
         row.addEventListener("click", () => {
           if (result.kind === "command") result.onRun();
@@ -135,10 +181,17 @@ export function openCommandPalette(): void {
         });
       }
       resultsList.appendChild(row);
+      rowEls.push(row);
     }
   }
 
   input.addEventListener("input", () => renderResults(input.value));
+  input.addEventListener("keydown", (ev) => {
+    if (ev.key === "ArrowDown") {
+      ev.preventDefault();
+      focusRowAt(0);
+    }
+  });
 
   function close(): void {
     if (!openState) return;

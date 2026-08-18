@@ -27,6 +27,7 @@ registerCopy({
   "panel.barn.upgrade": { en: { 1: "Upgrade — {cost} for {cap} capacity", 3: "Upgrade for {cost} — {cap} slots, baby" }, yue: { 1: "升級 － {cost} 換 {cap} 容量", 3: "畀 {cost} 升級，{cap} 個位任你放" } },
   "panel.barn.maxCapacity": { en: { 1: "Maximum capacity reached", 3: "Barn's as big as it gets" }, yue: { 1: "已達最大容量", 3: "穀倉大到頂喇" } },
   "panel.barn.maxCapacityReason": { en: { 1: "There is no further barn upgrade available." }, yue: { 1: "冇再高嘅升級可以揀。" } },
+  "panel.barn.capacityUnknown": { en: { 1: "unknown", 3: "who knows, honestly" }, yue: { 1: "未知", 3: "老實講，唔知" } },
   "panel.barn.capacityLabel": { en: { 1: "Barn storage {used} of {cap}" }, yue: { 1: "穀倉存貨 {used}／{cap}" } },
 
   // Orders
@@ -37,6 +38,8 @@ registerCopy({
   "panel.orders.fill": { en: { 1: "Fill order", 3: "Ship it" }, yue: { 1: "填單", 3: "出貨啦" } },
   "panel.orders.cannotFill": { en: { 1: "Not enough goods in the barn yet." }, yue: { 1: "穀倉貨仲未夠。" } },
   "panel.orders.reroll": { en: { 1: "Reroll ({cost})", 3: "Try a different one ({cost})" }, yue: { 1: "換過張 ({cost})", 3: "唔啱換過張 ({cost})" } },
+  "panel.orders.rerollUnavailable": { en: { 1: "Reroll unavailable", 3: "Can't swap this one" }, yue: { 1: "暫時唔可以換", 3: "呢張換唔到" } },
+  "panel.orders.rerollUnavailableReason": { en: { 1: "This order cannot be rerolled right now." }, yue: { 1: "呢張訂單而家唔可以換過。" } },
 
   // Vehicles
   "panel.vehicle.cargoLabel": { en: { 1: "Cargo slots" }, yue: { 1: "貨艙" } },

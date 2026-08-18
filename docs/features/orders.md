@@ -16,14 +16,15 @@ None; entirely driven by the orders view.
 
 - An order with no expiry timestamp renders with no timer, which is
   intentional — not every order need expire.
-- A reroll cost of null currently renders as a zero-cost reroll. If free
-  rerolls are a real game mechanic this is correct; if null should instead
-  mean "reroll unavailable" the panel needs a small follow-up to disable the
-  button in that case. Flagged for integration review since the exact
-  semantics live in the shared package.
+- A null reroll cost renders the Reroll button as an explicit disabled
+  "Reroll unavailable" state with a stated reason, never as a silent zero-
+  cost reroll — a control that reads as free and then either charges or
+  fails is exactly the decorative-UI defect the project treats as real
+  rather than cosmetic.
 
 ## Verification
 
-Manual: mock slots in empty, fillable, unfillable, and expiring states and
-confirm correct rendering and that the reroll and fill dispatches carry the
-right slot index.
+Manual: mock slots in empty, fillable, unfillable, and expiring states, plus
+a slot with a null reroll cost, and confirm correct rendering (including the
+disabled "Reroll unavailable" state) and that the reroll and fill dispatches
+carry the right slot index.

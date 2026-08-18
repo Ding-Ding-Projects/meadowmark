@@ -15,7 +15,12 @@ export function h<K extends keyof HTMLElementTagNameMap>(
   attrs: ElAttrs | null = null,
   ...children: Child[]
 ): HTMLElementTagNameMap[K] {
-  const [tag, ...classes] = String(tagAndClass).split(".");
+  const parts = String(tagAndClass).split(".");
+  // `parts[0]` is always present for a non-empty split() result, but
+  // noUncheckedIndexedAccess types it as possibly undefined — fall back to
+  // "div" as a documented, harmless default rather than casting past it.
+  const tag = parts[0] ?? "div";
+  const classes = parts.slice(1);
   const el = document.createElement(tag) as HTMLElementTagNameMap[K];
   if (classes.length) el.className = classes.join(" ");
   if (attrs) applyAttrs(el, attrs);

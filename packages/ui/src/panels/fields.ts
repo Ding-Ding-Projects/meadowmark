@@ -10,9 +10,13 @@ import { t } from "../i18n";
 import { FieldsView, HostBridge } from "../contracts";
 
 function plotIcon(plot: FieldsView["plots"][number], crops: FieldsView["availableCrops"]): string {
-  if (plot.state.kind === "empty") return "▫️";
-  if (plot.state.kind === "withered") return "🥀";
-  const crop = crops.find((c) => c.id === plot.state.cropId);
+  // Narrow via a local binding rather than repeated `plot.state.kind` checks
+  // — narrowing chained property accesses across statements is unreliable,
+  // and this keeps the discriminated-union narrowing unambiguous.
+  const state = plot.state;
+  if (state.kind === "empty") return "▫️";
+  if (state.kind === "withered") return "🥀";
+  const crop = crops.find((c) => c.id === state.cropId);
   return crop?.iconId ?? "🌱";
 }
 
@@ -68,12 +72,13 @@ export function renderFieldsPanel(host: HTMLElement, view: FieldsView, bridge: H
   }
 
   function plotAriaLabel(plot: FieldsView["plots"][number]): string {
-    if (plot.state.kind === "empty") return t("panel.fields.plotEmpty", { index: plot.index });
-    if (plot.state.kind === "ready") {
+    const state = plot.state;
+    if (state.kind === "empty") return t("panel.fields.plotEmpty", { index: plot.index });
+    if (state.kind === "ready") {
       return t("panel.fields.plotReady", { index: plot.index });
     }
-    if (plot.state.kind === "withered") return t("panel.fields.plotWithered", { index: plot.index });
-    return t("panel.fields.plotGrowing", { index: plot.index, remaining: formatDuration(plot.state.readyAt - Date.now()) });
+    if (state.kind === "withered") return t("panel.fields.plotWithered", { index: plot.index });
+    return t("panel.fields.plotGrowing", { index: plot.index, remaining: formatDuration(state.readyAt - Date.now()) });
   }
 
   function onPlotClick(plot: FieldsView["plots"][number]): void {
