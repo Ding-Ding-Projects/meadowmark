@@ -12,7 +12,7 @@ import * as THREE from 'three';
 import { createScene, type SceneBundle } from './scene.js';
 import { createCameraController, type CameraController } from './camera.js';
 import { InstanceManager } from './instancing.js';
-import { PickableSet, KeyboardCursor, pickGroundTile, type PickResult } from './picking.js';
+import { PickableSet, KeyboardCursor, pickGroundTile, type PickResult, type PickTarget } from './picking.js';
 import { createPlacementController, type PlacementController } from './placement.js';
 import { VillagerWanderSystem } from './villagers.js';
 import { OccupancyGrid, footprintTiles, TILE_SIZE } from './grid.js';
@@ -99,7 +99,11 @@ export function createRenderer(canvas: HTMLCanvasElement, opts: CreateRendererOp
   );
   sceneBundle.sunLight.shadow.map?.dispose();
   sceneBundle.sunLight.shadow.map = null;
-  sceneBundle.renderer.antialias = quality.getSettings().antialiasing;
+  // WebGLRenderer has no readable/writable `antialias` property — it is a
+  // context-creation flag baked in by `createScene()` at construction time,
+  // not something that can be toggled after the fact. The desired value is
+  // tracked in `quality`'s own state (read via `quality.getSettings().antialiasing`);
+  // actually changing it at runtime would require recreating the renderer/canvas.
   instances.billboardDistance = quality.getSettings().lodDistance;
 
   const listeners = new Set<RendererEventHandler>();
@@ -146,7 +150,7 @@ export function createRenderer(canvas: HTMLCanvasElement, opts: CreateRendererOp
     occupancy.reset();
 
     const buildingsByAsset = new Map<string, { position: THREE.Vector3Like; rotationY: number }[]>();
-    const buildingPickTargets: Parameters<PickableSet['sync']>[0] = [];
+    const buildingPickTargets: PickTarget[] = [];
     for (const b of state.buildings) {
       const asset = requireAsset(b.assetName); // throws loudly if unknown, per contract
       const list = buildingsByAsset.get(b.assetName) ?? [];
