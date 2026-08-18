@@ -127,3 +127,12 @@ export function removeAll(inventory: Record<string, number>, bag: Record<string,
   }
   return next;
 }
+
+/** Adds every entry in `bag` to the inventory. The counterpart to removeAll(), used to refund a cancelled/reversed action. */
+export function addAll(inventory: Record<string, number>, bag: Record<string, number>): Record<string, number> {
+  let next = inventory;
+  for (const goodId in bag) {
+    next = addGood(next, goodId, bag[goodId] ?? 0);
+  }
+  return next;
+}

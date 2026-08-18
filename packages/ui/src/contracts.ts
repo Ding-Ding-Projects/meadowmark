@@ -89,6 +89,8 @@ export interface FieldPlot {
 export interface FieldsView {
   plots: FieldPlot[];
   availableCrops: CropDef[];
+  /** Coin cost to unlock the next locked plot, or null once every plot is unlocked. */
+  nextPlotUnlockCost: number | null;
 }
 
 // ---------------------------------------------------------------------------
@@ -409,8 +411,10 @@ export type GameAction =
   | { type: "field/plantAll"; cropId: CropId }
   | { type: "field/harvest"; plotId: EntityId }
   | { type: "field/harvestAll" }
+  | { type: "field/unlockPlot" }
   | { type: "factory/queue"; factoryId: EntityId; slotIndex: number; recipeId: RecipeId }
   | { type: "factory/cancel"; factoryId: EntityId; slotIndex: number }
+  | { type: "factory/collect"; factoryId: EntityId; slotIndex: number }
   | { type: "barn/sell"; goodId: GoodId; amount: number }
   | { type: "barn/upgrade" }
   | { type: "order/fill"; orderIndex: number }
@@ -420,8 +424,10 @@ export type GameAction =
   | { type: "vehicle/collect"; vehicle: "train" | "helicopter" | "ship" }
   | { type: "town/place"; buildingId: BuildingId; x: number; y: number; rotation: 0 | 90 | 180 | 270 }
   | { type: "town/demolish"; instanceId: EntityId }
+  | { type: "town/select"; instanceId: EntityId | null }
   | { type: "zoo/assign"; enclosureId: EntityId; animalId: AnimalId }
   | { type: "zoo/collect"; enclosureId: EntityId }
+  | { type: "animal/collect"; shedId: EntityId; animalUnitId: EntityId }
   | { type: "mine/dig"; tileIndex: number }
   | { type: "museum/donate"; setId: string; slotIndex: number; artifactId: ArtifactId }
   | { type: "achievement/claim"; achievementId: AchievementId; tier: number }

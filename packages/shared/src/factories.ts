@@ -15,7 +15,7 @@ import type {
   GameState,
   ResourceBag,
 } from "./types.js";
-import { addGood, addXp, barnFreeSpace, hasAll, removeAll } from "./economy.js";
+import { addAll, addGood, addXp, barnFreeSpace, hasAll, removeAll } from "./economy.js";
 import { isReady } from "./time.js";
 
 export const FACTORY_BASE_QUEUE_SLOTS = 2;
@@ -102,6 +102,38 @@ export function collectProduction(
     },
     collected: true,
     events: xpResult.events,
+  };
+}
+
+/**
+ * Cancels a queued (not-yet-collected) production job and refunds its
+ * consumed inputs in full - there is no partial-progress penalty, since a
+ * factory slot has no partial-completion concept of its own (it is either
+ * running toward readyAt or it is gone). Works on a not-yet-ready job and
+ * on a ready-but-uncollected/paused one alike; the caller decides whether
+ * cancelling a paused job is something the UI wants to allow.
+ */
+export function cancelProduction(
+  state: GameState,
+  factoryId: string,
+  slotIndex: number,
+  recipe: RecipeCatalogEntry,
+): { state: GameState; cancelled: boolean } {
+  const factory = state.factories.factories.find((f) => f.id === factoryId);
+  const slot = factory?.queue[slotIndex];
+  if (!factory || !slot) return { state, cancelled: false };
+
+  const factories = state.factories.factories.map((f) =>
+    f.id === factoryId ? { ...f, queue: f.queue.filter((_, i) => i !== slotIndex) } : f,
+  );
+
+  return {
+    state: {
+      ...state,
+      inventory: addAll(state.inventory, recipe.inputs),
+      factories: { factories },
+    },
+    cancelled: true,
   };
 }
 
