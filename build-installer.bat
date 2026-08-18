@@ -89,10 +89,24 @@ if %SETUP_SIZE% LSS 1048576 (
 echo [build-installer]   Artifact:  %SETUP_EXE%
 echo [build-installer]   Size:      %SETUP_SIZE% bytes ^(~%SETUP_SIZE_MB% MB^)
 
-for /f "skip=1 tokens=* delims=" %%h in ('certutil -hashfile "%SETUP_EXE%" SHA256 ^| findstr /v "hash"') do (
+REM certutil emits a spaced hash line plus a completion line. Select only the
+REM hex/space line, remove its separators, and fail closed unless the result is
+REM exactly one SHA-256 digest (64 hexadecimal characters). A loose first-line
+REM parse can otherwise print the certutil status marker as the digest.
+set "SHA256_HASH="
+for /f "tokens=* delims=" %%h in ('certutil -hashfile "%SETUP_EXE%" SHA256 ^| findstr /R /I /C:"^[0-9A-F][0-9A-F ]*$"') do (
     if not defined SHA256_HASH set "SHA256_HASH=%%h"
 )
-set "SHA256_HASH=%SHA256_HASH: =%"
+set "SHA256_HASH=!SHA256_HASH: =!"
+set "SHA256_INVALID="
+for /f "delims=0123456789ABCDEFabcdef" %%h in ("!SHA256_HASH!") do set "SHA256_INVALID=1"
+if not defined SHA256_HASH set "SHA256_INVALID=1"
+if "!SHA256_HASH:~63,1!"=="" set "SHA256_INVALID=1"
+if not "!SHA256_HASH:~64,1!"=="" set "SHA256_INVALID=1"
+if defined SHA256_INVALID (
+    echo [build-installer] ERROR: certutil did not produce exactly 64 hexadecimal SHA-256 characters.
+    exit /b 1
+)
 echo [build-installer]   SHA-256:   %SHA256_HASH%
 echo.
 
