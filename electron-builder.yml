@@ -30,11 +30,15 @@ extraMetadata:
   main: packages/app/dist/main.cjs
 
 # Permanent no-signing policy. See the module comment above.
+# Only `forceCodeSigning` is a valid top-level property. `signExecutable` is
+# not an electron-builder option at all, and `signAndEditExecutable` belongs
+# under `win` -- both were rejected by the 26.x schema validator, which is
+# what this comment block previously claimed to be protecting against.
 forceCodeSigning: false
-signExecutable: false
-signAndEditExecutable: false
 
 win:
+  # Do not re-enable. See the no-signing policy above.
+  signAndEditExecutable: false
   target:
     - target: squirrel
   # No icon is committed yet; the app-logo-customization feature (see
