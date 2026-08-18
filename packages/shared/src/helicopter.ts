@@ -12,6 +12,9 @@ import { grantBooster } from "./boosters.js";
 import { addAnimalCards } from "./zoo.js";
 import { MINUTE_MS, isReady } from "./time.js";
 
+/** Species whose cards a chest may drop. Mirrors balance/zoo.json; the tick cannot read files, so the list is compiled in and the balance validator keeps the two in step. */
+const ZOO_CARD_SPECIES_IDS = ["lion", "zebra", "elephant", "flamingo", "otter", "seal", "penguin", "polar_bear", "arctic_fox", "tiger", "mountain_goat", "eagle"];
+
 export const HELICOPTER_ORDER_COUNT = 2;
 export const HELICOPTER_REFILL_DELAY_MS = 30 * MINUTE_MS;
 export const HELICOPTER_REPUTATION_BAR_CAP = 10;
@@ -36,6 +39,7 @@ function rollHeliChestReward(rng: RngState): HeliChestReward {
     boosterKind: pick(rng, HELI_CHEST_BOOSTER_KINDS),
     boosterQuantity: 1,
     expansionPermits: HELI_CHEST_EXPANSION_PERMITS,
+      animalCards: { [pick(rng, ZOO_CARD_SPECIES_IDS)]: nextInt(rng, 1, 2) },
   };
 }
 

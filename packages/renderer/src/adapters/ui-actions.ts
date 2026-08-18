@@ -48,12 +48,10 @@ import {
   cropCatalog,
   dailyChestReward,
   goodsById,
-  heliChestReward,
   museumExhibitCatalog,
   museumExhibitCatalogById,
   orderableGoods,
   recipeCatalog,
-  shipChestReward,
   trainRequestGoods,
   zooSpeciesCatalog,
 } from '../content.js';

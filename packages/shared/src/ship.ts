@@ -6,10 +6,13 @@
 
 import type { GameEvent, GameState, GoodId, ShipChestReward, ShipCrate, ShipState } from "./types.js";
 import type { RngState } from "./rng.js";
-import { nextInt, scopedRng } from "./rng.js";
+import { nextInt, pick, scopedRng } from "./rng.js";
 import { addXp, removeGood } from "./economy.js";
 import { addAnimalCards } from "./zoo.js";
 import { DAY_MS, MAX_OFFLINE_MS } from "./time.js";
+
+/** Species whose cards a chest may drop. Mirrors balance/zoo.json; the tick cannot read files, so the list is compiled in and the balance validator keeps the two in step. */
+const ZOO_CARD_SPECIES_IDS = ["lion", "zebra", "elephant", "flamingo", "otter", "seal", "penguin", "polar_bear", "arctic_fox", "tiger", "mountain_goat", "eagle"];
 
 export const SHIP_UNLOCK_LEVEL = 18;
 export const SHIP_CRATE_COUNT = 6;
@@ -28,6 +31,7 @@ function rollShipChestReward(rng: RngState): ShipChestReward {
   return {
     cash: nextInt(rng, SHIP_CHEST_CASH_MIN, SHIP_CHEST_CASH_MAX),
     expansionPermits: nextInt(rng, SHIP_CHEST_EXPANSION_PERMITS_MIN, SHIP_CHEST_EXPANSION_PERMITS_MAX),
+      animalCards: { [pick(rng, ZOO_CARD_SPECIES_IDS)]: nextInt(rng, 1, 2) },
   };
 }
 

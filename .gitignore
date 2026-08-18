@@ -7,3 +7,4 @@ release/
 packages/*/dist/
 tools/**/out/
 *.tsbuildinfo
+.claude/worktrees/

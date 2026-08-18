@@ -360,17 +360,11 @@ export const museumExhibitMetaById: ReadonlyMap<string, { displayName: string }>
   museumExhibitsRaw.map((e) => [e.exhibitId, { displayName: e.displayName }]),
 );
 
-/** balance/chests.json's helicopter/ship/daily chest rewards, in the shapes openHeliChest/openShipChest/claimDailyChest expect. */
-export const heliChestReward: HeliChestReward = {
-  cash: chestsRaw.helicopter.cash,
-  boosterKinds: chestsRaw.helicopter.boosterKinds ?? [],
-  animalCards: chestsRaw.helicopter.animalCards ?? {},
-};
-export const shipChestReward: ShipChestReward = {
-  cash: chestsRaw.ship.cash,
-  expansionPermits: chestsRaw.ship.expansionPermits ?? 0,
-  animalCards: chestsRaw.ship.animalCards ?? {},
-};
+// The helicopter and ship chest rewards used to be compiled in here from
+// balance/chests.json. They are now ROLLED AND STORED IN STATE at the moment
+// the chest becomes ready (see shared/helicopter.ts and shared/ship.ts), so
+// what the interface shows before opening is exactly what arrives. Only the
+// daily chest reward remains a fixed table.
 export const dailyChestReward: DailyChestRewardEntry = chestsRaw.daily;
 
 /** Full TickConfig built from every catalog above, passed to tick()/resumeOffline() on every call. */
