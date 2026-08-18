@@ -50,7 +50,7 @@ import { renderMuseumPanel } from "./panels/museum";
 import { renderAchievementsPanel } from "./panels/achievements";
 import { renderDailiesPanel } from "./panels/dailies";
 import { renderVillagePanel } from "./panels/village";
-import { openOfflineSummaryDialog } from "./panels/offline-summary";
+import { openOfflineSummaryDialog, type OfflineSummaryDialogHandle } from "./panels/offline-summary";
 import { mountSettings } from "./settings";
 import { mountOnboarding } from "./onboarding";
 import { createNavDock } from "./nav/dock";
@@ -61,7 +61,7 @@ import { t } from "./i18n";
 import { h } from "./dom";
 import { mountUniversalCenter } from "./universal/center";
 
-import { GameStateView, HostBridge, ReadonlyStore, RendererBridge } from "./contracts";
+import { GameStateView, HostBridge, OfflineSummaryView, ReadonlyStore, RendererBridge } from "./contracts";
 
 export * from "./contracts";
 export * from "./dom";
@@ -260,15 +260,34 @@ export function mountUi(root: HTMLElement, opts: MountUiOptions): MountedUi {
     }))
   );
 
+  // The pending summary stays truthy in the view until the player acknowledges
+  // it, and the tick loop pushes a new state every second, so this subscription
+  // fires repeatedly for one logical summary. Hold the open dialog and only open
+  // when nothing is on screen, or every tick stacks another copy -- measured at 68
+  // in under 90 seconds, with the player racing the loop to close them.
+  let offlineDialog: OfflineSummaryDialogHandle | null = null;
+  const showOfflineSummary = (summary: OfflineSummaryView): void => {
+    if (offlineDialog) return;
+    const handle = openOfflineSummaryDialog(summary, opts.host);
+    offlineDialog = {
+      close: () => {
+        offlineDialog = null;
+        handle.close();
+      },
+    };
+  };
+
   const offlineSub = opts.state$.subscribe((state) => {
     if (state.pendingOfflineSummary) {
-      openOfflineSummaryDialog(state.pendingOfflineSummary, opts.host);
+      showOfflineSummary(state.pendingOfflineSummary);
+    } else {
+      // Acknowledged: forget the handle so a genuinely new summary can open later.
+      offlineDialog = null;
     }
   });
   disposers.push(offlineSub);
-  if (opts.state$.getSnapshot().pendingOfflineSummary) {
-    openOfflineSummaryDialog(opts.state$.getSnapshot().pendingOfflineSummary!, opts.host);
-  }
+  // No explicit getSnapshot() open here on purpose. subscribe() delivers the
+  // current value, so opening again below was a guaranteed second dialog on mount.
 
   return {
     unmount(): void {

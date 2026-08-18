@@ -25,7 +25,8 @@
     "check:runtime-contract": "tsc -p tools/type-contracts/tsconfig.json --noEmit",
     "check:atomic": "node tools/guards/no-bare-rename.mjs",
     "check:preload-sandbox": "node tools/guards/no-fs-in-preload.mjs",
-    "check:balance": "node packages/shared/dist/balance-validate.js"
+    "check:balance": "node packages/shared/dist/balance-validate.js",
+    "check:offline-dialog": "node tools/guards/offline-dialog-once.mjs"
   },
   "devDependencies": {
     "@electron/asar": "^3.4.1",

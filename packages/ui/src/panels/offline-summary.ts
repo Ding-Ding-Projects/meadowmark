@@ -6,7 +6,19 @@ import { button } from "../components/button";
 import { t } from "../i18n";
 import { HostBridge, OfflineSummaryView } from "../contracts";
 
-export function openOfflineSummaryDialog(summary: OfflineSummaryView, bridge: HostBridge): void {
+export interface OfflineSummaryDialogHandle {
+  close: () => void;
+}
+
+/**
+ * Opens the returning-player summary and hands back a handle so the caller can
+ * tell whether one is already on screen. The caller MUST hold that handle: the
+ * pending summary stays truthy in the view until the player acknowledges it, and
+ * the tick loop pushes a new state every second, so an unguarded caller opens a
+ * fresh dialog per tick. Measured before this returned anything: 68 stacked
+ * dialogs in under 90 seconds, with the player racing the tick loop to close them.
+ */
+export function openOfflineSummaryDialog(summary: OfflineSummaryView, bridge: HostBridge): OfflineSummaryDialogHandle {
   const rows: HTMLElement[] = [
     h("div", {}, t("panel.offlineSummary.away", { duration: formatDuration(summary.awayDurationMs) })),
     h("div", {}, t("panel.offlineSummary.cropsHarvested", { count: summary.cropsHarvested })),
@@ -45,4 +57,5 @@ export function openOfflineSummaryDialog(summary: OfflineSummaryView, bridge: Ho
     actions: [okBtn],
     onClose: () => bridge.dispatch({ type: "offlineSummary/acknowledge" }),
   });
+  return handle;
 }
