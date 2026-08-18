@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "animals": [
+    {
+      "id": "chicken",
+      "level": 1,
+      "productGoodId": "egg",
+      "productionTimeMs": 600000,
+      "feedCost": 1,
+      "displayName": "Chicken",
+      "coinReward": 29,
+      "xpReward": 3
+    },
+    {
+      "id": "cow",
+      "level": 5,
+      "productGoodId": "milk",
+      "productionTimeMs": 2700000,
+      "feedCost": 2,
+      "displayName": "Cow",
+      "coinReward": 61,
+      "xpReward": 5
+    },
+    {
+      "id": "sheep",
+      "level": 10,
+      "productGoodId": "wool",
+      "productionTimeMs": 5400000,
+      "feedCost": 2,
+      "displayName": "Sheep",
+      "coinReward": 103,
+      "xpReward": 8
+    },
+    {
+      "id": "pig",
+      "level": 15,
+      "productGoodId": "bacon",
+      "productionTimeMs": 9000000,
+      "feedCost": 3,
+      "displayName": "Pig",
+      "coinReward": 153,
+      "xpReward": 12
+    },
+    {
+      "id": "goat",
+      "level": 21,
+      "productGoodId": "goat_milk",
+      "productionTimeMs": 12600000,
+      "feedCost": 3,
+      "displayName": "Goat",
+      "coinReward": 206,
+      "xpReward": 16
+    },
+    {
+      "id": "bee",
+      "level": 27,
+      "productGoodId": "honey",
+      "productionTimeMs": 18000000,
+      "feedCost": 4,
+      "displayName": "Bee",
+      "coinReward": 276,
+      "xpReward": 22
+    }
+  ]
+}

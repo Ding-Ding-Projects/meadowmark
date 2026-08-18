@@ -8,7 +8,7 @@
 
 import type { GameEvent, GameState, GoodId, OrderRequirement, OrderSlot, OrdersState } from "./types";
 import type { RngState } from "./rng";
-import { nextInt, pick, pickWeighted } from "./rng";
+import { nextInt, pickWeighted } from "./rng";
 import { hasAll, removeAll } from "./economy";
 import { MINUTE_MS, isReady } from "./time";
 
@@ -140,4 +140,3 @@ export function rerollOrder(
   };
 }
 
-export { pick };

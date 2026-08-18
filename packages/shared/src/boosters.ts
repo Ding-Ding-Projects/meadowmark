@@ -6,7 +6,7 @@
  * module or any other.
  */
 
-import type { ActiveBooster, BoosterInventoryItem, BoosterKind, BoosterState, GameEvent, GameState } from "./types";
+import type { ActiveBooster, BoosterKind, BoosterState, GameEvent, GameState } from "./types";
 import { isReady } from "./time";
 
 export const BOOSTER_DEFAULT_DURATIONS_MS: Record<BoosterKind, number> = {
@@ -78,4 +78,3 @@ export function tickBoosters(state: GameState, now: number): { state: GameState;
   return { state: { ...state, boosters: { ...state.boosters, active } }, events };
 }
 
-export { type BoosterInventoryItem };

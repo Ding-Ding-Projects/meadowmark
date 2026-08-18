@@ -8,7 +8,6 @@
  */
 
 import type {
-  FactoriesState,
   FactoryInstance,
   FactoryQueueSlot,
   FactoryTypeId,
@@ -181,4 +180,3 @@ export function tickFactories(state: GameState, now: number): { state: GameState
   return { state: { ...state, factories: { factories } }, events };
 }
 
-export type { FactoriesState };

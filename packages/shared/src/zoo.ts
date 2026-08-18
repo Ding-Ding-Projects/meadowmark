@@ -8,7 +8,6 @@
  */
 
 import type { GameState, GridPosition, ZooEnclosure, ZooHabitat, ZooState } from "./types";
-import { isReady } from "./time";
 import { MINUTE_MS } from "./time";
 
 export const ZOO_UNLOCK_POPULATION = 400;
@@ -130,4 +129,3 @@ export function collectZooIncome(
   };
 }
 
-export { isReady };

@@ -5,9 +5,7 @@
  * the train loop.
  */
 
-import type { BarnState, ResourceBag } from "./types";
-import { barnFreeSpace, barnUsed } from "./economy";
-import type { GameState } from "./types";
+import type { BarnState, GameState, ResourceBag } from "./types";
 
 export interface BarnUpgradeTier {
   level: number;
@@ -62,4 +60,3 @@ export function upgradeBarn(state: GameState): GameState {
   };
 }
 
-export { barnFreeSpace, barnUsed };

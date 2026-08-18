@@ -1,0 +1,649 @@
+{
+  "schemaVersion": 1,
+  "goods": [
+    {
+      "id": "wheat",
+      "category": "crop",
+      "unlockLevel": 1,
+      "baseValue": 3,
+      "displayName": "Wheat"
+    },
+    {
+      "id": "corn",
+      "category": "crop",
+      "unlockLevel": 3,
+      "baseValue": 5,
+      "displayName": "Corn"
+    },
+    {
+      "id": "carrot",
+      "category": "crop",
+      "unlockLevel": 6,
+      "baseValue": 8,
+      "displayName": "Carrot"
+    },
+    {
+      "id": "sugarcane",
+      "category": "crop",
+      "unlockLevel": 9,
+      "baseValue": 12,
+      "displayName": "Sugarcane"
+    },
+    {
+      "id": "cotton",
+      "category": "crop",
+      "unlockLevel": 12,
+      "baseValue": 18,
+      "displayName": "Cotton"
+    },
+    {
+      "id": "strawberry",
+      "category": "crop",
+      "unlockLevel": 16,
+      "baseValue": 26,
+      "displayName": "Strawberry"
+    },
+    {
+      "id": "tomato",
+      "category": "crop",
+      "unlockLevel": 20,
+      "baseValue": 32,
+      "displayName": "Tomato"
+    },
+    {
+      "id": "potato",
+      "category": "crop",
+      "unlockLevel": 24,
+      "baseValue": 38,
+      "displayName": "Potato"
+    },
+    {
+      "id": "soybean",
+      "category": "crop",
+      "unlockLevel": 28,
+      "baseValue": 46,
+      "displayName": "Soybean"
+    },
+    {
+      "id": "rice",
+      "category": "crop",
+      "unlockLevel": 33,
+      "baseValue": 55,
+      "displayName": "Rice"
+    },
+    {
+      "id": "pumpkin",
+      "category": "crop",
+      "unlockLevel": 38,
+      "baseValue": 68,
+      "displayName": "Pumpkin"
+    },
+    {
+      "id": "chilli",
+      "category": "crop",
+      "unlockLevel": 44,
+      "baseValue": 82,
+      "displayName": "Chilli"
+    },
+    {
+      "id": "coffee_bean",
+      "category": "crop",
+      "unlockLevel": 50,
+      "baseValue": 100,
+      "displayName": "Coffee Bean"
+    },
+    {
+      "id": "lavender",
+      "category": "crop",
+      "unlockLevel": 56,
+      "baseValue": 120,
+      "displayName": "Lavender"
+    },
+    {
+      "id": "grape",
+      "category": "crop",
+      "unlockLevel": 62,
+      "baseValue": 140,
+      "displayName": "Grape"
+    },
+    {
+      "id": "blueberry",
+      "category": "crop",
+      "unlockLevel": 70,
+      "baseValue": 165,
+      "displayName": "Blueberry"
+    },
+    {
+      "id": "vanilla",
+      "category": "crop",
+      "unlockLevel": 80,
+      "baseValue": 210,
+      "displayName": "Vanilla"
+    },
+    {
+      "id": "egg",
+      "category": "animal_product",
+      "unlockLevel": 1,
+      "baseValue": 6,
+      "displayName": "Egg"
+    },
+    {
+      "id": "milk",
+      "category": "animal_product",
+      "unlockLevel": 5,
+      "baseValue": 14,
+      "displayName": "Milk"
+    },
+    {
+      "id": "wool",
+      "category": "animal_product",
+      "unlockLevel": 10,
+      "baseValue": 20,
+      "displayName": "Wool"
+    },
+    {
+      "id": "bacon",
+      "category": "animal_product",
+      "unlockLevel": 15,
+      "baseValue": 30,
+      "displayName": "Bacon"
+    },
+    {
+      "id": "goat_milk",
+      "category": "animal_product",
+      "unlockLevel": 21,
+      "baseValue": 34,
+      "displayName": "Goat Milk"
+    },
+    {
+      "id": "honey",
+      "category": "animal_product",
+      "unlockLevel": 27,
+      "baseValue": 48,
+      "displayName": "Honey"
+    },
+    {
+      "id": "animal_feed",
+      "category": "feed",
+      "unlockLevel": 1,
+      "baseValue": 4,
+      "displayName": "Animal Feed"
+    },
+    {
+      "id": "coal",
+      "category": "mine",
+      "unlockLevel": 22,
+      "baseValue": 5,
+      "displayName": "Coal"
+    },
+    {
+      "id": "wood",
+      "category": "material",
+      "unlockLevel": 1,
+      "baseValue": 4,
+      "displayName": "Wood"
+    },
+    {
+      "id": "planks",
+      "category": "train_material",
+      "unlockLevel": 1,
+      "baseValue": 6,
+      "displayName": "Planks"
+    },
+    {
+      "id": "bricks",
+      "category": "train_material",
+      "unlockLevel": 2,
+      "baseValue": 9,
+      "displayName": "Bricks"
+    },
+    {
+      "id": "nails",
+      "category": "train_material",
+      "unlockLevel": 3,
+      "baseValue": 12,
+      "displayName": "Nails"
+    },
+    {
+      "id": "glass",
+      "category": "train_material",
+      "unlockLevel": 4,
+      "baseValue": 15,
+      "displayName": "Glass"
+    },
+    {
+      "id": "slabs",
+      "category": "train_material",
+      "unlockLevel": 5,
+      "baseValue": 18,
+      "displayName": "Slabs"
+    },
+    {
+      "id": "paint",
+      "category": "train_material",
+      "unlockLevel": 6,
+      "baseValue": 21,
+      "displayName": "Paint"
+    },
+    {
+      "id": "screws",
+      "category": "train_material",
+      "unlockLevel": 7,
+      "baseValue": 24,
+      "displayName": "Screws"
+    },
+    {
+      "id": "copper_ore",
+      "category": "ore",
+      "unlockLevel": 22,
+      "baseValue": 12,
+      "displayName": "Copper Ore"
+    },
+    {
+      "id": "iron_ore",
+      "category": "ore",
+      "unlockLevel": 22,
+      "baseValue": 22,
+      "displayName": "Iron Ore"
+    },
+    {
+      "id": "silver_ore",
+      "category": "ore",
+      "unlockLevel": 22,
+      "baseValue": 32,
+      "displayName": "Silver Ore"
+    },
+    {
+      "id": "gold_ore",
+      "category": "ore",
+      "unlockLevel": 22,
+      "baseValue": 42,
+      "displayName": "Gold Ore"
+    },
+    {
+      "id": "platinum_ore",
+      "category": "ore",
+      "unlockLevel": 22,
+      "baseValue": 52,
+      "displayName": "Platinum Ore"
+    },
+    {
+      "id": "copper_bar",
+      "category": "ore_bar",
+      "unlockLevel": 22,
+      "baseValue": 30,
+      "displayName": "Copper Bar"
+    },
+    {
+      "id": "iron_bar",
+      "category": "ore_bar",
+      "unlockLevel": 22,
+      "baseValue": 55,
+      "displayName": "Iron Bar"
+    },
+    {
+      "id": "silver_bar",
+      "category": "ore_bar",
+      "unlockLevel": 22,
+      "baseValue": 80,
+      "displayName": "Silver Bar"
+    },
+    {
+      "id": "gold_bar",
+      "category": "ore_bar",
+      "unlockLevel": 22,
+      "baseValue": 105,
+      "displayName": "Gold Bar"
+    },
+    {
+      "id": "platinum_bar",
+      "category": "ore_bar",
+      "unlockLevel": 22,
+      "baseValue": 130,
+      "displayName": "Platinum Bar"
+    },
+    {
+      "id": "quartz",
+      "category": "gem",
+      "unlockLevel": 22,
+      "baseValue": 40,
+      "displayName": "Quartz"
+    },
+    {
+      "id": "amethyst",
+      "category": "gem",
+      "unlockLevel": 22,
+      "baseValue": 70,
+      "displayName": "Amethyst"
+    },
+    {
+      "id": "ruby",
+      "category": "gem",
+      "unlockLevel": 22,
+      "baseValue": 100,
+      "displayName": "Ruby"
+    },
+    {
+      "id": "sapphire",
+      "category": "gem",
+      "unlockLevel": 22,
+      "baseValue": 130,
+      "displayName": "Sapphire"
+    },
+    {
+      "id": "diamond",
+      "category": "gem",
+      "unlockLevel": 22,
+      "baseValue": 160,
+      "displayName": "Diamond"
+    },
+    {
+      "id": "animal_feed",
+      "category": "crafted",
+      "unlockLevel": 1,
+      "baseValue": 12,
+      "displayName": "Animal Feed"
+    },
+    {
+      "id": "flour",
+      "category": "crafted",
+      "unlockLevel": 3,
+      "baseValue": 7,
+      "displayName": "Flour"
+    },
+    {
+      "id": "cornmeal",
+      "category": "crafted",
+      "unlockLevel": 4,
+      "baseValue": 12,
+      "displayName": "Cornmeal"
+    },
+    {
+      "id": "cream",
+      "category": "crafted",
+      "unlockLevel": 5,
+      "baseValue": 31,
+      "displayName": "Cream"
+    },
+    {
+      "id": "cheese",
+      "category": "crafted",
+      "unlockLevel": 7,
+      "baseValue": 69,
+      "displayName": "Cheese"
+    },
+    {
+      "id": "butter",
+      "category": "crafted",
+      "unlockLevel": 7,
+      "baseValue": 82,
+      "displayName": "Butter"
+    },
+    {
+      "id": "sugar",
+      "category": "crafted",
+      "unlockLevel": 9,
+      "baseValue": 28,
+      "displayName": "Sugar"
+    },
+    {
+      "id": "syrup",
+      "category": "crafted",
+      "unlockLevel": 11,
+      "baseValue": 64,
+      "displayName": "Syrup"
+    },
+    {
+      "id": "bread",
+      "category": "crafted",
+      "unlockLevel": 5,
+      "baseValue": 23,
+      "displayName": "Bread"
+    },
+    {
+      "id": "cake",
+      "category": "crafted",
+      "unlockLevel": 13,
+      "baseValue": 99,
+      "displayName": "Cake"
+    },
+    {
+      "id": "cookie",
+      "category": "crafted",
+      "unlockLevel": 8,
+      "baseValue": 107,
+      "displayName": "Cookie"
+    },
+    {
+      "id": "thread",
+      "category": "crafted",
+      "unlockLevel": 12,
+      "baseValue": 41,
+      "displayName": "Thread"
+    },
+    {
+      "id": "fabric",
+      "category": "crafted",
+      "unlockLevel": 15,
+      "baseValue": 136,
+      "displayName": "Fabric"
+    },
+    {
+      "id": "jam",
+      "category": "crafted",
+      "unlockLevel": 16,
+      "baseValue": 86,
+      "displayName": "Jam"
+    },
+    {
+      "id": "pickled_tomato",
+      "category": "crafted",
+      "unlockLevel": 20,
+      "baseValue": 69,
+      "displayName": "Pickled Tomato"
+    },
+    {
+      "id": "chips",
+      "category": "crafted",
+      "unlockLevel": 24,
+      "baseValue": 81,
+      "displayName": "Chips"
+    },
+    {
+      "id": "popcorn",
+      "category": "crafted",
+      "unlockLevel": 14,
+      "baseValue": 28,
+      "displayName": "Popcorn"
+    },
+    {
+      "id": "bottled_milk",
+      "category": "crafted",
+      "unlockLevel": 18,
+      "baseValue": 31,
+      "displayName": "Bottled Milk"
+    },
+    {
+      "id": "bottled_honey",
+      "category": "crafted",
+      "unlockLevel": 28,
+      "baseValue": 102,
+      "displayName": "Bottled Honey"
+    },
+    {
+      "id": "tomato_sauce",
+      "category": "crafted",
+      "unlockLevel": 21,
+      "baseValue": 146,
+      "displayName": "Tomato Sauce"
+    },
+    {
+      "id": "hot_sauce",
+      "category": "crafted",
+      "unlockLevel": 45,
+      "baseValue": 324,
+      "displayName": "Hot Sauce"
+    },
+    {
+      "id": "dough",
+      "category": "crafted",
+      "unlockLevel": 6,
+      "baseValue": 24,
+      "displayName": "Dough"
+    },
+    {
+      "id": "pizza",
+      "category": "crafted",
+      "unlockLevel": 22,
+      "baseValue": 249,
+      "displayName": "Pizza"
+    },
+    {
+      "id": "ice_cream",
+      "category": "crafted",
+      "unlockLevel": 19,
+      "baseValue": 98,
+      "displayName": "Ice Cream"
+    },
+    {
+      "id": "sundae",
+      "category": "crafted",
+      "unlockLevel": 26,
+      "baseValue": 189,
+      "displayName": "Sundae"
+    },
+    {
+      "id": "candy",
+      "category": "crafted",
+      "unlockLevel": 25,
+      "baseValue": 135,
+      "displayName": "Candy"
+    },
+    {
+      "id": "chocolate_candy",
+      "category": "crafted",
+      "unlockLevel": 37,
+      "baseValue": 297,
+      "displayName": "Chocolate Candy"
+    },
+    {
+      "id": "shirt",
+      "category": "crafted",
+      "unlockLevel": 26,
+      "baseValue": 283,
+      "displayName": "Shirt"
+    },
+    {
+      "id": "sweater",
+      "category": "crafted",
+      "unlockLevel": 33,
+      "baseValue": 348,
+      "displayName": "Sweater"
+    },
+    {
+      "id": "planks",
+      "category": "crafted",
+      "unlockLevel": 8,
+      "baseValue": 33,
+      "displayName": "Planks"
+    },
+    {
+      "id": "lavender_oil",
+      "category": "crafted",
+      "unlockLevel": 34,
+      "baseValue": 253,
+      "displayName": "Lavender Oil"
+    },
+    {
+      "id": "perfume",
+      "category": "crafted",
+      "unlockLevel": 41,
+      "baseValue": 298,
+      "displayName": "Perfume"
+    },
+    {
+      "id": "alcohol",
+      "category": "crafted",
+      "unlockLevel": 30,
+      "baseValue": 47,
+      "displayName": "Alcohol"
+    },
+    {
+      "id": "chair",
+      "category": "crafted",
+      "unlockLevel": 30,
+      "baseValue": 133,
+      "displayName": "Chair"
+    },
+    {
+      "id": "sofa",
+      "category": "crafted",
+      "unlockLevel": 39,
+      "baseValue": 438,
+      "displayName": "Sofa"
+    },
+    {
+      "id": "ground_coffee",
+      "category": "crafted",
+      "unlockLevel": 50,
+      "baseValue": 208,
+      "displayName": "Ground Coffee"
+    },
+    {
+      "id": "latte",
+      "category": "crafted",
+      "unlockLevel": 52,
+      "baseValue": 254,
+      "displayName": "Latte"
+    },
+    {
+      "id": "ring",
+      "category": "crafted",
+      "unlockLevel": 40,
+      "baseValue": 70,
+      "displayName": "Ring"
+    },
+    {
+      "id": "bracelet",
+      "category": "crafted",
+      "unlockLevel": 40,
+      "baseValue": 48,
+      "displayName": "Bracelet"
+    },
+    {
+      "id": "cocoa",
+      "category": "crafted",
+      "unlockLevel": 36,
+      "baseValue": 149,
+      "displayName": "Cocoa"
+    },
+    {
+      "id": "chocolate_bar",
+      "category": "crafted",
+      "unlockLevel": 38,
+      "baseValue": 359,
+      "displayName": "Chocolate Bar"
+    },
+    {
+      "id": "wine",
+      "category": "crafted",
+      "unlockLevel": 62,
+      "baseValue": 553,
+      "displayName": "Wine"
+    },
+    {
+      "id": "toy",
+      "category": "crafted",
+      "unlockLevel": 32,
+      "baseValue": 219,
+      "displayName": "Toy"
+    },
+    {
+      "id": "painted_toy",
+      "category": "crafted",
+      "unlockLevel": 35,
+      "baseValue": 242,
+      "displayName": "Painted Toy"
+    }
+  ]
+}

@@ -1,0 +1,498 @@
+{
+  "schemaVersion": 1,
+  "buildings": [
+    {
+      "buildingTypeId": "house_tier_1",
+      "displayName": "House (Tier 1)",
+      "kind": "house",
+      "footprint": {
+        "width": 2,
+        "height": 2
+      },
+      "costCoins": 300,
+      "costMaterials": {
+        "planks": 4
+      },
+      "buildTimeMs": 600000,
+      "populationReward": 8,
+      "requiresPopulation": 0,
+      "requiresLevel": 1,
+      "charmValue": 0
+    },
+    {
+      "buildingTypeId": "house_tier_2",
+      "displayName": "House (Tier 2)",
+      "kind": "house",
+      "footprint": {
+        "width": 2,
+        "height": 2
+      },
+      "costCoins": 900,
+      "costMaterials": {
+        "planks": 6,
+        "nails": 4
+      },
+      "buildTimeMs": 1800000,
+      "populationReward": 12,
+      "requiresPopulation": 0,
+      "requiresLevel": 4,
+      "charmValue": 0
+    },
+    {
+      "buildingTypeId": "house_tier_3",
+      "displayName": "House (Tier 3)",
+      "kind": "house",
+      "footprint": {
+        "width": 3,
+        "height": 2
+      },
+      "costCoins": 2200,
+      "costMaterials": {
+        "bricks": 6,
+        "nails": 6
+      },
+      "buildTimeMs": 3600000,
+      "populationReward": 16,
+      "requiresPopulation": 0,
+      "requiresLevel": 8,
+      "charmValue": 0
+    },
+    {
+      "buildingTypeId": "house_tier_4",
+      "displayName": "House (Tier 4)",
+      "kind": "house",
+      "footprint": {
+        "width": 3,
+        "height": 3
+      },
+      "costCoins": 5000,
+      "costMaterials": {
+        "bricks": 10,
+        "glass": 6
+      },
+      "buildTimeMs": 7200000,
+      "populationReward": 22,
+      "requiresPopulation": 0,
+      "requiresLevel": 13,
+      "charmValue": 0
+    },
+    {
+      "buildingTypeId": "house_tier_5",
+      "displayName": "House (Tier 5)",
+      "kind": "house",
+      "footprint": {
+        "width": 3,
+        "height": 3
+      },
+      "costCoins": 11000,
+      "costMaterials": {
+        "slabs": 10,
+        "glass": 8
+      },
+      "buildTimeMs": 12600000,
+      "populationReward": 28,
+      "requiresPopulation": 0,
+      "requiresLevel": 19,
+      "charmValue": 0
+    },
+    {
+      "buildingTypeId": "house_tier_6",
+      "displayName": "House (Tier 6)",
+      "kind": "house",
+      "footprint": {
+        "width": 4,
+        "height": 3
+      },
+      "costCoins": 24000,
+      "costMaterials": {
+        "slabs": 16,
+        "paint": 10
+      },
+      "buildTimeMs": 18000000,
+      "populationReward": 34,
+      "requiresPopulation": 0,
+      "requiresLevel": 27,
+      "charmValue": 0
+    },
+    {
+      "buildingTypeId": "house_tier_7",
+      "displayName": "House (Tier 7)",
+      "kind": "house",
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "costCoins": 48000,
+      "costMaterials": {
+        "paint": 18,
+        "screws": 14
+      },
+      "buildTimeMs": 21600000,
+      "populationReward": 40,
+      "requiresPopulation": 0,
+      "requiresLevel": 36,
+      "charmValue": 0
+    },
+    {
+      "buildingTypeId": "town_hall",
+      "displayName": "Town Hall",
+      "kind": "community",
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "costCoins": 2000,
+      "costMaterials": {
+        "planks": 10,
+        "bricks": 6
+      },
+      "buildTimeMs": 1800000,
+      "populationReward": 0,
+      "requiresPopulation": 0,
+      "requiresLevel": 1,
+      "charmValue": 0
+    },
+    {
+      "buildingTypeId": "farmers_market",
+      "displayName": "Farmers Market",
+      "kind": "community",
+      "footprint": {
+        "width": 3,
+        "height": 3
+      },
+      "costCoins": 1500,
+      "costMaterials": {
+        "planks": 8
+      },
+      "buildTimeMs": 1200000,
+      "populationReward": 0,
+      "requiresPopulation": 40,
+      "requiresLevel": 1,
+      "charmValue": 0
+    },
+    {
+      "buildingTypeId": "train_station",
+      "displayName": "Train Station",
+      "kind": "community",
+      "footprint": {
+        "width": 4,
+        "height": 3
+      },
+      "costCoins": 4000,
+      "costMaterials": {
+        "bricks": 10,
+        "glass": 6
+      },
+      "buildTimeMs": 3600000,
+      "populationReward": 0,
+      "requiresPopulation": 60,
+      "requiresLevel": 8,
+      "charmValue": 0
+    },
+    {
+      "buildingTypeId": "dock",
+      "displayName": "Dock",
+      "kind": "community",
+      "footprint": {
+        "width": 5,
+        "height": 3
+      },
+      "costCoins": 9000,
+      "costMaterials": {
+        "slabs": 12,
+        "glass": 10
+      },
+      "buildTimeMs": 7200000,
+      "populationReward": 0,
+      "requiresPopulation": 150,
+      "requiresLevel": 18,
+      "charmValue": 0
+    },
+    {
+      "buildingTypeId": "mine_entrance",
+      "displayName": "Mine Entrance",
+      "kind": "community",
+      "footprint": {
+        "width": 3,
+        "height": 3
+      },
+      "costCoins": 12000,
+      "costMaterials": {
+        "bricks": 16,
+        "screws": 6
+      },
+      "buildTimeMs": 9000000,
+      "populationReward": 0,
+      "requiresPopulation": 200,
+      "requiresLevel": 22,
+      "charmValue": 0
+    },
+    {
+      "buildingTypeId": "zoo_gate",
+      "displayName": "Zoo Gate",
+      "kind": "community",
+      "footprint": {
+        "width": 4,
+        "height": 3
+      },
+      "costCoins": 16000,
+      "costMaterials": {
+        "slabs": 14,
+        "paint": 10
+      },
+      "buildTimeMs": 10800000,
+      "populationReward": 0,
+      "requiresPopulation": 400,
+      "requiresLevel": 25,
+      "charmValue": 0
+    },
+    {
+      "buildingTypeId": "museum",
+      "displayName": "Museum",
+      "kind": "community",
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "costCoins": 22000,
+      "costMaterials": {
+        "slabs": 18,
+        "screws": 12
+      },
+      "buildTimeMs": 14400000,
+      "populationReward": 0,
+      "requiresPopulation": 500,
+      "requiresLevel": 30,
+      "charmValue": 0
+    },
+    {
+      "buildingTypeId": "restaurant",
+      "displayName": "Restaurant",
+      "kind": "community",
+      "footprint": {
+        "width": 3,
+        "height": 3
+      },
+      "costCoins": 15000,
+      "costMaterials": {
+        "paint": 8,
+        "glass": 6
+      },
+      "buildTimeMs": 9000000,
+      "populationReward": 0,
+      "requiresPopulation": 250,
+      "requiresLevel": 28,
+      "charmValue": 0
+    },
+    {
+      "buildingTypeId": "cinema",
+      "displayName": "Cinema",
+      "kind": "community",
+      "footprint": {
+        "width": 4,
+        "height": 3
+      },
+      "costCoins": 18000,
+      "costMaterials": {
+        "paint": 12,
+        "screws": 8
+      },
+      "buildTimeMs": 10800000,
+      "populationReward": 0,
+      "requiresPopulation": 300,
+      "requiresLevel": 31,
+      "charmValue": 0
+    },
+    {
+      "buildingTypeId": "school",
+      "displayName": "School",
+      "kind": "community",
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "costCoins": 13000,
+      "costMaterials": {
+        "bricks": 14,
+        "glass": 8
+      },
+      "buildTimeMs": 9000000,
+      "populationReward": 0,
+      "requiresPopulation": 180,
+      "requiresLevel": 24,
+      "charmValue": 0
+    },
+    {
+      "buildingTypeId": "hospital",
+      "displayName": "Hospital",
+      "kind": "community",
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "costCoins": 21000,
+      "costMaterials": {
+        "slabs": 16,
+        "screws": 10
+      },
+      "buildTimeMs": 12600000,
+      "populationReward": 0,
+      "requiresPopulation": 350,
+      "requiresLevel": 33,
+      "charmValue": 0
+    },
+    {
+      "buildingTypeId": "fire_station",
+      "displayName": "Fire Station",
+      "kind": "community",
+      "footprint": {
+        "width": 3,
+        "height": 3
+      },
+      "costCoins": 14000,
+      "costMaterials": {
+        "bricks": 12,
+        "paint": 6
+      },
+      "buildTimeMs": 9000000,
+      "populationReward": 0,
+      "requiresPopulation": 220,
+      "requiresLevel": 26,
+      "charmValue": 0
+    },
+    {
+      "buildingTypeId": "airport",
+      "displayName": "Airport",
+      "kind": "community",
+      "footprint": {
+        "width": 6,
+        "height": 5
+      },
+      "costCoins": 40000,
+      "costMaterials": {
+        "screws": 24,
+        "paint": 20
+      },
+      "buildTimeMs": 21600000,
+      "populationReward": 0,
+      "requiresPopulation": 600,
+      "requiresLevel": 45,
+      "charmValue": 0
+    },
+    {
+      "buildingTypeId": "sports_arena",
+      "displayName": "Sports Arena",
+      "kind": "community",
+      "footprint": {
+        "width": 5,
+        "height": 4
+      },
+      "costCoins": 30000,
+      "costMaterials": {
+        "slabs": 20,
+        "screws": 14
+      },
+      "buildTimeMs": 18000000,
+      "populationReward": 0,
+      "requiresPopulation": 450,
+      "requiresLevel": 42,
+      "charmValue": 0
+    },
+    {
+      "buildingTypeId": "flower_bed",
+      "displayName": "Flower Bed",
+      "kind": "decoration",
+      "footprint": {
+        "width": 1,
+        "height": 1
+      },
+      "costCoins": 200,
+      "costMaterials": {},
+      "buildTimeMs": 300000,
+      "populationReward": 0,
+      "requiresPopulation": 0,
+      "requiresLevel": 1,
+      "charmValue": 2
+    },
+    {
+      "buildingTypeId": "hedge_row",
+      "displayName": "Hedge Row",
+      "kind": "decoration",
+      "footprint": {
+        "width": 2,
+        "height": 1
+      },
+      "costCoins": 350,
+      "costMaterials": {},
+      "buildTimeMs": 300000,
+      "populationReward": 0,
+      "requiresPopulation": 0,
+      "requiresLevel": 1,
+      "charmValue": 3
+    },
+    {
+      "buildingTypeId": "fountain",
+      "displayName": "Fountain",
+      "kind": "decoration",
+      "footprint": {
+        "width": 2,
+        "height": 2
+      },
+      "costCoins": 1200,
+      "costMaterials": {},
+      "buildTimeMs": 300000,
+      "populationReward": 0,
+      "requiresPopulation": 0,
+      "requiresLevel": 1,
+      "charmValue": 8
+    },
+    {
+      "buildingTypeId": "statue",
+      "displayName": "Statue",
+      "kind": "decoration",
+      "footprint": {
+        "width": 2,
+        "height": 2
+      },
+      "costCoins": 2500,
+      "costMaterials": {},
+      "buildTimeMs": 300000,
+      "populationReward": 0,
+      "requiresPopulation": 0,
+      "requiresLevel": 1,
+      "charmValue": 14
+    },
+    {
+      "buildingTypeId": "gazebo",
+      "displayName": "Gazebo",
+      "kind": "decoration",
+      "footprint": {
+        "width": 3,
+        "height": 3
+      },
+      "costCoins": 4000,
+      "costMaterials": {},
+      "buildTimeMs": 300000,
+      "populationReward": 0,
+      "requiresPopulation": 0,
+      "requiresLevel": 1,
+      "charmValue": 20
+    },
+    {
+      "buildingTypeId": "topiary_garden",
+      "displayName": "Topiary Garden",
+      "kind": "decoration",
+      "footprint": {
+        "width": 3,
+        "height": 2
+      },
+      "costCoins": 6000,
+      "costMaterials": {},
+      "buildTimeMs": 300000,
+      "populationReward": 0,
+      "requiresPopulation": 0,
+      "requiresLevel": 1,
+      "charmValue": 28
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "@meadowmark/shared",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Headless, deterministic game simulation for Meadowmark - no three.js, no Electron, no DOM.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "balance-validate": "node dist/balance-validate.js"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2"
+  }
+}
