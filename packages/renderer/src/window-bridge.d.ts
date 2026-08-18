@@ -21,8 +21,15 @@ declare global {
       };
       loadGame(): Promise<unknown | null>;
       saveGame(state: unknown): Promise<void>;
-      loadSettings(): Promise<unknown>;
+      loadSettings(): Promise<{ values: Record<string, unknown>; provenance: Record<string, unknown>; warnings: string[] }>;
       saveSettings(settings: unknown): Promise<void>;
+      settings: {
+        load(): Promise<unknown>;
+        set(key: string, value: unknown): Promise<unknown>;
+        setMany(values: Record<string, unknown>): Promise<unknown>;
+        resetToDefault(key: string): Promise<unknown>;
+        resetAllToDefaults(): Promise<unknown>;
+      };
       appInfo(): Promise<{ name: string; version: string; platform: string; isDev: boolean }>;
     };
   }

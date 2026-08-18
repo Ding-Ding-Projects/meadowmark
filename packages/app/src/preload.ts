@@ -18,7 +18,19 @@
 
 import { contextBridge, ipcRenderer } from 'electron';
 import { IPC_CHANNELS } from './ipc-channels';
-import type { AppInfo, GameState, Settings } from './app-types';
+import type { AppInfo, GameState, Settings, SettingsLoadPayload } from './app-types';
+import type {
+  SettingsKey,
+  SettingsLoadResult,
+  SettingsProvenance,
+  SettingsValues,
+} from './services/settings';
+
+export interface SettingsServiceSnapshot {
+  values: SettingsValues;
+  provenance: SettingsProvenance;
+  loadResult: SettingsLoadResult;
+}
 
 export interface MeadowmarkApi {
   window: {
@@ -35,8 +47,15 @@ export interface MeadowmarkApi {
   };
   loadGame: () => Promise<GameState | null>;
   saveGame: (state: GameState) => Promise<void>;
-  loadSettings: () => Promise<Settings>;
+  loadSettings: () => Promise<SettingsLoadPayload>;
   saveSettings: (settings: Settings) => Promise<void>;
+  settings: {
+    load: () => Promise<SettingsServiceSnapshot>;
+    set: <K extends SettingsKey>(key: K, value: SettingsValues[K]) => Promise<SettingsServiceSnapshot>;
+    setMany: (values: Partial<SettingsValues>) => Promise<SettingsServiceSnapshot>;
+    resetToDefault: (key: SettingsKey) => Promise<SettingsServiceSnapshot>;
+    resetAllToDefaults: () => Promise<SettingsServiceSnapshot>;
+  };
   appInfo: () => Promise<AppInfo>;
 }
 
@@ -59,6 +78,13 @@ const api: MeadowmarkApi = {
   saveGame: (state: GameState) => ipcRenderer.invoke(IPC_CHANNELS.saveGame, state),
   loadSettings: () => ipcRenderer.invoke(IPC_CHANNELS.loadSettings),
   saveSettings: (settings: Settings) => ipcRenderer.invoke(IPC_CHANNELS.saveSettings, settings),
+  settings: {
+    load: () => ipcRenderer.invoke(IPC_CHANNELS.settingsServiceLoad),
+    set: (key, value) => ipcRenderer.invoke(IPC_CHANNELS.settingsServiceSet, key, value),
+    setMany: (values) => ipcRenderer.invoke(IPC_CHANNELS.settingsServiceSetMany, values),
+    resetToDefault: (key) => ipcRenderer.invoke(IPC_CHANNELS.settingsServiceResetToDefault, key),
+    resetAllToDefaults: () => ipcRenderer.invoke(IPC_CHANNELS.settingsServiceResetAllToDefaults),
+  },
   appInfo: () => ipcRenderer.invoke(IPC_CHANNELS.appInfo),
 };
 

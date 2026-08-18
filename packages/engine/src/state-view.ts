@@ -71,6 +71,7 @@ export type DecorationKind =
   | 'tree_fruit'
   | 'bush'
   | 'bush_berry'
+  | 'field_plot_empty'
   | 'rock_small'
   | 'rock_medium'
   | 'rock_large'

@@ -224,20 +224,10 @@
 .mm-menu__item[aria-disabled="true"] { opacity: var(--mm-state-disabled-content-opacity); pointer-events: none; }
 .mm-menu__shortcut { font-size: var(--mm-type-label-small-size); color: var(--mm-color-on-surface-variant); }
 
-/*
- * .mm-tabs has no background of its own by default, which is fine for a
- * tab strip that sits above another opaque panel - but the main
- * navigation rail (packages/ui/src/index.ts) is positioned directly over
- * the always-transparent #mm-canvas (the 3D world), so with no opaque
- * surface behind it the rail's on-surface-variant text was being read
- * against whatever the 3D scene happened to be rendering (usually the
- * green ground plane), which fails contrast in both themes. Every docked
- * orientation therefore gets a real M3 surface-container background and
- * elevation, matching every other panel in the app.
- */
 .mm-tabs {
   display: flex;
-  background: var(--mm-color-surface-container-low);
+  background: var(--mm-color-surface-container-high);
+  color: var(--mm-color-on-surface);
   box-shadow: var(--mm-elevation-1);
 }
 .mm-tabs--top, .mm-tabs--bottom { flex-direction: row; border-bottom: 1px solid var(--mm-color-outline-variant); }
@@ -254,7 +244,13 @@
   white-space: nowrap;
 }
 .mm-tabs--left .mm-tab, .mm-tabs--right .mm-tab { border-bottom: none; border-left: 2px solid transparent; }
-.mm-tab[aria-selected="true"] { color: var(--mm-color-primary); border-color: var(--mm-color-primary); }
+.mm-tab:hover { background: color-mix(in srgb, var(--mm-color-on-surface) var(--mm-state-hover-opacity), transparent); }
+.mm-tab:focus-visible { outline: 2px solid var(--mm-color-primary); outline-offset: -2px; }
+.mm-tab[aria-selected="true"] {
+  color: var(--mm-color-on-primary-container);
+  border-color: var(--mm-color-primary);
+  background: var(--mm-color-primary-container);
+}
 .mm-tab__close { margin-left: var(--mm-space-1); }
 
 .mm-tooltip {

@@ -11,6 +11,8 @@ registerCopy({
   "panel.fields.plotReady": { en: { 1: "Plot {index}, ready to harvest" }, yue: { 1: "第 {index} 格，可以收成" } },
   "panel.fields.plotWithered": { en: { 1: "Plot {index}, withered" }, yue: { 1: "第 {index} 格，枯咗" } },
   "panel.fields.plotGrowing": { en: { 1: "Plot {index}, growing, {remaining} remaining" }, yue: { 1: "第 {index} 格，生長緊，仲有 {remaining}" } },
+  "panel.fields.plotEmptyShort": { en: { 1: "Empty" }, yue: { 1: "空置" } },
+  "panel.fields.plotWitheredShort": { en: { 1: "Withered" }, yue: { 1: "枯咗" } },
 
   // Factories
   "panel.factories.title": { en: { 1: "Factories", 3: "Factories" }, yue: { 1: "工廠", 3: "工廠" } },
