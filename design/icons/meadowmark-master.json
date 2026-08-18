@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "generationId": "meadowmark-v1",
+  "title": "Meadowmark logo",
+  "description": "A sunrise over two green meadows, a winding cream path, and a sprouting leaf.",
+  "canvas": 512,
+  "tile": { "inset": 20, "radius": 112, "border": 22 },
+  "palette": {
+    "skyTop": "#b8e5f2",
+    "skyBottom": "#e6f4df",
+    "sun": "#ffd166",
+    "rearMeadow": "#65a955",
+    "frontMeadow": "#2f7048",
+    "path": "#fff1c7",
+    "deepGreen": "#174f3c"
+  },
+  "primitives": [
+    { "type": "verticalGradient", "top": "skyTop", "bottom": "skyBottom" },
+    { "type": "circle", "cx": 382, "cy": 130, "radius": 62, "fill": "sun" },
+    { "type": "polygon", "fill": "rearMeadow", "points": [[-18, 340], [48, 283], [112, 250], [176, 252], [242, 291], [308, 339], [374, 363], [440, 331], [536, 265], [536, 536], [-18, 536]] },
+    { "type": "polygon", "fill": "frontMeadow", "points": [[-24, 403], [52, 347], [126, 320], [202, 337], [276, 381], [350, 423], [428, 411], [538, 335], [538, 536], [-24, 536]] },
+    { "type": "polygon", "fill": "path", "points": [[249, 526], [239, 474], [249, 426], [278, 381], [313, 346], [336, 318], [341, 286], [332, 252], [363, 284], [373, 326], [360, 363], [336, 396], [310, 434], [296, 477], [302, 526]] },
+    { "type": "line", "stroke": "deepGreen", "width": 18, "x1": 302, "y1": 254, "x2": 282, "y2": 339 },
+    { "type": "ellipse", "fill": "deepGreen", "cx": 240, "cy": 271, "rx": 62, "ry": 24, "rotation": -13 },
+    { "type": "ellipse", "fill": "frontMeadow", "cx": 356, "cy": 224, "rx": 59, "ry": 24, "rotation": -24 },
+    { "type": "roundedRectStroke", "stroke": "deepGreen", "width": 22, "x": 20, "y": 20, "size": 472, "radius": 112 }
+  ]
+}

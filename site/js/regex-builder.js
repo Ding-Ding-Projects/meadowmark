@@ -10,12 +10,21 @@
 
   const MAX_SAMPLE = 20000;
   const EVAL_BUDGET_MS = 150;
+  const MAX_PATTERN = 256;
 
   function escapeHtml(s) {
     return s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   }
 
   function safeTest(pattern, flags, text) {
+    if (pattern.length > MAX_PATTERN) return { error: "Pattern exceeds the 256-character browser limit." };
+    if (text.length > MAX_SAMPLE) return { error: "Sample exceeds the 20,000-character browser limit." };
+    // JavaScript has no synchronous RegExp cancellation. Refuse the common
+    // exponential shapes before RegExp.exec rather than pretending that a
+    // stopwatch checked after exec can interrupt them.
+    if (/\((?:[^()\\]|\\.)*[+*}](?:[^()\\]|\\.)*\)[+*{]/.test(pattern) || /(?:\.\*|\.\+|\[[^\]]+\][+*])[^|]{0,32}(?:\.\*|\.\+|\[[^\]]+\][+*])/.test(pattern) || /\\[1-9]/.test(pattern)) {
+      return { error: "Pattern refused: nested/overlapping quantifiers and backreferences are disabled in the browser UI." };
+    }
     const start = performance.now();
     try {
       const re = new RegExp(pattern, flags.includes("g") ? flags : flags + "g");
@@ -42,6 +51,7 @@
    */
   function attach(input, options) {
     options = options || {};
+    if (input._mmRegexApi) return input._mmRegexApi;
     const wrap = input.closest(".mm-search") || input.parentElement;
     let btn = wrap.querySelector(".builder-btn");
     if (!btn) {
@@ -231,7 +241,7 @@
       el.appendChild(actions);
     }
 
-    return {
+    const api = {
       matches(text) {
         if (input.dataset.rbMode === "regex" && input.dataset.rbPattern) {
           const r = safeTest(input.dataset.rbPattern, input.dataset.rbFlags || "gi", text);
@@ -243,6 +253,8 @@
         return text.toLowerCase().includes(q);
       },
     };
+    input._mmRegexApi = api;
+    return api;
   }
 
   global.MMRegexBuilder = { attach, safeTest };

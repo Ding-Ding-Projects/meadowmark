@@ -1,4 +1,4 @@
-import { h } from "../dom";
+import { h, uid } from "../dom";
 import { openMenu } from "./menu";
 
 export interface SelectOption {
@@ -18,15 +18,21 @@ export interface SelectOptions {
 /** An M3 select surfaced as a button that opens the shared filterable menu. */
 export function select(opts: SelectOptions): HTMLDivElement {
   const current = opts.options.find((o) => o.value === opts.value);
+  const labelId = uid("select-label");
   const trigger = h(
     "button.mm-text-field__input",
     {
       type: "button",
       style: { textAlign: "left", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center" },
       "aria-haspopup": "listbox",
+      "aria-labelledby": labelId,
+      "aria-expanded": "false",
       onclick: () => {
+        trigger.setAttribute("aria-expanded", "true");
         openMenu({
           anchor: trigger,
+          role: "listbox",
+          onClose: () => trigger.setAttribute("aria-expanded", "false"),
           filterAriaLabel: opts.labelText,
           items: opts.options.map((o) => ({
             id: o.value,
@@ -47,7 +53,7 @@ export function select(opts: SelectOptions): HTMLDivElement {
   return h(
     "div.mm-text-field",
     {},
-    h("label.mm-text-field__label", {}, opts.labelText),
+    h("span.mm-text-field__label", { id: labelId }, opts.labelText),
     h("div.mm-select", {}, trigger)
   );
 }

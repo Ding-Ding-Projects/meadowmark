@@ -64,6 +64,7 @@ p, .mm-body-lg { font-size: var(--mm-type-body-lg-size); line-height: var(--mm-t
   position: sticky; top: 0; z-index: 40;
 }
 .mm-topbar .brand { font-weight: 700; text-decoration: none; color: var(--mm-on-surface); display: flex; align-items: center; gap: var(--mm-space-2); font-size: 1.1rem; }
+.mm-site-brand-mark { width: 32px; height: 32px; display: inline-grid; place-items: center; object-fit: contain; border-radius: var(--mm-radius-sm); }
 .mm-topbar .spacer { flex: 1; }
 .mm-topbar-controls { display: flex; align-items: center; gap: var(--mm-space-2); flex-wrap: wrap; }
 

@@ -40,3 +40,19 @@ Manual: trigger each severity and confirm auto-dismiss timing matches the
 documented behaviour (info/success auto-dismiss, warning/error persist);
 open the notification centre and confirm dismissed toasts still appear with
 their original message and timestamp.
+
+Evidence status: this is a prescribed manual procedure; no packaged
+notification-stack or history interaction/capture is recorded at `6e7760b`.
+
+## Security considerations
+
+Notifications must not display secrets, tokens, private paths, or unbounded
+external text. Errors remain factual at every language/funny setting, and a
+notification action must revalidate the operation rather than replay stale
+authority.
+
+## Suggested articles
+
+- [Internationalisation and funny levels](./i18n.md)
+- [Overlays and context menus](./overlays-and-menus.md)
+- [Unsigned automatic updates](./platform-services/updater.md)

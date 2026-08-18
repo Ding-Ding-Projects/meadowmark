@@ -25,21 +25,17 @@ export type ScheduleRecurrence =
   | { kind: 'weekdays'; days: readonly Weekday[] };
 
 /**
- * A rule's data source. Only 'local' is implemented in this build - it
- * carries a fixed partial settings object to apply while the rule is
- * active. 'https' and 'homeAssistant' are a documented EXTENSION POINT
- * for a future validated network source; their shapes are declared here
- * so a later implementation has a stable contract to fill in, but this
- * module makes NO network call of any kind for either of them. Attempting
- * to resolve one today reports 'unavailable' (see scheduled-source.ts),
- * never a silent no-op and never a fabricated value.
+ * A rule's data source. Local values resolve synchronously. Network
+ * source shapes are validated and bounded here, but remain explicitly
+ * unavailable until the scheduler owns a safe asynchronous resolver.
  */
 export type ScheduledRuleSource =
   | { type: 'local'; values: Record<string, unknown> }
   | {
       type: 'https';
-      /** NOT IMPLEMENTED. Reserved shape: a validated, versioned HTTPS
-       * endpoint returning an allowlisted subset of setting fields. */
+      /** A versioned HTTPS endpoint returning an allowlisted subset of
+       * setting fields. Explicit loopback HTTP is accepted for local
+       * development and integration only. */
       url: string;
       pollIntervalMs?: number;
     }
@@ -88,6 +84,79 @@ export type ScheduledRuleList = readonly ScheduledRule[];
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const TIME_RE = /^([01]\d|2[0-3]):[0-5]\d$/;
+const RULE_ID_RE = /^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/;
+const ENTITY_ID_RE = /^(?:binary_sensor|input_boolean)\.[a-z0-9_]{1,255}$/;
+const MIN_POLL_INTERVAL_MS = 15_000;
+const MAX_POLL_INTERVAL_MS = 86_400_000;
+const MAX_LABEL_LENGTH = 160;
+const MAX_URL_LENGTH = 2_048;
+
+function isPlainRecord(value: unknown): value is Record<string, unknown> {
+  if (value === null || typeof value !== 'object' || Array.isArray(value)) return false;
+  const prototype = Object.getPrototypeOf(value);
+  return prototype === Object.prototype || prototype === null;
+}
+
+function isRealDate(value: string): boolean {
+  if (!DATE_RE.test(value)) return false;
+  const parts = value.split('-').map(Number);
+  if (parts.length !== 3) return false;
+  const year = parts[0];
+  const month = parts[1];
+  const day = parts[2];
+  if (year === undefined || month === undefined || day === undefined) return false;
+  const parsed = new Date(Date.UTC(year, month - 1, day));
+  return (
+    parsed.getUTCFullYear() === year &&
+    parsed.getUTCMonth() === month - 1 &&
+    parsed.getUTCDate() === day
+  );
+}
+
+function validatePollInterval(value: unknown, errors: string[]): void {
+  if (value === undefined) return;
+  if (
+    !Number.isInteger(value) ||
+    (value as number) < MIN_POLL_INTERVAL_MS ||
+    (value as number) > MAX_POLL_INTERVAL_MS
+  ) {
+    errors.push(
+      `pollIntervalMs must be an integer from ${MIN_POLL_INTERVAL_MS} through ${MAX_POLL_INTERVAL_MS}.`,
+    );
+  }
+}
+
+function validateSettingsRecord(value: unknown, field: string, errors: string[]): void {
+  if (!isPlainRecord(value)) {
+    errors.push(`${field} must be a plain object.`);
+    return;
+  }
+  if (Object.keys(value).length > 64) {
+    errors.push(`${field} must contain no more than 64 fields.`);
+  }
+}
+
+function validateNetworkUrl(raw: unknown, field: string, errors: string[]): void {
+  if (typeof raw !== 'string' || raw.length === 0 || raw.length > MAX_URL_LENGTH) {
+    errors.push(`${field} must be a non-empty URL no longer than ${MAX_URL_LENGTH} characters.`);
+    return;
+  }
+  try {
+    const parsed = new URL(raw);
+    if (parsed.username || parsed.password) errors.push(`${field} must not contain URL credentials.`);
+    if (parsed.hash) errors.push(`${field} must not contain a fragment.`);
+    const loopbackHost =
+      parsed.hostname === 'localhost' ||
+      parsed.hostname === '127.0.0.1' ||
+      parsed.hostname === '[::1]' ||
+      parsed.hostname === '::1';
+    if (parsed.protocol !== 'https:' && !(parsed.protocol === 'http:' && loopbackHost)) {
+      errors.push(`${field} must use HTTPS, or HTTP with an explicit loopback host.`);
+    }
+  } catch {
+    errors.push(`${field} is not a valid URL.`);
+  }
+}
 
 export interface RuleValidationResult {
   valid: boolean;
@@ -103,20 +172,25 @@ export interface RuleValidationResult {
 export function validateScheduledRule(rule: ScheduledRule): RuleValidationResult {
   const errors: string[] = [];
 
-  if (typeof rule.id !== 'string' || rule.id.trim().length === 0) {
-    errors.push('Rule id must be a non-empty string.');
+  if (typeof rule.id !== 'string' || !RULE_ID_RE.test(rule.id)) {
+    errors.push('Rule id must be 1-128 characters using letters, digits, dot, underscore, colon, or hyphen.');
   }
-  if (typeof rule.label !== 'string' || rule.label.trim().length === 0) {
-    errors.push('Rule label must be a non-empty string.');
+  if (
+    typeof rule.label !== 'string' ||
+    rule.label.trim().length === 0 ||
+    rule.label.length > MAX_LABEL_LENGTH ||
+    /[\u0000-\u001f\u007f]/u.test(rule.label)
+  ) {
+    errors.push(`Rule label must be 1-${MAX_LABEL_LENGTH} characters without control characters.`);
   }
   if (typeof rule.enabled !== 'boolean') {
     errors.push('Rule "enabled" must be a boolean.');
   }
 
-  if (rule.startDate !== undefined && !DATE_RE.test(rule.startDate)) {
+  if (rule.startDate !== undefined && !isRealDate(rule.startDate)) {
     errors.push(`startDate "${rule.startDate}" is not a valid "YYYY-MM-DD" date string.`);
   }
-  if (rule.endDate !== undefined && !DATE_RE.test(rule.endDate)) {
+  if (rule.endDate !== undefined && !isRealDate(rule.endDate)) {
     errors.push(`endDate "${rule.endDate}" is not a valid "YYYY-MM-DD" date string.`);
   }
   if (
@@ -163,8 +237,18 @@ export function validateScheduledRule(rule: ScheduledRule): RuleValidationResult
   ) {
     errors.push(`Unknown source.type: ${JSON.stringify((rule.source as { type?: unknown }).type)}`);
   } else if (rule.source.type === 'local') {
-    if (rule.source.values === null || typeof rule.source.values !== 'object') {
-      errors.push('local source "values" must be an object.');
+    validateSettingsRecord(rule.source.values, 'local source "values"', errors);
+  } else if (rule.source.type === 'https') {
+    validateNetworkUrl(rule.source.url, 'https source "url"', errors);
+    validatePollInterval(rule.source.pollIntervalMs, errors);
+  } else if (rule.source.type === 'homeAssistant') {
+    validateNetworkUrl(rule.source.baseUrl, 'homeAssistant source "baseUrl"', errors);
+    if (typeof rule.source.entityId !== 'string' || !ENTITY_ID_RE.test(rule.source.entityId)) {
+      errors.push('homeAssistant source "entityId" must name a binary_sensor or input_boolean entity.');
+    }
+    validateSettingsRecord(rule.source.onValues, 'homeAssistant source "onValues"', errors);
+    if (rule.source.offValues !== undefined) {
+      validateSettingsRecord(rule.source.offValues, 'homeAssistant source "offValues"', errors);
     }
   }
 

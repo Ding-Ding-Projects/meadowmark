@@ -9,6 +9,8 @@
 
 import { h, Store } from "../dom";
 import { t } from "../i18n";
+import { button } from "../components/button";
+import { createRegexFieldState, openRegexBuilder, type RegexFieldState } from "../search/regex-builder";
 
 export interface PaletteCommandResult {
   kind: "command";
@@ -91,10 +93,16 @@ export function openCommandPalette(): void {
     "aria-label": t("palette.searchLabel"),
     placeholder: t("palette.placeholder"),
   }) as HTMLInputElement;
+  const searchState = createRegexFieldState();
+  const regexButton = button({ label: ".*", variant: "icon", ariaLabel: "Open anchored regex builder", onClick: () => openRegexBuilder(regexButton, searchState) });
 
   const resultsList = h("div", { role: "listbox", "aria-label": t("palette.resultsLabel") });
 
   function highlight(el: HTMLElement): void {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      el.focus();
+      return;
+    }
     el.animate(
       [
         { boxShadow: "0 0 0 3px var(--mm-color-primary)" },
@@ -118,11 +126,15 @@ export function openCommandPalette(): void {
     rowEls[clamped]?.focus();
   }
 
-  function renderResults(query: string): void {
+  function matches(label: string, state: RegexFieldState): boolean {
+    if (state.mode === "text") return label.toLowerCase().includes(state.query.trim().toLowerCase());
+    try { return new RegExp(state.pattern, state.flags).test(label); } catch { return false; }
+  }
+
+  function renderResults(state: RegexFieldState): void {
     resultsList.textContent = "";
     rowEls = [];
-    const needle = query.trim().toLowerCase();
-    const results = allResults().filter((r) => !needle || r.label.toLowerCase().includes(needle));
+    const results = allResults().filter((result) => matches(result.label, state));
     if (results.length === 0) {
       resultsList.appendChild(h("div", { style: { padding: "12px" } }, t("common.state.noMatches")));
       return;
@@ -185,7 +197,12 @@ export function openCommandPalette(): void {
     }
   }
 
-  input.addEventListener("input", () => renderResults(input.value));
+  input.addEventListener("input", () => searchState.update((state) => ({ ...state, query: input.value, mode: "text" })));
+  searchState.subscribe((state) => {
+    const visible = state.mode === "text" ? state.query : `/${state.pattern}/${state.flags}`;
+    if (input.value !== visible) input.value = visible;
+    renderResults(state);
+  });
   input.addEventListener("keydown", (ev) => {
     if (ev.key === "ArrowDown") {
       ev.preventDefault();
@@ -206,6 +223,13 @@ export function openCommandPalette(): void {
     if (ev.key === "Escape") {
       ev.preventDefault();
       close();
+    } else if (ev.key === "Tab") {
+      const focusable = [...surface.querySelectorAll<HTMLElement>('input, button, [tabindex]:not([tabindex="-1"])')].filter((element) => !element.hasAttribute("disabled"));
+      if (!focusable.length) return;
+      const first = focusable[0]!;
+      const last = focusable[focusable.length - 1]!;
+      if (ev.shiftKey && document.activeElement === first) { ev.preventDefault(); last.focus(); }
+      else if (!ev.shiftKey && document.activeElement === last) { ev.preventDefault(); first.focus(); }
     }
   }
 
@@ -218,7 +242,7 @@ export function openCommandPalette(): void {
       "aria-label": t("palette.title"),
       style: size === "fullscreen" ? { width: "96vw", height: "92vh", maxWidth: "96vw", maxHeight: "92vh" } : { width: "640px" },
     },
-    h("div.mm-search-field", { role: "search" }, input),
+    h("div.mm-search-field", { role: "search" }, input, regexButton),
     resultsList
   );
   const root = h("div.mm-dialog", { style: { zIndex: "var(--mm-z-palette)" } }, surface);
@@ -228,7 +252,7 @@ export function openCommandPalette(): void {
   document.addEventListener("keydown", onKeydown);
   openState = { root, scrim };
   input.focus();
-  renderResults("");
+  renderResults(searchState.getSnapshot());
 }
 
 export function installCommandPaletteHotkey(): () => void {

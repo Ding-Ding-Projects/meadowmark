@@ -4,7 +4,7 @@
  * "queue paused: barn full" state rather than silently dropping output.
  */
 
-import { h, formatDuration } from "../dom";
+import { h, formatDuration, preserveFocusedDescendant } from "../dom";
 import { button } from "../components/button";
 import { openMenu } from "../components/menu";
 import { t } from "../i18n";
@@ -82,6 +82,7 @@ export function renderFactoriesPanel(host: HTMLElement, view: FactoriesView, bar
   let tickHandle: number;
 
   function render(): void {
+    preserveFocusedDescendant(list, () => {
     list.textContent = "";
     if (view.factories.length === 0) {
       list.appendChild(h("div", {}, t("common.state.empty")));
@@ -90,6 +91,7 @@ export function renderFactoriesPanel(host: HTMLElement, view: FactoriesView, bar
     for (const factory of view.factories) {
       list.appendChild(renderFactoryCard(factory, barn, bridge));
     }
+    });
   }
 
   render();

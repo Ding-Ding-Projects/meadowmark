@@ -28,6 +28,8 @@ files:
 
 extraMetadata:
   main: packages/app/dist/main.cjs
+  build:
+    commit: "${env.RELEASE_COMMIT_SHA}"
 
 # Permanent no-signing policy. See the module comment above.
 # Only `forceCodeSigning` is a valid top-level property. `signExecutable` is
@@ -43,13 +45,14 @@ win:
   # electron-builder's schema documents both switches and signExecutable also
   # covers installer/auxiliary artifacts that use the standard signing path.
   signExecutable: false
+  # This also disables electron-builder's built-in PE resource editor. The
+  # release verifier therefore remains intentionally fail-closed until a
+  # separate unsigned resource-edit phase applies this icon to the packaged
+  # application and Setup executable without invoking any signer.
   signAndEditExecutable: false
+  icon: design/icons/meadowmark.ico
   target:
     - target: squirrel
-  # No icon is committed yet; the app-logo-customization feature (see
-  # docs/inventory/inventory.json) owns generating a real one. Leaving
-  # this unset rather than pointing at a placeholder avoids shipping a
-  # framework-default icon that later silently becomes "the" icon.
   artifactName: "${productName}-Setup-${version}.${ext}"
 
 squirrelWindows:
@@ -57,6 +60,8 @@ squirrelWindows:
   # `noMsi` keys with a schema-validation error; `artifactName` is the
   # supported way to control the generated setup executable's name.
   artifactName: "${productName}-Setup-${version}.${ext}"
-  # No remote update feed is published yet; packages/app/src/identity.ts
-  # carries a placeholder UPDATE_FEED_URL_PLACEHOLDER for when one is
-  # wired up. Leaving `remoteReleases` unset here until then.
+  # Squirrel stores this immutable commit-pinned URL in package/update
+  # metadata. build-installer.ps1 supplies RELEASE_COMMIT_SHA from HEAD and
+  # refuses a dirty tracked tree, so the URL always identifies the same icon
+  # bytes as the package being built rather than mutable main-branch content.
+  iconUrl: "https://raw.githubusercontent.com/Ding-Ding-Projects/meadowmark/${env.RELEASE_COMMIT_SHA}/design/icons/meadowmark.ico"

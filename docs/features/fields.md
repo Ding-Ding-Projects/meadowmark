@@ -36,3 +36,19 @@ the correct icon, short visible label, and accessible label per state, that
 the countdown decreases, and that Plant All / Harvest All dispatch the
 expected actions. Runtime: launch the built app, dismiss the welcome modal,
 and confirm the WebGL canvas shows terrain tiles and field-bed plots.
+
+Evidence status: the real packaged capture from commit `c328d7d` proves visible
+terrain and field-bed plots only. Plant, harvest, bulk actions, timers, and
+their state transitions have no packaged interaction proof at `6e7760b`.
+
+## Security considerations
+
+Crop availability, timing, costs, rewards, and plot ownership remain
+simulation-authoritative. The UI must not turn a stale or forged view into an
+accepted plant or harvest result.
+
+## Suggested articles
+
+- [HUD](./hud.md)
+- [Offline summary](./offline-summary.md)
+- [UI, engine, and shared integration](./integration-contract.md)

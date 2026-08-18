@@ -1,21 +1,8 @@
 @echo off
 setlocal EnableExtensions EnableDelayedExpansion
-REM ============================================================================
-REM download-dependencies.bat -- obtains every dependency Meadowmark needs to
-REM build, from a machine that has nothing installed, with no manual steps.
-REM
-REM Supports silent/no-prompt operation via /s, --silent, or SILENT=1.
-REM Exits non-zero on the first real failure.
-REM
-REM Phases:
-REM   1. Node.js       -- via winget (user-scoped) if `node` is not already
-REM                        on PATH. Refreshes THIS process's PATH afterward,
-REM                        because winget only updates PATH for FUTURE shells;
-REM                        the very next command in this same script would
-REM                        otherwise fail to find node, which reads as "the
-REM                        install failed" when it in fact succeeded.
-REM   2. npm packages   -- `npm ci` if a lockfile is present, else `npm install`.
-REM ============================================================================
+REM Exact, unattended dependency bootstrap for Meadowmark.
+REM The pinned version, canonical URL, and SHA-256 live in release-gate.json.
+REM No signing material or credentials are requested or installed.
 
 set "SILENT_MODE=0"
 if /I "%~1"=="/s" set "SILENT_MODE=1"
@@ -24,73 +11,53 @@ if "%SILENT%"=="1" set "SILENT_MODE=1"
 
 set "REPO_ROOT=%~dp0"
 if "%REPO_ROOT:~-1%"=="\" set "REPO_ROOT=%REPO_ROOT:~0,-1%"
+set "NODE_RESULT=%TEMP%\meadowmark-node-%RANDOM%-%RANDOM%-%RANDOM%.txt"
 
 echo [download-dependencies] Repository root: %REPO_ROOT%
 echo [download-dependencies] Silent mode: %SILENT_MODE%
-echo.
+echo [download-dependencies] Phase 1/2: exact Node bootstrap
 
-REM ---- Phase 1: Node.js ------------------------------------------------------
-
-echo [download-dependencies] Phase 1/2: Node.js
-where node >nul 2>nul
-if %ERRORLEVEL%==0 (
-    for /f "tokens=*" %%v in ('node --version 2^>nul') do set "NODE_VERSION=%%v"
-    echo [download-dependencies]   Already present: node !NODE_VERSION!
-) else (
-    echo [download-dependencies]   Not found on PATH. Installing via winget ^(user scope^)...
-    where winget >nul 2>nul
-    if not %ERRORLEVEL%==0 (
-        echo [download-dependencies] ERROR: winget is not available, and node is not installed.
-        echo [download-dependencies]        Install Node.js LTS from https://nodejs.org/ and re-run this script.
-        exit /b 1
-    )
-
-    winget install --id OpenJS.NodeJS.LTS --scope user --accept-source-agreements --accept-package-agreements --silent
-    if not %ERRORLEVEL%==0 (
-        echo [download-dependencies] ERROR: winget install of Node.js LTS failed ^(exit %ERRORLEVEL%^).
-        exit /b 1
-    )
-
-    REM winget only writes the registry PATH entry for FUTURE shells. This
-    REM process's PATH is stale until we refresh it from the registry
-    REM ourselves -- otherwise the very next command below fails to find
-    REM node, which looks like the install silently didn't happen.
-    echo [download-dependencies]   Refreshing current-process PATH...
-    for /f "usebackq tokens=2,*" %%A in (`reg query "HKCU\Environment" /v Path 2^>nul`) do set "USER_PATH=%%B"
-    for /f "usebackq tokens=2,*" %%A in (`reg query "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v Path 2^>nul`) do set "SYSTEM_PATH=%%B"
-    if defined USER_PATH if defined SYSTEM_PATH set "PATH=%SYSTEM_PATH%;%USER_PATH%"
-
-    where node >nul 2>nul
-    if not %ERRORLEVEL%==0 (
-        echo [download-dependencies] ERROR: node still not found on PATH after install and PATH refresh.
-        echo [download-dependencies]        Open a new terminal and re-run this script.
-        exit /b 1
-    )
-    for /f "tokens=*" %%v in ('node --version 2^>nul') do set "NODE_VERSION=%%v"
-    echo [download-dependencies]   Installed: node !NODE_VERSION!
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%REPO_ROOT%\tools\release\bootstrap-node.ps1" -ResultPath "%NODE_RESULT%"
+set "BOOTSTRAP_RESULT=%ERRORLEVEL%"
+if not "%BOOTSTRAP_RESULT%"=="0" (
+    if exist "%NODE_RESULT%" del /q "%NODE_RESULT%" >nul 2>nul
+    echo [download-dependencies] ERROR: pinned Node bootstrap failed ^(exit %BOOTSTRAP_RESULT%^).
+    exit /b %BOOTSTRAP_RESULT%
 )
+
+if not exist "%NODE_RESULT%" (
+    echo [download-dependencies] ERROR: Node bootstrap returned no verified toolchain path.
+    exit /b 1
+)
+set /p "NODE_DIR="<"%NODE_RESULT%"
+del /q "%NODE_RESULT%" >nul 2>nul
+if not exist "%NODE_DIR%\node.exe" (
+    echo [download-dependencies] ERROR: verified node.exe is missing from %NODE_DIR%.
+    exit /b 1
+)
+if not exist "%NODE_DIR%\npm.cmd" (
+    echo [download-dependencies] ERROR: verified npm.cmd is missing from %NODE_DIR%.
+    exit /b 1
+)
+set "PATH=%NODE_DIR%;%PATH%"
+for /f "tokens=*" %%v in ('"%NODE_DIR%\node.exe" --version') do set "NODE_VERSION=%%v"
+echo [download-dependencies]   Active Node: !NODE_VERSION! from %NODE_DIR%
 echo.
 
-REM ---- Phase 2: npm packages --------------------------------------------------
-
-echo [download-dependencies] Phase 2/2: npm packages
+echo [download-dependencies] Phase 2/2: locked npm dependencies
+if not exist "%REPO_ROOT%\package-lock.json" (
+    echo [download-dependencies] ERROR: package-lock.json is required; an unlocked install is not release reproducible.
+    exit /b 1
+)
 pushd "%REPO_ROOT%"
-
-if exist "package-lock.json" (
-    echo [download-dependencies]   Lockfile found. Running: npm ci
-    call npm ci
-) else (
-    echo [download-dependencies]   No lockfile yet. Running: npm install
-    call npm install
-)
+call "%NODE_DIR%\npm.cmd" ci --no-audit --no-fund
 set "NPM_RESULT=%ERRORLEVEL%"
 popd
-
-if not %NPM_RESULT%==0 (
-    echo [download-dependencies] ERROR: npm dependency install failed ^(exit %NPM_RESULT%^).
+if not "%NPM_RESULT%"=="0" (
+    echo [download-dependencies] ERROR: npm ci failed ^(exit %NPM_RESULT%^).
     exit /b %NPM_RESULT%
 )
 
 echo.
-echo [download-dependencies] Done. All dependencies present.
-exit /b 0
+echo [download-dependencies] Done. Exact Node and locked npm dependencies are present.
+endlocal & set "MEADOWMARK_NODE_DIR=%NODE_DIR%" & set "PATH=%PATH%" & exit /b 0

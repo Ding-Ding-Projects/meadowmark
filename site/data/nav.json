@@ -3,6 +3,7 @@
   { "id": "docs-index", "en": "Documentation index", "yue": "文件目錄", "href": "/docs/", "group": "core" },
   { "id": "changelog", "en": "Changelog", "yue": "更新日誌", "href": "/changelog.html", "group": "core" },
   { "id": "settings", "en": "Settings", "yue": "設定", "href": "/settings.html", "group": "core" },
+  { "id": "capabilities", "en": "Local tools & capabilities", "yue": "本機工具同功能", "href": "/capabilities.html", "group": "core" },
 
   { "id": "progression", "en": "Currencies & progression", "yue": "貨幣同進度", "href": "/docs/progression.html", "group": "foundations" },
   { "id": "saves-offline", "en": "Saves & coming back", "yue": "存檔同返嚟", "href": "/docs/saves-offline.html", "group": "foundations" },

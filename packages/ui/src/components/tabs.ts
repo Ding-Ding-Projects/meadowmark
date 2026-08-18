@@ -5,7 +5,9 @@ export type TabDock = "top" | "bottom" | "left" | "right";
 export interface TabDef {
   id: string;
   label: string;
-  panel: HTMLElement;
+  panel?: HTMLElement;
+  /** The real externally-rendered panel controlled by this tab. */
+  controlsId?: string;
   closable?: boolean;
   onClose?: () => void;
 }
@@ -44,16 +46,16 @@ export function tabs(opts: TabsOptions): { root: HTMLDivElement; setActive: (id:
         role: "tab",
         id: `mm-tab-${def.id}`,
         "aria-selected": String(def.id === activeId),
-        "aria-controls": `mm-tabpanel-${def.id}`,
+        "aria-controls": def.controlsId ?? `mm-tabpanel-${def.id}`,
         tabindex: def.id === activeId ? "0" : "-1",
         onclick: () => setActive(def.id),
       },
       h("span", {}, def.label),
       def.closable
         ? h(
-            "span.mm-tab__close",
+            "button.mm-tab__close",
             {
-              role: "button",
+              type: "button",
               "aria-label": `Close ${def.label}`,
               onclick: (ev: MouseEvent) => {
                 ev.stopPropagation();
@@ -89,20 +91,23 @@ export function tabs(opts: TabsOptions): { root: HTMLDivElement; setActive: (id:
       if (prevId === undefined) return;
       setActive(prevId);
       buttons.get(activeId)?.focus();
+    } else if (ev.key === "Home" || ev.key === "End") {
+      ev.preventDefault();
+      const targetId = ev.key === "Home" ? ids[0] : ids[ids.length - 1];
+      if (!targetId) return;
+      setActive(targetId);
+      buttons.get(targetId)?.focus();
     }
   });
 
   function render(): void {
-    tabList.textContent = "";
-    buttons.clear();
-    for (const def of opts.tabs) {
-      const btn = renderTabButton(def);
-      buttons.set(def.id, btn);
-      tabList.appendChild(btn);
+    for (const [id, btn] of buttons) {
+      btn.setAttribute("aria-selected", String(id === activeId));
+      btn.tabIndex = id === activeId ? 0 : -1;
     }
     panelHost.textContent = "";
     const activeTab = opts.tabs.find((t) => t.id === activeId) ?? opts.tabs[0];
-    if (activeTab) {
+    if (activeTab?.panel) {
       activeTab.panel.setAttribute("role", "tabpanel");
       activeTab.panel.setAttribute("id", `mm-tabpanel-${activeTab.id}`);
       activeTab.panel.setAttribute("aria-labelledby", `mm-tab-${activeTab.id}`);
@@ -112,11 +117,17 @@ export function tabs(opts: TabsOptions): { root: HTMLDivElement; setActive: (id:
   }
 
   function setActive(id: string): void {
+    if (!opts.tabs.some((tab) => tab.id === id)) return;
     activeId = id;
     render();
     opts.onActivate?.(id);
   }
 
+  for (const def of opts.tabs) {
+    const btn = renderTabButton(def);
+    buttons.set(def.id, btn);
+    tabList.appendChild(btn);
+  }
   render();
 
   const root = h("div", {

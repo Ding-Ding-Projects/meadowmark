@@ -36,6 +36,8 @@ import type { LogoAssetSet, LogoManifest, LogoSelection } from './types';
 const MANIFEST_SCHEMA_VERSION = 1 as const;
 const MANIFEST_FILE_NAME = 'manifest.json';
 const ICO_FILE_NAME = 'logo.ico';
+const ASSET_DIR_RE = /^assets-[a-z0-9]+-[a-f0-9]{12}$/;
+const VARIANT_FILE_RE = /^logo-(\d{1,4})\.png$/;
 
 function logoRootDir(userDataDir: string): string {
   return path.join(userDataDir, 'logo');
@@ -59,6 +61,33 @@ function newAssetDirName(): string {
   return `assets-${timestamp}-${random}`;
 }
 
+function isValidManifest(manifest: Partial<LogoManifest>): manifest is LogoManifest {
+  if (
+    manifest.schemaVersion !== MANIFEST_SCHEMA_VERSION ||
+    !manifest.selection ||
+    typeof manifest.assetDir !== 'string' ||
+    !ASSET_DIR_RE.test(manifest.assetDir) ||
+    !Array.isArray(manifest.variantFiles) ||
+    manifest.icoFileName !== ICO_FILE_NAME
+  ) return false;
+  return manifest.variantFiles.every((variant) => {
+    if (!variant || typeof variant.size !== 'number' || !Number.isInteger(variant.size)) return false;
+    if (typeof variant.fileName !== 'string') return false;
+    const match = VARIANT_FILE_RE.exec(variant.fileName);
+    return match !== null && Number(match[1]) === variant.size;
+  });
+}
+
+function resolveStoredAsset(userDataDir: string, assetDir: string, fileName?: string): string {
+  if (!ASSET_DIR_RE.test(assetDir)) throw new LogoStorageError('Stored logo manifest contains an invalid asset directory.');
+  const root = path.resolve(logoRootDir(userDataDir));
+  const resolved = path.resolve(root, assetDir, ...(fileName ? [fileName] : []));
+  if (resolved === root || !resolved.startsWith(`${root}${path.sep}`)) {
+    throw new LogoStorageError('Stored logo path escaped its private storage directory.');
+  }
+  return resolved;
+}
+
 /**
  * Reads the current logo manifest, or `null` if none has ever been
  * written (a fresh install, or after `clearLogoSelection`). A corrupt or
@@ -70,11 +99,7 @@ export async function readLogoManifest(userDataDir: string): Promise<LogoManifes
   try {
     const raw = await fs.readFile(manifestPath(userDataDir), 'utf8');
     const parsed = JSON.parse(raw) as Partial<LogoManifest>;
-    if (parsed.schemaVersion !== MANIFEST_SCHEMA_VERSION) return null;
-    if (!parsed.selection || !parsed.assetDir || !Array.isArray(parsed.variantFiles) || !parsed.icoFileName) {
-      return null;
-    }
-    return parsed as LogoManifest;
+    return isValidManifest(parsed) ? parsed : null;
   } catch (err) {
     const code = err && typeof err === 'object' && 'code' in err ? (err as { code?: unknown }).code : undefined;
     if (code === 'ENOENT') return null;
@@ -141,7 +166,7 @@ export async function persistLogoAssetSet(
 
 async function removeAssetDirBestEffort(userDataDir: string, assetDirName: string): Promise<void> {
   try {
-    await fs.rm(path.join(logoRootDir(userDataDir), assetDirName), { recursive: true, force: true });
+    await fs.rm(resolveStoredAsset(userDataDir, assetDirName), { recursive: true, force: true });
   } catch {
     // Best-effort cleanup only. Leaving an orphaned directory behind is
     // a (bounded, rare) waste of disk space, never a correctness or
@@ -162,7 +187,10 @@ export async function readLogoAsset(
   if (!fileName) {
     throw new LogoStorageError(`Manifest has no asset for the requested size.`);
   }
-  const filePath = path.join(logoRootDir(userDataDir), manifest.assetDir, fileName);
+  if (fileName !== ICO_FILE_NAME && !VARIANT_FILE_RE.test(fileName)) {
+    throw new LogoStorageError('Stored logo manifest contains an invalid asset filename.');
+  }
+  const filePath = resolveStoredAsset(userDataDir, manifest.assetDir, fileName);
   try {
     return await fs.readFile(filePath);
   } catch (err) {

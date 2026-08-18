@@ -31,3 +31,18 @@ different snapshots and confirm every tile updates, the XP bar fraction
 matches `xp / xpForNextLevel`, and the barn fill bar matches
 `used / capacity`. Runtime: launch the built app and confirm the HUD top is
 below the title bar bottom.
+
+Evidence status: the packaged capture from commit `c328d7d` shows the HUD below
+the custom title bar. It does not prove every value update, scale, language,
+theme, or narrow-layout state.
+
+## Security considerations
+
+HUD values are read-only projections. Currency, experience, capacity, and
+progress must never be accepted back from rendered text as authoritative state.
+
+## Suggested articles
+
+- [Fields](./fields.md)
+- [Material Design 3 token system](./design-system.md)
+- [UI, engine, and shared integration](./integration-contract.md)

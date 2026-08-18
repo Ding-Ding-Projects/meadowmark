@@ -1,6 +1,6 @@
 /** Enclosures, animal cards, and the hatchery. */
 
-import { h, formatDuration } from "../dom";
+import { h, formatDuration, preserveFocusedDescendant } from "../dom";
 import { button } from "../components/button";
 import { openMenu } from "../components/menu";
 import { t } from "../i18n";
@@ -11,6 +11,7 @@ export function renderZooPanel(host: HTMLElement, view: ZooView, bridge: HostBri
   let tickHandle: number;
 
   function render(): void {
+    preserveFocusedDescendant(grid, () => {
     grid.textContent = "";
     for (const enclosure of view.enclosures) {
       const animal = view.availableAnimals.find((a) => a.id === enclosure.animalId);
@@ -50,6 +51,7 @@ export function renderZooPanel(host: HTMLElement, view: ZooView, bridge: HostBri
       }
       grid.appendChild(tile);
     }
+    });
   }
 
   render();

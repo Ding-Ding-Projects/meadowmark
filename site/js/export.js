@@ -35,17 +35,23 @@
     return [header, sep, ...lines].join("\n");
   }
 
+  function escapeHtml(value) {
+    return String(value ?? "").replace(/[&<>"']/g, (char) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+    }[char]));
+  }
+
   function exportRows(rows, columns, baseName, format) {
     if (format === "json") downloadText(baseName + ".json", JSON.stringify(rows, null, 2), "application/json");
     else if (format === "csv") downloadText(baseName + ".csv", toCsv(rows, columns), "text/csv");
     else if (format === "markdown") downloadText(baseName + ".md", toMarkdown(rows, columns), "text/markdown");
     else if (format === "html") {
-      const html = "<table>\n<thead><tr>" + columns.map((c) => "<th>" + c.label + "</th>").join("") + "</tr></thead>\n<tbody>\n" +
-        rows.map((r) => "<tr>" + columns.map((c) => "<td>" + (r[c.key] ?? "") + "</td>").join("") + "</tr>").join("\n") +
+      const html = "<table>\n<thead><tr>" + columns.map((c) => "<th>" + escapeHtml(c.label) + "</th>").join("") + "</tr></thead>\n<tbody>\n" +
+        rows.map((r) => "<tr>" + columns.map((c) => "<td>" + escapeHtml(r[c.key]) + "</td>").join("") + "</tr>").join("\n") +
         "\n</tbody></table>\n";
       downloadText(baseName + ".html", html, "text/html");
     }
   }
 
-  global.MMExport = { downloadText, toCsv, toMarkdown, exportRows };
+  global.MMExport = { downloadText, toCsv, toMarkdown, exportRows, escapeHtml };
 })(window);

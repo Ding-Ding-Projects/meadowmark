@@ -1,6 +1,6 @@
 /** The 6-slot order board: required goods, rewards, fill button, reroll. */
 
-import { h, formatDuration, formatMoney } from "../dom";
+import { h, formatDuration, formatMoney, preserveFocusedDescendant } from "../dom";
 import { button } from "../components/button";
 import { t } from "../i18n";
 import { HostBridge, OrdersView } from "../contracts";
@@ -10,6 +10,7 @@ export function renderOrdersPanel(host: HTMLElement, view: OrdersView, bridge: H
   let tickHandle: number;
 
   function render(): void {
+    preserveFocusedDescendant(board, () => {
     board.textContent = "";
     for (const slot of view.slots) {
       if (!slot.orderId) {
@@ -54,6 +55,7 @@ export function renderOrdersPanel(host: HTMLElement, view: OrdersView, bridge: H
         )
       );
     }
+    });
   }
 
   render();

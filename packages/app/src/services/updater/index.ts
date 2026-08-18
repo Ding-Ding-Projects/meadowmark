@@ -25,12 +25,13 @@ export type {
 
 export {
   DEFAULT_BACKGROUND_CHECK_INTERVAL_MS,
+  DEFAULT_RELEASE_NOTES_URL_TEMPLATE,
+  DEFAULT_UPDATE_FEED_URL,
   MAX_PACKAGE_BYTES,
   MAX_RELEASES_FILE_BYTES,
   MIN_BACKGROUND_CHECK_INTERVAL_MS,
   RELEASES_FILE_NAME,
   UNSIGNED_UPDATE_WARNING,
-  UPDATE_FEED_PLACEHOLDER,
 } from './feed-config.js';
 
 export { compareVersions, isNewerVersion, parseVersionComponents } from './semver.js';
@@ -41,4 +42,5 @@ export {
   DownloadInsecureUrlError,
   DownloadOfflineError,
   DownloadTooLargeError,
+  DownloadUntrustedRedirectError,
 } from './http-download.js';

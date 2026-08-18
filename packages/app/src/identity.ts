@@ -32,10 +32,14 @@ export const DATA_DIR_NAME = 'Meadowmark';
 export const SHIPPED_DISPLAY_NAME = 'Meadowmark';
 
 /**
- * Placeholder auto-update feed URL. Squirrel.Windows resolves updates
- * against this base; it is unsigned, per the project's permanent
- * no-code-signing policy, and integrity relies on HTTPS transport plus
- * package hashes rather than a signature.
+ * Stable GitHub Releases latest-release route containing the Squirrel.Windows
+ * `RELEASES` index and its referenced `.nupkg` assets. The packages are
+ * intentionally unsigned; integrity relies on HTTPS transport plus the
+ * hash and size published in `RELEASES`, never a publisher signature.
  */
-export const UPDATE_FEED_URL_PLACEHOLDER =
-  'https://updates.example.invalid/meadowmark/win32/x64';
+export const UPDATE_FEED_URL =
+  'https://github.com/Ding-Ding-Projects/meadowmark/releases/latest/download/';
+
+/** Release page linked from an update-ready notification. */
+export const UPDATE_RELEASE_NOTES_URL_TEMPLATE =
+  'https://github.com/Ding-Ding-Projects/meadowmark/releases/latest';

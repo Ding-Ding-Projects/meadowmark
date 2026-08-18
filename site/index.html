@@ -94,13 +94,10 @@
 
     <section class="mm-card" style="margin-top:var(--mm-space-6)" id="download" data-anchor="download">
       <h2 data-str="download.title"></h2>
-      <p id="download-status" data-str="download.not_yet"></p>
-      <!-- The download button's state is driven entirely by
-           data/release.json (published/tag/assetUrl), read at runtime by
-           js/release.js. It never links to a guessed release-asset URL:
-           when release.json says published: false, this stays a link to
-           the Releases page. Flipping the switch later is a one-file
-           data edit, not a hunt through every page's HTML. -->
+      <p id="download-status">Release metadata is loading. No pending release is assumed to exist.</p>
+      <!-- The download button is driven entirely by data/release.json.
+           The verified historical baseline and a pending next release are
+           separate records. js/release.js never guesses an asset URL. -->
       <a class="mm-btn" id="download-btn" href="https://github.com/Ding-Ding-Projects/meadowmark/releases" aria-disabled="false" data-str="download.view_releases"></a>
       <p class="hint" style="margin-top:var(--mm-space-3)">
         <span class="i18n-en">When a release does ship, it will be an unsigned Squirrel.Windows installer. Windows will show an "unknown publisher" / SmartScreen warning — that is expected, not a bug, because this project permanently does not use code signing.</span>

@@ -34,3 +34,18 @@ Manual: mock a factory with an empty slot (opens picker, disables
 under-stocked recipes with a reason), a running slot (timer counts down),
 and a paused-by-full-barn slot (shows the paused message, not a silently
 vanished timer).
+
+Evidence status: this is a prescribed manual procedure; no packaged factory
+interaction or capture is recorded at `6e7760b`.
+
+## Security considerations
+
+Recipe eligibility, stock consumption, queue timing, and collection rewards
+must be enforced by the simulation. Disabled controls and displayed costs are
+not an authorization boundary.
+
+## Suggested articles
+
+- [Barn](./barn.md)
+- [Orders](./orders.md)
+- [UI, engine, and shared integration](./integration-contract.md)

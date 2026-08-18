@@ -104,6 +104,20 @@ export function uid(prefix = "mm"): string {
   return `${prefix}-${uidCounter}-${Date.now().toString(36)}`;
 }
 
+/** Preserves keyboard focus across a bounded live-region rebuild. This is a
+ * compatibility bridge for ticking panels until their timers are fully
+ * incremental; it prevents the one-second DOM refresh from ejecting focus. */
+export function preserveFocusedDescendant(container: HTMLElement, mutate: () => void): void {
+  const selector = 'button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+  const before = [...container.querySelectorAll<HTMLElement>(selector)];
+  const active = document.activeElement instanceof HTMLElement && container.contains(document.activeElement) ? document.activeElement : null;
+  const index = active ? before.indexOf(active) : -1;
+  mutate();
+  if (index < 0) return;
+  const after = [...container.querySelectorAll<HTMLElement>(selector)];
+  after[Math.min(index, after.length - 1)]?.focus({ preventScroll: true });
+}
+
 export function formatDuration(ms: number): string {
   if (ms <= 0) return "0:00";
   const totalSeconds = Math.ceil(ms / 1000);

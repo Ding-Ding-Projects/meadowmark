@@ -61,5 +61,21 @@ accent hue, font, language, funny level, emoji toggle, render quality);
 search for a setting's label and confirm the jump-to-tab action selects the
 correct tab.
 
-Yum Lerng Cha wiring note: the settings service IPC bridge was implemented
-without running tests, lint, type-checking, reviews, audits, or screenshots.
+The settings service IPC bridge was implemented in an earlier speed-focused
+pass without tests, lint, type-checking, reviews, audits, or captures. The
+`c328d7d` packaged capture shows application launch and first paint only; it
+does not independently prove settings-service hydration, mutation, or
+persistence.
+
+## Security considerations
+
+Settings are validated in the privileged process and written atomically.
+Display-name or appearance changes must not alter the app ID, data directory,
+executable, update feed, or package identity. External-source credentials and
+personal-vocabulary payloads require their separate private storage boundaries.
+
+## Suggested articles
+
+- [Scheduled and external settings](./platform-services/scheduled-settings.md)
+- [Internationalisation and funny levels](./i18n.md)
+- [Material Design 3 token system](./design-system.md)

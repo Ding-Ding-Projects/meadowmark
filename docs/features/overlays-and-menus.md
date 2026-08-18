@@ -47,3 +47,19 @@ to stay fully visible and never covers its anchor; open a menu with more
 items than fit the viewport height and confirm it scrolls internally rather
 than clipping; type into a context menu's filter and confirm only the label
 text changes, never the action wired to a surviving item.
+
+Evidence status: this is a prescribed manual procedure; viewport collision,
+scrolling, context-menu filtering, focus return, and narrow-layout behavior
+have no packaged interaction record or capture at `6e7760b`.
+
+## Security considerations
+
+Filtered or hidden items must not retain reachable destructive shortcuts.
+Overlay content sourced outside the app requires isolated rendering and bounded
+text; menus may invoke only registered actions with their normal validation.
+
+## Suggested articles
+
+- [Regex-powered search](./regex-search.md)
+- [Command palette](./command-palette.md)
+- [Material Design 3 token system](./design-system.md)

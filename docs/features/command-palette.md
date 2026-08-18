@@ -59,3 +59,19 @@ the keyboard only, Arrow-Down from the search field into the result list,
 Arrow Up/Down between rows, Enter into a setting row's embedded control,
 adjust the control, then Escape back out to the row without the palette
 closing.
+
+Evidence status: this is a prescribed manual procedure; the full palette index,
+rich controls, teleport targets, and keyboard path have no packaged interaction
+record or capture at `6e7760b`.
+
+## Security considerations
+
+Palette results may expose only registered actions and settings. A result must
+not bypass a lock, destructive confirmation, validation rule, or privileged IPC
+boundary merely because it can navigate to the target.
+
+## Suggested articles
+
+- [Regex-powered search](./regex-search.md)
+- [Settings](./settings.md)
+- [Overlays and context menus](./overlays-and-menus.md)
