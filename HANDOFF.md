@@ -1,6 +1,6 @@
 # Meadowmark — handoff
 
-Written 2026-08-18 against `main` at `c0822d3`. Every figure here was measured, not
+Written 2026-08-18 against `main` at `e1f8ccf`. Every figure here was measured, not
 remembered. Where something is unverified, it says so.
 
 ## Read this first: the app now draws a basic world, but it is still not a finished game
@@ -57,7 +57,8 @@ Site: <https://ding-ding-projects.github.io/meadowmark/> — live, HTTP 200.
 | The baseline 3D world renders | Built app launched on an off-screen desktop; welcome modal dismissed; captured WebGL surface shows terrain tiles and field-bed plots |
 | Preload is sandbox-clean | `node tools/guards/no-fs-in-preload.mjs` — emitted bundle requires only `electron` |
 | No bare `fs.rename` | `node tools/guards/no-bare-rename.mjs` |
-| Installer packages and is unsigned | Local package; `Get-AuthenticodeSignature` reports `NotSigned`, no signer |
+| Installer packages and is unsigned | `build-installer.bat /s`; `Meadowmark-Setup-0.1.0.exe` is 135,971,840 bytes, SHA-256 `cfe4fa447b668140019e26c87de5d249f82bad634d73fdc8cd36254abc3e5ccd`, and `Get-AuthenticodeSignature` reports `NotSigned` |
+| The Squirrel artifact installs and launches | Installed from that setup with `--silent`; launched from `%LOCALAPPDATA%\meadowmark\app-0.1.0\Meadowmark.exe` on the hidden desktop; capture is `docs/assets/captures/meadowmark-packaged-terrain-fields.png` |
 | Release assets exist | Latest `v0.1.0-15`; assets attached with nonzero sizes |
 
 ## What is NOT verified
@@ -66,8 +67,8 @@ Site: <https://ding-ding-projects.github.io/meadowmark/> — live, HTTP 200.
 - **That rich placed-world content is complete.** Baseline terrain and field beds render;
   factories, roads, animal sheds, museum content, and many placement-driven objects are
   still limited by the adapter gaps below.
-- **That the installer produces a working install.** It has never been installed and
-  launched. Only the development build has been launched.
+- **That the installer performs every update path.** One clean install was exercised;
+  update, rollback, and repair flows remain unverified.
 - **Any performance claim.** No frame budget, draw-call or instance count has been
   measured.
 - **Anything about UI behaviour beyond first paint.** No panel interaction, no
