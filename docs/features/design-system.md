@@ -49,3 +49,19 @@ Manual: toggle Settings → General → Theme between System, Light and Dark wit
 the OS set to both light and dark, and confirm every surface (HUD, panels,
 dialogs, menus, toasts) renders with real, legible colours in all four
 combinations, never a transparent or undefined value.
+
+Evidence status: this is a prescribed manual procedure. The sole packaged
+capture from `c328d7d` shows one dark surface state; it is not light/dark,
+contrast, density, high-scale, or full-component proof.
+
+## Security considerations
+
+Appearance input must remain presentation-only. It must not alter package
+identity, data locations, update configuration, accessible names, or factual
+status values, and imported theme data requires bounded validation.
+
+## Suggested articles
+
+- [Settings](./settings.md)
+- [Logo customization pipeline](./platform-services/logo-customization.md)
+- [Overlays and context menus](./overlays-and-menus.md)

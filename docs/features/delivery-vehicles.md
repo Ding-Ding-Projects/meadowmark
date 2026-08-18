@@ -29,3 +29,18 @@ None; entirely driven by each vehicle's own view.
 Manual: mock one view per state value for each of the three vehicle kinds
 and confirm the status text, cargo rendering, and action button (Dispatch,
 Collect, or none) match the state.
+
+Evidence status: this is a prescribed manual procedure; no packaged train,
+helicopter, or ship interaction/capture is recorded at `6e7760b`.
+
+## Security considerations
+
+Dispatch and collect controls submit typed actions only. The simulation must
+revalidate capacity, cargo, time, cost, and readiness so a stale view cannot
+grant goods or consume resources incorrectly.
+
+## Suggested articles
+
+- [Orders](./orders.md)
+- [Barn](./barn.md)
+- [UI, engine, and shared integration](./integration-contract.md)

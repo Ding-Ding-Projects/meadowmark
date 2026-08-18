@@ -29,3 +29,19 @@ None.
 Manual: mock a game state with a populated pending offline summary, confirm
 the dialog opens with correct figures, and confirm closing it dispatches the
 acknowledge action exactly once.
+
+Evidence status: this is a prescribed manual procedure. Offline simulation
+chunk invariance has a committed executable check, but the packaged summary
+dialog and acknowledgement path have no recorded interaction/capture.
+
+## Security considerations
+
+The summary is a projection of locally computed state. It must not trust elapsed
+time, reward totals, or acknowledgement values supplied by renderer markup, and
+it must not expose private save paths.
+
+## Suggested articles
+
+- [Fields](./fields.md)
+- [HUD](./hud.md)
+- [UI, engine, and shared integration](./integration-contract.md)

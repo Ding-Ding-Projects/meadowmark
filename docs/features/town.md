@@ -32,3 +32,18 @@ the right building id and that the placement callback dispatches the place
 action; mock a selected building, confirm Demolish opens the super-confirm
 gate and that the demolish action only fires after both keys are held and
 the slider reaches full.
+
+Evidence status: this is a prescribed manual procedure; placement, selection,
+rotation, and demolition have no packaged interaction/capture at `6e7760b`.
+
+## Security considerations
+
+Placement and demolition must be validated against current simulation state.
+The confirmation UI cannot substitute for target validation, and cancelling or
+closing it must never dispatch the destructive action.
+
+## Suggested articles
+
+- [Destructive-action confirmation](./super-confirm.md)
+- [UI, engine, and shared integration](./integration-contract.md)
+- [Material Design 3 token system](./design-system.md)

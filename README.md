@@ -12,6 +12,8 @@ an "unknown publisher" / SmartScreen warning when you run the installer.
 That warning is expected, not a bug.
 
 - Repository: [Ding-Ding-Projects/meadowmark](https://github.com/Ding-Ding-Projects/meadowmark)
+- Website: [Meadowmark documentation and landing site](https://ding-ding-projects.github.io/meadowmark/)
+- Documentation: [`docs/README.md`](docs/README.md)
 - Platform: Windows only
 - License: MIT
 
@@ -26,6 +28,7 @@ and run it. Windows will warn that the publisher is unknown — click
 
 - [Building from source](#building-from-source)
 - [Runtime evidence](#runtime-evidence)
+- [Published baseline](#published-baseline)
 - [Project layout](#project-layout)
 - [Line count](#line-count)
 - [Contributing](#contributing)
@@ -48,8 +51,10 @@ installed, with no manual steps required.
   you want to run the rest yourself.
 
 All three accept `/s`, `--silent`, or a `SILENT=1` environment variable
-for fully non-interactive operation (this is what CI uses), and exit
-non-zero on the first real failure.
+for fully non-interactive operation and exit non-zero on the first real
+failure. The current release workflow calls only
+`download-dependencies.bat /s`; it then invokes the npm build and packaging
+commands directly, so CI does not yet prove the other two root scripts.
 
 </details>
 
@@ -84,18 +89,37 @@ is permanently disabled for this project — see `electron-builder.yml`.
 
 ## Runtime evidence
 
-The packaged Squirrel.Windows build was installed and launched on the hidden
-desktop from commit `c328d7d`. This capture is the real app surface: terrain
-tiles, field beds, the readable Wheat selector, and the corrected navigation
-rail are visible in the built artifact.
+The packaged Squirrel.Windows build was installed and launched on a hidden
+desktop from commit
+[`c328d7d`](https://github.com/Ding-Ding-Projects/meadowmark/commit/c328d7d3552aa46f22766de9d5bf763cdfe15bc1).
+This capture is the repository's only current packaged visual evidence:
+terrain tiles, field beds, the readable Wheat selector, the corrected
+navigation rail, and the HUD are visible in that artifact. It does **not**
+prove every panel, interaction, accessibility path, responsive layout,
+service module, update path, or a later release candidate.
 
 ![Packaged Meadowmark showing terrain tiles and field beds](docs/assets/captures/meadowmark-packaged-terrain-fields.png)
+
+## Published baseline
+
+The latest release verified while this documentation was updated is
+[`v0.1.0-21`](https://github.com/Ding-Ding-Projects/meadowmark/releases/tag/v0.1.0-21),
+targeting commit
+[`6e7760b`](https://github.com/Ding-Ding-Projects/meadowmark/commit/6e7760b993ad07356efe4b641220578b267fe807).
+It is non-draft and contains the unsigned setup executable, the full Squirrel
+package, and `RELEASES`. Release publication succeeded in
+[GitHub Actions run 32100386848](https://github.com/Ding-Ding-Projects/meadowmark/actions/runs/32100386848).
+
+That workflow ran no tests or lint by design. Its success proves build,
+packaging, and publication for that commit; it is not a gameplay, UI,
+accessibility, security, or updater-runtime verdict. See
+[`HANDOFF.md`](HANDOFF.md) for the current evidence boundary.
 
 ## Project layout
 
 ```
 packages/
-  app/       Electron main process + preload bridge (this lane owns it)
+  app/       Electron main process, preload bridge, and local service modules
   shared/    Shared domain types, balance data validation
   engine/    three.js rendering / simulation engine
   ui/        Material Design 3 DOM UI (renderer)
@@ -131,8 +155,10 @@ attribution breakdown by surviving `git blame` line).
 
 ## Contributing
 
-See `AGENTS.md` for engineering conventions used throughout this
-repository.
+See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the contributor workflow and
+`AGENTS.md` for engineering conventions used throughout this repository.
+The project also maintains a [`SECURITY.md`](SECURITY.md) policy and
+[`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md).
 
 <details>
 <summary>Completeness inventory</summary>

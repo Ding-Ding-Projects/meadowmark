@@ -1,163 +1,266 @@
-# Meadowmark — handoff
+# Meadowmark handoff
 
-Written 2026-08-18 against `main` at `e1f8ccf`. Every figure here was measured, not
-remembered. Where something is unverified, it says so.
+Prepared on 2026-08-18 after fetching `origin/main` at
+`dd2a44fa5264656a62802af04cac3bd192668b9d` and merging it normally into the
+documentation branch. The resulting handoff commit preserves documentation tip
+`287e62bb4a640d88756909cedb741d3e91d92871` and `dd2a44f` as its two parents. No
+commit was rebased or dropped.
 
-## Read this first: the app now draws a basic world, but it is still not a finished game
+This is a handoff-only closeout. It did not build an installer, publish or verify
+a new release, capture the application, integrate the preserved implementation
+branches into `main`, or delete repository state.
 
-**The built application, launched and captured, now renders terrain tiles and visible
-field-bed plots in the WebGL world after the welcome modal is dismissed.** That fixes
-the earlier "flat green plane" first-paint failure. It still should not be described
-as a playable game: the world is sparse, many systems are unwired, and most gameplay
-surfaces beyond first paint remain unverified.
+## Read this first
 
-What a capture of the running build actually shows:
+The latest published baseline is `v0.1.0-22`, targeting `dd2a44f`. Six substantial
+lanes are preserved in separate branches, but none of their tips is an ancestor
+of that published commit. Source checks passed in several individual lanes; the
+lanes have not been combined, built, or exercised as one application.
 
-- **The 3D world renders baseline terrain and field beds.** The engine now consumes
-  `state.tiles` and instantiates terrain meshes, and the renderer adapter adds
-  field-bed meshes for every unlocked plot.
-- **The navigation rail is legible enough to read and click.** Its selected and idle
-  states now use Material surface/container roles with visible selected contrast.
-- **The crop picker no longer leaks an internal missing-key marker.** A missing `Wheat`
-  key falls back to the readable label `Wheat`.
-- **Field plots render readable empty-state labels** in the DOM and visible beds in the
-  3D world.
-- **The HUD is offset below the custom title bar** rather than clipped by it.
-
-Put together, a person opening this build sees a real but sparse terrain grid with
-empty field plots, readable chrome, HUD stats, and the fields panel. **Do not describe
-this as a playable game yet.** It boots, holds real state, renders DOM, and renders
-baseline WebGL world geometry — that is what is established.
-
-## What actually exists
-
-A Windows Electron desktop application in TypeScript, structured as five workspace
-packages, plus a published documentation and landing site.
-
-| Package | State | Notes |
-|---|---|---|
-| `packages/shared` | Compiles, runs | The whole game simulation, headless and deterministic. The most trustworthy thing in the repo. |
-| `packages/engine` | Compiles, renders baseline world | three.js scene, generated meshes, terrain tiles, field-bed meshes, orbit camera. |
-| `packages/ui` | Compiles, renders | Material 3 DOM layer, HUD and 14 panels. Visibly renders in the built app. |
-| `packages/app` | Compiles, runs | Electron main, preload bridge, ten local subsystems. |
-| `packages/renderer` | Compiles, boots | The entry point and the three adapters joining the above. |
-
-Site: <https://ding-ding-projects.github.io/meadowmark/> — live, HTTP 200.
-
-**45,478 lines across 288 files** (project total, `node tools/line-count/count.mjs`).
-
-## What is verified, and by what
-
-| Claim | How it was checked |
-|---|---|
-| All five packages compile | `npx tsc --noEmit` per package, 0 errors each |
-| Offline progress is chunk-invariant | `node packages/shared/dist/determinism-check.js` — one 30-day tick equals 43,200 one-minute ticks, byte-identical. The comparator was watched failing first. |
-| Balance data is coherent | Validator: no orphan unlocks, no chain cycles, no unreachable goods |
-| The app boots and the bridge works | Launched on an off-screen desktop, window captured, real state on screen |
-| The baseline 3D world renders | Built app launched on an off-screen desktop; welcome modal dismissed; captured WebGL surface shows terrain tiles and field-bed plots |
-| Preload is sandbox-clean | `node tools/guards/no-fs-in-preload.mjs` — emitted bundle requires only `electron` |
-| No bare `fs.rename` | `node tools/guards/no-bare-rename.mjs` |
-| Installer packages and is unsigned | `build-installer.bat /s`; `Meadowmark-Setup-0.1.0.exe` is 135,971,840 bytes, SHA-256 `cfe4fa447b668140019e26c87de5d249f82bad634d73fdc8cd36254abc3e5ccd`, and `Get-AuthenticodeSignature` reports `NotSigned` |
-| The Squirrel artifact installs and launches | Installed from that setup with `--silent`; launched from `%LOCALAPPDATA%\meadowmark\app-0.1.0\Meadowmark.exe` on the hidden desktop; capture is `docs/assets/captures/meadowmark-packaged-terrain-fields.png` |
-| Release assets exist | Latest `v0.1.0-15`; assets attached with nonzero sizes |
-
-## What is NOT verified
-
-- **That the game is playable.** Nothing has been played. No action has been clicked.
-- **That rich placed-world content is complete.** Baseline terrain and field beds render;
-  factories, roads, animal sheds, museum content, and many placement-driven objects are
-  still limited by the adapter gaps below.
-- **That the installer performs every update path.** One clean install was exercised;
-  update, rollback, and repair flows remain unverified.
-- **Any performance claim.** No frame budget, draw-call or instance count has been
-  measured.
-- **Anything about UI behaviour beyond first paint.** No panel interaction, no
-  keyboard path, no screen reader, no narrow layout has been exercised.
-
-## There is no test suite
-
-This is deliberate and it is a standing project decision, not an oversight: **the
-release workflow runs no tests and no lint.** There is also, separately, no test
-suite in the repository to run. The only executable checks are:
-
-| Command | What it proves |
-|---|---|
-| `node packages/shared/dist/determinism-check.js` | Offline progress is chunk-invariant |
-| `node tools/guards/no-bare-rename.mjs` | Saves cannot bypass the atomic-write helper |
-| `node tools/guards/no-fs-in-preload.mjs` | The sandboxed preload stays loadable |
-| `node tools/inventory/check.mjs` | No "done" inventory row points at a missing file |
-| `node tools/inventory/negative-regression.mjs` | The inventory check actually goes red |
-| `node tools/line-count/count.mjs` | The line table the release publishes |
-
-A consequence worth stating: a release can ship from a commit whose behaviour nobody
-checked, and several have.
+The only real built-application capture remains
+[`meadowmark-packaged-terrain-fields.png`](docs/assets/captures/meadowmark-packaged-terrain-fields.png)
+from commit [`c328d7d`](https://github.com/Ding-Ding-Projects/meadowmark/commit/c328d7d3552aa46f22766de9d5bf763cdfe15bc1).
+It shows launch and first paint after the welcome modal was dismissed: baseline
+terrain, field beds, the navigation rail, HUD, and the Fields empty state. Its
+SHA-256 is
+`a22908afd6b002b973535c8a18c1d915f04b6268ed4a6b2284734a87283b7d2a`.
+It does not prove `dd2a44f`, any preserved lane tip, application interaction,
+settings persistence, accessibility, narrow layouts, update behavior, or a
+complete capture matrix.
 
 ## Published baseline
 
-- Latest release **`v0.1.0-15`**, non-draft, assets attached with nonzero sizes.
-- Earlier verified in detail: `v0.1.0-9`, targeting `5520efe`, carrying
-  `Meadowmark-Setup-0.1.0.exe` (135,820,288 bytes), `meadowmark-0.1.0-full.nupkg`
-  (135,106,135 bytes) and `RELEASES` (81 bytes).
-- Releases before this fix installed an application whose first-paint world rendered as
-  a flat green plane. Rebuild and release from this fix before claiming a published
-  installer contains the terrain/field-bed repair.
-- Installers are permanently unsigned. Windows shows an unknown-publisher warning.
-  Code signing is prohibited for this project and must never be added.
+- Release: [`v0.1.0-22`](https://github.com/Ding-Ding-Projects/meadowmark/releases/tag/v0.1.0-22),
+  non-draft and non-prerelease, published 2026-08-18, targeting
+  `dd2a44fa5264656a62802af04cac3bd192668b9d`.
+- Workflow: [Release run 32159906150](https://github.com/Ding-Ding-Projects/meadowmark/actions/runs/32159906150),
+  completed successfully for that exact commit. It built, packaged, and
+  published; it ran no tests or lint.
+- `Meadowmark-Setup-0.1.0.exe`: 135,972,352 bytes, published SHA-256
+  `2e2fca4551649241917e06ba5007574f3c9f276ada0a21bb6a8e1d43019fc334`.
+- `meadowmark-0.1.0-full.nupkg`: 135,257,825 bytes, published SHA-256
+  `c1c22f9963c330ce64692b324db6d675f44c68b76ee39e3feaa22c8b9e88869d`.
+- `RELEASES`: 81 bytes, published SHA-256
+  `bec63b8ceaeaa1dab75caaf47457d2348ae22a31188bdf427ee0d2006b1bef17`.
+- The published line-count report records 291 project files, 46,144 total
+  project lines, and 42,285 non-blank project lines at `HEAD`, produced by
+  `node tools/line-count/count.mjs --rev HEAD`.
+- Its grand total is 374 files, 56,633 total lines, and 51,867 non-blank
+  lines, including the separately reported excluded rows.
+- These are the release's only three assets. It does not attach a dim-sum
+  photo.
+- Installers are deliberately unsigned. Windows may show an unknown-publisher
+  or SmartScreen warning. Code signing remains prohibited for this project.
 
-## Completeness inventory
+The successful release workflow proves that those three assets were produced
+and published from `dd2a44f`. It is not interaction, visual, accessibility,
+playability, update, rollback, or end-to-end service evidence.
 
-`docs/inventory/inventory.json` holds 28 hand-written rows for canonical product
-surfaces. Almost every row still reads `missing`, which is accurate. The ten
-subsystems under `packages/app/src/services/**` implement much of the machinery behind
-several of those rows, but **none is wired to IPC, to the preload bridge, or to any UI
-surface** — so no row was promoted to `done`. They are libraries with no callers.
+## Preserved implementation lanes
 
-## Known defects and gaps
+Each commit exists locally and on the listed pushed branch. `git merge-base
+--is-ancestor <tip> dd2a44f` returned false for every tip below, so none is part
+of the published baseline.
 
-Highest first.
+| Lane | Local branch / pushed branch | Preserved tip | State |
+| --- | --- | --- | --- |
+| Documentation truth | `agent/yumtong-docs-truth` / `origin/agent/release-docs-truth` | [`287e62b`](https://github.com/Ding-Ding-Projects/meadowmark/commit/287e62bb4a640d88756909cedb741d3e91d92871) | Public documentation, community files, categorized feature articles, and release-history corrections; merged with `dd2a44f` only in this local branch. |
+| Browser site | `agent/yumtong-site-universal` / `origin/agent/site-capabilities` | [`d25112a`](https://github.com/Ding-Ding-Projects/meadowmark/commit/d25112a0700691b65c4db11f6684acd0c0597f5e) | Browser-local capability surface and contract check; still records `v0.1.0-21` and must be reconciled with `v0.1.0-22`. |
+| Desktop UI | `agent/yumtong-ui-universal` / `origin/agent/desktop-control-centre` | [`5e36e62`](https://github.com/Ding-Ding-Projects/meadowmark/commit/5e36e6223e8ed92f421fc4139b9075af5b3be8dc) | Universal control centre and UI-side bridge consumers; source-checked only. |
+| Completeness inventory | `agent/yumtong-inventory-guards` / `origin/agent/inventory-contract` | [`007a65c`](https://github.com/Ding-Ding-Projects/meadowmark/commit/007a65c669b06e7912c69efed437e290bccd9556) | Per-surface canonical inventory, schema, fail-closed checker, negative matrix, and line-counter self-test. |
+| Release contract | `agent/yumtong-release-contract` / `origin/agent/release-hardening` | [`f74f8ca`](https://github.com/Ding-Ding-Projects/meadowmark/commit/f74f8caa1c5d43352e56b9f7551836dc6a804640) | Unsigned Windows packaging contract, deterministic icon family, and fail-closed publication workflow; its stricter release gate remains false. |
+| Application runtime | `agent/yumtong-app-runtime` / `origin/agent/runtime-seam` | [`809ee93`](https://github.com/Ding-Ding-Projects/meadowmark/commit/809ee9314c192f31bb55f9d306c88a7acf5c8d93) | Main-process runtime services, bounded IPC/preload contract, updater metadata, and renderer response validation; type-checked only. |
 
-1. Ten service subsystems are **unwired**.
-2. **Adapter gaps, all marked `GAP:` in `packages/renderer/src/adapters/`:** the
-   simulation carries no world position for factories, animal sheds or plots, so the
-   renderer uses hard-coded layouts; no terrain or weather system exists; no museum
-   system or zoo species catalog exists anywhere; `TrainState` has three wagons but the
-   UI models one vehicle per kind, so only wagon 0 is surfaced; `GameAction` has no
-   factory-collect, animal-collect, plot-unlock or building-select member; the
-   simulation has no way to cancel a queued factory job or demolish a placed building,
-   so both are no-ops; `placeBuilding()` ignores the requested rotation.
-3. **Placement ghost cannot follow the cursor** — the engine exposes no camera or
-   raycaster accessor to compute a hovered ground tile.
-4. Documented UI follow-ups: museum donate control, settings search index is
-   hand-maintained rather than derived, toast corner has no persisted setting.
-5. Site: long-form docs prose does not vary with the funny level; horizontal tab
-    docking uses native scroll rather than an overflow popover.
+The primary checkout was still at `6e7760b` when the linked checkout inventory was
+read. The next owner should update it normally from `origin/main` before using it
+as the integration checkout.
 
-## Things that bit us, so they do not bite again
+## Exact source-check record
 
-- **A green build proves a file was produced, never that anything runs it.** The
-  installer packaged cleanly for several releases while the renderer entry point did
-  not exist at all.
-- **A test with an injected host proves the screen and nothing about the wiring.** The
-  renderer type-checked and bundled perfectly while `window.meadowmark` was undefined,
-  because one value import dragged `node:fs` into a sandboxed preload. Grep the
-  *emitted* bundle, not the source.
-- **An escaping layer ate one backslash from every pair** in three files. Four failures
-  were loud; five compiled perfectly and did nothing — `.replace(/\n/g, '\n')` replaces
-  a newline with a newline. `scan_escapes` style checks catch all three shapes.
-- **A comment asserting a guarantee is worth nothing until something checks it.** The
-  packaging config promised three signing fields were pinned; one was not a real option
-  and another was in the wrong place, so the schema validator rejected the file and
-  packaging never ran.
-- **Parallel agents over one checkout collide.** Files left in the primary checkout by
-  one lane were committed by accident, and another lane observed its direct edits
-  silently reverted. Each lane must work only in its own worktree.
+These verdicts belong to their named commits and check source or metadata. They
+do not prove the combined application or a packaged interaction.
 
-## Next owner: start here
+| Commit | Command | Verdict and boundary |
+| --- | --- | --- |
+| `287e62b` | documentation structure scan | Exit 0: 26 feature articles each contained `Behaviour`, `Configuration`, `Failure modes`, `Security considerations`, `Verification`, and `Suggested articles`. This was a task-local PowerShell scan, not a committed product test. |
+| `287e62b` | documentation local-link scan | Exit 0: 38 Markdown files had no missing local target. Task-local PowerShell scan. |
+| `287e62b` | public-vocabulary scan | Exit 0: no private conversation term was found in the changed public documentation. Task-local PowerShell scan. |
+| `287e62b` | `git diff --check` | Exit 0. |
+| `d25112a` | `node site/tools/check-contract.mjs` | Exit 0: 24 exact surfaces and 14 runtime contracts. The check still names historical release `v0.1.0-21`, so it must be updated and rerun after integration. |
+| `d25112a` | `Get-ChildItem site/js/*.js \| ForEach-Object { node --check $_.FullName }` | Exit 0 for all 16 JavaScript files. |
+| `5e36e62` | `npm run typecheck --workspace @meadowmark/ui` | Exit 0 in the exact UI checkout. |
+| `5e36e62` | `npm run build --workspace @meadowmark/shared` | Exit 0 in the exact UI checkout. |
+| `5e36e62` | `npm run build --workspace @meadowmark/engine` | Exit 0 in the exact UI checkout. |
+| `5e36e62` | `npm run typecheck --workspace @meadowmark/renderer` | Exit 0 in the exact UI checkout. |
+| `5e36e62` | `npx --no-install tsx packages/ui/src/universal/contract-test.ts` | Exit 0 only loaded the module. `runUniversalContractTests()` is exported but has no caller, so this is not a contract verdict; wire and invoke the runner before treating it as a check. |
+| `007a65c` | `node tools/line-count/self-test.mjs` | Exit 0. Categorization, newline arithmetic, mismatch failure, and invalid-revision failure passed. |
+| `007a65c` | `node tools/inventory/check.mjs` | Exit 1 by design: release blocked. It reported one isolated endpoint-drift violation because `site/capabilities.html` is absent until the site lane integrates, plus 1,145 `missing`, 25 `partial`, and 0 `done` rows. |
+| `007a65c` | `node tools/inventory/negative-regression.mjs` | Exit 0 in the independent handoff review: all 10,647 deliberate removals or mutations turned red, and exact restoration turned green. |
+| `f74f8ca` | `node tools/release/verify-contract.mjs` | Exit 0. Publication remains fail-closed until capture and built-artifact evidence is recorded. |
+| `f74f8ca` | `node tools/release/verify-icon.mjs` | Exit 0. The committed ICO contains 16, 20, 24, 32, 40, 48, 64, 128, and 256 pixel frames. |
+| `809ee93` | `npm run typecheck --workspace @meadowmark/app` | Exit 0 in the exact runtime checkout. No package build followed the handoff pivot. |
+| `809ee93` | `git diff --check` | Exit 0. |
+| all six lane diffs | public-vocabulary scan | Exit 0 across the documentation, site, UI, inventory, release, and runtime changed files. |
+| `dd2a44f` | Release workflow run `32159906150` | Success for build, unsigned Squirrel packaging, and publication only. It ran no tests, lint, UI interaction, or captures. |
 
-1. Rebuild and ship a release from the terrain/field-bed fix before claiming the
-   published installer contains it.
-2. Drive one actual player action from the built app (for example, plant and harvest a
-   crop) and capture the world/panel state after the interaction.
-3. Then wire one service subsystem end to end — IPC, preload, UI — and promote exactly
-   one inventory row to `done`, so the pattern exists for the other nine.
-4. Only then consider whether anything here is worth calling a playable release.
+No full integrated test suite was run because the six lane tips are still
+separate. No package or installer was built after the handoff pivot. The source
+checks above must not be summarized as a passing application, runtime, or release
+verification result.
+
+## Completeness inventory and release gate
+
+The inventory at `007a65c` defines 45 canonical contracts across 26 registered
+surfaces, producing 1,170 contract/surface rows:
+
+| Status | Rows |
+| --- | ---: |
+| `missing` | 1,145 |
+| `partial` | 25 |
+| `done` | 0 |
+
+The inventory checker is intentionally red. Its one structural violation is the
+site endpoint that will exist only after `d25112a` integrates; the 1,170 status
+rows remain the substantive release boundary even after that drift is resolved.
+
+The published `dd2a44f` baseline still carries the older one-field gate
+`{"rendersVerified": true}`. The replacement gate at `f74f8ca` has
+`rendersVerified: false` and null `sourceCommit`, `manifestPath`, and
+`manifestSha256` fields. Therefore the hardened release contract is not
+authorized to publish a candidate after it integrates. The stricter false gate
+is correct: no final-candidate capture manifest or built-artifact interaction
+proof exists. Do not describe the stricter gate as current `main` state before
+`f74f8ca` is integrated.
+
+## Source checks versus built-artifact interaction
+
+Source checks answer whether TypeScript compiles, source contracts are internally
+consistent, inventory omissions are detected, links resolve, and release metadata
+is fail-closed. They do not answer whether a control can be operated in the
+packaged application.
+
+Built-artifact interaction means launching the packaged executable and exercising
+the exact path through the real main process, preload bridge, renderer, UI, and
+persistent stores. No preserved lane has that proof. The repository has only the
+narrow `c328d7d` packaged first-paint capture described above; it does not show a
+completed player action and is therefore visual launch evidence, not interaction
+evidence.
+
+## Known unimplemented and unproved seams
+
+### Integration and evidence
+
+- The site, desktop UI, inventory, release, and runtime lane tips have not been
+  integrated with each other or with `origin/main`.
+- No combined typecheck, build, contract run, installer build, install, launch,
+  or interaction pass exists for the integrated candidate.
+- No final-candidate capture manifest exists. Required destination, settings,
+  editor, dialog, empty/error, narrow, light, dark, and contrast states remain
+  uncaptured.
+- Playability is unproved. No plant/harvest, production, delivery, building,
+  animal, mine, museum, achievement, or village action has been exercised from
+  a packaged application.
+
+### Desktop service and UI seams
+
+- The runtime lane exposes broad settings, schedules, logo, converter, exports,
+  Ollama, narrator, authenticator, locks, history, updater, and status APIs in
+  source. The UI lane is separate, so their combined IPC/preload/renderer/UI
+  behavior is not integrated or exercised.
+- Shared School-mode watching and unlock, scheduled-value persistence mapping,
+  logo host round-trip, narrator host persistence, guided authenticator and lock
+  registration, Support Tickets, bundled documentation and changelog browsing,
+  concrete export sources, and Ollama harness/chat flows remain incomplete.
+- Advanced tab management and Word-depth appearance editing remain incomplete.
+- Validated HTTPS and Home Assistant scheduled-setting sources explicitly remain
+  unavailable in source; local scheduled values are the only implemented route.
+
+### Browser-site boundaries
+
+- Browser QR generation, operating-system credential-vault storage, native file
+  and process authority, complete PDF/media/archive conversion, complete Ollama
+  management, durable unlimited queues, and server delivery are not implemented.
+- The verified dim-sum photo/startup surprise is still absent.
+- The site contract still identifies `v0.1.0-21`; release data and assertions must
+  move to `v0.1.0-22` during integration.
+- The live site root responds, but `/capabilities.html` returns 404 and the live
+  `data/release.json` still reports `published: false`, with null `tag` and
+  `assetUrl`. The site lane is neither integrated nor deployed.
+
+### Gameplay and renderer seams
+
+- Renderer placement has no ground-tile raycast, and camera focus/highlight
+  operations have no matching engine capability.
+- Several world assets still use explicit fallbacks: farmers market, zoo gate,
+  flower bed, gazebo, topiary, and some zoo enclosures.
+- Plots and factories do not carry authoritative world positions; placement and
+  some rendered layouts remain hard-coded. Terrain/weather simulation is absent.
+- The UI does not fully represent multi-wagon train or multi-order helicopter
+  state. Order cash/expiry, building selection, zoo species and collection,
+  museum systems, per-task daily claims, richer offline earnings, and villager
+  metadata remain incomplete or absent.
+- Factory-job cancellation, manual vehicle departure, building demolition and
+  rotation, animal feed/collection, zoo collection, and museum donation lack
+  complete simulation/action support. Some reward tables and daily/regatta
+  content are also absent.
+
+### Release and installation seams
+
+- `rendersVerified` remains false, so the hardened release lane is correctly
+  blocked.
+- The icon and release-contract source checks passed, but no installer was built
+  from `f74f8ca` and no packaged executable or installer icon was inspected.
+- The hardened workflow requires a new committed semantic package version, but
+  both `origin/main` and `f74f8ca` still declare `0.1.0`, a version already used
+  by `v0.1.0-22` and earlier releases. After `f74f8ca` integrates, publication
+  must remain blocked until an authorized release task commits a unique version.
+- Update availability, download, restart, rollback, repair, invalid metadata,
+  corrupt package, cancellation, offline behavior, and unsaved-work protection
+  remain unexercised.
+- `v0.1.0-22` does not contain any of the six preserved lane tips. No release
+  contains their combined work, and this handoff did not create or verify
+  another release.
+
+## Open issues
+
+- [`Ding-Ding-Projects/meadowmark#2`](https://github.com/Ding-Ding-Projects/meadowmark/issues/2),
+  **Release-grade completion and repository shutdown**, is open. Its sole comment
+  records the work start and the `c328d7d` baseline; it does not contain a final
+  integrated handoff comment. That public comment also exposes an absolute local
+  checkout path. This handoff lane was explicitly read-only for GitHub, so it did
+  not edit the comment; the next authorized GitHub-record pass should remove the
+  path and verify the edited comment.
+No issue was edited or closed during this handoff lane. A separate issue in a
+private instruction repository was also reviewed and is reported privately; its
+repository name and link are intentionally omitted here.
+
+## Next owner and action
+
+The next owner should use a current `main` checkout and integrate the six preserved
+tips semantically, resolving their shared changes rather than taking one side of a
+conflict. Recommended order:
+
+1. Integrate runtime `809ee93`, then UI `5e36e62`, and reconcile the shared bridge
+   types and host methods.
+2. Integrate site `d25112a`; update its verified historical release data from
+   `v0.1.0-21` to `v0.1.0-22` without converting source checks into runtime claims.
+3. Integrate documentation `287e62b`, preserving the current release and lane
+   evidence in this handoff.
+4. Integrate inventory `007a65c`; resolve the site endpoint drift, rerun the
+   checker, and keep the release blocked for every incomplete row.
+5. Integrate release contract `f74f8ca`; keep `rendersVerified: false` until a
+   final candidate is built, installed, interacted with, and captured through the
+   approved headless route with a committed manifest.
+6. Run every source check above against the combined commit, then build through
+   `build.bat /s` and `build-installer.bat /s`. Treat those as build/package
+   evidence only.
+7. Exercise real packaged player and service interactions, capture the required
+   surface matrix, populate only evidence that actually exists, and rerun the
+   fail-closed inventory and release checks.
+8. Post the integrated handoff to Meadowmark issue #2. Do not close it until the
+   integrated commit, packaged interaction, release evidence, and remaining
+   completion criteria are genuinely verified.
+
+Until those steps complete, the honest state is: published baseline available,
+six implementation lanes preserved, the hardened lane's release gate false,
+zero complete inventory rows, and no release-grade integrated candidate.

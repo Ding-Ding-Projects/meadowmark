@@ -20,6 +20,12 @@ is generated entirely on-device, nobody else is playing, and nothing leaves
 the machine. This is a project-wide requirement, not a village-specific
 choice.
 
+## Configuration
+
+Achievement tiers, daily tasks, streak state, and village neighbours are
+provided by the host view contract. The panel has no network configuration and
+must preserve the literal local-only boundary.
+
 ## Failure modes
 
 - Achievement tiers render as a row of equal-width segments regardless of how
@@ -33,3 +39,18 @@ Manual: mock achievements with a claimable and a not-yet-complete tier;
 dailies with claimed, unclaimed, and incomplete tasks and a streak; village
 with zero and several neighbours, confirming the local-only notice always
 renders regardless of neighbour count.
+
+Evidence status: this is a prescribed manual procedure; no packaged interaction
+or capture is recorded for these panels at `6e7760b`.
+
+## Security considerations
+
+The village must never imply real neighbours or transmit local state. Progress
+and reward actions must be validated by the host reducer rather than trusted
+from enabled-button state alone.
+
+## Suggested articles
+
+- [HUD](./hud.md)
+- [Notifications](./notifications.md)
+- [UI, engine, and shared integration](./integration-contract.md)

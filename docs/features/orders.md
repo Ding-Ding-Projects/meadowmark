@@ -28,3 +28,18 @@ Manual: mock slots in empty, fillable, unfillable, and expiring states, plus
 a slot with a null reroll cost, and confirm correct rendering (including the
 disabled "Reroll unavailable" state) and that the reroll and fill dispatches
 carry the right slot index.
+
+Evidence status: this is a prescribed manual procedure; no packaged order-board
+interaction or capture is recorded at `6e7760b`.
+
+## Security considerations
+
+The simulation must revalidate stock, reward, expiry, reroll cost, and slot
+identity. Displayed eligibility is not authority to consume goods or grant
+currency.
+
+## Suggested articles
+
+- [Barn](./barn.md)
+- [Delivery vehicles](./delivery-vehicles.md)
+- [Notifications](./notifications.md)
