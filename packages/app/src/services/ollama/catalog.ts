@@ -78,6 +78,7 @@ async function fetchBoundedText(url: string): Promise<string> {
   try {
     const response = await fetch(parsed, {
       signal: controller.signal,
+      redirect: 'error',
       headers: { accept: 'text/html,application/json' },
     });
     if (!response.ok) {

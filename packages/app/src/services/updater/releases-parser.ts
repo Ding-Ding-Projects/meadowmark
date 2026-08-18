@@ -19,7 +19,8 @@ import { compareVersions } from './semver.js';
  */
 
 const LINE_PATTERN = /^([0-9a-fA-F]{40})\s+(\S+)\s+(\d+)\s*$/;
-const FILENAME_VERSION_PATTERN = /-(\d+(?:\.\d+){1,3})(-delta)?\.nupkg$/i;
+const SAFE_PACKAGE_FILENAME_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._-]{0,239}\.nupkg$/;
+const FILENAME_VERSION_PATTERN = /-(\d+(?:\.\d+){1,3})(-(?:full|delta))?\.nupkg$/i;
 
 export class ReleasesParseError extends Error {}
 
@@ -52,6 +53,11 @@ export function parseReleasesFile(text: string): ReleaseEntry[] {
       // the case this parser exists to reject cleanly rather than crash on.
       throw new ReleasesParseError(`RELEASES line did not match "<sha1> <filename> <size>": "${line}"`);
     }
+    if (!SAFE_PACKAGE_FILENAME_PATTERN.test(filename) || filename.includes('..')) {
+      throw new ReleasesParseError(
+        `package file name "${filename}" must be a safe single .nupkg basename containing only letters, numbers, dots, underscores, and hyphens`,
+      );
+    }
     const versionMatch = FILENAME_VERSION_PATTERN.exec(filename);
     if (!versionMatch || versionMatch[1] === undefined) {
       throw new ReleasesParseError(`package file name "${filename}" does not carry a recognizable version`);
@@ -65,7 +71,7 @@ export function parseReleasesFile(text: string): ReleaseEntry[] {
       filename,
       sizeBytes,
       version: versionMatch[1],
-      isDelta: Boolean(versionMatch[2]),
+      isDelta: versionMatch[2]?.toLowerCase() === '-delta',
     };
   });
 }

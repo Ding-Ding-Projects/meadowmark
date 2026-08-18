@@ -31,6 +31,7 @@ export class DownloadHttpError extends Error {
 }
 export class DownloadTooLargeError extends Error {}
 export class DownloadInsecureUrlError extends Error {}
+export class DownloadUntrustedRedirectError extends Error {}
 
 export interface DownloadOptions {
   readonly maxBytes: number;
@@ -45,8 +46,17 @@ export interface DownloadResult {
 }
 
 const LOOPBACK_HOSTNAMES = new Set(['localhost', '127.0.0.1', '::1']);
+const GITHUB_RELEASE_REDIRECT_HOSTNAMES = new Set([
+  'github.com',
+  'objects.githubusercontent.com',
+  'release-assets.githubusercontent.com',
+  'github-releases.githubusercontent.com',
+]);
 
 function assertSecureUrl(url: URL): void {
+  if (url.username.length > 0 || url.password.length > 0) {
+    throw new DownloadInsecureUrlError('refusing update URL containing embedded credentials');
+  }
   if (url.protocol === 'https:') {
     return;
   }
@@ -58,23 +68,54 @@ function assertSecureUrl(url: URL): void {
   );
 }
 
+function assertTrustedRedirect(initialHostname: string, redirectUrl: URL): void {
+  const nextHostname = redirectUrl.hostname.toLowerCase();
+  if (nextHostname === initialHostname) {
+    return;
+  }
+  if (initialHostname === 'github.com' && GITHUB_RELEASE_REDIRECT_HOSTNAMES.has(nextHostname)) {
+    return;
+  }
+  throw new DownloadUntrustedRedirectError(
+    `refusing update redirect from "${initialHostname}" to untrusted host "${nextHostname}"`,
+  );
+}
+
+function describeUrl(url: URL): string {
+  return `${url.protocol}//${url.host}${url.pathname}`;
+}
+
+function describeRawUrl(rawUrl: string): string {
+  try {
+    return describeUrl(new URL(rawUrl));
+  } catch {
+    return '[malformed update URL]';
+  }
+}
+
 /** Fetches a URL's body into memory, following redirects, enforcing HTTPS and a byte ceiling. */
 export function fetchBody(rawUrl: string, options: DownloadOptions): Promise<DownloadResult> {
   return new Promise((resolve, reject) => {
     let redirectsRemaining = MAX_REDIRECTS;
     let currentUrl = rawUrl;
+    let initialHostname: string | null = null;
 
     const attempt = (): void => {
       let url: URL;
       try {
         url = new URL(currentUrl);
       } catch (error) {
-        reject(new DownloadInsecureUrlError(`malformed update feed URL "${currentUrl}": ${String(error)}`));
+        reject(new DownloadInsecureUrlError(`malformed update feed URL: ${String(error)}`));
         return;
       }
 
       try {
         assertSecureUrl(url);
+        if (initialHostname === null) {
+          initialHostname = url.hostname.toLowerCase();
+        } else {
+          assertTrustedRedirect(initialHostname, url);
+        }
       } catch (error) {
         reject(error as Error);
         return;
@@ -94,7 +135,7 @@ export function fetchBody(rawUrl: string, options: DownloadOptions): Promise<Dow
           if (statusCode >= 300 && statusCode < 400 && response.headers.location) {
             response.resume();
             if (redirectsRemaining <= 0) {
-              reject(new DownloadHttpError(`too many redirects fetching "${rawUrl}"`, statusCode));
+              reject(new DownloadHttpError(`too many redirects fetching "${describeRawUrl(rawUrl)}"`, statusCode));
               return;
             }
             redirectsRemaining -= 1;
@@ -105,7 +146,7 @@ export function fetchBody(rawUrl: string, options: DownloadOptions): Promise<Dow
 
           if (statusCode < 200 || statusCode >= 300) {
             response.resume();
-            reject(new DownloadHttpError(`update feed returned HTTP ${statusCode} for "${currentUrl}"`, statusCode));
+            reject(new DownloadHttpError(`update feed returned HTTP ${statusCode} for "${describeUrl(url)}"`, statusCode));
             return;
           }
 
@@ -140,21 +181,21 @@ export function fetchBody(rawUrl: string, options: DownloadOptions): Promise<Dow
           });
 
           response.on('end', () => {
-            resolve({ body: Buffer.concat(chunks), finalUrl: currentUrl });
+            resolve({ body: Buffer.concat(chunks), finalUrl: describeUrl(url) });
           });
 
           response.on('error', (error) => {
-            reject(wrapAsOfflineIfNetworkError(error, currentUrl));
+            reject(wrapAsOfflineIfNetworkError(error, describeUrl(url)));
           });
         },
       );
 
       request.on('timeout', () => {
-        request.destroy(new DownloadOfflineError(`request to "${currentUrl}" timed out after ${REQUEST_TIMEOUT_MS}ms`));
+        request.destroy(new DownloadOfflineError(`request to "${describeUrl(url)}" timed out after ${REQUEST_TIMEOUT_MS}ms`));
       });
 
       request.on('error', (error) => {
-        reject(wrapAsOfflineIfNetworkError(error, currentUrl));
+        reject(wrapAsOfflineIfNetworkError(error, describeUrl(url)));
       });
     };
 

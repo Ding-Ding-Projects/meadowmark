@@ -331,6 +331,7 @@ export class AuthService {
     const now = Date.now();
     for (const [id, pending] of this.pendingRegistrations) {
       if (now - pending.createdAtMs > PENDING_REGISTRATION_TTL_MS) {
+        pending.secret.fill(0);
         this.pendingRegistrations.delete(id);
       }
     }
@@ -338,6 +339,7 @@ export class AuthService {
 
   /** Discards an in-progress registration without persisting anything. */
   cancelRegistration(pendingId: string): void {
+    this.pendingRegistrations.get(pendingId)?.secret.fill(0);
     this.pendingRegistrations.delete(pendingId);
   }
 
@@ -401,6 +403,7 @@ export class AuthService {
       throw err;
     }
 
+    pending.secret.fill(0);
     this.pendingRegistrations.delete(pendingId);
     return entry;
   }
@@ -521,6 +524,32 @@ export class AuthService {
       periodSeconds: entry.period,
       clockStatus: this.clockMonitor.status(),
     };
+  }
+
+  /** Verifies a TOTP value without exposing the stored or current code to a caller. */
+  async verifyCode(entryId: string, code: string): Promise<boolean> {
+    this.ensureSelfCheckPassed();
+    const entry = (await this.entriesStore.listEntries()).find((candidate) => candidate.id === entryId);
+    if (!entry) return false;
+    const secret = await retrieveSecret(entryId);
+    if (!secret) return false;
+    try {
+      return verifyTotp(
+        secret,
+        code,
+        Date.now(),
+        { algorithm: entry.algorithm, digits: entry.digits, period: entry.period },
+        PAIRING_WINDOW_STEPS,
+      ) !== null;
+    } finally {
+      secret.fill(0);
+    }
+  }
+
+  /** Clears every uncommitted registration secret during process teardown. */
+  dispose(): void {
+    for (const pending of this.pendingRegistrations.values()) pending.secret.fill(0);
+    this.pendingRegistrations.clear();
   }
 }
 

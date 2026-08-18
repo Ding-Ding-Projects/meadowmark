@@ -116,7 +116,7 @@ export interface UpdaterConfig {
    * `https://example.com/releases/win32/`. The service fetches
    * `RELEASES` relative to this URL and resolves package file names
    * against it. Pass `null`, an empty string, or the shipped
-   * {@link UPDATE_FEED_PLACEHOLDER} to represent "not configured yet" -
+   * Pass null or an empty string to represent "not configured yet" -
    * the service will never attempt a network request in that case and
    * will report {@link UpdaterState} status `no-feed-configured`.
    */
