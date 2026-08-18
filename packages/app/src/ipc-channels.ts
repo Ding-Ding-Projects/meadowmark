@@ -136,6 +136,5 @@ export const IPC_CHANNELS = {
   historyDiffRevisions: 'history:diff-revisions',
   historyRestoreRevision: 'history:restore-revision',
   historyLabelRevision: 'history:label-revision',
-  historyPrune: 'history:prune',
   historyExport: 'history:export',
 } as const;

@@ -1,28 +1,8 @@
 /** Sandboxed preload bridge. Value imports stay limited to Electron and the leaf channel table. */
 import { contextBridge, ipcRenderer } from 'electron';
 import { IPC_CHANNELS } from './ipc-channels';
-<<<<<<< HEAD
-import type { AppInfo, GameState, Settings, SettingsLoadPayload } from './app-types';
-import type {
-  SettingsKey,
-  SettingsLoadResult,
-  SettingsProvenance,
-  SettingsValues,
-} from './services/settings';
-import type {
-  CommitResult,
-  DiffResult,
-  ExportOptions,
-  HistoryAvailability,
-  PruneResult,
-  RecordSummary,
-  RetentionPolicy,
-  Revision,
-} from './services/history';
-=======
 import type { MeadowmarkApi, NarratorEngineHandler, PublicUpdaterState, RuntimeStatusSnapshot } from './runtime-contract';
 import type { GameState, Settings } from './app-types';
->>>>>>> origin/main
 
 export type { MeadowmarkApi } from './runtime-contract';
 
@@ -65,21 +45,7 @@ function registerNarratorEngine(handler: NarratorEngineHandler): () => void {
     ipcRenderer.removeListener(IPC_CHANNELS.narratorEngineRequest, listener);
     removeNarratorEngineListener = null;
   };
-<<<<<<< HEAD
-  appInfo: () => Promise<AppInfo>;
-  history: {
-    init: () => Promise<HistoryAvailability>;
-    listRevisions: (options?: { recordPath?: string; limit?: number }) => Promise<Revision[]>;
-    listRecords: () => Promise<RecordSummary[]>;
-    diffRevisions: (fromHash: string, toHash: string, recordPath?: string) => Promise<DiffResult>;
-    restoreRevision: (hash: string, recordPath: string) => Promise<{ content: string; commit: CommitResult }>;
-    labelRevision: (hash: string, label: string) => Promise<void>;
-    prune: (policy: RetentionPolicy) => Promise<PruneResult>;
-    exportHistory: (options?: ExportOptions) => Promise<string>;
-  };
-=======
   return removeNarratorEngineListener;
->>>>>>> origin/main
 }
 
 const api: MeadowmarkApi = {
@@ -169,20 +135,6 @@ const api: MeadowmarkApi = {
       resolve: (key, shippedText) => invoke(IPC_CHANNELS.vocabularyResolve, key, shippedText),
     },
   },
-<<<<<<< HEAD
-  appInfo: () => ipcRenderer.invoke(IPC_CHANNELS.appInfo),
-  history: {
-    init: () => ipcRenderer.invoke(IPC_CHANNELS.historyInit),
-    listRevisions: (options) => ipcRenderer.invoke(IPC_CHANNELS.historyListRevisions, options ?? {}),
-    listRecords: () => ipcRenderer.invoke(IPC_CHANNELS.historyListRecords),
-    diffRevisions: (fromHash, toHash, recordPath) =>
-      ipcRenderer.invoke(IPC_CHANNELS.historyDiffRevisions, fromHash, toHash, recordPath),
-    restoreRevision: (hash, recordPath) => ipcRenderer.invoke(IPC_CHANNELS.historyRestoreRevision, hash, recordPath),
-    labelRevision: (hash, label) => ipcRenderer.invoke(IPC_CHANNELS.historyLabelRevision, hash, label),
-    prune: (policy) => ipcRenderer.invoke(IPC_CHANNELS.historyPrune, policy),
-    exportHistory: (options) => ipcRenderer.invoke(IPC_CHANNELS.historyExport, options ?? {}),
-  },
-=======
   authenticator: {
     vaultAvailable: () => invoke(IPC_CHANNELS.authVaultAvailable),
     clockStatus: () => invoke(IPC_CHANNELS.authClockStatus),
@@ -235,7 +187,6 @@ const api: MeadowmarkApi = {
     onChanged: (callback: (status: RuntimeStatusSnapshot) => void) => subscribe(IPC_CHANNELS.runtimeStatusChanged, callback),
   },
   appInfo: () => invoke(IPC_CHANNELS.appInfo),
->>>>>>> origin/main
 };
 
 contextBridge.exposeInMainWorld('meadowmark', api);
