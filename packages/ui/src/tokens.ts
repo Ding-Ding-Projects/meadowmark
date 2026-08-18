@@ -51,6 +51,120 @@ export const colorToken = {
   scrim: "--mm-color-scrim",
 } as const;
 
+/**
+ * Game colour families: raw hues for a badge, dock icon, or capsule that
+ * needs a colour outside the semantic primary/secondary/tertiary roles.
+ * Each family has a light/base/dark step (base = fill, dark = the solid-drop
+ * bottom edge that base composes against).
+ */
+export const gameColorToken = {
+  grassLight: "--mm-color-grass-light",
+  grass: "--mm-color-grass",
+  grassDark: "--mm-color-grass-dark",
+  goldLight: "--mm-color-gold-light",
+  gold: "--mm-color-gold",
+  goldDark: "--mm-color-gold-dark",
+  amberLight: "--mm-color-amber-light",
+  amber: "--mm-color-amber",
+  amberDark: "--mm-color-amber-dark",
+  tomatoLight: "--mm-color-tomato-light",
+  tomato: "--mm-color-tomato",
+  tomatoDark: "--mm-color-tomato-dark",
+  skyLight: "--mm-color-sky-light",
+  sky: "--mm-color-sky",
+  skyDark: "--mm-color-sky-dark",
+  woodLight: "--mm-color-wood-light",
+  wood: "--mm-color-wood",
+  woodDark: "--mm-color-wood-dark",
+  cream: "--mm-color-cream",
+  parchment: "--mm-color-parchment",
+} as const;
+
+/** Paired linear-gradient stops for glossy capsule/badge fills. */
+export const gradientToken = {
+  grassStart: "--mm-gradient-grass-start",
+  grassEnd: "--mm-gradient-grass-end",
+  goldStart: "--mm-gradient-gold-start",
+  goldEnd: "--mm-gradient-gold-end",
+  amberStart: "--mm-gradient-amber-start",
+  amberEnd: "--mm-gradient-amber-end",
+  tomatoStart: "--mm-gradient-tomato-start",
+  tomatoEnd: "--mm-gradient-tomato-end",
+  skyStart: "--mm-gradient-sky-start",
+  skyEnd: "--mm-gradient-sky-end",
+  woodStart: "--mm-gradient-wood-start",
+  woodEnd: "--mm-gradient-wood-end",
+  parchmentStart: "--mm-gradient-parchment-start",
+  parchmentEnd: "--mm-gradient-parchment-end",
+} as const;
+
+/** Chunky corner-radius scale for round/squircle game furniture. */
+export const radiusToken = {
+  sm: "--mm-radius-sm",
+  md: "--mm-radius-md",
+  lg: "--mm-radius-lg",
+  xl: "--mm-radius-xl",
+  full: "--mm-radius-full",
+} as const;
+
+/** Border-width scale; every game panel/button/capsule border is at least "thick". */
+export const borderToken = {
+  hairline: "--mm-border-hairline",
+  thin: "--mm-border-thin",
+  thick: "--mm-border-thick",
+  heavy: "--mm-border-heavy",
+} as const;
+
+/**
+ * Solid-drop and ambient shadow recipes. The -sm/-md/-lg drop shadows are
+ * the physical "bottom edge" a chunky button or capsule needs; the ambient
+ * shadows are the soft ground shadow a floating panel casts; -panel/-card
+ * combine both into one ready-to-use box-shadow value.
+ */
+export const shadowToken = {
+  dropColor: "--mm-shadow-drop-color",
+  dropOffsetSm: "--mm-shadow-drop-offset-sm",
+  dropOffsetMd: "--mm-shadow-drop-offset-md",
+  dropOffsetLg: "--mm-shadow-drop-offset-lg",
+  dropSm: "--mm-shadow-drop-sm",
+  dropMd: "--mm-shadow-drop-md",
+  dropLg: "--mm-shadow-drop-lg",
+  ambientSm: "--mm-shadow-ambient-sm",
+  ambientMd: "--mm-shadow-ambient-md",
+  ambientLg: "--mm-shadow-ambient-lg",
+  panel: "--mm-shadow-panel",
+  card: "--mm-shadow-card",
+  insetHighlight: "--mm-shadow-inset-highlight",
+  insetHighlightStrong: "--mm-shadow-inset-highlight-strong",
+} as const;
+
+/** Heavy font weights for anything a player reads at a glance. */
+export const fontWeightToken = {
+  regular: "--mm-font-weight-regular",
+  medium: "--mm-font-weight-medium",
+  bold: "--mm-font-weight-bold",
+  heavy: "--mm-font-weight-heavy",
+} as const;
+
+/** Larger, bolder type roles for panel titles, button labels, and HUD numerals. */
+export const gameTypeScaleToken = {
+  panelTitle: "panel-title",
+  buttonLabel: "button-label",
+  buttonLabelLarge: "button-label-large",
+  hudValue: "hud-value",
+  hudValueLarge: "hud-value-large",
+  dockLabel: "dock-label",
+} as const;
+
+export type GameTypeScaleRole = (typeof gameTypeScaleToken)[keyof typeof gameTypeScaleToken];
+
+/** Minimum control heights for chunky, tactile buttons and dock icons. */
+export const controlHeightToken = {
+  button: "--mm-control-height-button",
+  buttonLarge: "--mm-control-height-button-lg",
+  dockIcon: "--mm-control-height-dock-icon",
+} as const;
+
 export const typeScaleToken = {
   displayLarge: "display-large",
   displayMedium: "display-medium",

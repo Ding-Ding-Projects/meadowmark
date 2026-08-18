@@ -1,12 +1,20 @@
 /*
- * Meadowmark Material Design 3 token set.
+ * Meadowmark design token set.
  *
  * All colour, type, shape, elevation, motion and spacing values used anywhere
  * in packages/ui MUST come from these custom properties. Never hard-code a
  * colour, radius, duration or font size in component CSS.
  *
+ * This is a warm, saturated, tactile GAME palette (grass greens, harvest
+ * gold, tomato red, sky blue, deep wood brown) layered on top of the
+ * original Material-3-derived role names, so every file that already
+ * references --mm-color-primary, --mm-shape-large, --mm-elevation-3 and so
+ * on keeps working unchanged. New "chunky" tokens (radius, thick borders,
+ * solid-drop button/panel shadows, gradient stops, heavy type) sit alongside
+ * the original scale for building the physical, 3D game-furniture look.
+ *
  * The full light palette is defined here on bare :root first. Dark overrides
- * only redefine the roles that change — never define a role only inside a
+ * only redefine the roles that change - never define a role only inside a
  * media query or [data-theme] block, or the theme that was never seen first
  * renders with nothing.
  */
@@ -17,59 +25,62 @@
   /* ---- Seed / brand ---- */
   --mm-seed-hue: 122; /* meadow green */
 
-  /* ---- M3 colour roles: LIGHT (default, defined on bare :root) ---- */
-  --mm-color-primary: #3b6a3f;
+  /* ---- M3 colour roles: LIGHT (default, defined on bare :root) ----
+     Recast as a saturated, warm game palette: grass green primary, harvest
+     gold secondary, sky blue tertiary, tomato red error, amber warning,
+     leaf green success. */
+  --mm-color-primary: #2e7d32;
   --mm-color-on-primary: #ffffff;
-  --mm-color-primary-container: #bcf0bb;
-  --mm-color-on-primary-container: #002106;
+  --mm-color-primary-container: #b9f2b0;
+  --mm-color-on-primary-container: #04210b;
 
-  --mm-color-secondary: #53634f;
+  --mm-color-secondary: #a15c00;
   --mm-color-on-secondary: #ffffff;
-  --mm-color-secondary-container: #d6e8cd;
-  --mm-color-on-secondary-container: #121f0f;
+  --mm-color-secondary-container: #ffda9e;
+  --mm-color-on-secondary-container: #2b1700;
 
-  --mm-color-tertiary: #38656a;
+  --mm-color-tertiary: #0b6fa6;
   --mm-color-on-tertiary: #ffffff;
-  --mm-color-tertiary-container: #bcebf0;
-  --mm-color-on-tertiary-container: #002022;
+  --mm-color-tertiary-container: #c7e8ff;
+  --mm-color-on-tertiary-container: #001e2e;
 
-  --mm-color-error: #ba1a1a;
+  --mm-color-error: #b3261e;
   --mm-color-on-error: #ffffff;
-  --mm-color-error-container: #ffdad6;
-  --mm-color-on-error-container: #410002;
+  --mm-color-error-container: #ffdad4;
+  --mm-color-on-error-container: #410001;
 
-  --mm-color-warning: #7a5900;
+  --mm-color-warning: #8a5300;
   --mm-color-on-warning: #ffffff;
-  --mm-color-warning-container: #ffdea6;
-  --mm-color-on-warning-container: #271900;
+  --mm-color-warning-container: #ffdda6;
+  --mm-color-on-warning-container: #2a1800;
 
-  --mm-color-success: #2e6a3e;
+  --mm-color-success: #1e7a34;
   --mm-color-on-success: #ffffff;
-  --mm-color-success-container: #b3f1bc;
-  --mm-color-on-success-container: #002107;
+  --mm-color-success-container: #b7f4c0;
+  --mm-color-on-success-container: #002106;
 
-  --mm-color-background: #fbfdf6;
-  --mm-color-on-background: #1a1c18;
+  --mm-color-background: #fff8ec;
+  --mm-color-on-background: #2b1d0f;
 
-  --mm-color-surface: #fbfdf6;
-  --mm-color-on-surface: #1a1c18;
-  --mm-color-surface-variant: #dfe4d7;
-  --mm-color-on-surface-variant: #43483e;
+  --mm-color-surface: #fff8ec;
+  --mm-color-on-surface: #2b1d0f;
+  --mm-color-surface-variant: #f0e0c0;
+  --mm-color-on-surface-variant: #5c4a2e;
 
-  --mm-color-surface-dim: #dadcd5;
-  --mm-color-surface-bright: #fbfdf6;
+  --mm-color-surface-dim: #e8d8b8;
+  --mm-color-surface-bright: #fffdf7;
   --mm-color-surface-container-lowest: #ffffff;
-  --mm-color-surface-container-low: #f4f6ef;
-  --mm-color-surface-container: #eef0e9;
-  --mm-color-surface-container-high: #e8ebe3;
-  --mm-color-surface-container-highest: #e2e5dd;
+  --mm-color-surface-container-low: #fff3de;
+  --mm-color-surface-container: #fcebcb;
+  --mm-color-surface-container-high: #f6e0b8;
+  --mm-color-surface-container-highest: #f0d5a0;
 
-  --mm-color-outline: #73796d;
-  --mm-color-outline-variant: #c3c8ba;
+  --mm-color-outline: #8a6d46;
+  --mm-color-outline-variant: #d8c29a;
 
-  --mm-color-inverse-surface: #2f312c;
-  --mm-color-inverse-on-surface: #f1f1ea;
-  --mm-color-inverse-primary: #a1d39f;
+  --mm-color-inverse-surface: #3b2a18;
+  --mm-color-inverse-on-surface: #fff3de;
+  --mm-color-inverse-primary: #8fe39a;
 
   --mm-color-shadow: #000000;
   --mm-color-scrim: #000000;
@@ -81,6 +92,38 @@
   --mm-state-dragged-opacity: 0.16;
   --mm-state-disabled-content-opacity: 0.38;
   --mm-state-disabled-container-opacity: 0.12;
+
+  /* ---- Game palette: named colour families ----
+     Raw hues for anyone building a badge, dock icon or capsule that needs a
+     colour outside the semantic primary/secondary/tertiary roles above.
+     Each family has a light, base and dark step so a chunky button can pick
+     its fill (base) and its solid-drop bottom edge (dark) from one family. */
+  --mm-color-grass-light: #8fe39a;
+  --mm-color-grass: #2e7d32;
+  --mm-color-grass-dark: #1b5e20;
+
+  --mm-color-gold-light: #ffda9e;
+  --mm-color-gold: #d98c00;
+  --mm-color-gold-dark: #a15c00;
+
+  --mm-color-amber-light: #ffdda6;
+  --mm-color-amber: #f2a900;
+  --mm-color-amber-dark: #8a5300;
+
+  --mm-color-tomato-light: #ffb4a9;
+  --mm-color-tomato: #d8412f;
+  --mm-color-tomato-dark: #8c2318;
+
+  --mm-color-sky-light: #c7e8ff;
+  --mm-color-sky: #2196d4;
+  --mm-color-sky-dark: #0b6fa6;
+
+  --mm-color-wood-light: #a9835a;
+  --mm-color-wood: #6b4a28;
+  --mm-color-wood-dark: #3b2a18;
+
+  --mm-color-cream: #fff8ec;
+  --mm-color-parchment: #fcebcb;
 
   /* ---- Type scale (M3) ---- */
   --mm-font-family: "Meadowmark UI", "Segoe UI", "Noto Sans", "Noto Sans HK", system-ui, sans-serif;
@@ -106,6 +149,23 @@
   --mm-type-body-medium-size: 14px; --mm-type-body-medium-line: 20px; --mm-type-body-medium-weight: 400;
   --mm-type-body-small-size: 12px;  --mm-type-body-small-line: 16px;  --mm-type-body-small-weight: 400;
 
+  /* ---- Heavy font weights & a bigger "read it at a glance" game type scale ----
+     A web app leans on 400/500; a game HUD needs 700/800 everywhere a player
+     glances at a number or a label, and larger sizes than a docs site would
+     use. These are additive - the M3 scale above is unchanged and still
+     available for anything that genuinely wants a lighter weight. */
+  --mm-font-weight-regular: 400;
+  --mm-font-weight-medium: 500;
+  --mm-font-weight-bold: 700;
+  --mm-font-weight-heavy: 800;
+
+  --mm-type-panel-title-size: 22px;   --mm-type-panel-title-line: 26px;   --mm-type-panel-title-weight: var(--mm-font-weight-heavy);
+  --mm-type-button-label-size: 16px;  --mm-type-button-label-line: 20px;  --mm-type-button-label-weight: var(--mm-font-weight-heavy);
+  --mm-type-button-label-large-size: 19px; --mm-type-button-label-large-line: 24px; --mm-type-button-label-large-weight: var(--mm-font-weight-heavy);
+  --mm-type-hud-value-size: 22px;     --mm-type-hud-value-line: 24px;     --mm-type-hud-value-weight: var(--mm-font-weight-heavy);
+  --mm-type-hud-value-large-size: 28px; --mm-type-hud-value-large-line: 30px; --mm-type-hud-value-large-weight: var(--mm-font-weight-heavy);
+  --mm-type-dock-label-size: 12px;    --mm-type-dock-label-line: 14px;    --mm-type-dock-label-weight: var(--mm-font-weight-bold);
+
   /* ---- Shape scale ---- */
   --mm-shape-none: 0px;
   --mm-shape-extra-small: 4px;
@@ -115,6 +175,21 @@
   --mm-shape-extra-large: 28px;
   --mm-shape-full: 999px;
 
+  /* ---- Chunky radius scale, for the round/squircle game-furniture look ---- */
+  --mm-radius-sm: 16px;
+  --mm-radius-md: 20px;
+  --mm-radius-lg: 24px;
+  --mm-radius-xl: 32px;
+  --mm-radius-full: 999px;
+
+  /* ---- Border scale ----
+     Hairline borders read as "website"; every game panel/button/capsule
+     border is at least the "thick" step. */
+  --mm-border-hairline: 1px;
+  --mm-border-thin: 2px;
+  --mm-border-thick: 3px;
+  --mm-border-heavy: 4px;
+
   /* ---- Elevation (box-shadow recipes, colour-aware) ---- */
   --mm-elevation-0: none;
   --mm-elevation-1: 0 1px 2px 0 rgba(0,0,0,0.30), 0 1px 3px 1px rgba(0,0,0,0.15);
@@ -122,6 +197,55 @@
   --mm-elevation-3: 0 1px 3px 0 rgba(0,0,0,0.30), 0 4px 8px 3px rgba(0,0,0,0.15);
   --mm-elevation-4: 0 2px 3px 0 rgba(0,0,0,0.30), 0 6px 10px 4px rgba(0,0,0,0.15);
   --mm-elevation-5: 0 4px 4px 0 rgba(0,0,0,0.30), 0 8px 12px 6px rgba(0,0,0,0.15);
+
+  /* ---- Solid-drop shadows ----
+     The physical "bottom edge" shadow chunky buttons and panels need,
+     layered with a soft ambient blur so raised furniture still casts a
+     believable shadow onto the world/table behind it. --mm-shadow-drop-color
+     is the flat colour a component composes its own coloured bottom edge
+     from (mix it with the button's own fill), and the -sm/-md/-lg steps are
+     ready-to-use neutral recipes for anything that does not need a custom
+     tint. */
+  --mm-shadow-drop-color: rgba(0, 0, 0, 0.32);
+  --mm-shadow-drop-offset-sm: 4px;
+  --mm-shadow-drop-offset-md: 6px;
+  --mm-shadow-drop-offset-lg: 8px;
+
+  --mm-shadow-drop-sm: 0 var(--mm-shadow-drop-offset-sm) 0 var(--mm-shadow-drop-color);
+  --mm-shadow-drop-md: 0 var(--mm-shadow-drop-offset-md) 0 var(--mm-shadow-drop-color);
+  --mm-shadow-drop-lg: 0 var(--mm-shadow-drop-offset-lg) 0 var(--mm-shadow-drop-color);
+
+  /* Soft ambient ground shadow, for panels/cards floating over the world. */
+  --mm-shadow-ambient-sm: 0 2px 6px rgba(59, 42, 24, 0.14);
+  --mm-shadow-ambient-md: 0 8px 20px rgba(59, 42, 24, 0.20);
+  --mm-shadow-ambient-lg: 0 16px 36px rgba(59, 42, 24, 0.26);
+
+  /* Combined recipes: solid bottom edge + soft ambient blur, for panels and
+     large chunky cards that need to visibly float above the scene. */
+  --mm-shadow-panel: var(--mm-shadow-drop-lg), var(--mm-shadow-ambient-lg);
+  --mm-shadow-card: var(--mm-shadow-drop-md), var(--mm-shadow-ambient-md);
+
+  /* Inner highlight, the glossy top edge of a chunky button/capsule. */
+  --mm-shadow-inset-highlight: inset 0 2px 0 rgba(255, 255, 255, 0.40);
+  --mm-shadow-inset-highlight-strong: inset 0 3px 0 rgba(255, 255, 255, 0.55);
+
+  /* ---- Gradient stops ----
+     Paired start/end colours for the glossy capsule/badge fills the HUD and
+     buttons use. Use as `linear-gradient(180deg, var(--mm-gradient-x-start), var(--mm-gradient-x-end))`. */
+  --mm-gradient-grass-start: #43a047;
+  --mm-gradient-grass-end: #1b5e20;
+  --mm-gradient-gold-start: #ffb300;
+  --mm-gradient-gold-end: #a15c00;
+  --mm-gradient-amber-start: #ffca28;
+  --mm-gradient-amber-end: #8a5300;
+  --mm-gradient-tomato-start: #e5533f;
+  --mm-gradient-tomato-end: #8c2318;
+  --mm-gradient-sky-start: #4fc3f7;
+  --mm-gradient-sky-end: #0b6fa6;
+  --mm-gradient-wood-start: #8a6438;
+  --mm-gradient-wood-end: #3b2a18;
+  --mm-gradient-parchment-start: #fffdf7;
+  --mm-gradient-parchment-end: #f6e0b8;
 
   /* ---- Motion ---- */
   --mm-motion-duration-short1: 50ms;
@@ -158,6 +282,13 @@
   /* ---- Touch targets ---- */
   --mm-touch-target-min: 44px;
 
+  /* ---- Chunky control sizing ----
+     Minimum heights for the physical, tactile controls this game uses.
+     Buttons stay well above the touch-target minimum by design. */
+  --mm-control-height-button: 48px;
+  --mm-control-height-button-lg: 60px;
+  --mm-control-height-dock-icon: 76px;
+
   /*
    * Height of the custom frameless-window title bar (see
    * packages/renderer/index.html's #mm-titlebar, which is hard-coded to
@@ -187,58 +318,92 @@
    made, OR when the app's theme setting explicitly selects dark. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --mm-color-primary: #a1d39f;
-    --mm-color-on-primary: #073911;
-    --mm-color-primary-container: #22522a;
-    --mm-color-on-primary-container: #bcf0bb;
+    --mm-color-primary: #8fe39a;
+    --mm-color-on-primary: #063911;
+    --mm-color-primary-container: #1e5227;
+    --mm-color-on-primary-container: #b9f2b0;
 
-    --mm-color-secondary: #bacbb2;
-    --mm-color-on-secondary: #263422;
-    --mm-color-secondary-container: #3c4a37;
-    --mm-color-on-secondary-container: #d6e8cd;
+    --mm-color-secondary: #ffc46b;
+    --mm-color-on-secondary: #452b00;
+    --mm-color-secondary-container: #653e00;
+    --mm-color-on-secondary-container: #ffda9e;
 
-    --mm-color-tertiary: #a0ced3;
-    --mm-color-on-tertiary: #00363a;
-    --mm-color-tertiary-container: #1e4d51;
-    --mm-color-on-tertiary-container: #bcebf0;
+    --mm-color-tertiary: #7fcfff;
+    --mm-color-on-tertiary: #00344a;
+    --mm-color-tertiary-container: #004c6e;
+    --mm-color-on-tertiary-container: #c7e8ff;
 
-    --mm-color-error: #ffb4ab;
-    --mm-color-on-error: #690005;
+    --mm-color-error: #ffb4a9;
+    --mm-color-on-error: #690003;
     --mm-color-error-container: #93000a;
-    --mm-color-on-error-container: #ffdad6;
+    --mm-color-on-error-container: #ffdad4;
 
-    --mm-color-warning: #ffcb70;
-    --mm-color-on-warning: #402d00;
-    --mm-color-warning-container: #5c4200;
-    --mm-color-on-warning-container: #ffdea6;
+    --mm-color-warning: #ffc46b;
+    --mm-color-on-warning: #452d00;
+    --mm-color-warning-container: #664b00;
+    --mm-color-on-warning-container: #ffdda6;
 
-    --mm-color-success: #97d5a1;
+    --mm-color-success: #9be0a6;
     --mm-color-on-success: #003910;
     --mm-color-success-container: #14521f;
-    --mm-color-on-success-container: #b3f1bc;
+    --mm-color-on-success-container: #b7f4c0;
 
-    --mm-color-background: #12140f;
-    --mm-color-on-background: #e2e3db;
+    --mm-color-background: #1c140c;
+    --mm-color-on-background: #f0e0c0;
 
-    --mm-color-surface: #12140f;
-    --mm-color-on-surface: #e2e3db;
-    --mm-color-surface-variant: #43483e;
-    --mm-color-on-surface-variant: #c3c8ba;
+    --mm-color-surface: #1c140c;
+    --mm-color-on-surface: #f0e0c0;
+    --mm-color-surface-variant: #4a3a22;
+    --mm-color-on-surface-variant: #d8c29a;
 
-    --mm-color-surface-dim: #12140f;
-    --mm-color-surface-bright: #383a34;
-    --mm-color-surface-container-lowest: #0c0f0a;
-    --mm-color-surface-container-low: #1a1c18;
-    --mm-color-surface-container: #1e201b;
-    --mm-color-surface-container-high: #282b25;
-    --mm-color-surface-container-highest: #333630;
+    --mm-color-surface-dim: #1c140c;
+    --mm-color-surface-bright: #423323;
+    --mm-color-surface-container-lowest: #120d07;
+    --mm-color-surface-container-low: #241b10;
+    --mm-color-surface-container: #2a2013;
+    --mm-color-surface-container-high: #352a19;
+    --mm-color-surface-container-highest: #413420;
 
-    --mm-color-outline: #8d9387;
-    --mm-color-outline-variant: #43483e;
+    --mm-color-outline: #a08a5e;
+    --mm-color-outline-variant: #4a3a22;
 
-    --mm-color-inverse-surface: #e2e3db;
-    --mm-color-inverse-on-surface: #2f312c;
-    --mm-color-inverse-primary: #3b6a3f;
+    --mm-color-inverse-surface: #f0e0c0;
+    --mm-color-inverse-on-surface: #2b1d0f;
+    --mm-color-inverse-primary: #2e7d32;
+
+    --mm-color-grass-light: #b9f2b0;
+    --mm-color-grass: #6fce7a;
+    --mm-color-grass-dark: #2e7d32;
+
+    --mm-color-gold-light: #ffe9c2;
+    --mm-color-gold: #ffb037;
+    --mm-color-gold-dark: #c47f00;
+
+    --mm-color-amber-light: #ffe9c2;
+    --mm-color-amber: #ffc94d;
+    --mm-color-amber-dark: #a15c00;
+
+    --mm-color-tomato-light: #ffcdc4;
+    --mm-color-tomato: #ff8a76;
+    --mm-color-tomato-dark: #b3382a;
+
+    --mm-color-sky-light: #dcf1ff;
+    --mm-color-sky: #6fd0ff;
+    --mm-color-sky-dark: #2196d4;
+
+    --mm-color-wood-light: #c9a56f;
+    --mm-color-wood: #8a6438;
+    --mm-color-wood-dark: #3b2a18;
+
+    --mm-color-cream: #241b10;
+    --mm-color-parchment: #2a2013;
+
+    --mm-shadow-drop-color: rgba(0, 0, 0, 0.55);
+    --mm-shadow-ambient-sm: 0 2px 6px rgba(0, 0, 0, 0.35);
+    --mm-shadow-ambient-md: 0 8px 20px rgba(0, 0, 0, 0.45);
+    --mm-shadow-ambient-lg: 0 16px 36px rgba(0, 0, 0, 0.55);
+    --mm-shadow-inset-highlight: inset 0 2px 0 rgba(255, 255, 255, 0.18);
+    --mm-shadow-inset-highlight-strong: inset 0 3px 0 rgba(255, 255, 255, 0.26);
 
     --mm-elevation-1: 0 1px 2px 0 rgba(0,0,0,0.60), 0 1px 3px 1px rgba(0,0,0,0.40);
     --mm-elevation-2: 0 1px 2px 0 rgba(0,0,0,0.60), 0 2px 6px 2px rgba(0,0,0,0.40);
@@ -250,58 +415,92 @@
 
 /* Explicit dark theme choice wins in both directions regardless of OS setting. */
 :root[data-theme="dark"] {
-  --mm-color-primary: #a1d39f;
-  --mm-color-on-primary: #073911;
-  --mm-color-primary-container: #22522a;
-  --mm-color-on-primary-container: #bcf0bb;
+  --mm-color-primary: #8fe39a;
+  --mm-color-on-primary: #063911;
+  --mm-color-primary-container: #1e5227;
+  --mm-color-on-primary-container: #b9f2b0;
 
-  --mm-color-secondary: #bacbb2;
-  --mm-color-on-secondary: #263422;
-  --mm-color-secondary-container: #3c4a37;
-  --mm-color-on-secondary-container: #d6e8cd;
+  --mm-color-secondary: #ffc46b;
+  --mm-color-on-secondary: #452b00;
+  --mm-color-secondary-container: #653e00;
+  --mm-color-on-secondary-container: #ffda9e;
 
-  --mm-color-tertiary: #a0ced3;
-  --mm-color-on-tertiary: #00363a;
-  --mm-color-tertiary-container: #1e4d51;
-  --mm-color-on-tertiary-container: #bcebf0;
+  --mm-color-tertiary: #7fcfff;
+  --mm-color-on-tertiary: #00344a;
+  --mm-color-tertiary-container: #004c6e;
+  --mm-color-on-tertiary-container: #c7e8ff;
 
-  --mm-color-error: #ffb4ab;
-  --mm-color-on-error: #690005;
+  --mm-color-error: #ffb4a9;
+  --mm-color-on-error: #690003;
   --mm-color-error-container: #93000a;
-  --mm-color-on-error-container: #ffdad6;
+  --mm-color-on-error-container: #ffdad4;
 
-  --mm-color-warning: #ffcb70;
-  --mm-color-on-warning: #402d00;
-  --mm-color-warning-container: #5c4200;
-  --mm-color-on-warning-container: #ffdea6;
+  --mm-color-warning: #ffc46b;
+  --mm-color-on-warning: #452d00;
+  --mm-color-warning-container: #664b00;
+  --mm-color-on-warning-container: #ffdda6;
 
-  --mm-color-success: #97d5a1;
+  --mm-color-success: #9be0a6;
   --mm-color-on-success: #003910;
   --mm-color-success-container: #14521f;
-  --mm-color-on-success-container: #b3f1bc;
+  --mm-color-on-success-container: #b7f4c0;
 
-  --mm-color-background: #12140f;
-  --mm-color-on-background: #e2e3db;
+  --mm-color-background: #1c140c;
+  --mm-color-on-background: #f0e0c0;
 
-  --mm-color-surface: #12140f;
-  --mm-color-on-surface: #e2e3db;
-  --mm-color-surface-variant: #43483e;
-  --mm-color-on-surface-variant: #c3c8ba;
+  --mm-color-surface: #1c140c;
+  --mm-color-on-surface: #f0e0c0;
+  --mm-color-surface-variant: #4a3a22;
+  --mm-color-on-surface-variant: #d8c29a;
 
-  --mm-color-surface-dim: #12140f;
-  --mm-color-surface-bright: #383a34;
-  --mm-color-surface-container-lowest: #0c0f0a;
-  --mm-color-surface-container-low: #1a1c18;
-  --mm-color-surface-container: #1e201b;
-  --mm-color-surface-container-high: #282b25;
-  --mm-color-surface-container-highest: #333630;
+  --mm-color-surface-dim: #1c140c;
+  --mm-color-surface-bright: #423323;
+  --mm-color-surface-container-lowest: #120d07;
+  --mm-color-surface-container-low: #241b10;
+  --mm-color-surface-container: #2a2013;
+  --mm-color-surface-container-high: #352a19;
+  --mm-color-surface-container-highest: #413420;
 
-  --mm-color-outline: #8d9387;
-  --mm-color-outline-variant: #43483e;
+  --mm-color-outline: #a08a5e;
+  --mm-color-outline-variant: #4a3a22;
 
-  --mm-color-inverse-surface: #e2e3db;
-  --mm-color-inverse-on-surface: #2f312c;
-  --mm-color-inverse-primary: #3b6a3f;
+  --mm-color-inverse-surface: #f0e0c0;
+  --mm-color-inverse-on-surface: #2b1d0f;
+  --mm-color-inverse-primary: #2e7d32;
+
+  --mm-color-grass-light: #b9f2b0;
+  --mm-color-grass: #6fce7a;
+  --mm-color-grass-dark: #2e7d32;
+
+  --mm-color-gold-light: #ffe9c2;
+  --mm-color-gold: #ffb037;
+  --mm-color-gold-dark: #c47f00;
+
+  --mm-color-amber-light: #ffe9c2;
+  --mm-color-amber: #ffc94d;
+  --mm-color-amber-dark: #a15c00;
+
+  --mm-color-tomato-light: #ffcdc4;
+  --mm-color-tomato: #ff8a76;
+  --mm-color-tomato-dark: #b3382a;
+
+  --mm-color-sky-light: #dcf1ff;
+  --mm-color-sky: #6fd0ff;
+  --mm-color-sky-dark: #2196d4;
+
+  --mm-color-wood-light: #c9a56f;
+  --mm-color-wood: #8a6438;
+  --mm-color-wood-dark: #3b2a18;
+
+  --mm-color-cream: #241b10;
+  --mm-color-parchment: #2a2013;
+
+  --mm-shadow-drop-color: rgba(0, 0, 0, 0.55);
+  --mm-shadow-ambient-sm: 0 2px 6px rgba(0, 0, 0, 0.35);
+  --mm-shadow-ambient-md: 0 8px 20px rgba(0, 0, 0, 0.45);
+  --mm-shadow-ambient-lg: 0 16px 36px rgba(0, 0, 0, 0.55);
+  --mm-shadow-inset-highlight: inset 0 2px 0 rgba(255, 255, 255, 0.18);
+  --mm-shadow-inset-highlight-strong: inset 0 3px 0 rgba(255, 255, 255, 0.26);
 }
 
 @media (prefers-reduced-motion: reduce) {
