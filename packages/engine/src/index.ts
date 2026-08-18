@@ -11,6 +11,7 @@
 // Side-effect imports: populate the mesh registry.
 import './assets/buildings.js';
 import './assets/nature.js';
+import './assets/flora.js';
 import './assets/props.js';
 import './assets/characters.js';
 
