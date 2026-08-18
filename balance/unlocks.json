@@ -442,6 +442,11 @@
       "id": "recipe_cosmetics_lavender_oil"
     },
     {
+      "level": 34,
+      "kind": "animal",
+      "id": "duck"
+    },
+    {
       "level": 35,
       "kind": "recipe",
       "id": "recipe_toy_factory_painted_toy"
@@ -502,6 +507,11 @@
       "id": "recipe_cosmetics_perfume"
     },
     {
+      "level": 41,
+      "kind": "animal",
+      "id": "turkey"
+    },
+    {
       "level": 42,
       "kind": "building",
       "id": "sports_arena"
@@ -532,6 +542,11 @@
       "id": "mango"
     },
     {
+      "level": 48,
+      "kind": "animal",
+      "id": "rabbit"
+    },
+    {
       "level": 50,
       "kind": "crop",
       "id": "coffee_bean"
@@ -550,6 +565,11 @@
       "level": 53,
       "kind": "crop",
       "id": "orange"
+    },
+    {
+      "level": 55,
+      "kind": "animal",
+      "id": "alpaca"
     },
     {
       "level": 56,
@@ -572,6 +592,11 @@
       "id": "recipe_winery_wine"
     },
     {
+      "level": 63,
+      "kind": "animal",
+      "id": "horse"
+    },
+    {
       "level": 66,
       "kind": "crop",
       "id": "ginger"
@@ -580,6 +605,11 @@
       "level": 70,
       "kind": "crop",
       "id": "blueberry"
+    },
+    {
+      "level": 71,
+      "kind": "animal",
+      "id": "quail"
     },
     {
       "level": 72,

@@ -805,6 +805,48 @@
       "unlockLevel": 95,
       "baseValue": 302,
       "displayName": "Saffron"
+    },
+    {
+      "id": "duck_egg",
+      "category": "animal_product",
+      "unlockLevel": 34,
+      "baseValue": 72,
+      "displayName": "Duck Egg"
+    },
+    {
+      "id": "turkey_meat",
+      "category": "animal_product",
+      "unlockLevel": 41,
+      "baseValue": 107,
+      "displayName": "Turkey Meat"
+    },
+    {
+      "id": "angora_wool",
+      "category": "animal_product",
+      "unlockLevel": 48,
+      "baseValue": 160,
+      "displayName": "Angora Wool"
+    },
+    {
+      "id": "alpaca_fleece",
+      "category": "animal_product",
+      "unlockLevel": 55,
+      "baseValue": 240,
+      "displayName": "Alpaca Fleece"
+    },
+    {
+      "id": "horse_milk",
+      "category": "animal_product",
+      "unlockLevel": 63,
+      "baseValue": 380,
+      "displayName": "Horse Milk"
+    },
+    {
+      "id": "quail_egg",
+      "category": "animal_product",
+      "unlockLevel": 71,
+      "baseValue": 602,
+      "displayName": "Quail Egg"
     }
   ]
 }
