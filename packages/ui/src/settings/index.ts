@@ -13,6 +13,8 @@ import { slider, switchControl } from "../components/form-controls";
 import { searchField } from "../search/regex-builder";
 import { funnyLevelSliders } from "./funny-level";
 import { renderHistoryPanel } from "../history";
+import { renderExportsPanel } from "../exports";
+import { renderLogoPanel } from "../logo";
 import { AppSettings, classifyRenderQuality, renderQualityPreset, settingsStore, TabDock, ThemeMode } from "./store";
 import { LanguageMode, setLanguageMode, i18nStore } from "../i18n";
 import { t } from "../i18n";
@@ -301,6 +303,8 @@ export function mountSettings(host: HTMLElement): () => void {
       { id: "language", label: t("settings.tab.language"), panel: languagePanel },
       { id: "render", label: t("settings.tab.render"), panel: renderPanel },
       { id: "history", label: t("settings.tab.history"), panel: renderHistoryPanel() },
+      { id: "exports", label: t("settings.tab.exports"), panel: renderExportsPanel() },
+      { id: "logo", label: t("settings.tab.logo"), panel: renderLogoPanel() },
     ],
   });
 

@@ -10,7 +10,6 @@ promise that every integer exists.
 [Release](https://github.com/Ding-Ding-Projects/meadowmark/releases/tag/v0.1.0-22) ·
 [commit `dd2a44f`](https://github.com/Ding-Ding-Projects/meadowmark/commit/dd2a44fa5264656a62802af04cac3bd192668b9d)
 
-<<<<<<< HEAD
 - Initial repository scaffolding: npm workspaces for `packages/shared`,
   `packages/engine`, `packages/ui`, and `packages/app`.
 - Electron main process (`packages/app`): frameless window with a custom
@@ -42,14 +41,24 @@ promise that every integer exists.
   `window.meadowmark.history`, with a new "History" tab in Settings that
   lists, searches, labels, restores, and exports recorded revisions. See
   `docs/features/history.md`.
-=======
 - Corrected renderer-to-engine and renderer-to-interface state mappings and
   aligned the bridge declarations used by the published desktop build.
 - Restored generated nature content and expanded the interface content and
   token definitions used by the packaged first-paint surface.
 - Shipped unsigned `Setup.exe`, the full `.nupkg`, and `RELEASES`. GitHub
   Actions ran no tests or lint by standing project policy.
->>>>>>> origin/main
+- Export engine wiring: the Electron main process now serializes the
+  settings document and the farm save into any of the ten formats the
+  export engine supports, always computing and showing a loss report
+  before writing, and writes through the native save dialog and the app's
+  atomic-write path. Exposed through preload as `window.meadowmark.exports`,
+  with a new "Export" tab in Settings. See `docs/features/exports.md`.
+- App-logo customization wiring: the Electron main process now runs the
+  decode/edit/convert/verify/persist pipeline for shipped presets and PNG
+  uploads picked through the native file dialog, exposed through preload
+  as `window.meadowmark.logo`, with a new "Logo" tab in Settings showing
+  live previews and a reset action. See
+  `docs/features/app-logo-customization.md`.
 
 ## [v0.1.0-21] - 2026-08-18
 

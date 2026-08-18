@@ -81,6 +81,7 @@ export {
 export type { LogoErrorCode } from './errors';
 export { computeSafeArea } from './image-ops';
 export { CANONICAL_SIZE } from './edit';
+export { encodePng } from './png-codec';
 
 /** Lists the shipped logo presets available to choose from. */
 export function listLogoPresets(): readonly LogoPresetSummary[] {
