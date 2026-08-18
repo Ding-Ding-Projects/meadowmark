@@ -45,8 +45,15 @@ export function parseReleasesFile(text: string): ReleaseEntry[] {
       throw new ReleasesParseError(`RELEASES line did not match "<sha1> <filename> <size>": "${line}"`);
     }
     const [, sha1, filename, sizeText] = match;
+    if (sha1 === undefined || filename === undefined || sizeText === undefined) {
+      // LINE_PATTERN has exactly three mandatory (non-optional) capture
+      // groups, so a successful match always populates all three; this is
+      // unreachable in practice, but a malformed RELEASES line is exactly
+      // the case this parser exists to reject cleanly rather than crash on.
+      throw new ReleasesParseError(`RELEASES line did not match "<sha1> <filename> <size>": "${line}"`);
+    }
     const versionMatch = FILENAME_VERSION_PATTERN.exec(filename);
-    if (!versionMatch) {
+    if (!versionMatch || versionMatch[1] === undefined) {
       throw new ReleasesParseError(`package file name "${filename}" does not carry a recognizable version`);
     }
     const sizeBytes = Number.parseInt(sizeText, 10);

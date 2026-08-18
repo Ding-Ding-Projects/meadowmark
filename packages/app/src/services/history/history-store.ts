@@ -63,7 +63,7 @@ export class HistoryUnavailableError extends Error {
  * unavailable — a bad revision hash, an invalid label, a git command
  * that exited non-zero. Carries the original detail in `message`. */
 export class HistoryOperationError extends Error {
-  constructor(message: string, public readonly cause?: unknown) {
+  constructor(message: string, public override readonly cause?: unknown) {
     super(message);
     this.name = 'HistoryOperationError';
   }
@@ -175,7 +175,7 @@ function parseLogChunk(chunk: string): Revision | null {
     .filter((line) => line.length > 0);
 
   const actionMatch = ACTION_TRAILER_RE.exec(body);
-  const action = actionMatch ? actionMatch[1].trim() : undefined;
+  const action = actionMatch ? actionMatch[1]?.trim() : undefined;
   const subjectLine = body.split('\n')[0]?.trim() ?? '';
 
   const filesChanged = filesBlob
@@ -766,11 +766,10 @@ export class HistoryStore {
     let parent: string | undefined;
 
     try {
-      for (let i = 0; i < commits.length; i += 1) {
+      for (const [i, commit] of commits.entries()) {
         if (!keptFlags[i]) {
           continue;
         }
-        const commit = commits[i];
         const args = ['commit-tree', commit.tree];
         if (parent) {
           args.push('-p', parent);

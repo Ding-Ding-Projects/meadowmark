@@ -42,17 +42,19 @@ function decodeBase32(text: string): Uint8Array {
     return new Uint8Array(0);
   }
   const lookup = new Map<string, number>();
-  for (let i = 0; i < BASE32_ALPHABET.length; i += 1) {
-    lookup.set(BASE32_ALPHABET[i], i);
+  let alphabetIndex = 0;
+  for (const letter of BASE32_ALPHABET) {
+    lookup.set(letter, alphabetIndex);
+    alphabetIndex += 1;
   }
   const out: number[] = [];
   let bits = 0;
   let value = 0;
-  for (let i = 0; i < cleaned.length; i += 1) {
-    const ch = cleaned[i];
+  let position = 0;
+  for (const ch of cleaned) {
     const digit = lookup.get(ch);
     if (digit === undefined) {
-      throw new MalformedInputError(`"${ch}" at position ${i} is not a valid base32 character (RFC 4648 alphabet, case-insensitive).`);
+      throw new MalformedInputError(`"${ch}" at position ${position} is not a valid base32 character (RFC 4648 alphabet, case-insensitive).`);
     }
     value = (value << 5) | digit;
     bits += 5;
@@ -60,6 +62,7 @@ function decodeBase32(text: string): Uint8Array {
       out.push((value >>> (bits - 8)) & 0xff);
       bits -= 8;
     }
+    position += 1;
   }
   return new Uint8Array(out);
 }

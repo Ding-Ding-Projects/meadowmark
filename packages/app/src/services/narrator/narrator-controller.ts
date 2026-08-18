@@ -144,7 +144,12 @@ export class NarratorController {
         );
         if (staleIndex !== -1) {
           const [stale] = this.queue.splice(staleIndex, 1);
-          stale.resolve({ kind: 'superseded' });
+          // staleIndex came from findIndex, so splice always removes exactly
+          // one element here; the undefined case is unreachable, but is
+          // handled rather than asserted away.
+          if (stale) {
+            stale.resolve({ kind: 'superseded' });
+          }
         }
       }
 
@@ -286,7 +291,7 @@ export class NarratorController {
           this.settings.english,
           ENGLISH_LANG_TAG,
         );
-        if (outcome.kind === 'error') {
+        if (outcome.kind === 'engine-error') {
           return outcome;
         }
       }
@@ -297,7 +302,7 @@ export class NarratorController {
           this.settings.cantonese,
           CANTONESE_LANG_TAG,
         );
-        if (outcome.kind === 'error') {
+        if (outcome.kind === 'engine-error') {
           return outcome;
         }
       }
