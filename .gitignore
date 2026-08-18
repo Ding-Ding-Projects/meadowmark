@@ -6,3 +6,4 @@ release/
 .vite/
 packages/*/dist/
 tools/**/out/
+*.tsbuildinfo
