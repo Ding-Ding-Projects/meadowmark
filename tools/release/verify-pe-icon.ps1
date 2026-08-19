@@ -73,12 +73,35 @@ try {
         $smallHash = Get-PixelHash -Bitmap $smallBitmap
         if ($largeHash -eq $smallHash) { throw "Large and small embedded icons in $Executable collapse to one identical frame." }
         if ($RequireReferenceMatch) {
-            $reference = New-Object System.Drawing.Icon $ReferenceIcon, 32, 32
-            try {
-                $referenceBitmap = $reference.ToBitmap()
-                try { $referenceHash = Get-PixelHash -Bitmap $referenceBitmap } finally { $referenceBitmap.Dispose() }
-            } finally { $reference.Dispose() }
-            if ($largeHash -ne $referenceHash) { throw "The packaged application icon does not match the committed Meadowmark icon. executable=$Executable reference=$ReferenceIcon largeHash=$largeHash referenceHash=$referenceHash" }
+            # Compare against EVERY frame in the committed .ico, not one guessed
+            # size.
+            #
+            # new Icon(path, 32, 32) asks Windows for the best match at that size,
+            # and which frame it returns is environment-dependent: the identical
+            # file hashed f96fcce0 when this script ran standalone and f6b5e25b
+            # when the release build ran it, against an executable whose icon was
+            # provably pixel-identical to the file (0 differing pixels of 1024,
+            # measured on the unpacked exe, the nupkg copy and Setup.exe).
+            #
+            # Requiring a match with ANY committed frame still proves the embedded
+            # icon came from this icon family, and drops an ambiguity that is not
+            # ours to control.
+            $referenceHashes = @()
+            foreach ($size in @(16, 20, 24, 32, 40, 48, 64, 128, 256)) {
+                try {
+                    $frame = New-Object System.Drawing.Icon $ReferenceIcon, $size, $size
+                    try {
+                        $frameBitmap = $frame.ToBitmap()
+                        try { $referenceHashes += (Get-PixelHash -Bitmap $frameBitmap) } finally { $frameBitmap.Dispose() }
+                    } finally { $frame.Dispose() }
+                } catch { }
+            }
+            if ($referenceHashes.Count -eq 0) {
+                throw "Could not read any frame from the committed icon $ReferenceIcon; refusing to claim a match."
+            }
+            if ($referenceHashes -notcontains $largeHash) {
+                throw "The packaged application icon does not match any frame of the committed Meadowmark icon. executable=$Executable reference=$ReferenceIcon largeHash=$largeHash frames=$($referenceHashes.Count)"
+            }
         }
         [pscustomobject]@{ executable = $Executable; largePixelHash = $largeHash; smallPixelHash = $smallHash; referenceMatched = [bool]$RequireReferenceMatch }
     } finally {
