@@ -146,7 +146,11 @@ try {
         $signatureStatus = [string](Get-AuthenticodeSignature -FilePath $setup.FullName).Status
     } catch {
         $probe = "(Get-AuthenticodeSignature -LiteralPath $($setup.FullName)).Status"
-        $signatureStatus = (& "$env:SystemRoot\System32\WindowsPowerShell1.0\powershell.exe" -NoProfile -NonInteractive -Command $probe 2>$null | Select-Object -First 1)
+        # powershell.exe is resolved from PATH on purpose. An absolute path here
+        # needs a backslash before v1.0, and this repo has repeatedly had one
+        # backslash of a pair eaten in transit -- which turned it into a literal
+        # vertical tab and produced "WindowsPowerShell<VT>1.0".
+        $signatureStatus = (& powershell.exe -NoProfile -NonInteractive -Command $probe 2>$null | Select-Object -First 1)
         if ($LASTEXITCODE -ne 0) { $signatureStatus = $null }
     }
     if ([string]::IsNullOrWhiteSpace($signatureStatus)) {
