@@ -1,4 +1,4 @@
-param([switch]$Silent)
+param([switch]$Silent, [string]$VerifyUnsignedExecutable)
 
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
@@ -59,7 +59,80 @@ $repoRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\..'))
 $gate = Get-Content -LiteralPath (Join-Path $repoRoot 'release-gate.json') -Raw | ConvertFrom-Json
 $package = Get-Content -LiteralPath (Join-Path $repoRoot 'package.json') -Raw | ConvertFrom-Json
 if ($gate.schemaVersion -ne 2) { throw 'release-gate.json has an unsupported schemaVersion.' }
-$version = [string]$package.version
+$baseVersion = [string]$package.version
+$version = if ([string]::IsNullOrWhiteSpace($env:RELEASE_BUILD_VERSION)) { $baseVersion } else { $env:RELEASE_BUILD_VERSION.Trim() }
+if ($baseVersion -notmatch '^\d+\.\d+\.\d+$' -or $version -notmatch '^\d+\.\d+\.\d+$') {
+    throw "Base and release build versions must both be stable three-part semantic versions. base=$baseVersion release=$version"
+}
+
+function Get-PeCertificateTableState {
+    param([string]$Path)
+    $stream = [System.IO.File]::Open($Path, [System.IO.FileMode]::Open, [System.IO.FileAccess]::Read, [System.IO.FileShare]::Read)
+    try {
+        $reader = [System.IO.BinaryReader]::new($stream)
+        try {
+            if ($stream.Length -lt 64) { throw 'PE file is shorter than the DOS header.' }
+            $stream.Position = 0
+            if ($reader.ReadUInt16() -ne 0x5A4D) { throw 'PE file does not begin with the MZ signature.' }
+            $stream.Position = 0x3C
+            $peOffset = [int64]$reader.ReadUInt32()
+            if ($peOffset -lt 64 -or $peOffset -gt ($stream.Length - 24)) { throw 'PE header offset is outside the file.' }
+            $stream.Position = $peOffset
+            if ($reader.ReadUInt32() -ne 0x00004550) { throw 'PE signature is missing.' }
+            $stream.Position = $peOffset + 20
+            $optionalHeaderSize = [int]$reader.ReadUInt16()
+            $optionalHeaderOffset = $peOffset + 24
+            if ($optionalHeaderSize -lt 2 -or ($optionalHeaderOffset + $optionalHeaderSize) -gt $stream.Length) {
+                throw 'PE optional header is truncated.'
+            }
+            $stream.Position = $optionalHeaderOffset
+            $magic = $reader.ReadUInt16()
+            if ($magic -eq 0x10B) {
+                $numberOfDirectoriesOffset = 92
+                $dataDirectoriesOffset = 96
+            } elseif ($magic -eq 0x20B) {
+                $numberOfDirectoriesOffset = 108
+                $dataDirectoriesOffset = 112
+            } else {
+                throw ("Unsupported PE optional-header magic: 0x{0:x4}." -f $magic)
+            }
+            if ($optionalHeaderSize -lt ($numberOfDirectoriesOffset + 4)) { throw 'PE optional header omits NumberOfRvaAndSizes.' }
+            $stream.Position = $optionalHeaderOffset + $numberOfDirectoriesOffset
+            $directoryCount = [uint32]$reader.ReadUInt32()
+            if ($directoryCount -le 4) { return 'NotSigned' }
+            $securityEntryOffset = $optionalHeaderOffset + $dataDirectoriesOffset + (4 * 8)
+            if ($optionalHeaderSize -lt (($securityEntryOffset - $optionalHeaderOffset) + 8)) {
+                throw 'PE optional header claims a security directory but does not contain its entry.'
+            }
+            $stream.Position = $securityEntryOffset
+            $certificateOffset = [uint64]$reader.ReadUInt32()
+            $certificateSize = [uint64]$reader.ReadUInt32()
+            if ($certificateOffset -eq 0 -and $certificateSize -eq 0) { return 'NotSigned' }
+            if ($certificateOffset -eq 0 -or $certificateSize -lt 8 -or ($certificateOffset % 8) -ne 0) {
+                throw 'PE certificate-table metadata is malformed.'
+            }
+            if (($certificateOffset + $certificateSize) -gt [uint64]$stream.Length) {
+                throw 'PE certificate table extends beyond the file.'
+            }
+            return 'CertificateTablePresent'
+        } finally { $reader.Dispose() }
+    } finally { $stream.Dispose() }
+}
+
+if (-not [string]::IsNullOrWhiteSpace($VerifyUnsignedExecutable)) {
+    $signatureState = Get-PeCertificateTableState -Path ([System.IO.Path]::GetFullPath($VerifyUnsignedExecutable))
+    if ($signatureState -ne 'NotSigned') { throw "Executable is not unsigned: $signatureState" }
+    [pscustomobject]@{ executable = [System.IO.Path]::GetFullPath($VerifyUnsignedExecutable); signatureStatus = $signatureState }
+    return
+}
+$baseParts = $baseVersion.Split('.')
+$releaseParts = $version.Split('.')
+if ($releaseParts[0] -ne $baseParts[0] -or $releaseParts[1] -ne $baseParts[1]) {
+    throw "RELEASE_BUILD_VERSION may change only the patch component. base=$baseVersion release=$version"
+}
+if (-not [string]::IsNullOrWhiteSpace($env:RELEASE_BUILD_VERSION) -and [int64]$baseParts[2] -ne 0) {
+    throw 'A release build override requires the committed base patch to be 0.'
+}
 $productName = [string]$gate.application.productName
 $output = Assert-SafeChild -Parent $repoRoot -Child (Join-Path $repoRoot $gate.artifacts.outputDirectory) -Label 'Release output'
 if ($output -eq $repoRoot) { throw 'Release output must never be the repository root.' }
@@ -107,7 +180,7 @@ try {
             # extraMetadata does not expand ${env.*} either -- the literal string was
             # landing in the packaged package.json, so provenance validation saw a
             # missing commit. Both values are passed as real overrides instead.
-            & npx.cmd electron-builder --win squirrel "-c.squirrelWindows.iconUrl=$iconUrl" "-c.extraMetadata.releaseCommit=$head" 2>&1 | Tee-Object -FilePath $logTemporary -Append
+            & npx.cmd electron-builder --win squirrel "-c.squirrelWindows.iconUrl=$iconUrl" "-c.extraMetadata.releaseCommit=$head" "-c.extraMetadata.version=$version" 2>&1 | Tee-Object -FilePath $logTemporary -Append
             $buildExit = $LASTEXITCODE
         }
         $buildExit = $LASTEXITCODE
@@ -146,31 +219,12 @@ try {
     $nupkgSha1 = Get-HashHex -Path $nupkg.FullName -Algorithm SHA1
     if ($nupkgSha1 -ne $columns[0].ToLowerInvariant()) { throw 'RELEASES SHA-1 does not match the full package.' }
 
-    # Prove the setup executable is unsigned. This is a policy gate, never a
-    # formality, so it fails closed: a signature we cannot READ stops the build,
-    # rather than being treated as "not signed".
-    #
-    # Deliberately NOT Get-AuthenticodeSignature. Microsoft.PowerShell.Security
-    # fails to load on this machine under both PowerShell 7 and Windows
-    # PowerShell 5.1 ("found in the module ... but the module could not be
-    # loaded"), which killed the release at its final check. The .NET call below
-    # reads the embedded Authenticode certificate directly and needs no module:
-    # it RETURNS a certificate for a signed file, and throws a
-    # CryptographicException for a file that carries no signature at all.
-    $setupIsSigned = $null
-    try {
-        $null = [System.Security.Cryptography.X509Certificates.X509Certificate]::CreateFromSignedFile($setup.FullName)
-        $setupIsSigned = $true
-    } catch [System.Security.Cryptography.CryptographicException] {
-        $setupIsSigned = $false
-    } catch {
-        throw "Could not determine the setup executable signature state: $($_.Exception.Message)"
-    }
-    if ($null -eq $setupIsSigned) {
-        throw 'Could not determine the setup executable signature state; refusing to claim it is unsigned.'
-    }
-    if ($setupIsSigned) {
-        throw 'Setup executable must be unsigned, but it carries an Authenticode certificate.'
+    # The PE security data-directory entry is the authoritative on-disk signal.
+    # Both offset and size must be zero before the build may claim NotSigned.
+    # Any certificate table or malformed/truncated metadata fails closed.
+    $setupSignatureStatus = Get-PeCertificateTableState -Path $setup.FullName
+    if ($setupSignatureStatus -ne 'NotSigned') {
+        throw "Setup executable must be unsigned, but its PE state is $setupSignatureStatus."
     }
 
     Add-Type -AssemblyName System.IO.Compression.FileSystem
@@ -221,13 +275,14 @@ try {
     $manifest = [ordered]@{
         schemaVersion = 1
         product = $productName
+        baseVersion = $baseVersion
         version = $version
         commit = $head
         nodeVersion = $nodeVersion
         buildStartedUtc = $started.ToString('o')
         buildCompletedUtc = $completed.ToString('o')
         unsigned = $true
-        setupSignatureStatus = [string]$setupSignature.Status
+        setupSignatureStatus = $setupSignatureStatus
         packageSha1 = $nupkgSha1
         iconSha256 = Get-HashHex -Path $iconPath -Algorithm SHA256
         iconValidation = [string]$iconEntries

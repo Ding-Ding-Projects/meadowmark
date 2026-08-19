@@ -22,6 +22,7 @@
     "check:line-count": "node tools/line-count/self-test.mjs",
     "check:site": "node site/tools/check-contract.mjs",
     "check:release": "node tools/release/verify-contract.mjs && node tools/release/verify-icon.mjs",
+    "check:release-negative": "node tools/release/verify-contract-negative.mjs",
     "check:runtime-contract": "tsc -p tools/type-contracts/tsconfig.json --noEmit",
     "check:atomic": "node tools/guards/no-bare-rename.mjs",
     "check:preload-sandbox": "node tools/guards/no-fs-in-preload.mjs",

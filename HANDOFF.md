@@ -1,5 +1,57 @@
 # Meadowmark handoff
 
+## Current status: release-workflow repair candidate, locally checked only
+
+Updated on 2026-08-18 from branch `codex/fix-release-workflow`. This narrow
+candidate removes the CI-only `rendersVerified` publication hold, derives one
+stable `v<major>.<minor>.<GITHUB_RUN_NUMBER>` tag and matching Squirrel package
+version per workflow run, compares executable and reference large/small icons
+through the same `ExtractIconEx` path, and records `NotSigned` only when the PE
+security directory proves that no certificate table exists.
+The deterministic icon-family check also normalizes text line endings before
+comparing the generated SVG, so a fresh Windows checkout cannot fail solely
+because Git materialized CRLF while the generator emits LF.
+
+The render-evidence fields in `release-gate.json` remain unchanged and truthful:
+no capture evidence was invented or promoted. The published-only changelog data
+also remains unchanged because this candidate has no commit, workflow result, or
+release to attribute yet.
+
+Focused local evidence for the uncommitted candidate:
+
+- `node --check tools/release/verify-contract.mjs`: exit 0.
+- `node tools/release/verify-contract.mjs`: exit 0.
+- `node tools/release/verify-contract-negative.mjs`: exit 0 after 15 deliberate
+  regressions each exited nonzero, covering publication holds, attempt-specific
+  tags, release ownership/recovery, CI test commands, native handle cleanup,
+  signature-proof bypasses, icon selection, line endings, and release read-back.
+- PowerShell parser checks for `verify-pe-icon.ps1` and
+  `build-installer.ps1`: exit 0.
+- `actionlint -shellcheck= .github/workflows/release.yml`: exit 0. This proves
+  workflow structure only; shell contents were not checked by that invocation.
+- `verify-pe-icon.ps1` comparing `design/icons/meadowmark.ico` with itself via
+  `ExtractIconEx`: exit 0, with distinct large/small hashes and a successful
+  reference match.
+- `node tools/release/generate-icons.mjs --check`: initially exposed the CRLF/LF
+  false mismatch in the fresh linked checkout; after newline normalization, a
+  deliberate title mutation exited 1 and exact restoration exited 0.
+- `build-installer.ps1 -VerifyUnsignedExecutable`: the existing Meadowmark setup
+  returned `NotSigned`; an embedded-signed Git executable was rejected as
+  `CertificateTablePresent`.
+
+No application build, installer build, package inspection, push, GitHub Actions
+run, or release was performed for this candidate. The existing failing workflow
+remains the latest remote result until this change is reviewed, committed, pushed,
+and read back through the real release flow. Older release-chain sections below
+are retained as historical evidence and are superseded where they conflict with
+this current-status section.
+
+## Historical release-grade handoff from earlier on 2026-08-18
+
+The material below records the state before the current release-workflow repair.
+Where it conflicts with the current-status section above, it is historical rather
+than an instruction for the next owner.
+
 Prepared on 2026-08-18 after normally integrating the six preserved
 implementation tips, the documentation handoff, and the packaged capture
 evidence onto the `dd2a44f` baseline. No commit was rebased or dropped.
@@ -8,7 +60,7 @@ This is a handoff-only closeout, not a release pass. It did not build an install
 publish or verify a new release after integration. It did preserve a real
 published-package first-paint capture for the existing `v0.1.0-22` baseline.
 
-## Release chain: eleven blockers fixed, one still open
+## Historical release chain: eleven blockers fixed before the current repair
 
 The local release path (`build-installer.bat /s`) had **never completed end to end**.
 Eleven genuine blockers were found and fixed this session, each committed separately:
@@ -28,7 +80,7 @@ Eleven genuine blockers were found and fixed this session, each committed separa
 10-11. two bad pixel-hash implementations, one of which I introduced by clamping
     coordinates instead of scaling
 
-**Still blocked, and the artifact is not at fault.** The build stops at the packaged
+**Historical blocker, now addressed by the current candidate.** The build stopped at the packaged
 icon comparison. Measured with the exact API the verifier uses, against the exact
 reference it is given: **0 differing pixels out of 1024** on the unpacked exe, the
 nupkg copy and `Setup.exe`. Run standalone the verifier PASSES all three. Inside the
@@ -301,54 +353,45 @@ interaction evidence.
 
 ### Release and installation seams
 
-- `rendersVerified` remains false, so the hardened release path is correctly
-  blocked.
-- The icon and release-contract source checks passed, but no installer was built
-  from `f74f8ca` and no packaged executable or installer icon was inspected.
-- The hardened workflow requires a new committed semantic package version, but
-  the integrated candidate still declares `0.1.0`, a version already used by
-  `v0.1.0-22` and earlier releases. Publication must remain blocked until an
-  authorized release task commits a unique version.
+- `rendersVerified` remains false as truthful local capture metadata; it no longer
+  blocks the build-and-publish workflow, which is required to release every push.
+- The current candidate repairs the environment-dependent icon comparison and PE
+  signature evidence, but its canonical installer build is still pending.
+- The committed base stays `0.1.0`; the workflow derives a matching monotonic
+  package version and tag from `GITHUB_RUN_NUMBER`, so each release is newer than
+  `v0.1.0-22` without an attempt-specific duplicate.
 - Update availability, download, restart, rollback, repair, invalid metadata,
   corrupt package, cancellation, offline behavior, and unsaved-work protection
   remain unexercised.
-- `v0.1.0-22` does not contain any of the integrated lane tips. No release
-  contains their combined work, and this handoff did not create or verify
-  another release.
+- `v0.1.0-22` remains the latest verified published baseline until the current
+  candidate receives a terminal workflow and release read-back verdict.
 
 ## Open issues
 
 - [`Ding-Ding-Projects/meadowmark#2`](https://github.com/Ding-Ding-Projects/meadowmark/issues/2),
-  **Release-grade completion and repository shutdown**, is open. Its sole comment
-  records the work start and the `c328d7d` baseline; it does not contain a final
-  integrated handoff comment. That public comment also exposes an absolute local
-  checkout path. This handoff lane was explicitly read-only for GitHub, so it did
-  not edit the comment; the next authorized GitHub-record pass should remove the
-  path and verify the edited comment.
-No issue was edited or closed during this handoff lane. A separate issue in a
-private instruction repository was also reviewed and is reported privately; its
-repository name and link are intentionally omitted here.
+  **Release-grade completion and repository shutdown**, is open and now carries
+  the current red-workflow diagnosis plus the bounded repair scope. Rolling
+  progress is also recorded in Discussion #3.
 
 ## Next owner and action
 
-The implementation lanes are integrated. The next release-grade owner should:
+The implementation lanes are integrated. The current owner should:
 
-1. Commit a new semantic application version; `0.1.0` is already published and
-   the hardened release workflow correctly refuses its reuse.
-2. Repair the unsigned executable/icon resource path. PE resource editing is
-   disabled while installer verification requires the committed icon family.
-3. Build through `build.bat /s` and `build-installer.bat /s`, then verify the
+1. Complete adversarial review and commit the release-workflow candidate.
+2. Build through `build.bat /s` and `build-installer.bat /s`, then verify the
    generated Squirrel assets against the exact candidate commit.
+3. Push the integrated commit and require a successful workflow, unique non-draft
+   release, matching target commit, three downloadable assets, and hash read-back.
 4. Exercise real packaged player and service interactions, wire the remaining UI
    authority seams, and capture the required surface matrix through the approved
    hidden-desktop route.
 5. Populate only evidence that actually exists, rerun the fail-closed inventory
-   and release checks, and set `rendersVerified` only for a matching committed
-   manifest.
+   checks, and keep `rendersVerified` truthful to matching committed capture
+   evidence rather than using it as a CI switch.
 6. Keep Meadowmark issue #2 open until the release-grade objective and its
    evidence are complete.
 
 Until those steps complete, the honest state is: the implementation lanes are
-integrated, the published baseline remains `v0.1.0-22`, the hardened release gate
-is false, zero inventory rows are complete, and the integrated candidate has no
-package or runtime interaction verdict.
+integrated, the published baseline remains `v0.1.0-22`, zero inventory rows are
+complete, and the current candidate has focused source checks but no new package,
+workflow, release, or runtime-interaction verdict.

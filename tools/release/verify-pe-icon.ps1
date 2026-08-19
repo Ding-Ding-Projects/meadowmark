@@ -51,64 +51,53 @@ function Get-PixelHash {
     } finally { $normalized.Dispose() }
 }
 
+function Get-HandlePixelHash {
+    param([IntPtr]$Handle)
+    if ($Handle -eq [IntPtr]::Zero) { throw 'Cannot hash an empty icon handle.' }
+    $icon = [System.Drawing.Icon]::FromHandle($Handle)
+    try {
+        $bitmap = $icon.ToBitmap()
+        try { return Get-PixelHash -Bitmap $bitmap }
+        finally { $bitmap.Dispose() }
+    } finally { $icon.Dispose() }
+}
+
 $large = [IntPtr]::Zero
 $small = [IntPtr]::Zero
-$count = [MeadowmarkIconNative]::ExtractIconEx($Executable, 0, [ref]$large, [ref]$small, 1)
-# ExtractIconEx returns the number of icon HANDLES it filled, not the number of
-# pairs requested: asking for one pair yields two handles (large and small) on
-# this platform. The old assertion demanded exactly 1 and therefore rejected
-# every correctly-iconned executable -- verified against notepad.exe, which also
-# returns 2 and would also have failed. What actually matters is that BOTH
-# handles came back, so that is what is checked.
-if ($count -lt 1 -or $large -eq [IntPtr]::Zero -or $small -eq [IntPtr]::Zero) {
-    throw "No complete large/small icon pair was embedded in $Executable."
-}
+$count = 0
 try {
-    $largeIcon = [System.Drawing.Icon]::FromHandle($large)
-    $smallIcon = [System.Drawing.Icon]::FromHandle($small)
-    $largeBitmap = $largeIcon.ToBitmap()
-    $smallBitmap = $smallIcon.ToBitmap()
-    try {
-        $largeHash = Get-PixelHash -Bitmap $largeBitmap
-        $smallHash = Get-PixelHash -Bitmap $smallBitmap
-        if ($largeHash -eq $smallHash) { throw "Large and small embedded icons in $Executable collapse to one identical frame." }
-        if ($RequireReferenceMatch) {
-            # Compare against EVERY frame in the committed .ico, not one guessed
-            # size.
-            #
-            # new Icon(path, 32, 32) asks Windows for the best match at that size,
-            # and which frame it returns is environment-dependent: the identical
-            # file hashed f96fcce0 when this script ran standalone and f6b5e25b
-            # when the release build ran it, against an executable whose icon was
-            # provably pixel-identical to the file (0 differing pixels of 1024,
-            # measured on the unpacked exe, the nupkg copy and Setup.exe).
-            #
-            # Requiring a match with ANY committed frame still proves the embedded
-            # icon came from this icon family, and drops an ambiguity that is not
-            # ours to control.
-            $referenceHashes = @()
-            foreach ($size in @(16, 20, 24, 32, 40, 48, 64, 128, 256)) {
-                try {
-                    $frame = New-Object System.Drawing.Icon $ReferenceIcon, $size, $size
-                    try {
-                        $frameBitmap = $frame.ToBitmap()
-                        try { $referenceHashes += (Get-PixelHash -Bitmap $frameBitmap) } finally { $frameBitmap.Dispose() }
-                    } finally { $frame.Dispose() }
-                } catch { }
-            }
-            if ($referenceHashes.Count -eq 0) {
-                throw "Could not read any frame from the committed icon $ReferenceIcon; refusing to claim a match."
-            }
-            if ($referenceHashes -notcontains $largeHash) {
-                throw "The packaged application icon does not match any frame of the committed Meadowmark icon. executable=$Executable reference=$ReferenceIcon largeHash=$largeHash frames=$($referenceHashes.Count)"
-            }
-        }
-        [pscustomobject]@{ executable = $Executable; largePixelHash = $largeHash; smallPixelHash = $smallHash; referenceMatched = [bool]$RequireReferenceMatch }
-    } finally {
-        $largeBitmap.Dispose()
-        $smallBitmap.Dispose()
+    $count = [MeadowmarkIconNative]::ExtractIconEx($Executable, 0, [ref]$large, [ref]$small, 1)
+    if ($count -lt 1 -or $large -eq [IntPtr]::Zero -or $small -eq [IntPtr]::Zero) {
+        throw "No complete large/small icon pair was embedded in $Executable."
     }
+    $largeHash = Get-HandlePixelHash -Handle $large
+    $smallHash = Get-HandlePixelHash -Handle $small
+
+    if ($RequireReferenceMatch) {
+        # Extract the executable and committed .ico through the same Windows API.
+        # Matching each large/small result to its corresponding reference avoids
+        # environment-dependent frame selection by System.Drawing.Icon(path,size).
+        $referenceLarge = [IntPtr]::Zero
+        $referenceSmall = [IntPtr]::Zero
+        $referenceCount = 0
+        try {
+            $referenceCount = [MeadowmarkIconNative]::ExtractIconEx($ReferenceIcon, 0, [ref]$referenceLarge, [ref]$referenceSmall, 1)
+            if ($referenceCount -lt 1 -or $referenceLarge -eq [IntPtr]::Zero -or $referenceSmall -eq [IntPtr]::Zero) {
+                throw "No complete large/small icon pair could be extracted from $ReferenceIcon."
+            }
+            $referenceLargeHash = Get-HandlePixelHash -Handle $referenceLarge
+            $referenceSmallHash = Get-HandlePixelHash -Handle $referenceSmall
+            if ($largeHash -ne $referenceLargeHash -or $smallHash -ne $referenceSmallHash) {
+                throw "The packaged icon pair does not match the committed Meadowmark icon. executable=$Executable reference=$ReferenceIcon largeHash=$largeHash referenceLargeHash=$referenceLargeHash smallHash=$smallHash referenceSmallHash=$referenceSmallHash"
+            }
+        } finally {
+            if ($referenceLarge -ne [IntPtr]::Zero) { [MeadowmarkIconNative]::DestroyIcon($referenceLarge) | Out-Null }
+            if ($referenceSmall -ne [IntPtr]::Zero) { [MeadowmarkIconNative]::DestroyIcon($referenceSmall) | Out-Null }
+        }
+    }
+
+    [pscustomobject]@{ executable = $Executable; largePixelHash = $largeHash; smallPixelHash = $smallHash; referenceMatched = [bool]$RequireReferenceMatch }
 } finally {
-    [MeadowmarkIconNative]::DestroyIcon($large) | Out-Null
-    [MeadowmarkIconNative]::DestroyIcon($small) | Out-Null
+    if ($large -ne [IntPtr]::Zero) { [MeadowmarkIconNative]::DestroyIcon($large) | Out-Null }
+    if ($small -ne [IntPtr]::Zero) { [MeadowmarkIconNative]::DestroyIcon($small) | Out-Null }
 }

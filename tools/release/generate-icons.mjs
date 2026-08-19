@@ -37,11 +37,12 @@ if (!Array.isArray(sizes) || sizes.join(",") !== "16,20,24,32,40,48,64,128,256")
 }
 const generatedIco = generateIco(sizes, definition);
 const entries = inspectIco(generatedIco);
+const normalizeNewlines = (value) => value.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
 
 if (process.argv.includes("--check")) {
   const [committedSvg, committedIco] = await Promise.all([readFile(sourcePath, "utf8"), readFile(outputPath)]);
   inspectIco(committedIco);
-  if (committedSvg !== generatedSvg) throw new Error("design/icons/meadowmark-master.svg is stale; regenerate the icon family.");
+  if (normalizeNewlines(committedSvg) !== normalizeNewlines(generatedSvg)) throw new Error("design/icons/meadowmark-master.svg is stale; regenerate the icon family.");
   if (!committedIco.equals(generatedIco)) throw new Error("design/icons/meadowmark.ico is stale; regenerate the icon family.");
   console.log(`Verified master-bound deterministic Meadowmark icon family: ${entries.map((entry) => entry.width).join(", ")} px.`);
 } else {
