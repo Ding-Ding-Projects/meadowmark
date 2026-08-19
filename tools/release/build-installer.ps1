@@ -95,7 +95,18 @@ try {
     try {
         $priorPreference = $ErrorActionPreference
         $ErrorActionPreference = 'Continue'
-        & npm.cmd run dist 2>&1 | Tee-Object -FilePath $logTemporary
+        # electron-builder does NOT expand ${env.*} inside squirrelWindows.iconUrl,
+        # so the raw macro reached the generated nuspec and the pinned-icon check
+        # rejected it. Build the workspace, then invoke electron-builder directly
+        # with the URL resolved against the commit actually being built. npm run
+        # dist stays the human entry point; the release path needs the pin.
+        $iconUrl = "https://raw.githubusercontent.com/Ding-Ding-Projects/meadowmark/$head/design/icons/meadowmark.ico"
+        & npm.cmd run build 2>&1 | Tee-Object -FilePath $logTemporary
+        $buildExit = $LASTEXITCODE
+        if ($buildExit -eq 0) {
+            & npx.cmd electron-builder --win squirrel "-c.squirrelWindows.iconUrl=$iconUrl" 2>&1 | Tee-Object -FilePath $logTemporary -Append
+            $buildExit = $LASTEXITCODE
+        }
         $buildExit = $LASTEXITCODE
         $ErrorActionPreference = $priorPreference
     } finally { Pop-Location }
