@@ -14,7 +14,7 @@
   ],
   "scripts": {
     "build": "npm run build --workspaces --if-present",
-    "dist": "npm run build && electron-builder --win squirrel --config electron-builder.yml",
+    "dist": "npm run build && electron-builder --win squirrel",
     "start": "npm run build && electron packages/app/dist/main.cjs",
     "lines": "node tools/line-count/count.mjs",
     "check:inventory": "node tools/inventory/check.mjs",
