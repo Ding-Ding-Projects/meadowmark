@@ -19,30 +19,36 @@ public static class MeadowmarkIconNative {
 
 function Get-PixelHash {
     param([System.Drawing.Bitmap]$Bitmap)
-    # Hash the ARGB values directly rather than normalising through
-    # Graphics.DrawImage and hashing the locked byte buffer.
+    # Scale to a fixed 32x32 and hash the ARGB values read back pixel by pixel.
     #
-    # The DrawImage route reported a mismatch between the icon embedded in the
-    # packaged executable and the committed one when a direct pixel comparison
-    # of the very same two images found 0 differing pixels out of 1024. Source
-    # bitmaps arrive with different PixelFormats, and the redraw plus locked
-    # buffer (including stride padding) is not stable across them. Reading the
-    # pixels is slower and says what it means.
-    $sha = [Security.Cryptography.SHA256]::Create()
-    $bytes = New-Object byte[] (32 * 32 * 4)
-    $index = 0
-    for ($y = 0; $y -lt 32; $y++) {
-        for ($x = 0; $x -lt 32; $x++) {
-            $sampleX = [Math]::Min($x, $Bitmap.Width - 1)
-            $sampleY = [Math]::Min($y, $Bitmap.Height - 1)
-            $pixel = $Bitmap.GetPixel($sampleX, $sampleY)
-            $bytes[$index++] = $pixel.A
-            $bytes[$index++] = $pixel.R
-            $bytes[$index++] = $pixel.G
-            $bytes[$index++] = $pixel.B
+    # Two things were wrong here in turn. The original hashed the LOCKED BYTE
+    # BUFFER of a redrawn bitmap, which is not stable across source PixelFormats
+    # and reported a mismatch for two images with 0 differing pixels out of 1024.
+    # The first replacement read pixels directly but CLAMPED coordinates instead
+    # of scaling, so a large icon bigger than 32x32 had its top-left corner
+    # sampled against a fully scaled reference -- same false mismatch, new cause.
+    # Scaling and then reading pixels is what actually compares like with like.
+    $normalized = New-Object System.Drawing.Bitmap 32, 32, ([System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+    try {
+        $graphics = [System.Drawing.Graphics]::FromImage($normalized)
+        try {
+            $graphics.CompositingMode = [System.Drawing.Drawing2D.CompositingMode]::SourceCopy
+            $graphics.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::NearestNeighbor
+            $graphics.DrawImage($Bitmap, 0, 0, 32, 32)
+        } finally { $graphics.Dispose() }
+        $bytes = New-Object byte[] (32 * 32 * 4)
+        $index = 0
+        for ($y = 0; $y -lt 32; $y++) {
+            for ($x = 0; $x -lt 32; $x++) {
+                $pixel = $normalized.GetPixel($x, $y)
+                $bytes[$index++] = $pixel.A
+                $bytes[$index++] = $pixel.R
+                $bytes[$index++] = $pixel.G
+                $bytes[$index++] = $pixel.B
+            }
         }
-    }
-    return ($sha.ComputeHash($bytes) | ForEach-Object { $_.ToString('x2') }) -join ''
+        return ([Security.Cryptography.SHA256]::Create().ComputeHash($bytes) | ForEach-Object { $_.ToString('x2') }) -join ''
+    } finally { $normalized.Dispose() }
 }
 
 $large = [IntPtr]::Zero
