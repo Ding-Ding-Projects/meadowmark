@@ -133,31 +133,30 @@ try {
     if ($nupkgSha1 -ne $columns[0].ToLowerInvariant()) { throw 'RELEASES SHA-1 does not match the full package.' }
 
     # Prove the setup executable is unsigned. This is a policy gate, never a
-    # formality, so it fails closed: if the signature cannot be READ we stop,
-    # rather than treating "could not check" as "not signed".
+    # formality, so it fails closed: a signature we cannot READ stops the build,
+    # rather than being treated as "not signed".
     #
-    # Microsoft.PowerShell.Security does not always load under PowerShell 7 on
-    # this platform ("found in the module ... but the module could not be
-    # loaded"), so import it explicitly and fall back to Windows PowerShell 5.1,
-    # which carries the module natively.
-    $signatureStatus = $null
+    # Deliberately NOT Get-AuthenticodeSignature. Microsoft.PowerShell.Security
+    # fails to load on this machine under both PowerShell 7 and Windows
+    # PowerShell 5.1 ("found in the module ... but the module could not be
+    # loaded"), which killed the release at its final check. The .NET call below
+    # reads the embedded Authenticode certificate directly and needs no module:
+    # it RETURNS a certificate for a signed file, and throws a
+    # CryptographicException for a file that carries no signature at all.
+    $setupIsSigned = $null
     try {
-        Import-Module Microsoft.PowerShell.Security -ErrorAction Stop
-        $signatureStatus = [string](Get-AuthenticodeSignature -FilePath $setup.FullName).Status
+        $null = [System.Security.Cryptography.X509Certificates.X509Certificate]::CreateFromSignedFile($setup.FullName)
+        $setupIsSigned = $true
+    } catch [System.Security.Cryptography.CryptographicException] {
+        $setupIsSigned = $false
     } catch {
-        $probe = "(Get-AuthenticodeSignature -LiteralPath $($setup.FullName)).Status"
-        # powershell.exe is resolved from PATH on purpose. An absolute path here
-        # needs a backslash before v1.0, and this repo has repeatedly had one
-        # backslash of a pair eaten in transit -- which turned it into a literal
-        # vertical tab and produced "WindowsPowerShell<VT>1.0".
-        $signatureStatus = (& powershell.exe -NoProfile -NonInteractive -Command $probe 2>$null | Select-Object -First 1)
-        if ($LASTEXITCODE -ne 0) { $signatureStatus = $null }
+        throw "Could not determine the setup executable signature state: $($_.Exception.Message)"
     }
-    if ([string]::IsNullOrWhiteSpace($signatureStatus)) {
-        throw 'Could not read the setup executable signature status; refusing to claim it is unsigned.'
+    if ($null -eq $setupIsSigned) {
+        throw 'Could not determine the setup executable signature state; refusing to claim it is unsigned.'
     }
-    if ($signatureStatus.Trim() -ne 'NotSigned') {
-        throw "Setup executable must be unsigned; signature status is $signatureStatus."
+    if ($setupIsSigned) {
+        throw 'Setup executable must be unsigned, but it carries an Authenticode certificate.'
     }
 
     Add-Type -AssemblyName System.IO.Compression.FileSystem
