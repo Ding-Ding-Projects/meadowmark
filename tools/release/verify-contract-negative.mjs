@@ -34,6 +34,7 @@ const regressions = [
   ["--simulate-missing-timing-recovery", "missing published-release timing recovery"],
   ["--simulate-ci-test-command", "test command added to the release workflow"],
   ["--simulate-commented-destroy-icon", "commented-out native icon cleanup"],
+  ["--simulate-powershell-backtick-notes", "PowerShell-escaped Markdown release notes"],
 ];
 
 for (const [flag, label] of regressions) {

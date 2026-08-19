@@ -78,6 +78,11 @@ if (process.argv.includes("--simulate-ci-test-command")) {
 if (process.argv.includes("--simulate-commented-destroy-icon")) {
   iconVerifier = replaceRequired(iconVerifier, "            if ($referenceLarge -ne [IntPtr]::Zero) { [MeadowmarkIconNative]::DestroyIcon($referenceLarge) | Out-Null }", "            # reference-large DestroyIcon removed", "the active reference-large handle cleanup");
 }
+if (process.argv.includes("--simulate-powershell-backtick-notes")) {
+  const plain = "          Exact commit: ${{ github.sha }}";
+  const tick = String.fromCharCode(96);
+  workflow = replaceRequired(workflow, plain, "          Exact commit: " + tick + "${{ github.sha }}" + tick, "the release-note commit line");
+}
 const gate = JSON.parse(gateText);
 const packageDocument = JSON.parse(packageText);
 
@@ -138,6 +143,7 @@ for (const flag of [
   "--simulate-missing-timing-recovery",
   "--simulate-ci-test-command",
   "--simulate-commented-destroy-icon",
+  "--simulate-powershell-backtick-notes",
 ]) requireExact(negativeDriver, flag, "release-contract negative regression driver");
 
 requireActiveLine(config, /^\s*forceCodeSigning:\s*false\s*$/m, "electron-builder configuration");
@@ -218,17 +224,25 @@ requireStepLine("Resolve unused published dim-sum code name", /^\s*node tools\/r
 requireStepLine("Resolve unused published dim-sum code name", /^\s*if:\s*steps\.release_state\.outputs\.state != 'published'\s*$/m);
 requireStepLine("Write preliminary factual release notes", /^\s*Workflow run: https:\/\/github\.com\/\$\{\{ github\.repository \}\}\/actions\/runs\/\$\{\{ github\.run_id \}\}\s*$/m);
 requireStepLine("Write preliminary factual release notes", /^\s*if:\s*steps\.release_state\.outputs\.state != 'published'\s*$/m);
+requireStepLine("Write preliminary factual release notes", /^\s*Exact commit: \$\{\{ github\.sha \}\}\s*$/m);
+requireStepLine("Write preliminary factual release notes", /^\s*<pre><code>\$hashes<\/code><\/pre>\s*$/m);
+if (workflowStep("Write preliminary factual release notes").includes(String.fromCharCode(96))) {
+  throw new Error("Double-quoted PowerShell release-note here-strings must not contain Markdown backticks.");
+}
 requireStepLine("Create or replace the owned draft release", /^\s*gh release create \$tag `\s*$/m);
 requireStepLine("Create or replace the owned draft release", /^\s*if:\s*steps\.release_state\.outputs\.state != 'published'\s*$/m);
 requireStepLine("Publish the release exactly once", /^\s*gh release edit '\$\{\{ steps\.tag\.outputs\.tag \}\}' --draft=false\s*$/m);
 requireStepLine("Publish the release exactly once", /^\s*if:\s*steps\.release_state\.outputs\.state != 'published'\s*$/m);
 requireStepLine("Finalize release notes with publication timing", /^\s*\$jobs = gh api 'repos\/\$\{\{ github\.repository \}\}\/actions\/runs\/\$\{\{ github\.run_id \}\}\/jobs\?filter=all&per_page=100' \| ConvertFrom-Json\s*$/m);
 requireStepLine("Finalize release notes with publication timing", /^\s*if:\s*steps\.release_state\.outputs\.state != 'published'\s*$/m);
-requireStepLine("Recover timing without changing published release identity", /^\s*if \(\[string\]\$release\.body -match 'Workflow duration: \\d\{2\}:\\d\{2\}:\\d\{2\}'\) \{\s*$/m);
+requireStepLine("Recover timing without changing published release identity", /^\s*if \(\$notes -notmatch 'Workflow duration: \\d\{2\}:\\d\{2\}:\\d\{2\}'\) \{\s*$/m);
 requireStepLine("Recover timing without changing published release identity", /^\s*if:\s*steps\.release_state\.outputs\.state == 'published'\s*$/m);
 requireStepLine("Recover timing without changing published release identity", /^\s*gh release edit \$tag --notes-file \$notesPath\s*$/m);
+requireStepLine("Recover timing without changing published release identity", /^\s*\$notes = \[regex\]::Replace\(\$notes, '\(\?m\)\^Exact commit:\.\*\$', "Exact commit: \$expectedCommit"\)\s*$/m);
+requireStepLine("Recover timing without changing published release identity", /^\s*\$artifactSection = "### Artifact SHA-256.*<pre><code>\$hashText<\/code><\/pre>.*### Workflow timing"\s*$/m);
 requireStepLine("Read published release and assets back", /^\s*gh release download \$tag --dir \$download\s*$/m);
-requireStepLine("Read published release and assets back", /^\s*\$hashMatches = \[regex\]::Matches\(\[string\]\$release\.body, '\(\?m\)\^\(\[0-9a-f\]\{64\}\)  \(\[\^\\r\\n\]\+\)\$'\)\s*$/m);
+requireExact(activeLines(workflowStep("Read published release and assets back")), "$hashMatches = [regex]::Matches([string]$release.body, '(?m)^\\s*([0-9a-f]{64})\\s{2}([^\\r\\n]+)\\r?$')", "release read-back hash parser");
+requireStepLine("Read published release and assets back", /^\s*throw 'Published release notes contain disallowed control characters\.'\s*$/m);
 requireStepLine("Upload safe build and failure evidence", /^\s*if:\s*\$\{\{ always\(\) \}\}\s*$/m);
 requireStepLine("Upload safe build and failure evidence", /^\s*uses:\s*actions\/upload-artifact@v4\s*$/m);
 

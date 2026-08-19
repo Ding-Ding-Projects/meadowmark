@@ -14,14 +14,14 @@ because Git materialized CRLF while the generator emits LF.
 
 The render-evidence fields in `release-gate.json` remain unchanged and truthful:
 no capture evidence was invented or promoted. The published-only changelog data
-also remains unchanged because this candidate has no commit, workflow result, or
-release to attribute yet.
+also remains unchanged because `v0.1.50` ended with a failed workflow verdict and
+the requested `v0.1.51` manual release is still pending.
 
 Focused local evidence for code commit `4a9a238` and this pending handoff update:
 
 - `node --check tools/release/verify-contract.mjs`: exit 0.
 - `node tools/release/verify-contract.mjs`: exit 0.
-- `node tools/release/verify-contract-negative.mjs`: exit 0 after 15 deliberate
+- `node tools/release/verify-contract-negative.mjs`: exit 0 after 16 deliberate
   regressions each exited nonzero, covering publication holds, attempt-specific
   tags, release ownership/recovery, CI test commands, native handle cleanup,
   signature-proof bypasses, icon selection, line endings, and release read-back.
@@ -51,11 +51,25 @@ Focused local evidence for code commit `4a9a238` and this pending handoff update
   - `RELEASES`: 82 bytes,
     SHA-256 `763a09fbc324fb9373c979d848da27222e5f18d864dce3136633f8c5bb5ce1ed`.
 
-No push, GitHub Actions run, or release was performed for this candidate. The
-existing failing workflow remains the latest remote result until this change is
-integrated, pushed, and read back through the real release flow. Older
-release-chain sections below are retained as historical evidence and are
-superseded where they conflict with this current-status section.
+Code commit `bf9f4eb` was pushed and produced the remote follow-up below. The
+release-note source hotfix and requested fresh manual release remain local and
+unverified. Older release-chain sections below are retained as historical
+evidence and are superseded where they conflict with this current-status section.
+
+### Remote follow-up and manual-release plan
+
+The first repaired workflow run, `32208008166`, published `v0.1.50` and all
+three assets for `bf9f4eb`, then failed read-back because PowerShell interpreted
+Markdown backticks before `b` and `t` as control characters in the release-note
+here-string. The published notes were repaired manually and read back with zero
+disallowed controls, the exact commit, stable duration, and three assets intact.
+
+The current source follow-up removes Markdown backticks from that double-quoted
+PowerShell here-string, reconstructs any owned published hash section with HTML
+code markup, and rejects control characters before read-back. The requested
+fresh manual release will be `v0.1.51`, built only by `build.bat /s` followed by
+`build-installer.bat /s`. Automatic publication must stay disabled only for the
+single push that receives that manual release, then be restored.
 
 ## Historical release-grade handoff from earlier on 2026-08-18
 
@@ -368,15 +382,16 @@ interaction evidence.
   blocks the build-and-publish workflow, which is required to release every push.
 - The current candidate repairs the environment-dependent icon comparison and PE
   signature evidence; the canonical local installer build passed at `4a9a238`,
-  while remote publication and read-back remain pending.
+  and `v0.1.50` was manually read back after its corrupted notes were repaired.
 - The committed base stays `0.1.0`; the workflow derives a matching monotonic
   package version and tag from `GITHUB_RUN_NUMBER`, so each release is newer than
   `v0.1.0-22` without an attempt-specific duplicate.
 - Update availability, download, restart, rollback, repair, invalid metadata,
   corrupt package, cancellation, offline behavior, and unsaved-work protection
   remain unexercised.
-- `v0.1.0-22` remains the latest verified published baseline until the current
-  candidate receives a terminal workflow and release read-back verdict.
+- `v0.1.50` is the latest manually verified published baseline. Its automatic
+  workflow verdict remains failed because the first read-back saw corrupted notes;
+  the source fix and requested `v0.1.51` manual release remain pending.
 
 ## Open issues
 
@@ -389,19 +404,20 @@ interaction evidence.
 
 The implementation lanes are integrated. The current owner should:
 
-1. Commit the local-build evidence update and rerun the focused static checks.
-2. Push the integrated commit and require a successful workflow, unique non-draft
-   release, matching target commit, three downloadable assets, and hash read-back.
-3. Exercise real packaged player and service interactions, wire the remaining UI
+1. Commit the release-note control-character fix and rerun the focused static checks.
+2. Build `v0.1.51` through `build.bat /s` and then `build-installer.bat /s`.
+3. Disable only the automatic Release workflow for the single default-branch push,
+   manually publish and read back `v0.1.51`, then restore the workflow immediately.
+4. Exercise real packaged player and service interactions, wire the remaining UI
    authority seams, and capture the required surface matrix through the approved
    hidden-desktop route.
-4. Populate only evidence that actually exists, rerun the fail-closed inventory
+5. Populate only evidence that actually exists, rerun the fail-closed inventory
    checks, and keep `rendersVerified` truthful to matching committed capture
    evidence rather than using it as a CI switch.
-5. Keep Meadowmark issue #2 open until the release-grade objective and its
+6. Keep Meadowmark issue #2 open until the release-grade objective and its
    evidence are complete.
 
 Until those steps complete, the honest state is: the implementation lanes are
-integrated, the published baseline remains `v0.1.0-22`, zero inventory rows are
-complete, and the current candidate has focused source and package evidence but
-no new workflow, release, or runtime-interaction verdict.
+integrated, `v0.1.50` has a failed automatic workflow but a manually verified
+release record, zero inventory rows are complete, and the release-note hotfix has
+no `v0.1.51` package or runtime-interaction verdict yet.

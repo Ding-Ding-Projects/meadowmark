@@ -165,7 +165,7 @@ jobs:
           $notesPath = Join-Path $env:RUNNER_TEMP 'meadowmark-release-notes.md'
           if ('${{ steps.dim_sum.outputs.available }}' -eq 'true') {
             $dimSum = @"
-          **${{ steps.dim_sum.outputs.code_name }}** (`${{ steps.dim_sum.outputs.dish_id }}`)
+          **${{ steps.dim_sum.outputs.code_name }}** (<code>${{ steps.dim_sum.outputs.dish_id }}</code>)
 
           - [Published dish photo (${{ steps.dim_sum.outputs.asset_name }})](${{ steps.dim_sum.outputs.photo_url }})
           - [Catalog release ${{ steps.dim_sum.outputs.catalog_release_tag }}](${{ steps.dim_sum.outputs.catalog_release_url }})
@@ -186,11 +186,11 @@ jobs:
           @"
           ## Meadowmark $tag
 
-          Exact commit: `${{ github.sha }}`
+          Exact commit: ${{ github.sha }}
           Workflow run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
           This release contains an unsigned Windows installer built through the
-          committed `build-installer.bat /s` Squirrel.Windows path. Code signing
+          committed <code>build-installer.bat /s</code> Squirrel.Windows path. Code signing
           is permanently disabled. Windows may show an unknown-publisher or
           SmartScreen warning. Meadowmark is free and has no purchases.
 
@@ -203,9 +203,7 @@ jobs:
 
           ### Artifact SHA-256
 
-          ```text
-          $hashes
-          ```
+          <pre><code>$hashes</code></pre>
 
           ### Workflow timing
 
@@ -288,28 +286,39 @@ jobs:
         run: |
           $tag = '${{ steps.tag.outputs.tag }}'
           $release = gh api "repos/${{ github.repository }}/releases/tags/$tag" | ConvertFrom-Json
-          if ([string]$release.body -match 'Workflow duration: \d{2}:\d{2}:\d{2}') {
-            Write-Host 'Published release timing is already finalized.'
-            return
-          }
-          $jobs = gh api 'repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs?filter=all&per_page=100' | ConvertFrom-Json
-          $firstJob = $jobs.jobs | Where-Object { $_.started_at } | Sort-Object started_at | Select-Object -First 1
-          if (-not $firstJob -or -not $release.published_at) { throw 'Could not recover exact workflow timing.' }
-          $start = [DateTimeOffset]::Parse([string]$firstJob.started_at).ToUniversalTime()
-          $end = [DateTimeOffset]::Parse([string]$release.published_at).ToUniversalTime()
-          $duration = $end - $start
-          if ($duration.TotalSeconds -lt 0) { throw 'Recovered workflow publication duration is negative.' }
-          $durationText = '{0:D2}:{1:D2}:{2:D2}' -f [int]$duration.TotalHours, $duration.Minutes, $duration.Seconds
-          $timing = @"
+          $originalNotes = [string]$release.body
+          $notes = $originalNotes
+          $expectedCommit = '${{ github.sha }}'
+          $notes = [regex]::Replace($notes, '(?m)^Exact commit:.*$', "Exact commit: $expectedCommit")
+          $notes = $notes.Replace(([string][char]8 + 'uild-installer.bat /s'), 'build-installer.bat /s')
+          $hashMatches = [regex]::Matches($notes, '(?m)^\s*([0-9a-f]{64})\s{2}([^\r\n]+)\r?$')
+          if ($hashMatches.Count -ne 3) { throw 'Published release notes do not contain exactly three recoverable artifact hashes.' }
+          $hashText = (($hashMatches | ForEach-Object { "$($_.Groups[1].Value)  $($_.Groups[2].Value)" }) -join "`r`n")
+          $artifactSection = "### Artifact SHA-256`r`n`r`n<pre><code>$hashText</code></pre>`r`n`r`n### Workflow timing"
+          $notes = [regex]::Replace($notes, '(?s)### Artifact SHA-256.*?### Workflow timing', [System.Text.RegularExpressions.MatchEvaluator]{ param($match) $artifactSection })
+          if ($notes -notmatch 'Workflow duration: \d{2}:\d{2}:\d{2}') {
+            $jobs = gh api 'repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs?filter=all&per_page=100' | ConvertFrom-Json
+            $firstJob = $jobs.jobs | Where-Object { $_.started_at } | Sort-Object started_at | Select-Object -First 1
+            if (-not $firstJob -or -not $release.published_at) { throw 'Could not recover exact workflow timing.' }
+            $start = [DateTimeOffset]::Parse([string]$firstJob.started_at).ToUniversalTime()
+            $end = [DateTimeOffset]::Parse([string]$release.published_at).ToUniversalTime()
+            $duration = $end - $start
+            if ($duration.TotalSeconds -lt 0) { throw 'Recovered workflow publication duration is negative.' }
+            $durationText = '{0:D2}:{1:D2}:{2:D2}' -f [int]$duration.TotalHours, $duration.Minutes, $duration.Seconds
+            $timing = @"
           ### Workflow timing
 
           - Workflow started: $($start.ToString('o'))
           - Workflow completed: $($end.ToString('o'))
           - Workflow duration: $durationText
           "@
-          $notes = [string]$release.body
-          $notes = $notes -replace '(?s)### Workflow timing.*?### Line count', "$timing`r`n`r`n### Line count"
-          if ($notes -eq [string]$release.body) { throw 'Could not locate the preliminary workflow-timing section.' }
+            $notes = $notes -replace '(?s)### Workflow timing.*?### Line count', "$timing`r`n`r`n### Line count"
+          }
+          if ($notes -match '[\x00-\x09\x0B\x0C\x0E-\x1F]') { throw 'Recovered release notes still contain disallowed control characters.' }
+          if ($notes -eq $originalNotes) {
+            Write-Host 'Published release notes and timing are already finalized.'
+            return
+          }
           $notesPath = Join-Path $env:RUNNER_TEMP 'meadowmark-recovered-release-notes.md'
           $notes | Out-File $notesPath -Encoding utf8
           gh release edit $tag --notes-file $notesPath
@@ -326,8 +335,11 @@ jobs:
           if ($release.target_commitish -ne '${{ github.sha }}') {
             throw "Release target $($release.target_commitish) does not match ${{ github.sha }}."
           }
+          if ([string]$release.body -match '[\x00-\x09\x0B\x0C\x0E-\x1F]') {
+            throw 'Published release notes contain disallowed control characters.'
+          }
           if ('${{ steps.release_state.outputs.state }}' -eq 'published') {
-            $hashMatches = [regex]::Matches([string]$release.body, '(?m)^([0-9a-f]{64})  ([^\r\n]+)$')
+            $hashMatches = [regex]::Matches([string]$release.body, '(?m)^\s*([0-9a-f]{64})\s{2}([^\r\n]+)\r?$')
             $expectedArtifacts = @($hashMatches | ForEach-Object {
               [pscustomobject]@{ sha256 = $_.Groups[1].Value; name = $_.Groups[2].Value }
             })
