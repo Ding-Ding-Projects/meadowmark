@@ -17,7 +17,12 @@ copyright: Copyright (c) Ding-Ding Projects
 
 directories:
   output: release
-  buildResources: build-resources
+  # Points at the generated icon family, NOT a build-resources folder that does
+  # not exist. electron-builder resolves a relative win.icon against this
+  # directory, and when it is missing it falls back to the stock Electron icon
+  # WITHOUT warning -- which is why the packaged executable carried no icon and
+  # the release verifier blocked on a missing large/small pair.
+  buildResources: design/icons
 
 files:
   - packages/app/dist/**/*
@@ -60,7 +65,7 @@ win:
   # above and forceCodeSigning below, with no certificate configured anywhere.
   # The release script independently proves the produced Setup.exe carries no
   # Authenticode certificate, so this stays fail-closed rather than trusted.
-  icon: design/icons/meadowmark.ico
+  icon: meadowmark.ico
   target:
     - target: squirrel
   artifactName: "${productName}-Setup-${version}.${ext}"
