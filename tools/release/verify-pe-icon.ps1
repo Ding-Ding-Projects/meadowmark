@@ -78,7 +78,7 @@ try {
                 $referenceBitmap = $reference.ToBitmap()
                 try { $referenceHash = Get-PixelHash -Bitmap $referenceBitmap } finally { $referenceBitmap.Dispose() }
             } finally { $reference.Dispose() }
-            if ($largeHash -ne $referenceHash) { throw "The packaged application icon does not match the committed Meadowmark icon." }
+            if ($largeHash -ne $referenceHash) { throw "The packaged application icon does not match the committed Meadowmark icon. executable=$Executable reference=$ReferenceIcon largeHash=$largeHash referenceHash=$referenceHash" }
         }
         [pscustomobject]@{ executable = $Executable; largePixelHash = $largeHash; smallPixelHash = $smallHash; referenceMatched = [bool]$RequireReferenceMatch }
     } finally {
