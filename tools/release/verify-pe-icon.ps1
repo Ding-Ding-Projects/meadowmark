@@ -40,7 +40,13 @@ function Get-PixelHash {
 $large = [IntPtr]::Zero
 $small = [IntPtr]::Zero
 $count = [MeadowmarkIconNative]::ExtractIconEx($Executable, 0, [ref]$large, [ref]$small, 1)
-if ($count -ne 1 -or $large -eq [IntPtr]::Zero -or $small -eq [IntPtr]::Zero) {
+# ExtractIconEx returns the number of icon HANDLES it filled, not the number of
+# pairs requested: asking for one pair yields two handles (large and small) on
+# this platform. The old assertion demanded exactly 1 and therefore rejected
+# every correctly-iconned executable -- verified against notepad.exe, which also
+# returns 2 and would also have failed. What actually matters is that BOTH
+# handles came back, so that is what is checked.
+if ($count -lt 1 -or $large -eq [IntPtr]::Zero -or $small -eq [IntPtr]::Zero) {
     throw "No complete large/small icon pair was embedded in $Executable."
 }
 try {
