@@ -8,7 +8,7 @@ This is a handoff-only closeout, not a release pass. It did not build an install
 publish or verify a new release after integration. It did preserve a real
 published-package first-paint capture for the existing `v0.1.0-22` baseline.
 
-## Read this first: it looks like a game now, and the camera points at nothing
+## Read this first: the world renders
 
 Updated 2026-08-18 against `main` at `d812972`, after the interface restyle and the
 graphics-variety work. Measured, not remembered.
@@ -24,12 +24,27 @@ silhouettes per type, 43 props (carts, windmills, market stalls, barrels, wells)
 plants across a dozen species, villager and animal variants, all twelve zoo species,
 and effect meshes for smoke, sparkles, ripples and dust.
 
-**But the last capture shows the camera framing empty grass.** The farm, the field beds
-and every one of those 328 meshes are off-screen. The world lane pulled the camera back
-to fix an over-close framing and it now points at bare ground; a few stray markers and
-red fence rails are the only geometry visible. **This is the most important open
-defect** - cosmetic in cause, total in effect. A player opening this build sees a green
-field and a nice interface, and none of their town.
+**The world draws.** A capture of the running build shows a red barn with a silo, six
+brown field beds with wheat growing in them, trees, a fence line and real shadows on
+the grass. See `docs/assets/captures/meadowmark-world-renders.png`.
+
+**It was not the camera, and it took four wrong guesses to find that out.** Four
+plausible fixes in a row produced byte-identical frames. Reading the live scene over
+the debugging protocol answered it in one shot: 20 pools, 1,734 instances, all
+correctly populated and positioned, every one `visible:false / bbVisible:true`, with
+`distToTarget` 30.8 against a live `billboardDistance` of 24. The entire world was
+drawing as flat camera-facing quads.
+
+The camera clamps to 6..60 and opens at about 31, while the Speed presets set
+`lodDistance` to 14/18/24/32/48 and the renderer assigns that over the class default.
+So at the DEFAULT quality level everything sat past the billboard threshold on the
+first frame and never came back. Presets are now 36/44/54/68/90.
+
+Three of the four "failed" fixes were real defects and they stayed: the camera
+targeted a hardcoded (0,0,0), which is the CORNER of the 40x40 grid; the
+level-of-detail distance was measured from world origin rather than from what the
+camera looks at; and the boot focus now prefers field beds over planted crops, since a
+fresh save has beds and no crops.
 
 **Three fixes worth knowing, all root causes rather than symptoms:**
 
@@ -42,8 +57,16 @@ field and a nice interface, and none of their town.
 - `effects.ts` registered nothing because no module imported it, so `defineAsset` never
   ran. Fourth instance this session of the same wired-at-one-end shape.
 
-**Also open:** the "Welcome back" offline dialog stacks a new copy every second until
-acknowledged. Found while capturing, not yet fixed.
+**Corrected:** an earlier version of this document called the ten main-process
+subsystems "libraries with no callers". That is out of date - all ten reach the
+preload bridge and have UI touchpoints (measured: ollama 24 preload refs, auth 18,
+history 9, locks 9, narrator 9, settings 8, converter 8, updater 7, logo 7,
+exports 4). What remains is promoting inventory rows with evidence, not wiring.
+
+**Fixed since:** the "Welcome back" dialog stacked a new copy every second until
+acknowledged - 68 in under 90 seconds. Guarded now, with
+`tools/guards/offline-dialog-once.mjs` watched failing on both halves before being
+trusted. Confirmed live over the debugging protocol: 1 dialog, not 68.
 
 ---
 
