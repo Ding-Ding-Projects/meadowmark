@@ -1,6 +1,6 @@
 # Meadowmark handoff
 
-## Current status: release-workflow repair candidate, locally checked only
+## Current status: release-workflow repair candidate, locally built
 
 Updated on 2026-08-18 from branch `codex/fix-release-workflow`. This narrow
 candidate removes the CI-only `rendersVerified` publication hold, derives one
@@ -17,7 +17,7 @@ no capture evidence was invented or promoted. The published-only changelog data
 also remains unchanged because this candidate has no commit, workflow result, or
 release to attribute yet.
 
-Focused local evidence for the uncommitted candidate:
+Focused local evidence for code commit `4a9a238` and this pending handoff update:
 
 - `node --check tools/release/verify-contract.mjs`: exit 0.
 - `node tools/release/verify-contract.mjs`: exit 0.
@@ -38,13 +38,24 @@ Focused local evidence for the uncommitted candidate:
 - `build-installer.ps1 -VerifyUnsignedExecutable`: the existing Meadowmark setup
   returned `NotSigned`; an embedded-signed Git executable was rejected as
   `CertificateTablePresent`.
+- `build.bat /s`: exit 0 at `4a9a238`; all five workspaces built from the exact
+  pinned Node and locked dependency set.
+- `RELEASE_BUILD_VERSION=0.1.50` with `build-installer.bat /s`: exit 0 at
+  `4a9a238`. The Squirrel package recorded base `0.1.0`, built/package version
+  `0.1.50`, exact commit provenance, `NotSigned`, matching large/small app and
+  installer icon hashes, and these three publish assets:
+  - `Meadowmark-Setup-0.1.50.exe`: 136,139,776 bytes,
+    SHA-256 `03df1be5fdd022e0fa2169a1c22a19b0aeffa61ee7dd3b7e46d16d98a6263a0a`;
+  - `meadowmark-0.1.50-full.nupkg`: 135,411,583 bytes,
+    SHA-256 `de0eb54f84d1f0092986cd593e3682fd26fbb8a482bd026643e39cc94759c182`;
+  - `RELEASES`: 82 bytes,
+    SHA-256 `763a09fbc324fb9373c979d848da27222e5f18d864dce3136633f8c5bb5ce1ed`.
 
-No application build, installer build, package inspection, push, GitHub Actions
-run, or release was performed for this candidate. The existing failing workflow
-remains the latest remote result until this change is reviewed, committed, pushed,
-and read back through the real release flow. Older release-chain sections below
-are retained as historical evidence and are superseded where they conflict with
-this current-status section.
+No push, GitHub Actions run, or release was performed for this candidate. The
+existing failing workflow remains the latest remote result until this change is
+integrated, pushed, and read back through the real release flow. Older
+release-chain sections below are retained as historical evidence and are
+superseded where they conflict with this current-status section.
 
 ## Historical release-grade handoff from earlier on 2026-08-18
 
@@ -356,7 +367,8 @@ interaction evidence.
 - `rendersVerified` remains false as truthful local capture metadata; it no longer
   blocks the build-and-publish workflow, which is required to release every push.
 - The current candidate repairs the environment-dependent icon comparison and PE
-  signature evidence, but its canonical installer build is still pending.
+  signature evidence; the canonical local installer build passed at `4a9a238`,
+  while remote publication and read-back remain pending.
 - The committed base stays `0.1.0`; the workflow derives a matching monotonic
   package version and tag from `GITHUB_RUN_NUMBER`, so each release is newer than
   `v0.1.0-22` without an attempt-specific duplicate.
@@ -377,21 +389,19 @@ interaction evidence.
 
 The implementation lanes are integrated. The current owner should:
 
-1. Complete adversarial review and commit the release-workflow candidate.
-2. Build through `build.bat /s` and `build-installer.bat /s`, then verify the
-   generated Squirrel assets against the exact candidate commit.
-3. Push the integrated commit and require a successful workflow, unique non-draft
+1. Commit the local-build evidence update and rerun the focused static checks.
+2. Push the integrated commit and require a successful workflow, unique non-draft
    release, matching target commit, three downloadable assets, and hash read-back.
-4. Exercise real packaged player and service interactions, wire the remaining UI
+3. Exercise real packaged player and service interactions, wire the remaining UI
    authority seams, and capture the required surface matrix through the approved
    hidden-desktop route.
-5. Populate only evidence that actually exists, rerun the fail-closed inventory
+4. Populate only evidence that actually exists, rerun the fail-closed inventory
    checks, and keep `rendersVerified` truthful to matching committed capture
    evidence rather than using it as a CI switch.
-6. Keep Meadowmark issue #2 open until the release-grade objective and its
+5. Keep Meadowmark issue #2 open until the release-grade objective and its
    evidence are complete.
 
 Until those steps complete, the honest state is: the implementation lanes are
 integrated, the published baseline remains `v0.1.0-22`, zero inventory rows are
-complete, and the current candidate has focused source checks but no new package,
-workflow, release, or runtime-interaction verdict.
+complete, and the current candidate has focused source and package evidence but
+no new workflow, release, or runtime-interaction verdict.
