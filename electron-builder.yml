@@ -28,8 +28,12 @@ files:
 
 extraMetadata:
   main: packages/app/dist/main.cjs
-  build:
-    commit: "${env.RELEASE_COMMIT_SHA}"
+  # NOT `build:`. electron-builder treats a `build` key here as the deprecated
+  # --em.build CLI form and refuses to package at all, with the singularly
+  # unhelpful message "--em.build is deprecated, please specify as -c". `build` is
+  # its own reserved package.json config key, so the stamped commit lives under a
+  # name it does not own.
+  releaseCommit: "${env.RELEASE_COMMIT_SHA}"
 
 # Permanent no-signing policy. See the module comment above.
 # Only `forceCodeSigning` is a valid top-level property. `signExecutable` is
