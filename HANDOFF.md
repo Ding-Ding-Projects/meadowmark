@@ -74,6 +74,12 @@ public assets were downloaded and matched the canonical hashes. Automatic
 publication was disabled only for that push and is active again. This pending
 documentation/source commit should produce the next ordinary automatic release.
 
+The first automatic follow-up, run `32209486092` (release run number 51),
+correctly refused to overwrite manual `v0.1.51` because that tag belonged to a
+different target commit and carried no matching run-ownership marker. It stopped
+before build or publication and changed no release. Run number 51 is now consumed;
+the next push is expected to derive the unused `v0.1.52` tag from run number 52.
+
 ## Historical release-grade handoff from earlier on 2026-08-18
 
 The material below records the state before the current release-workflow repair.
@@ -407,10 +413,10 @@ interaction evidence.
 
 The implementation lanes are integrated. The current owner should:
 
-1. Commit the release-data and parseable-hash follow-up, then rerun the focused
+1. Commit this factual ownership-collision handoff after rerunning the focused
    site and release-contract checks.
-2. Push with the automatic Release workflow active and verify its terminal run,
-   next unique release, exact target, notes, and three downloaded assets.
+2. Push with the automatic Release workflow active and verify run 52, expected
+   `v0.1.52`, its exact target, notes, and three downloaded assets.
 3. Exercise real packaged player and service interactions, wire the remaining UI
    authority seams, and capture the required surface matrix through the approved
    hidden-desktop route.
