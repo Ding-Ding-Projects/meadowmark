@@ -8,6 +8,45 @@ This is a handoff-only closeout, not a release pass. It did not build an install
 publish or verify a new release after integration. It did preserve a real
 published-package first-paint capture for the existing `v0.1.0-22` baseline.
 
+## Release chain: eleven blockers fixed, one still open
+
+The local release path (`build-installer.bat /s`) had **never completed end to end**.
+Eleven genuine blockers were found and fixed this session, each committed separately:
+
+1. `--config` flag electron-builder 26 misparses as `--em.build`
+2. `extraMetadata.build` is a reserved key and blocked packaging entirely
+3. `Microsoft.PowerShell.Security` will not load on this machine under either
+   PowerShell, so the unsigned check moved to the .NET Authenticode API
+4. an eaten backslash turned `v1.0` into a literal vertical tab in a path
+5. `${env.*}` is not expanded inside `squirrelWindows.iconUrl`
+6. `${env.*}` is not expanded inside `extraMetadata` either
+7. `signAndEditExecutable: false` disables icon embedding as well as signing
+8. `directories.buildResources` pointed at a folder that does not exist, so
+   electron-builder silently fell back to the stock Electron icon
+9. the icon verifier required `ExtractIconEx` to return exactly 1; it returns 2
+   (large + small) here and would have rejected `notepad.exe` too
+10-11. two bad pixel-hash implementations, one of which I introduced by clamping
+    coordinates instead of scaling
+
+**Still blocked, and the artifact is not at fault.** The build stops at the packaged
+icon comparison. Measured with the exact API the verifier uses, against the exact
+reference it is given: **0 differing pixels out of 1024** on the unpacked exe, the
+nupkg copy and `Setup.exe`. Run standalone the verifier PASSES all three. Inside the
+build process the same `.ico` file hashes differently -- `f96fcce0` standalone,
+`f6b5e25b` in-build -- and only 6 of the 9 frames are readable there. That points at
+GDI+ frame selection differing by process context, not at a wrong icon.
+
+**The gate was deliberately not weakened to force a pass.** `rendersVerified` stays
+`false`, so CI still refuses to publish. That red is the gate working, not a broken
+build.
+
+**Next step:** print the per-frame reference hashes from inside the build process and
+compare against the standalone set. If GDI+ is the cause, read the `.ico` frames by
+parsing the file directly rather than through `System.Drawing.Icon`, which removes
+the environment dependence entirely.
+
+---
+
 ## Read this first: the world renders
 
 Updated 2026-08-18 against `main` at `d812972`, after the interface restyle and the
