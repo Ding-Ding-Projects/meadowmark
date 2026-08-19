@@ -29,10 +29,22 @@ export type SpeedLevel = 1 | 2 | 3 | 4 | 5;
  * index 4 => level 5 (slowest/highest quality). `quality.ts` and any test
  * asserting the mapping should both read from this single table.
  */
+/**
+ * Speed presets.
+ *
+ * lodDistance MUST stay above the camera's default orbit distance. The camera
+ * clamps to 6..60 and opens at about 31, so the old level-3 default of 24 put
+ * every instance past the billboard threshold on the very first frame: 1,734
+ * instances across 20 pools all rendered as flat camera-facing quads, which
+ * reads as bare ground with the odd grey sheet in it. Measured live before the
+ * change: distToTarget 30.8, billboardDistance 24, every pool visible:false /
+ * bbVisible:true. Billboards now appear only when the player genuinely zooms
+ * out, and level 5 (90) never billboards inside the clamp range at all.
+ */
 export const SPEED_LEVEL_TABLE: Record<SpeedLevel, QualitySettings> = {
   1: {
     shadowMapResolution: 512,
-    lodDistance: 14,
+    lodDistance: 36,
     instancingBudget: 400,
     antialiasing: false,
     dayNightEnabled: false,
@@ -40,7 +52,7 @@ export const SPEED_LEVEL_TABLE: Record<SpeedLevel, QualitySettings> = {
   },
   2: {
     shadowMapResolution: 1024,
-    lodDistance: 18,
+    lodDistance: 44,
     instancingBudget: 800,
     antialiasing: false,
     dayNightEnabled: true,
@@ -48,7 +60,7 @@ export const SPEED_LEVEL_TABLE: Record<SpeedLevel, QualitySettings> = {
   },
   3: {
     shadowMapResolution: 2048,
-    lodDistance: 24,
+    lodDistance: 54,
     instancingBudget: 1500,
     antialiasing: true,
     dayNightEnabled: true,
@@ -56,7 +68,7 @@ export const SPEED_LEVEL_TABLE: Record<SpeedLevel, QualitySettings> = {
   },
   4: {
     shadowMapResolution: 2048,
-    lodDistance: 32,
+    lodDistance: 68,
     instancingBudget: 2500,
     antialiasing: true,
     dayNightEnabled: true,
@@ -64,7 +76,7 @@ export const SPEED_LEVEL_TABLE: Record<SpeedLevel, QualitySettings> = {
   },
   5: {
     shadowMapResolution: 4096,
-    lodDistance: 48,
+    lodDistance: 90,
     instancingBudget: 4000,
     antialiasing: true,
     dayNightEnabled: true,

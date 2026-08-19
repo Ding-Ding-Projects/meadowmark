@@ -166,7 +166,17 @@ function averageVertexColor(geometry: THREE.BufferGeometry): THREE.Color {
 export class InstanceManager {
   private pools = new Map<string, InstancePool>();
   private root: THREE.Group;
-  billboardDistance = 24;
+  /**
+   * Distance at which pools swap to their flat billboard.
+   *
+   * This MUST sit above the camera's default orbit distance. The camera clamps
+   * to 6..60 and opens at ~31, so the previous value of 24 put the entire world
+   * into billboard mode on the very first frame and kept it there for every
+   * default view -- buildings, crops and field beds all rendered as flat quads
+   * facing the camera, which reads as bare ground with the odd grey sheet in it.
+   * 50 leaves billboards for the genuinely far end of the zoom range.
+   */
+  billboardDistance = 50;
 
   constructor(parent: THREE.Object3D) {
     this.root = new THREE.Group();

@@ -64,6 +64,12 @@ export interface RendererHandle {
     panBy: (dx: number, dz: number) => void;
     zoomBy: (delta: number) => void;
     rotateBy: (deltaYaw: number, deltaPitch: number) => void;
+    /**
+     * Point the camera at a TILE coordinate and re-centre the pan bounds there.
+     * Takes tiles, not world units, so callers never repeat the TILE_SIZE
+     * conversion and cannot get it subtly wrong.
+     */
+    focusOnTile: (tile: TileCoord) => void;
   };
   placement: {
     begin: (assetName: string, footprintWidth: number, footprintDepth: number) => void;
@@ -352,7 +358,11 @@ export function createRenderer(canvas: HTMLCanvasElement, opts: CreateRendererOp
       instances.setInstances(assetName, transforms);
     }
 
-    const camDistance = cameraController.camera.position.length();
+    // Distance to the TARGET, not to world origin. Using position.length() here
+    // meant a camera focused anywhere inland reported a large distance and every
+    // pool sat permanently in billboard mode -- which is what rendered the world
+    // as bare ground with the occasional flat grey quad.
+    const camDistance = cameraController.getDistanceToTarget();
     instances.updateLOD(camDistance);
 
     sceneBundle.update(now);
@@ -422,6 +432,8 @@ export function createRenderer(canvas: HTMLCanvasElement, opts: CreateRendererOp
       panBy: cameraController.panBy,
       zoomBy: cameraController.zoomBy,
       rotateBy: cameraController.rotateBy,
+      focusOnTile: (tile: TileCoord) =>
+        cameraController.setFocus(tile.x * TILE_SIZE, tile.y * TILE_SIZE),
     },
     placement: {
       begin: beginPlacement,

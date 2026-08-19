@@ -15,7 +15,7 @@ import {
   type GameEvent,
   type GameState,
 } from '@meadowmark/shared';
-import { createRenderer } from '@meadowmark/engine';
+import { createRenderer, type GameStateView } from '@meadowmark/engine';
 import { hydrateSettingsFromHost, mountUi, notifyError, notifyInfo, notifySuccess, type HostBridge } from '@meadowmark/ui';
 
 import { achievementCatalog, dailyTaskTemplates, regattaScoreBarCap, regattaTaskTemplates, tickConfig } from './content.js';
@@ -72,6 +72,55 @@ function describeEvent(event: GameEvent): { kind: 'success' | 'info'; message: s
   }
 }
 
+/**
+ * Where the player's own farm is, in tile coordinates.
+ *
+ * Deliberately narrow. An earlier version averaged EVERY view entity including
+ * scattered scenery and roads, which are spread across the whole 40x40 grid --
+ * so the average landed near the middle of the map and the six starting plots
+ * over in one corner were still off screen. Scenery is decoration; the plots and
+ * the buildings the player owns are what they came to look at.
+ *
+ * Preference order: crop plots, then placed buildings, then animal sheds, then
+ * the middle of the terrain grid.
+ */
+function contentCentreTile(view: GameStateView): { x: number; y: number } {
+  const mean = (points: readonly { x: number; y: number }[]): { x: number; y: number } | null => {
+    if (points.length === 0) return null;
+    let sumX = 0;
+    let sumY = 0;
+    for (const p of points) {
+      sumX += p.x;
+      sumY += p.y;
+    }
+    return { x: sumX / points.length, y: sumY / points.length };
+  };
+
+  // Field BEDS first, not planted crops. mapCropPlots skips a plot with no crop
+  // in it, so on a fresh save cropPlots is empty and a centroid built from it
+  // falls through to the grid centre -- which is exactly the empty ground this
+  // whole fix exists to stop the player staring at. The beds are emitted for
+  // every unlocked plot whether or not anything is growing.
+  const beds = mean(
+    view.decorations.filter((d) => d.kind === 'field_plot_empty').map((d) => d.position),
+  );
+  if (beds) return beds;
+  const plots = mean(view.cropPlots.map((c) => c.position));
+  if (plots) return plots;
+  const buildings = mean(view.buildings.map((b) => b.position));
+  if (buildings) return buildings;
+  const animals = mean(view.animals.map((a) => a.position));
+  if (animals) return animals;
+
+  let maxX = 0;
+  let maxY = 0;
+  for (const tile of view.tiles) {
+    if (tile.position.x > maxX) maxX = tile.position.x;
+    if (tile.position.y > maxY) maxY = tile.position.y;
+  }
+  return { x: maxX / 2, y: maxY / 2 };
+}
+
 async function boot(): Promise<void> {
   const canvas = document.getElementById('mm-canvas');
   const uiRoot = document.getElementById('mm-ui-root');
@@ -94,8 +143,14 @@ async function boot(): Promise<void> {
   const counters = createAchievementCounters();
 
   const renderer = createRenderer(canvas, { reducedMotion: prefersReducedMotion() });
-  renderer.setState(stateToEngineView(state, now));
-
+  const firstView = stateToEngineView(state, now);
+  renderer.setState(firstView);
+  // Point the camera at the town before the first frame. The controller
+  // defaults to world origin, which is the CORNER of the 40x40 grid, while
+  // every starting plot, shed and factory sits inland -- so without this the
+  // player opens the game looking at empty ground, and zooming out only frames
+  // more of it.
+  renderer.camera.focusOnTile(contentCentreTile(firstView));
   const rendererBridge = createRendererBridge(canvas, renderer);
 
   // Building selection is presentational-only (see ui-actions.ts's

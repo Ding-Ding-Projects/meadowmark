@@ -38,6 +38,24 @@ export interface CameraController {
   zoomBy: (delta: number) => void;
   rotateBy: (deltaYaw: number, deltaPitch: number) => void;
   /**
+   * Point the camera at a world position and re-centre the pan bounds on it.
+   *
+   * Without this the controller orbited a hardcoded (0,0,0), which is the
+   * CORNER of the 40x40 town grid while the farm sits inland - so the player
+   * looked at empty ground and pulling the distance back only framed more of
+   * it. Pan limits are relative to the focus, not to world origin, or moving
+   * the focus would immediately clamp the camera back toward the corner.
+   */
+  setFocus: (x: number, z: number) => void;
+  /**
+   * Distance from the camera to what it is LOOKING AT, not to world origin.
+   *
+   * The level-of-detail swap needs this. Measuring from origin instead means a
+   * camera focused anywhere away from (0,0,0) reports an inflated distance and
+   * every instance flips to its flat billboard permanently.
+   */
+  getDistanceToTarget: () => number;
+  /**
    * Toggle whether WASD/arrow/QE/RF/zoom keys drive the camera. Disabled
    * while building placement owns the keyboard, so a plain arrow key
    * during placement moves the placement ghost instead of also panning
@@ -92,6 +110,8 @@ export function createCameraController(opts: CreateCameraOptions): CameraControl
   let targetDistance = distance;
   const targetPos = target.clone();
   const desiredTargetPos = target.clone();
+  // Pan limits are measured from here, not from world origin.
+  const focusOrigin = target.clone();
 
   let reducedMotion = false;
   const EASE = 10; // higher = snappier
@@ -107,8 +127,16 @@ export function createCameraController(opts: CreateCameraOptions): CameraControl
   function clampAll(): void {
     targetDistance = THREE.MathUtils.clamp(targetDistance, limits.minDistance, limits.maxDistance);
     targetPitch = THREE.MathUtils.clamp(targetPitch, limits.minPitch, limits.maxPitch);
-    desiredTargetPos.x = THREE.MathUtils.clamp(desiredTargetPos.x, -limits.panBounds, limits.panBounds);
-    desiredTargetPos.z = THREE.MathUtils.clamp(desiredTargetPos.z, -limits.panBounds, limits.panBounds);
+    desiredTargetPos.x = THREE.MathUtils.clamp(
+      desiredTargetPos.x,
+      focusOrigin.x - limits.panBounds,
+      focusOrigin.x + limits.panBounds,
+    );
+    desiredTargetPos.z = THREE.MathUtils.clamp(
+      desiredTargetPos.z,
+      focusOrigin.z - limits.panBounds,
+      focusOrigin.z + limits.panBounds,
+    );
   }
 
   function panBy(dx: number, dz: number): void {
@@ -261,5 +289,27 @@ export function createCameraController(opts: CreateCameraOptions): CameraControl
   clampAll();
   update(0);
 
-  return { camera, update, dispose, snapToCorner, setReducedMotion, panBy, zoomBy, rotateBy, setKeyboardEnabled };
+  function setFocus(x: number, z: number): void {
+    focusOrigin.set(x, 0, z);
+    desiredTargetPos.set(x, 0, z);
+    // Snap rather than ease: this is called at boot to frame the town, and
+    // easing in from the map corner would show the player several seconds of
+    // empty grass first.
+    targetPos.set(x, 0, z);
+    clampAll();
+  }
+
+  return {
+    camera,
+    update,
+    dispose,
+    snapToCorner,
+    setReducedMotion,
+    panBy,
+    zoomBy,
+    rotateBy,
+    setKeyboardEnabled,
+    setFocus,
+    getDistanceToTarget: () => camera.position.distanceTo(targetPos),
+  };
 }
