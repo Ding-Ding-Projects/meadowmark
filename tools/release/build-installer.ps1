@@ -104,7 +104,10 @@ try {
         & npm.cmd run build 2>&1 | Tee-Object -FilePath $logTemporary
         $buildExit = $LASTEXITCODE
         if ($buildExit -eq 0) {
-            & npx.cmd electron-builder --win squirrel "-c.squirrelWindows.iconUrl=$iconUrl" 2>&1 | Tee-Object -FilePath $logTemporary -Append
+            # extraMetadata does not expand ${env.*} either -- the literal string was
+            # landing in the packaged package.json, so provenance validation saw a
+            # missing commit. Both values are passed as real overrides instead.
+            & npx.cmd electron-builder --win squirrel "-c.squirrelWindows.iconUrl=$iconUrl" "-c.extraMetadata.releaseCommit=$head" 2>&1 | Tee-Object -FilePath $logTemporary -Append
             $buildExit = $LASTEXITCODE
         }
         $buildExit = $LASTEXITCODE
