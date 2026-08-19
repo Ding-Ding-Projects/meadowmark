@@ -132,9 +132,28 @@ try {
     $nupkgSha1 = Get-HashHex -Path $nupkg.FullName -Algorithm SHA1
     if ($nupkgSha1 -ne $columns[0].ToLowerInvariant()) { throw 'RELEASES SHA-1 does not match the full package.' }
 
-    $setupSignature = Get-AuthenticodeSignature -FilePath $setup.FullName
-    if ($setupSignature.Status -ne [System.Management.Automation.SignatureStatus]::NotSigned) {
-        throw "Setup executable must be unsigned; signature status is $($setupSignature.Status)."
+    # Prove the setup executable is unsigned. This is a policy gate, never a
+    # formality, so it fails closed: if the signature cannot be READ we stop,
+    # rather than treating "could not check" as "not signed".
+    #
+    # Microsoft.PowerShell.Security does not always load under PowerShell 7 on
+    # this platform ("found in the module ... but the module could not be
+    # loaded"), so import it explicitly and fall back to Windows PowerShell 5.1,
+    # which carries the module natively.
+    $signatureStatus = $null
+    try {
+        Import-Module Microsoft.PowerShell.Security -ErrorAction Stop
+        $signatureStatus = [string](Get-AuthenticodeSignature -FilePath $setup.FullName).Status
+    } catch {
+        $probe = "(Get-AuthenticodeSignature -LiteralPath $($setup.FullName)).Status"
+        $signatureStatus = (& "$env:SystemRoot\System32\WindowsPowerShell1.0\powershell.exe" -NoProfile -NonInteractive -Command $probe 2>$null | Select-Object -First 1)
+        if ($LASTEXITCODE -ne 0) { $signatureStatus = $null }
+    }
+    if ([string]::IsNullOrWhiteSpace($signatureStatus)) {
+        throw 'Could not read the setup executable signature status; refusing to claim it is unsigned.'
+    }
+    if ($signatureStatus.Trim() -ne 'NotSigned') {
+        throw "Setup executable must be unsigned; signature status is $signatureStatus."
     }
 
     Add-Type -AssemblyName System.IO.Compression.FileSystem
