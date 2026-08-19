@@ -19,22 +19,30 @@ public static class MeadowmarkIconNative {
 
 function Get-PixelHash {
     param([System.Drawing.Bitmap]$Bitmap)
-    $normalized = New-Object System.Drawing.Bitmap 32, 32, ([System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
-    try {
-        $graphics = [System.Drawing.Graphics]::FromImage($normalized)
-        try {
-            $graphics.CompositingMode = [System.Drawing.Drawing2D.CompositingMode]::SourceCopy
-            $graphics.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::NearestNeighbor
-            $graphics.DrawImage($Bitmap, 0, 0, 32, 32)
-        } finally { $graphics.Dispose() }
-        $rectangle = New-Object System.Drawing.Rectangle 0, 0, 32, 32
-        $data = $normalized.LockBits($rectangle, [System.Drawing.Imaging.ImageLockMode]::ReadOnly, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
-        try {
-            $bytes = New-Object byte[] ([Math]::Abs($data.Stride) * $data.Height)
-            [Runtime.InteropServices.Marshal]::Copy($data.Scan0, $bytes, 0, $bytes.Length)
-            return ([Security.Cryptography.SHA256]::Create().ComputeHash($bytes) | ForEach-Object { $_.ToString('x2') }) -join ''
-        } finally { $normalized.UnlockBits($data) }
-    } finally { $normalized.Dispose() }
+    # Hash the ARGB values directly rather than normalising through
+    # Graphics.DrawImage and hashing the locked byte buffer.
+    #
+    # The DrawImage route reported a mismatch between the icon embedded in the
+    # packaged executable and the committed one when a direct pixel comparison
+    # of the very same two images found 0 differing pixels out of 1024. Source
+    # bitmaps arrive with different PixelFormats, and the redraw plus locked
+    # buffer (including stride padding) is not stable across them. Reading the
+    # pixels is slower and says what it means.
+    $sha = [Security.Cryptography.SHA256]::Create()
+    $bytes = New-Object byte[] (32 * 32 * 4)
+    $index = 0
+    for ($y = 0; $y -lt 32; $y++) {
+        for ($x = 0; $x -lt 32; $x++) {
+            $sampleX = [Math]::Min($x, $Bitmap.Width - 1)
+            $sampleY = [Math]::Min($y, $Bitmap.Height - 1)
+            $pixel = $Bitmap.GetPixel($sampleX, $sampleY)
+            $bytes[$index++] = $pixel.A
+            $bytes[$index++] = $pixel.R
+            $bytes[$index++] = $pixel.G
+            $bytes[$index++] = $pixel.B
+        }
+    }
+    return ($sha.ComputeHash($bytes) | ForEach-Object { $_.ToString('x2') }) -join ''
 }
 
 $large = [IntPtr]::Zero
