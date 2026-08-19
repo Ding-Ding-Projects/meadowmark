@@ -1,14 +1,14 @@
 # Meadowmark roadmap
 
 This roadmap separates code that exists from behavior that is release-proven.
-The published baseline is `v0.1.0-21` at `6e7760b`.
+The manually verified published baseline is `v0.1.51` at `e5335a1`.
 
 ## Verified baseline
 
 - [x] Strict TypeScript workspaces for shared simulation, rendering engine,
   Material Design 3 UI, renderer adapter, and Electron main process.
 - [x] Unsigned Squirrel.Windows setup, full package, and release index published
-  for `v0.1.0-21`.
+  and read back for `v0.1.51`.
 - [x] Packaged baseline capture from `c328d7d` showing terrain, field beds,
   readable crop selection, navigation rail, and HUD.
 - [x] Base settings store wired through main-process IPC and the preload bridge.

@@ -2,20 +2,20 @@
   "schemaVersion": 2,
   "currentBaseline": {
     "published": true,
-    "tag": "v0.1.0-22",
-    "targetCommit": "dd2a44fa5264656a62802af04cac3bd192668b9d",
-    "publishedAt": "2026-08-18T16:25:47Z",
-    "releaseUrl": "https://github.com/Ding-Ding-Projects/meadowmark/releases/tag/v0.1.0-22",
+    "tag": "v0.1.51",
+    "targetCommit": "e5335a146844543ea2747862722821eaaf62828d",
+    "publishedAt": "2026-08-19T02:36:09Z",
+    "releaseUrl": "https://github.com/Ding-Ding-Projects/meadowmark/releases/tag/v0.1.51",
     "installer": {
-      "name": "Meadowmark-Setup-0.1.0.exe",
-      "assetUrl": "https://github.com/Ding-Ding-Projects/meadowmark/releases/download/v0.1.0-22/Meadowmark-Setup-0.1.0.exe",
-      "size": 135972352,
-      "sha256": "2e2fca4551649241917e06ba5007574f3c9f276ada0a21bb6a8e1d43019fc334",
+      "name": "Meadowmark-Setup-0.1.51.exe",
+      "assetUrl": "https://github.com/Ding-Ding-Projects/meadowmark/releases/download/v0.1.51/Meadowmark-Setup-0.1.51.exe",
+      "size": 136139776,
+      "sha256": "130b19f431a26215b872d1031aafbaf6e3cf63f6a1f82db8d493cad2aefe0646",
       "unsigned": true
     },
     "updateAssets": [
-      { "name": "RELEASES", "size": 81, "sha256": "bec63b8ceaeaa1dab75caaf47457d2348ae22a31188bdf427ee0d2006b1bef17" },
-      { "name": "meadowmark-0.1.0-full.nupkg", "size": 135257825, "sha256": "c1c22f9963c330ce64692b324db6d675f44c68b76ee39e3feaa22c8b9e88869d" }
+      { "name": "RELEASES", "size": 82, "sha256": "3d3eada0a95b6fa5d6a9c852e1c03ba8368e2623c2e4fc0cbe9642cd45d458e1" },
+      { "name": "meadowmark-0.1.51-full.nupkg", "size": 135411596, "sha256": "cbea281ab3114cb23ebadd4078c5c06045d4b10572610a60c809a9c5ec13b227" }
     ]
   },
   "pendingRelease": {
@@ -23,6 +23,6 @@
     "published": false,
     "tag": null,
     "assetUrl": null,
-    "note": "Repository integration after v0.1.0-22 is not published. v0.1.0-22 remains the latest verified downloadable baseline."
+    "note": "Source changes after the manually verified v0.1.51 release are pending automatic publication."
   }
 }

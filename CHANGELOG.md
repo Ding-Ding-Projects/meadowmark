@@ -8,6 +8,22 @@ All notable changes to Meadowmark are documented in this file. Every entry
 carries the commit SHA that made the change; a SHA is only listed here after
 `git cat-file -e <sha>` confirms it exists in this repository.
 
+## [v0.1.51] - 2026-08-19
+
+[Release](https://github.com/Ding-Ding-Projects/meadowmark/releases/tag/v0.1.51) ·
+[commit `e5335a1`](https://github.com/Ding-Ding-Projects/meadowmark/commit/e5335a146844543ea2747862722821eaaf62828d)
+
+- Repaired PowerShell release-note generation so Markdown formatting cannot turn
+  commit or command text into backspace/tab control characters.
+- Built through `build.bat /s` and then `build-installer.bat /s`, producing a
+  manually published unsigned Squirrel.Windows release with package version
+  `0.1.51`.
+- Verified the exact target commit, non-draft/non-prerelease state, three asset
+  names and sizes, release-note timing/dim-sum/line-count evidence, and public
+  download SHA-256 values.
+- Shipped `Meadowmark-Setup-0.1.51.exe`, `meadowmark-0.1.51-full.nupkg`, and
+  `RELEASES`. GitHub Actions ran no tests or lint for the manual release.
+
 ## [v0.1.0-22] - 2026-08-18
 
 [Release](https://github.com/Ding-Ding-Projects/meadowmark/releases/tag/v0.1.0-22) ·

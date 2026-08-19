@@ -1,5 +1,15 @@
 [
   {
+    "version": "v0.1.51",
+    "date": "2026-08-19",
+    "status": "published",
+    "releaseTag": "v0.1.51",
+    "commit": "e5335a146844543ea2747862722821eaaf62828d",
+    "category": "Infrastructure",
+    "en": "Repaired release-note control-character handling, published a manually verified unsigned Squirrel.Windows release, and read all three assets back against the canonical build hashes.",
+    "yue": "修正 release notes 控制字元問題，手動發佈並驗證未簽署 Squirrel.Windows release，再下載三件資產逐個對返 canonical build 雜湊。"
+  },
+  {
     "version": "v0.1.0-22",
     "date": "2026-08-18",
     "status": "published",

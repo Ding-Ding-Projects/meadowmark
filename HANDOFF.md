@@ -1,6 +1,6 @@
 # Meadowmark handoff
 
-## Current status: release-workflow repair candidate, locally built
+## Current status: manual release verified; follow-up source fix pending
 
 Updated on 2026-08-18 from branch `codex/fix-release-workflow`. This narrow
 candidate removes the CI-only `rendersVerified` publication hold, derives one
@@ -13,9 +13,8 @@ comparing the generated SVG, so a fresh Windows checkout cannot fail solely
 because Git materialized CRLF while the generator emits LF.
 
 The render-evidence fields in `release-gate.json` remain unchanged and truthful:
-no capture evidence was invented or promoted. The published-only changelog data
-also remains unchanged because `v0.1.50` ended with a failed workflow verdict and
-the requested `v0.1.51` manual release is still pending.
+no capture evidence was invented or promoted. The published-only changelog and
+landing-site release data now identify the manually verified `v0.1.51` baseline.
 
 Focused local evidence for code commit `4a9a238` and this pending handoff update:
 
@@ -66,10 +65,14 @@ disallowed controls, the exact commit, stable duration, and three assets intact.
 
 The current source follow-up removes Markdown backticks from that double-quoted
 PowerShell here-string, reconstructs any owned published hash section with HTML
-code markup, and rejects control characters before read-back. The requested
-fresh manual release will be `v0.1.51`, built only by `build.bat /s` followed by
-`build-installer.bat /s`. Automatic publication must stay disabled only for the
-single push that receives that manual release, then be restored.
+code markup, places every hash on its own parseable line, and rejects control
+characters before read-back.
+
+The requested `v0.1.51` manual release is published at `e5335a1`. It was built
+only by `build.bat /s` followed by `build-installer.bat /s`; the exact three
+public assets were downloaded and matched the canonical hashes. Automatic
+publication was disabled only for that push and is active again. This pending
+documentation/source commit should produce the next ordinary automatic release.
 
 ## Historical release-grade handoff from earlier on 2026-08-18
 
@@ -381,8 +384,8 @@ interaction evidence.
 - `rendersVerified` remains false as truthful local capture metadata; it no longer
   blocks the build-and-publish workflow, which is required to release every push.
 - The current candidate repairs the environment-dependent icon comparison and PE
-  signature evidence; the canonical local installer build passed at `4a9a238`,
-  and `v0.1.50` was manually read back after its corrupted notes were repaired.
+  signature evidence; `v0.1.51` was built at `e5335a1`, published manually, and
+  read back against the canonical hashes.
 - The committed base stays `0.1.0`; the workflow derives a matching monotonic
   package version and tag from `GITHUB_RUN_NUMBER`, so each release is newer than
   `v0.1.0-22` without an attempt-specific duplicate.
@@ -404,20 +407,19 @@ interaction evidence.
 
 The implementation lanes are integrated. The current owner should:
 
-1. Commit the release-note control-character fix and rerun the focused static checks.
-2. Build `v0.1.51` through `build.bat /s` and then `build-installer.bat /s`.
-3. Disable only the automatic Release workflow for the single default-branch push,
-   manually publish and read back `v0.1.51`, then restore the workflow immediately.
-4. Exercise real packaged player and service interactions, wire the remaining UI
+1. Commit the release-data and parseable-hash follow-up, then rerun the focused
+   site and release-contract checks.
+2. Push with the automatic Release workflow active and verify its terminal run,
+   next unique release, exact target, notes, and three downloaded assets.
+3. Exercise real packaged player and service interactions, wire the remaining UI
    authority seams, and capture the required surface matrix through the approved
    hidden-desktop route.
-5. Populate only evidence that actually exists, rerun the fail-closed inventory
+4. Populate only evidence that actually exists, rerun the fail-closed inventory
    checks, and keep `rendersVerified` truthful to matching committed capture
    evidence rather than using it as a CI switch.
-6. Keep Meadowmark issue #2 open until the release-grade objective and its
+5. Keep Meadowmark issue #2 open until the release-grade objective and its
    evidence are complete.
 
 Until those steps complete, the honest state is: the implementation lanes are
-integrated, `v0.1.50` has a failed automatic workflow but a manually verified
-release record, zero inventory rows are complete, and the release-note hotfix has
-no `v0.1.51` package or runtime-interaction verdict yet.
+integrated, `v0.1.51` is manually verified, zero inventory rows are complete, and
+the pending source follow-up has no automatic-run or runtime-interaction verdict.

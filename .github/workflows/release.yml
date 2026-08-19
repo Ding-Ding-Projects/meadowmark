@@ -203,7 +203,9 @@ jobs:
 
           ### Artifact SHA-256
 
-          <pre><code>$hashes</code></pre>
+          <pre><code>
+          $hashes
+          </code></pre>
 
           ### Workflow timing
 
@@ -294,7 +296,7 @@ jobs:
           $hashMatches = [regex]::Matches($notes, '(?m)^\s*([0-9a-f]{64})\s{2}([^\r\n]+)\r?$')
           if ($hashMatches.Count -ne 3) { throw 'Published release notes do not contain exactly three recoverable artifact hashes.' }
           $hashText = (($hashMatches | ForEach-Object { "$($_.Groups[1].Value)  $($_.Groups[2].Value)" }) -join "`r`n")
-          $artifactSection = "### Artifact SHA-256`r`n`r`n<pre><code>$hashText</code></pre>`r`n`r`n### Workflow timing"
+          $artifactSection = "### Artifact SHA-256`r`n`r`n<pre><code>`r`n$hashText`r`n</code></pre>`r`n`r`n### Workflow timing"
           $notes = [regex]::Replace($notes, '(?s)### Artifact SHA-256.*?### Workflow timing', [System.Text.RegularExpressions.MatchEvaluator]{ param($match) $artifactSection })
           if ($notes -notmatch 'Workflow duration: \d{2}:\d{2}:\d{2}') {
             $jobs = gh api 'repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs?filter=all&per_page=100' | ConvertFrom-Json

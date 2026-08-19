@@ -103,16 +103,19 @@ service module, or update path.
 ## Published baseline
 
 The latest release verified while this documentation was updated is
-[`v0.1.0-22`](https://github.com/Ding-Ding-Projects/meadowmark/releases/tag/v0.1.0-22),
+[`v0.1.51`](https://github.com/Ding-Ding-Projects/meadowmark/releases/tag/v0.1.51),
 targeting commit
-[`dd2a44f`](https://github.com/Ding-Ding-Projects/meadowmark/commit/dd2a44fa5264656a62802af04cac3bd192668b9d).
+[`e5335a1`](https://github.com/Ding-Ding-Projects/meadowmark/commit/e5335a146844543ea2747862722821eaaf62828d).
 It is non-draft and contains the unsigned setup executable, the full Squirrel
-package, and `RELEASES`. Release publication succeeded in
-[GitHub Actions run 32159906150](https://github.com/Ding-Ding-Projects/meadowmark/actions/runs/32159906150).
+package, and `RELEASES`. It was built through the committed one-click scripts,
+published manually, and all three public assets were downloaded and matched
+against the canonical build hashes.
 
-That workflow ran no tests or lint by design. Its success proves build,
-packaging, and publication for that commit; it is not a gameplay, UI,
-accessibility, security, or updater-runtime verdict. See
+No GitHub Actions tests or lint ran for the manual release. Its verification
+proves build, packaging, publication, and asset read-back for that commit; it is
+not a gameplay, UI, accessibility, security, or updater-runtime verdict. The
+newest real packaged-runtime capture remains the historical `v0.1.0-22` image
+above and must not be presented as a `v0.1.51` capture. See
 [`HANDOFF.md`](HANDOFF.md) for the current evidence boundary.
 
 ## Project layout

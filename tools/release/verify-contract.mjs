@@ -225,7 +225,9 @@ requireStepLine("Resolve unused published dim-sum code name", /^\s*if:\s*steps\.
 requireStepLine("Write preliminary factual release notes", /^\s*Workflow run: https:\/\/github\.com\/\$\{\{ github\.repository \}\}\/actions\/runs\/\$\{\{ github\.run_id \}\}\s*$/m);
 requireStepLine("Write preliminary factual release notes", /^\s*if:\s*steps\.release_state\.outputs\.state != 'published'\s*$/m);
 requireStepLine("Write preliminary factual release notes", /^\s*Exact commit: \$\{\{ github\.sha \}\}\s*$/m);
-requireStepLine("Write preliminary factual release notes", /^\s*<pre><code>\$hashes<\/code><\/pre>\s*$/m);
+requireStepLine("Write preliminary factual release notes", /^\s*<pre><code>\s*$/m);
+requireStepLine("Write preliminary factual release notes", /^\s*\$hashes\s*$/m);
+requireStepLine("Write preliminary factual release notes", /^\s*<\/code><\/pre>\s*$/m);
 if (workflowStep("Write preliminary factual release notes").includes(String.fromCharCode(96))) {
   throw new Error("Double-quoted PowerShell release-note here-strings must not contain Markdown backticks.");
 }
@@ -239,7 +241,7 @@ requireStepLine("Recover timing without changing published release identity", /^
 requireStepLine("Recover timing without changing published release identity", /^\s*if:\s*steps\.release_state\.outputs\.state == 'published'\s*$/m);
 requireStepLine("Recover timing without changing published release identity", /^\s*gh release edit \$tag --notes-file \$notesPath\s*$/m);
 requireStepLine("Recover timing without changing published release identity", /^\s*\$notes = \[regex\]::Replace\(\$notes, '\(\?m\)\^Exact commit:\.\*\$', "Exact commit: \$expectedCommit"\)\s*$/m);
-requireStepLine("Recover timing without changing published release identity", /^\s*\$artifactSection = "### Artifact SHA-256.*<pre><code>\$hashText<\/code><\/pre>.*### Workflow timing"\s*$/m);
+requireStepLine("Recover timing without changing published release identity", /^\s*\$artifactSection = "### Artifact SHA-256.*<pre><code>.*\$hashText.*<\/code><\/pre>.*### Workflow timing"\s*$/m);
 requireStepLine("Read published release and assets back", /^\s*gh release download \$tag --dir \$download\s*$/m);
 requireExact(activeLines(workflowStep("Read published release and assets back")), "$hashMatches = [regex]::Matches([string]$release.body, '(?m)^\\s*([0-9a-f]{64})\\s{2}([^\\r\\n]+)\\r?$')", "release read-back hash parser");
 requireStepLine("Read published release and assets back", /^\s*throw 'Published release notes contain disallowed control characters\.'\s*$/m);
