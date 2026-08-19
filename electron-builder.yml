@@ -49,11 +49,17 @@ win:
   # electron-builder's schema documents both switches and signExecutable also
   # covers installer/auxiliary artifacts that use the standard signing path.
   signExecutable: false
-  # This also disables electron-builder's built-in PE resource editor. The
-  # release verifier therefore remains intentionally fail-closed until a
-  # separate unsigned resource-edit phase applies this icon to the packaged
-  # application and Setup executable without invoking any signer.
-  signAndEditExecutable: false
+  # signAndEditExecutable is deliberately NOT set to false here. Setting it
+  # disables electron-builder's PE resource editor as well as signing, so no
+  # icon is ever embedded and the release verifier blocks forever on a missing
+  # large/small icon pair -- which is exactly where this build sat. From
+  # electron-builder's own log: "To skip only code signing while keeping icon
+  # and metadata applied, use signExecutable: false instead."
+  #
+  # Code signing remains permanently prohibited and is off via signExecutable
+  # above and forceCodeSigning below, with no certificate configured anywhere.
+  # The release script independently proves the produced Setup.exe carries no
+  # Authenticode certificate, so this stays fail-closed rather than trusted.
   icon: design/icons/meadowmark.ico
   target:
     - target: squirrel
