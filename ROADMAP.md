@@ -3,6 +3,17 @@
 This roadmap separates code that exists from behavior that is release-proven.
 The manually verified published baseline is `v0.1.51` at `e5335a1`.
 
+## Repository closeout snapshot
+
+- [x] Fetch and fast-forward the primary `main` checkout to `d3a808c`.
+- [x] Confirm a clean working tree, no unmerged index entries, no conflict markers,
+  no stashes, no linked checkouts, and no additional local branches.
+- [x] Record that no preservation commit or conflict-resolution choice was needed.
+- [x] Confirm that no redundant task-owned checkout, branch, or stash existed
+  for safe removal; no external archive was required because no removal occurred.
+- [ ] Complete the separate release-grade objective tracked by
+  `Ding-Ding-Projects/meadowmark#2`; this closeout intentionally does not run it.
+
 ## Verified baseline
 
 - [x] Strict TypeScript workspaces for shared simulation, rendering engine,

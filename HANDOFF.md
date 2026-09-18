@@ -1,5 +1,30 @@
 # Meadowmark handoff
 
+## Current closeout snapshot
+
+Updated on 2026-09-18 from the primary `main` checkout at `d3a808c556200e348032ade2a75cb1cf1506480a`.
+
+This closeout was limited to repository preservation, history reconciliation, documentation truth, and safe cleanup. No release build, installer publication, or unrelated release repair was run.
+
+### Repository inventory and preservation
+
+- The primary checkout was the only checkout: `C:\Users\cntow\Documents\GitHub\good-day`.
+- `git fetch --prune origin` completed, then `git pull --ff-only origin main` fast-forwarded `main` from `a296fe7` to `d3a808c`.
+- The initial and final working trees were clean. No recoverable uncommitted files, half-finished paths, stashes, linked checkouts, or additional local branches were found, so no preservation commit was required.
+- `main` is aligned with `origin/main` at `d3a808c`. The fetched remote ref was verified after reconciliation.
+
+### Conflict and cleanup result
+
+- `git ls-files -u` returned no entries.
+- A tracked-text conflict-marker scan returned no `<<<<<<<`, `=======`, or `>>>>>>>` markers.
+- No automatic conflict choice was needed because no conflict existed.
+- No safe redundant checkout, branch, or stash existed. Nothing was removed, so the pre-removal external archive requirement was not activated.
+- The only open GitHub issue found was `Ding-Ding-Projects/meadowmark#2`, which remains open because its release-grade scope is outside this closeout.
+
+### Exact closeout boundary
+
+The documentation refresh in this commit records the clean preservation and integration state. The project remains incomplete for release-grade work: the existing inventory and packaged-interaction gaps below are unchanged, and no release claim is made from this closeout.
+
 ## Current status: manual release verified; follow-up source fix pending
 
 Updated on 2026-08-18 from branch `codex/fix-release-workflow`. This narrow
